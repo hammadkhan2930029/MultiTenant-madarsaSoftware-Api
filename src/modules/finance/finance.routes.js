@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { headsRoutes } from './heads/heads.routes.js';
+import { fundCollectionsRoutes } from './fund-collections/fundCollections.routes.js';
+import { salaryRoutes } from './salaries/salaries.routes.js';
+import { reportsRoutes } from './reports/reports.routes.js';
+
+const router = Router();
+
+router.use('/heads', headsRoutes);
+router.use('/fund-collections', fundCollectionsRoutes);
+router.use('/salaries', salaryRoutes);
+router.use('/reports', reportsRoutes);
+
+export { router as financeRoutes };

@@ -1,0 +1,340 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  email     String   @unique @db.VarChar(150)
+  username  String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      String   @default("admin") @db.VarChar(50)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
+model Branch {
+  id        Int             @id @default(autoincrement())
+  name      String          @unique @db.VarChar(150)
+  code      String?         @unique @db.VarChar(50)
+  address   String?         @db.VarChar(255)
+  status    String          @default("active") @db.VarChar(50)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  classes   AcademicClass[]
+  assignments StudentClassAssignment[]
+  studentAttendances StudentAttendance[]
+  teacherAttendances TeacherAttendance[]
+
+  @@map("branches")
+}
+
+model AcademicClass {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(150)
+  branchId  Int
+  status    String    @default("active") @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  branch    Branch    @relation(fields: [branchId], references: [id])
+  sections  Section[]
+  assignments StudentClassAssignment[]
+  studentAttendances StudentAttendance[]
+
+  @@unique([branchId, name])
+  @@map("classes")
+}
+
+model Section {
+  id        Int           @id @default(autoincrement())
+  name      String        @db.VarChar(150)
+  classId   Int
+  status    String        @default("active") @db.VarChar(50)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  class     AcademicClass @relation(fields: [classId], references: [id])
+  assignments StudentClassAssignment[]
+  studentAttendances StudentAttendance[]
+
+  @@unique([classId, name])
+  @@map("sections")
+}
+
+model AcademicSession {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  assignments StudentClassAssignment[]
+
+  @@map("sessions")
+}
+
+model Student {
+  id              Int                      @id @default(autoincrement())
+  admissionNumber String                   @unique @db.VarChar(100)
+  fullName        String                   @db.VarChar(150)
+  fatherName      String                   @db.VarChar(150)
+  gender          String                   @db.VarChar(20)
+  dob             DateTime?
+  phone           String?                  @db.VarChar(50)
+  email           String?                  @db.VarChar(150)
+  address         String?                  @db.VarChar(255)
+  imageUrl        String?                  @db.VarChar(255)
+  status          String                   @default("active") @db.VarChar(50)
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  parents         StudentParent[]
+  assignments     StudentClassAssignment[]
+  attendances     StudentAttendance[]
+  hifzDailyEntries HifzDailyEntry[]
+  hifzWeeklyEntries HifzWeeklyEntry[]
+  hifzMonthlyEntries HifzMonthlyEntry[]
+  hifzSiparaEntries HifzSiparaEntry[]
+  fundCollections  FundCollection[]
+
+  @@map("students")
+}
+
+model Parent {
+  id         Int             @id @default(autoincrement())
+  fullName   String          @db.VarChar(150)
+  phone      String?         @db.VarChar(50)
+  email      String?         @db.VarChar(150)
+  cnic       String?         @db.VarChar(50)
+  occupation String?         @db.VarChar(150)
+  address    String?         @db.VarChar(255)
+  status     String          @default("active") @db.VarChar(50)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  students   StudentParent[]
+
+  @@map("parents")
+}
+
+model StudentParent {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  parentId     Int
+  relationship String   @db.VarChar(50)
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  student      Student  @relation(fields: [studentId], references: [id])
+  parent       Parent   @relation(fields: [parentId], references: [id])
+
+  @@unique([studentId, parentId, relationship])
+  @@map("student_parents")
+}
+
+model StudentClassAssignment {
+  id         Int             @id @default(autoincrement())
+  studentId  Int
+  branchId   Int
+  classId    Int
+  sectionId  Int
+  sessionId  Int
+  status     String          @default("active") @db.VarChar(50)
+  assignedAt DateTime        @default(now())
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  student    Student         @relation(fields: [studentId], references: [id])
+  branch     Branch          @relation(fields: [branchId], references: [id])
+  class      AcademicClass   @relation(fields: [classId], references: [id])
+  section    Section         @relation(fields: [sectionId], references: [id])
+  session    AcademicSession @relation(fields: [sessionId], references: [id])
+
+  @@map("student_class_assignments")
+}
+
+model Teacher {
+  id           Int      @id @default(autoincrement())
+  fullName     String   @db.VarChar(150)
+  email        String?  @db.VarChar(150)
+  phone        String?  @unique @db.VarChar(50)
+  cnic         String?  @unique @db.VarChar(50)
+  subject      String   @db.VarChar(150)
+  qualification String? @db.VarChar(150)
+  address      String?  @db.VarChar(255)
+  imageUrl     String?  @db.VarChar(255)
+  basicSalary  Decimal  @db.Decimal(10, 2)
+  status       String   @default("active") @db.VarChar(50)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  attendances  TeacherAttendance[]
+  salaryEntries SalaryEntry[]
+
+  @@map("teachers")
+}
+
+model StudentAttendance {
+  id        Int           @id @default(autoincrement())
+  studentId Int
+  branchId  Int
+  classId   Int
+  sectionId Int
+  date      DateTime
+  status    String        @db.VarChar(20)
+  remarks   String?       @db.VarChar(255)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  student   Student       @relation(fields: [studentId], references: [id])
+  branch    Branch        @relation(fields: [branchId], references: [id])
+  class     AcademicClass @relation(fields: [classId], references: [id])
+  section   Section       @relation(fields: [sectionId], references: [id])
+
+  @@unique([studentId, date])
+  @@map("student_attendance")
+}
+
+model TeacherAttendance {
+  id        Int      @id @default(autoincrement())
+  teacherId Int
+  branchId  Int
+  date      DateTime
+  status    String   @db.VarChar(20)
+  remarks   String?  @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  branch    Branch   @relation(fields: [branchId], references: [id])
+
+  @@unique([teacherId, date])
+  @@map("teacher_attendance")
+}
+
+model HifzDailyEntry {
+  id                Int      @id @default(autoincrement())
+  studentId         Int
+  date              DateTime
+  sabq              String?  @db.VarChar(150)
+  sabaqi            String?  @db.VarChar(150)
+  manzil            String?  @db.VarChar(150)
+  performanceStatus String   @db.VarChar(50)
+  remarks           String?  @db.VarChar(255)
+  status            String   @default("active") @db.VarChar(50)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  student           Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, date])
+  @@map("hifz_daily_entries")
+}
+
+model HifzWeeklyEntry {
+  id                Int      @id @default(autoincrement())
+  studentId         Int
+  weekStartDate     DateTime
+  weekEndDate       DateTime
+  siparaFrom        String?  @db.VarChar(100)
+  siparaTo          String?  @db.VarChar(100)
+  lessonFrom        String?  @db.VarChar(150)
+  lessonTo          String?  @db.VarChar(150)
+  performanceStatus String   @db.VarChar(50)
+  remarks           String?  @db.VarChar(255)
+  status            String   @default("active") @db.VarChar(50)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  student           Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, weekStartDate, weekEndDate])
+  @@map("hifz_weekly_entries")
+}
+
+model HifzMonthlyEntry {
+  id                Int      @id @default(autoincrement())
+  studentId         Int
+  month             Int
+  year              Int
+  startSabq         String?  @db.VarChar(150)
+  endSabq           String?  @db.VarChar(150)
+  totalRecitation   String?  @db.VarChar(150)
+  performanceStatus String   @db.VarChar(50)
+  remarks           String?  @db.VarChar(255)
+  status            String   @default("active") @db.VarChar(50)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  student           Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, month, year])
+  @@map("hifz_monthly_entries")
+}
+
+model HifzSiparaEntry {
+  id                Int      @id @default(autoincrement())
+  studentId         Int
+  siparaNumber      Int
+  startDate         DateTime?
+  endDate           DateTime?
+  totalDays         Int?
+  quality           String?  @db.VarChar(150)
+  performanceStatus String   @db.VarChar(50)
+  remarks           String?  @db.VarChar(255)
+  status            String   @default("active") @db.VarChar(50)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  student           Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, siparaNumber])
+  @@map("hifz_sipara_entries")
+}
+
+model FinanceHead {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique @db.VarChar(150)
+  type            String           @db.VarChar(20)
+  description     String?          @db.VarChar(255)
+  status          String           @default("active") @db.VarChar(50)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  fundCollections FundCollection[]
+  salaryEntries   SalaryEntry[]
+
+  @@map("finance_heads")
+}
+
+model FundCollection {
+  id            Int         @id @default(autoincrement())
+  studentId     Int
+  financeHeadId Int
+  amount        Decimal     @db.Decimal(10, 2)
+  paymentDate   DateTime
+  remarks       String?     @db.VarChar(255)
+  status        String      @default("active") @db.VarChar(50)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  student       Student     @relation(fields: [studentId], references: [id])
+  financeHead   FinanceHead @relation(fields: [financeHeadId], references: [id])
+
+  @@map("fund_collections")
+}
+
+model SalaryEntry {
+  id            Int         @id @default(autoincrement())
+  teacherId      Int
+  financeHeadId  Int
+  amount         Decimal    @db.Decimal(10, 2)
+  salaryMonth    Int
+  salaryYear     Int
+  paymentDate    DateTime
+  remarks        String?    @db.VarChar(255)
+  status         String     @default("active") @db.VarChar(50)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  teacher        Teacher    @relation(fields: [teacherId], references: [id])
+  financeHead    FinanceHead @relation(fields: [financeHeadId], references: [id])
+
+  @@unique([teacherId, salaryMonth, salaryYear])
+  @@map("salary_entries")
+}

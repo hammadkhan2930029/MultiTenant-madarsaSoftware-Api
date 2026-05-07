@@ -1,0 +1,65 @@
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import { env } from './config/env.js';
+import { apiResponse } from './utils/apiResponse.js';
+import { healthRoutes } from './modules/health/health.routes.js';
+import { authRoutes } from './modules/auth/auth.routes.js';
+import { branchesRoutes } from './modules/branches/branches.routes.js';
+import { classesRoutes } from './modules/classes/classes.routes.js';
+import { sectionsRoutes } from './modules/sections/sections.routes.js';
+import { sessionsRoutes } from './modules/sessions/sessions.routes.js';
+import { studentsRoutes } from './modules/students/students.routes.js';
+import { parentsRoutes } from './modules/parents/parents.routes.js';
+import { teachersRoutes } from './modules/teachers/teachers.routes.js';
+import { attendanceRoutes } from './modules/attendance/attendance.routes.js';
+import { hifzRoutes } from './modules/hifz/hifz.routes.js';
+import { financeRoutes } from './modules/finance/finance.routes.js';
+import { reportsRoutes } from './modules/reports/reports.routes.js';
+import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
+import { errorMiddleware } from './middlewares/error.middleware.js';
+
+const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(
+  cors({
+    origin: env.appOrigin,
+    credentials: true,
+  })
+);
+app.use(helmet());
+app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (_req, res) => {
+  return apiResponse(res, {
+    message: `${env.appName} is running successfully.`,
+    data: null,
+  });
+});
+
+app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/branches', branchesRoutes);
+app.use('/api/classes', classesRoutes);
+app.use('/api/sections', sectionsRoutes);
+app.use('/api/sessions', sessionsRoutes);
+app.use('/api/students', studentsRoutes);
+app.use('/api/parents', parentsRoutes);
+app.use('/api/teachers', teachersRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/hifz', hifzRoutes);
+app.use('/api/finance', financeRoutes);
+app.use('/api/reports', reportsRoutes);
+
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
+
+export { app };
