@@ -1,10 +1,19 @@
 import { Router } from 'express';
-import { loginAdmin, changePassword, getCurrentAdminProfile } from './auth.controller.js';
+import {
+  loginAdmin,
+  changePassword,
+  getCurrentAdminProfile,
+  getMadrassaProfile,
+  updateMadrassaProfile,
+} from './auth.controller.js';
 import { validate } from '../../middlewares/validate.middleware.js';
+import { madrassaProfileImageUpload } from '../../middlewares/upload.middleware.js';
 import {
   loginValidationSchema,
   changePasswordValidationSchema,
   currentAdminValidationSchema,
+  madrassaProfileValidationSchema,
+  updateMadrassaProfileValidationSchema,
 } from './auth.validation.js';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
 
@@ -18,5 +27,13 @@ router.post(
   changePassword
 );
 router.get('/me', authMiddleware, validate(currentAdminValidationSchema), getCurrentAdminProfile);
+router.get('/profile', authMiddleware, validate(madrassaProfileValidationSchema), getMadrassaProfile);
+router.put(
+  '/profile',
+  authMiddleware,
+  madrassaProfileImageUpload.single('logo'),
+  validate(updateMadrassaProfileValidationSchema),
+  updateMadrassaProfile
+);
 
 export { router as authRoutes };

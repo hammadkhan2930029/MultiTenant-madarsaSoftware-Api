@@ -23,6 +23,9 @@ export const env = {
   nodeEnv: process.env.NODE_ENV,
   appName: process.env.APP_NAME,
   appOrigin: process.env.APP_ORIGIN,
+  appOrigins: process.env.APP_ORIGIN.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,

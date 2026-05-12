@@ -48,3 +48,11 @@ export const teacherImageUpload = multer({
   },
   fileFilter: imageFileFilter,
 });
+
+export const madrassaProfileImageUpload = multer({
+  storage: createStorage('madrassa-profiles'),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: imageFileFilter,
+});

@@ -50,3 +50,34 @@ export const currentAdminValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({}).default({}),
 });
+
+const optionalStringField = (max, message) =>
+  z.union([z.string().trim().max(max, message), z.literal(''), z.undefined()]).transform((value) =>
+    value === '' ? undefined : value
+  );
+
+const madrassaProfileBodySchema = z.object({
+  name: z.string().trim().min(2, 'Profile name is required.').max(150, 'Profile name is too long.'),
+  email: z.string().trim().email('Please enter a valid email address.').max(150, 'Email is too long.'),
+  phone1: optionalStringField(50, 'Primary phone is too long.'),
+  phone2: optionalStringField(50, 'Secondary phone is too long.'),
+  address: optionalStringField(255, 'Address is too long.'),
+  branch: optionalStringField(150, 'Branch is too long.'),
+  city: optionalStringField(150, 'City is too long.'),
+  familyNoSeq: optionalStringField(100, 'Family sequence number is too long.'),
+  regNo: optionalStringField(100, 'Registration number is too long.'),
+  logoUrl: optionalStringField(255, 'Logo URL is too long.'),
+  status: z.enum(['active', 'inactive']).optional(),
+});
+
+export const madrassaProfileValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
+export const updateMadrassaProfileValidationSchema = z.object({
+  body: madrassaProfileBodySchema,
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});

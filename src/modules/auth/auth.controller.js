@@ -31,3 +31,21 @@ export const getCurrentAdminProfile = asyncHandler(async (req, res) => {
     data: result,
   });
 });
+
+export const getMadrassaProfile = asyncHandler(async (req, res) => {
+  const result = await authService.getMadrassaProfile(req.admin);
+
+  return apiResponse(res, {
+    message: 'Madrassa profile fetched successfully.',
+    data: result,
+  });
+});
+
+export const updateMadrassaProfile = asyncHandler(async (req, res) => {
+  const result = await authService.updateMadrassaProfile(req.admin, req.body, req.file);
+
+  return apiResponse(res, {
+    message: 'Madrassa profile updated successfully.',
+    data: result,
+  });
+});

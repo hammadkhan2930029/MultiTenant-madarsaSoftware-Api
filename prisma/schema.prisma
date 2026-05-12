@@ -17,8 +17,51 @@ model Admin {
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  madrassaProfile MadrassaProfile?
 
   @@map("admins")
+}
+
+model MadrassaProfile {
+  id          Int      @id @default(autoincrement())
+  adminId     Int      @unique
+  name        String   @db.VarChar(150)
+  email       String   @db.VarChar(150)
+  phone1      String?  @db.VarChar(50)
+  phone2      String?  @db.VarChar(50)
+  address     String?  @db.VarChar(255)
+  branch      String?  @db.VarChar(150)
+  city        String?  @db.VarChar(150)
+  familyNoSeq String?  @db.VarChar(100)
+  regNo       String?  @db.VarChar(100)
+  logoUrl     String?  @db.VarChar(255)
+  status      String   @default("active") @db.VarChar(50)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  admin       Admin    @relation(fields: [adminId], references: [id])
+
+  @@map("madrassa_profiles")
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cities")
+}
+
+model Subject {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  detail    String?  @db.VarChar(255)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subjects")
 }
 
 model Branch {
@@ -84,13 +127,32 @@ model AcademicSession {
 model Student {
   id              Int                      @id @default(autoincrement())
   admissionNumber String                   @unique @db.VarChar(100)
+  admissionDate   DateTime?
+  admissionFee    Decimal?                 @db.Decimal(10, 2)
   fullName        String                   @db.VarChar(150)
   fatherName      String                   @db.VarChar(150)
   gender          String                   @db.VarChar(20)
+  caste           String?                  @db.VarChar(100)
+  cnic            String?                  @db.VarChar(50)
   dob             DateTime?
+  bForm           String?                  @db.VarChar(50)
   phone           String?                  @db.VarChar(50)
+  whatsapp        String?                  @db.VarChar(50)
   email           String?                  @db.VarChar(150)
   address         String?                  @db.VarChar(255)
+  currentAddress  String?                  @db.VarChar(255)
+  permanentAddress String?                 @db.VarChar(255)
+  district        String?                  @db.VarChar(150)
+  prevMadrassa    String?                  @db.VarChar(150)
+  prevSchool      String?                  @db.VarChar(150)
+  secularEdu      String?                  @db.VarChar(150)
+  religiousEdu    String?                  @db.VarChar(150)
+  requiredClass   String?                  @db.VarChar(150)
+  requiredJamaat  String?                  @db.VarChar(150)
+  teacherName     String?                  @db.VarChar(150)
+  medicalCondition String?                 @db.VarChar(255)
+  monthlyFee      Decimal?                 @db.Decimal(10, 2)
+  reside          String?                  @db.VarChar(20)
   imageUrl        String?                  @db.VarChar(255)
   status          String                   @default("active") @db.VarChar(50)
   createdAt       DateTime                 @default(now())

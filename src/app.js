@@ -19,6 +19,8 @@ import { attendanceRoutes } from './modules/attendance/attendance.routes.js';
 import { hifzRoutes } from './modules/hifz/hifz.routes.js';
 import { financeRoutes } from './modules/finance/finance.routes.js';
 import { reportsRoutes } from './modules/reports/reports.routes.js';
+import { citiesRoutes } from './modules/cities/cities.routes.js';
+import { subjectsRoutes } from './modules/subjects/subjects.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -26,9 +28,17 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const allowedOrigins = new Set(env.appOrigins);
+
 app.use(
   cors({
-    origin: env.appOrigin,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   })
 );
@@ -58,6 +68,8 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/hifz', hifzRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/reports', reportsRoutes);
+app.use('/api/cities', citiesRoutes);
+app.use('/api/subjects', subjectsRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
