@@ -3,7 +3,7 @@ import { authMiddleware } from '../../middlewares/auth.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createSubject,
-  deactivateSubject,
+  deleteSubject,
   getSubjectById,
   getSubjects,
   updateSubject,
@@ -23,6 +23,6 @@ router.post('/', validate(createSubjectValidationSchema), createSubject);
 router.get('/', validate(listSubjectsValidationSchema), getSubjects);
 router.get('/:id', validate(subjectIdValidationSchema), getSubjectById);
 router.patch('/:id', validate(updateSubjectValidationSchema), updateSubject);
-router.patch('/:id/deactivate', validate(subjectIdValidationSchema), deactivateSubject);
+router.delete('/:id', validate(subjectIdValidationSchema), deleteSubject);
 
 export { router as subjectsRoutes };

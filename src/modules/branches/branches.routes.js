@@ -6,7 +6,7 @@ import {
   getBranches,
   getBranchById,
   updateBranch,
-  deactivateBranch,
+  deleteBranch,
 } from './branches.controller.js';
 import {
   createBranchValidationSchema,
@@ -23,6 +23,6 @@ router.post('/', validate(createBranchValidationSchema), createBranch);
 router.get('/', validate(listBranchesValidationSchema), getBranches);
 router.get('/:id', validate(branchIdValidationSchema), getBranchById);
 router.patch('/:id', validate(updateBranchValidationSchema), updateBranch);
-router.patch('/:id/deactivate', validate(branchIdValidationSchema), deactivateBranch);
+router.delete('/:id', validate(branchIdValidationSchema), deleteBranch);
 
 export { router as branchesRoutes };

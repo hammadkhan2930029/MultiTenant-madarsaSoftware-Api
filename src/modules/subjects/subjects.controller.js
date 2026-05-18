@@ -39,11 +39,11 @@ export const updateSubject = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.deactivateSubject(req.params.id);
+export const deleteSubject = asyncHandler(async (req, res) => {
+  const result = await subjectsService.deleteSubject(req.params.id);
 
   return apiResponse(res, {
-    message: 'Subject deactivated successfully.',
+    message: 'Subject deleted successfully.',
     data: result,
   });
 });

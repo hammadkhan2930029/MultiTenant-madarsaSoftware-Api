@@ -6,7 +6,7 @@ import {
   getClasses,
   getClassById,
   updateClass,
-  deactivateClass,
+  deleteClass,
 } from './classes.controller.js';
 import {
   createClassValidationSchema,
@@ -23,6 +23,6 @@ router.post('/', validate(createClassValidationSchema), createClass);
 router.get('/', validate(listClassesValidationSchema), getClasses);
 router.get('/:id', validate(classIdValidationSchema), getClassById);
 router.patch('/:id', validate(updateClassValidationSchema), updateClass);
-router.patch('/:id/deactivate', validate(classIdValidationSchema), deactivateClass);
+router.delete('/:id', validate(classIdValidationSchema), deleteClass);
 
 export { router as classesRoutes };

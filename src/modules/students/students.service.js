@@ -3,6 +3,7 @@ import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
+const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
 
 const studentSelect = {
   id: true,
@@ -46,6 +47,7 @@ const studentSelect = {
         select: {
           id: true,
           fullName: true,
+          familyNumber: true,
           phone: true,
           email: true,
           cnic: true,
@@ -118,6 +120,7 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
         where: { id: parentId },
         data: {
           fullName: parentItem.fullName || existingParent.fullName,
+          familyNumber: optionalString(parentItem.familyNumber) || existingParent.familyNumber,
           phone: optionalString(parentItem.phone),
           email: optionalString(parentItem.email),
           cnic: optionalString(parentItem.cnic),
@@ -150,13 +153,28 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
         const parent = await tx.parent.create({
           data: {
             fullName: parentItem.fullName,
+            familyNumber: optionalString(parentItem.familyNumber),
             phone: optionalString(parentItem.phone),
             email: optionalString(parentItem.email),
             cnic: optionalString(parentItem.cnic),
             occupation: optionalString(parentItem.occupation),
             address: optionalString(parentItem.address),
           },
+          select: {
+            id: true,
+            familyNumber: true,
+          },
         });
+
+        if (!parent.familyNumber) {
+          await tx.parent.update({
+            where: { id: parent.id },
+            data: {
+              familyNumber: generateFamilyNumber(parent.id),
+            },
+          });
+        }
+
         parentId = parent.id;
       }
     }

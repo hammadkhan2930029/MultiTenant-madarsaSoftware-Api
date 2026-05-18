@@ -20,6 +20,8 @@ import { hifzRoutes } from './modules/hifz/hifz.routes.js';
 import { financeRoutes } from './modules/finance/finance.routes.js';
 import { reportsRoutes } from './modules/reports/reports.routes.js';
 import { citiesRoutes } from './modules/cities/cities.routes.js';
+import { departmentsRoutes } from './modules/departments/departments.routes.js';
+import { shiftsRoutes } from './modules/shifts/shifts.routes.js';
 import { subjectsRoutes } from './modules/subjects/subjects.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
@@ -69,6 +71,8 @@ app.use('/api/hifz', hifzRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/cities', citiesRoutes);
+app.use('/api/departments', departmentsRoutes);
+app.use('/api/shifts', shiftsRoutes);
 app.use('/api/subjects', subjectsRoutes);
 
 app.use(notFoundMiddleware);

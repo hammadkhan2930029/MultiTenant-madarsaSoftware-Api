@@ -6,7 +6,7 @@ import {
   getSections,
   getSectionById,
   updateSection,
-  deactivateSection,
+  deleteSection,
 } from './sections.controller.js';
 import {
   createSectionValidationSchema,
@@ -23,6 +23,6 @@ router.post('/', validate(createSectionValidationSchema), createSection);
 router.get('/', validate(listSectionsValidationSchema), getSections);
 router.get('/:id', validate(sectionIdValidationSchema), getSectionById);
 router.patch('/:id', validate(updateSectionValidationSchema), updateSection);
-router.patch('/:id/deactivate', validate(sectionIdValidationSchema), deactivateSection);
+router.delete('/:id', validate(sectionIdValidationSchema), deleteSection);
 
 export { router as sectionsRoutes };

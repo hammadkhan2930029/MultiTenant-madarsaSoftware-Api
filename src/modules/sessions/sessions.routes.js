@@ -6,7 +6,7 @@ import {
   getSessions,
   getSessionById,
   updateSession,
-  deactivateSession,
+  deleteSession,
 } from './sessions.controller.js';
 import {
   createSessionValidationSchema,
@@ -23,6 +23,6 @@ router.post('/', validate(createSessionValidationSchema), createSession);
 router.get('/', validate(listSessionsValidationSchema), getSessions);
 router.get('/:id', validate(sessionIdValidationSchema), getSessionById);
 router.patch('/:id', validate(updateSessionValidationSchema), updateSession);
-router.patch('/:id/deactivate', validate(sessionIdValidationSchema), deactivateSession);
+router.delete('/:id', validate(sessionIdValidationSchema), deleteSession);
 
 export { router as sessionsRoutes };

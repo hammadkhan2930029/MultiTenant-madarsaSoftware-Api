@@ -108,7 +108,7 @@ export const sessionsService = {
     });
   },
 
-  async deactivateSession(id) {
+  async deleteSession(id) {
     const session = await prisma.academicSession.findUnique({
       where: { id },
     });
@@ -117,13 +117,23 @@ export const sessionsService = {
       throw new AppError('Session not found.', 404);
     }
 
-    if (session.status === 'inactive') {
-      throw new AppError('Session is already inactive.', 400);
+    const relatedRecords = await prisma.academicSession.findUnique({
+      where: { id },
+      select: {
+        _count: {
+          select: {
+            assignments: true,
+          },
+        },
+      },
+    });
+
+    if ((relatedRecords?._count?.assignments || 0) > 0) {
+      throw new AppError('This session cannot be deleted because related records exist.', 400);
     }
 
-    return prisma.academicSession.update({
+    return prisma.academicSession.delete({
       where: { id },
-      data: { status: 'inactive' },
       select: sessionSelect,
     });
   },

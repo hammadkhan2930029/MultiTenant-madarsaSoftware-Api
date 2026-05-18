@@ -39,11 +39,11 @@ export const updateSection = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateSection = asyncHandler(async (req, res) => {
-  const section = await sectionsService.deactivateSection(Number(req.params.id));
+export const deleteSection = asyncHandler(async (req, res) => {
+  const section = await sectionsService.deleteSection(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Section deactivated successfully.',
+    message: 'Section deleted successfully.',
     data: section,
   });
 });

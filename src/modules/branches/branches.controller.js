@@ -39,11 +39,11 @@ export const updateBranch = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateBranch = asyncHandler(async (req, res) => {
-  const branch = await branchesService.deactivateBranch(Number(req.params.id));
+export const deleteBranch = asyncHandler(async (req, res) => {
+  const branch = await branchesService.deleteBranch(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Branch deactivated successfully.',
+    message: 'Branch deleted successfully.',
     data: branch,
   });
 });

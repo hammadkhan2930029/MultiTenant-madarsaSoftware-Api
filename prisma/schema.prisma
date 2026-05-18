@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -51,6 +52,32 @@ model City {
   updatedAt DateTime @updatedAt
 
   @@map("cities")
+}
+
+model Shift {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  startTime String   @db.VarChar(10)
+  endTime   String   @db.VarChar(10)
+  type      String   @db.VarChar(50)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("shifts")
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  code      String?  @unique @db.VarChar(50)
+  head      String?  @db.VarChar(150)
+  members   Int      @default(0)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("departments")
 }
 
 model Subject {
@@ -172,6 +199,7 @@ model Student {
 model Parent {
   id         Int             @id @default(autoincrement())
   fullName   String          @db.VarChar(150)
+  familyNumber String?       @unique @db.VarChar(100)
   phone      String?         @db.VarChar(50)
   email      String?         @db.VarChar(150)
   cnic       String?         @db.VarChar(50)

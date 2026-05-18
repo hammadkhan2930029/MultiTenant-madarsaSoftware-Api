@@ -17,6 +17,21 @@ const branchSelect = {
   },
 };
 
+const defaultBranchData = {
+  name: 'Main Campus',
+  code: 'MC-01',
+  address: 'Madarsa Road, Lahore',
+  status: 'active',
+};
+
+const ensureDefaultBranch = async () =>
+  prisma.branch.upsert({
+    where: { name: defaultBranchData.name },
+    update: defaultBranchData,
+    create: defaultBranchData,
+    select: branchSelect,
+  });
+
 export const branchesService = {
   async createBranch(payload) {
     const existingBranch = await prisma.branch.findFirst({
@@ -40,6 +55,8 @@ export const branchesService = {
   },
 
   async getBranches(query) {
+    await ensureDefaultBranch();
+
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
@@ -127,7 +144,7 @@ export const branchesService = {
     });
   },
 
-  async deactivateBranch(id) {
+  async deleteBranch(id) {
     const branch = await prisma.branch.findUnique({
       where: { id },
     });
@@ -136,13 +153,39 @@ export const branchesService = {
       throw new AppError('Branch not found.', 404);
     }
 
-    if (branch.status === 'inactive') {
-      throw new AppError('Branch is already inactive.', 400);
+    if (branch.name === defaultBranchData.name) {
+      throw new AppError('Main Campus cannot be deleted.', 400);
     }
 
-    return prisma.branch.update({
+    const relatedRecords = await prisma.branch.findUnique({
       where: { id },
-      data: { status: 'inactive' },
+      select: {
+        _count: {
+          select: {
+            classes: true,
+            assignments: true,
+            studentAttendances: true,
+            teacherAttendances: true,
+          },
+        },
+      },
+    });
+
+    const hasDependencies =
+      (relatedRecords?._count?.classes || 0) > 0 ||
+      (relatedRecords?._count?.assignments || 0) > 0 ||
+      (relatedRecords?._count?.studentAttendances || 0) > 0 ||
+      (relatedRecords?._count?.teacherAttendances || 0) > 0;
+
+    if (hasDependencies) {
+      throw new AppError(
+        'This branch cannot be deleted because classes, assignments, or attendance records are linked to it.',
+        400
+      );
+    }
+
+    return prisma.branch.delete({
+      where: { id },
       select: branchSelect,
     });
   },

@@ -17,6 +17,7 @@ const optionalNumberField = (message) =>
 const parentLinkSchema = z.object({
   parentId: z.coerce.number().int().positive().optional(),
   fullName: z.string().trim().min(2, 'Parent full name is required.').max(150, 'Parent full name is too long.'),
+  familyNumber: optionalStringField(100, 'Family number is too long.'),
   relationship: z.string().trim().min(2, 'Relationship is required.').max(50, 'Relationship is too long.'),
   isPrimary: z.coerce.boolean().optional(),
   phone: optionalStringField(50, 'Parent phone is too long.'),

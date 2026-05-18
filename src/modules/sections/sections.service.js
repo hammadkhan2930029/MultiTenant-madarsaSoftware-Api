@@ -140,7 +140,7 @@ export const sectionsService = {
     });
   },
 
-  async deactivateSection(id) {
+  async deleteSection(id) {
     const section = await prisma.section.findUnique({
       where: { id },
     });
@@ -149,13 +149,28 @@ export const sectionsService = {
       throw new AppError('Section not found.', 404);
     }
 
-    if (section.status === 'inactive') {
-      throw new AppError('Section is already inactive.', 400);
+    const relatedRecords = await prisma.section.findUnique({
+      where: { id },
+      select: {
+        _count: {
+          select: {
+            assignments: true,
+            studentAttendances: true,
+          },
+        },
+      },
+    });
+
+    const hasDependencies =
+      (relatedRecords?._count?.assignments || 0) > 0 ||
+      (relatedRecords?._count?.studentAttendances || 0) > 0;
+
+    if (hasDependencies) {
+      throw new AppError('This section cannot be deleted because related records exist.', 400);
     }
 
-    return prisma.section.update({
+    return prisma.section.delete({
       where: { id },
-      data: { status: 'inactive' },
       select: sectionSelect,
     });
   },

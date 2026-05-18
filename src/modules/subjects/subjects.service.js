@@ -107,7 +107,7 @@ export const subjectsService = {
     });
   },
 
-  async deactivateSubject(id) {
+  async deleteSubject(id) {
     const existingSubject = await prisma.subject.findUnique({
       where: { id: Number(id) },
     });
@@ -116,13 +116,8 @@ export const subjectsService = {
       throw new AppError('Subject not found.', 404);
     }
 
-    if (existingSubject.status === 'inactive') {
-      throw new AppError('Subject is already inactive.', 400);
-    }
-
-    return prisma.subject.update({
+    return prisma.subject.delete({
       where: { id: Number(id) },
-      data: { status: 'inactive' },
       select: subjectSelect,
     });
   },

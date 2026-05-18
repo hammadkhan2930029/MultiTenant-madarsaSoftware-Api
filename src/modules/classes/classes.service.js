@@ -149,7 +149,7 @@ export const classesService = {
     });
   },
 
-  async deactivateClass(id) {
+  async deleteClass(id) {
     const academicClass = await prisma.academicClass.findUnique({
       where: { id },
     });
@@ -158,13 +158,30 @@ export const classesService = {
       throw new AppError('Class not found.', 404);
     }
 
-    if (academicClass.status === 'inactive') {
-      throw new AppError('Class is already inactive.', 400);
+    const relatedRecords = await prisma.academicClass.findUnique({
+      where: { id },
+      select: {
+        _count: {
+          select: {
+            sections: true,
+            assignments: true,
+            studentAttendances: true,
+          },
+        },
+      },
+    });
+
+    const hasDependencies =
+      (relatedRecords?._count?.sections || 0) > 0 ||
+      (relatedRecords?._count?.assignments || 0) > 0 ||
+      (relatedRecords?._count?.studentAttendances || 0) > 0;
+
+    if (hasDependencies) {
+      throw new AppError('This class cannot be deleted because related records exist.', 400);
     }
 
-    return prisma.academicClass.update({
+    return prisma.academicClass.delete({
       where: { id },
-      data: { status: 'inactive' },
       select: classSelect,
     });
   },

@@ -5,6 +5,7 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 const parentSelect = {
   id: true,
   fullName: true,
+  familyNumber: true,
   phone: true,
   email: true,
   cnic: true,
@@ -29,6 +30,24 @@ const parentSelect = {
   },
 };
 
+const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
+
+const ensureFamilyNumberUnique = async (familyNumber, excludeId) => {
+  if (!familyNumber) return;
+
+  const existingParent = await prisma.parent.findFirst({
+    where: {
+      familyNumber,
+      ...(excludeId ? { id: { not: excludeId } } : {}),
+    },
+    select: { id: true },
+  });
+
+  if (existingParent) {
+    throw new AppError('Family number already exists.', 409);
+  }
+};
+
 const buildDuplicateParentWhere = (payload, excludeId) => ({
   AND: [
     { fullName: payload.fullName },
@@ -44,6 +63,8 @@ const buildDuplicateParentWhere = (payload, excludeId) => ({
 
 export const parentsService = {
   async createParent(payload) {
+    await ensureFamilyNumberUnique(payload.familyNumber);
+
     if (payload.phone || payload.email) {
       const duplicateParent = await prisma.parent.findFirst({
         where: buildDuplicateParentWhere(payload),
@@ -54,15 +75,33 @@ export const parentsService = {
       }
     }
 
-    return prisma.parent.create({
+    const createdParent = await prisma.parent.create({
       data: {
         fullName: payload.fullName,
+        familyNumber: payload.familyNumber || null,
         phone: payload.phone || null,
         email: payload.email || null,
         cnic: payload.cnic || null,
         occupation: payload.occupation || null,
         address: payload.address || null,
       },
+      select: {
+        id: true,
+        familyNumber: true,
+      },
+    });
+
+    if (!createdParent.familyNumber) {
+      await prisma.parent.update({
+        where: { id: createdParent.id },
+        data: {
+          familyNumber: generateFamilyNumber(createdParent.id),
+        },
+      });
+    }
+
+    return prisma.parent.findUnique({
+      where: { id: createdParent.id },
       select: parentSelect,
     });
   },
@@ -75,6 +114,7 @@ export const parentsService = {
         ? {
             OR: [
               { fullName: { contains: query.search } },
+              { familyNumber: { contains: query.search } },
               { phone: { contains: query.search } },
               { email: { contains: query.search } },
             ],
@@ -122,6 +162,8 @@ export const parentsService = {
       throw new AppError('Parent not found.', 404);
     }
 
+    await ensureFamilyNumberUnique(payload.familyNumber, id);
+
     if (payload.phone || payload.email) {
       const duplicateParent = await prisma.parent.findFirst({
         where: buildDuplicateParentWhere(payload, id),
@@ -136,6 +178,7 @@ export const parentsService = {
       where: { id },
       data: {
         fullName: payload.fullName,
+        familyNumber: payload.familyNumber || null,
         phone: payload.phone || null,
         email: payload.email || null,
         cnic: payload.cnic || null,

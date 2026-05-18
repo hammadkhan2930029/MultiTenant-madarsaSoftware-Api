@@ -39,11 +39,11 @@ export const updateSession = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateSession = asyncHandler(async (req, res) => {
-  const session = await sessionsService.deactivateSession(Number(req.params.id));
+export const deleteSession = asyncHandler(async (req, res) => {
+  const session = await sessionsService.deleteSession(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Session deactivated successfully.',
+    message: 'Session deleted successfully.',
     data: session,
   });
 });

@@ -7,6 +7,7 @@ const optionalStringField = (max, message) =>
 
 const parentBodySchema = z.object({
   fullName: z.string().trim().min(2, 'Parent full name is required.').max(150, 'Parent full name is too long.'),
+  familyNumber: optionalStringField(100, 'Family number is too long.'),
   phone: optionalStringField(50, 'Phone is too long.'),
   email: z
     .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])

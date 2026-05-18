@@ -39,11 +39,11 @@ export const updateClass = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateClass = asyncHandler(async (req, res) => {
-  const academicClass = await classesService.deactivateClass(Number(req.params.id));
+export const deleteClass = asyncHandler(async (req, res) => {
+  const academicClass = await classesService.deleteClass(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Class deactivated successfully.',
+    message: 'Class deleted successfully.',
     data: academicClass,
   });
 });
