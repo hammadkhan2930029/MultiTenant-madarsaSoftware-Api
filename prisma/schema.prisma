@@ -333,8 +333,21 @@ model HifzDailyEntry {
   studentId         Int
   date              DateTime
   sabq              String?  @db.VarChar(150)
+  sabqListener      String?  @db.VarChar(150)
+  sabqMistake       Int?
+  sabqAtkann        Int?
   sabaqi            String?  @db.VarChar(150)
+  sabaqiMistake     Int?
+  sabaqiAtkann      Int?
   manzil            String?  @db.VarChar(150)
+  manzilBeforeDetail String? @db.VarChar(150)
+  manzilBeforeMistake Int?
+  manzilBeforeAtkann Int?
+  manzilAfterDetail String? @db.VarChar(150)
+  manzilAfterMistake Int?
+  manzilAfterAtkann Int?
+  lessonDetail      String?  @db.VarChar(255)
+  count             Int?
   performanceStatus String   @db.VarChar(50)
   remarks           String?  @db.VarChar(255)
   status            String   @default("active") @db.VarChar(50)
@@ -349,12 +362,23 @@ model HifzDailyEntry {
 model HifzWeeklyEntry {
   id                Int      @id @default(autoincrement())
   studentId         Int
+  weekLabel         String?  @db.VarChar(150)
+  className         String?  @db.VarChar(150)
+  sectionName       String?  @db.VarChar(150)
+  teacherName       String?  @db.VarChar(150)
   weekStartDate     DateTime
   weekEndDate       DateTime
   siparaFrom        String?  @db.VarChar(100)
   siparaTo          String?  @db.VarChar(100)
   lessonFrom        String?  @db.VarChar(150)
   lessonTo          String?  @db.VarChar(150)
+  sawal1            Int?
+  sawal2            Int?
+  sawal3            Int?
+  tahajji           Int?
+  panja             Int?
+  khudKhwani        Int?
+  classWork         String?  @db.VarChar(150)
   performanceStatus String   @db.VarChar(50)
   remarks           String?  @db.VarChar(255)
   status            String   @default("active") @db.VarChar(50)

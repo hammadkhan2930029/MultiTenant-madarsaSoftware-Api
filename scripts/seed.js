@@ -54,18 +54,7 @@ const ensureAdmin = async () => {
 const ensureMadrassaProfile = (adminId, email) =>
   prisma.madrassaProfile.upsert({
     where: { adminId },
-    update: {
-      name: 'Jamia Anwar ul Quran',
-      email,
-      phone1: '0300-1234567',
-      phone2: '0321-7654321',
-      address: 'Township, Lahore',
-      branch: 'Main Campus',
-      city: 'Lahore',
-      familyNoSeq: 'FAM-2026-001',
-      regNo: 'REG-QA-9921',
-      status: 'active',
-    },
+    update: {},
     create: {
       adminId,
       name: 'Jamia Anwar ul Quran',

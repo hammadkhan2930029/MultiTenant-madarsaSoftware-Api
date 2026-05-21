@@ -4,25 +4,25 @@ import { dailyHifzService } from './daily.service.js';
 
 export const createDailyEntry = asyncHandler(async (req, res) => {
   const entry = await dailyHifzService.createEntry(req.body);
-  return apiResponse(res, { statusCode: 201, message: 'Daily jaiza saved successfully.', data: entry });
+  return apiResponse(res, { statusCode: 201, message: 'یومیہ جائزہ کامیابی سے محفوظ ہو گیا۔', data: entry });
 });
 
 export const getDailyEntries = asyncHandler(async (req, res) => {
   const entries = await dailyHifzService.getEntries(req.query);
-  return apiResponse(res, { message: 'Daily jaiza entries fetched successfully.', data: entries });
+  return apiResponse(res, { message: 'یومیہ جائزے کامیابی سے حاصل ہو گئے۔', data: entries });
 });
 
 export const getDailyEntryById = asyncHandler(async (req, res) => {
   const entry = await dailyHifzService.getEntryById(Number(req.params.id));
-  return apiResponse(res, { message: 'Daily jaiza detail fetched successfully.', data: entry });
+  return apiResponse(res, { message: 'یومیہ جائزے کی تفصیل کامیابی سے حاصل ہو گئی۔', data: entry });
 });
 
 export const updateDailyEntry = asyncHandler(async (req, res) => {
   const entry = await dailyHifzService.updateEntry(Number(req.params.id), req.body);
-  return apiResponse(res, { message: 'Daily jaiza updated successfully.', data: entry });
+  return apiResponse(res, { message: 'یومیہ جائزہ کامیابی سے اپڈیٹ ہو گیا۔', data: entry });
 });
 
 export const deactivateDailyEntry = asyncHandler(async (req, res) => {
   const entry = await dailyHifzService.deactivateEntry(Number(req.params.id));
-  return apiResponse(res, { message: 'Daily jaiza deactivated successfully.', data: entry });
+  return apiResponse(res, { message: 'یومیہ جائزہ غیر فعال کر دیا گیا۔', data: entry });
 });

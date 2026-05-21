@@ -7,8 +7,21 @@ const select = {
   studentId: true,
   date: true,
   sabq: true,
+  sabqListener: true,
+  sabqMistake: true,
+  sabqAtkann: true,
   sabaqi: true,
+  sabaqiMistake: true,
+  sabaqiAtkann: true,
   manzil: true,
+  manzilBeforeDetail: true,
+  manzilBeforeMistake: true,
+  manzilBeforeAtkann: true,
+  manzilAfterDetail: true,
+  manzilAfterMistake: true,
+  manzilAfterAtkann: true,
+  lessonDetail: true,
+  count: true,
   performanceStatus: true,
   remarks: true,
   status: true,
@@ -16,6 +29,26 @@ const select = {
   updatedAt: true,
   student: { select: { id: true, admissionNumber: true, fullName: true } },
 };
+
+const nullableFields = [
+  'sabq',
+  'sabqListener',
+  'sabqMistake',
+  'sabqAtkann',
+  'sabaqi',
+  'sabaqiMistake',
+  'sabaqiAtkann',
+  'manzil',
+  'manzilBeforeDetail',
+  'manzilBeforeMistake',
+  'manzilBeforeAtkann',
+  'manzilAfterDetail',
+  'manzilAfterMistake',
+  'manzilAfterAtkann',
+  'lessonDetail',
+  'count',
+  'remarks',
+];
 
 const normalizeDate = (value) => {
   const date = new Date(value);
@@ -25,17 +58,30 @@ const normalizeDate = (value) => {
 
 const ensureStudent = async (studentId) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });
-  if (!student) throw new AppError('Student not found.', 404);
+  if (!student) throw new AppError('طالب علم نہیں ملا۔', 404);
+};
+
+const normalizePayload = (payload) => {
+  const data = { ...payload };
+
+  nullableFields.forEach((field) => {
+    if (data[field] === undefined || data[field] === '') {
+      data[field] = null;
+    }
+  });
+
+  return data;
 };
 
 export const dailyHifzService = {
   async createEntry(payload) {
     await ensureStudent(payload.studentId);
     const date = normalizeDate(payload.date);
+    const data = normalizePayload(payload);
     return prisma.hifzDailyEntry.upsert({
       where: { studentId_date: { studentId: payload.studentId, date } },
-      create: { ...payload, date, remarks: payload.remarks || null },
-      update: { ...payload, date, remarks: payload.remarks || null },
+      create: { ...data, date },
+      update: { ...data, date },
       select,
     });
   },
@@ -57,28 +103,28 @@ export const dailyHifzService = {
 
   async getEntryById(id) {
     const entry = await prisma.hifzDailyEntry.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('Daily jaiza entry not found.', 404);
+    if (!entry) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
     return entry;
   },
 
   async updateEntry(id, payload) {
     const existing = await prisma.hifzDailyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Daily jaiza entry not found.', 404);
+    if (!existing) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
     await ensureStudent(payload.studentId);
     const duplicate = await prisma.hifzDailyEntry.findFirst({
       where: { id: { not: id }, studentId: payload.studentId, date: normalizeDate(payload.date) },
     });
-    if (duplicate) throw new AppError('Daily jaiza for this student and date already exists.', 409);
+    if (duplicate) throw new AppError('اس طالب علم کا اس تاریخ کا یومیہ جائزہ پہلے سے موجود ہے۔', 409);
     return prisma.hifzDailyEntry.update({
       where: { id },
-      data: { ...payload, date: normalizeDate(payload.date), remarks: payload.remarks || null },
+      data: { ...normalizePayload(payload), date: normalizeDate(payload.date) },
       select,
     });
   },
 
   async deactivateEntry(id) {
     const existing = await prisma.hifzDailyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Daily jaiza entry not found.', 404);
+    if (!existing) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
     return prisma.hifzDailyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

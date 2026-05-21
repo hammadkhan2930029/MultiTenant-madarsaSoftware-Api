@@ -22327,11 +22327,29 @@ export namespace Prisma {
   export type HifzDailyEntryAvgAggregateOutputType = {
     id: number | null
     studentId: number | null
+    sabqMistake: number | null
+    sabqAtkann: number | null
+    sabaqiMistake: number | null
+    sabaqiAtkann: number | null
+    manzilBeforeMistake: number | null
+    manzilBeforeAtkann: number | null
+    manzilAfterMistake: number | null
+    manzilAfterAtkann: number | null
+    count: number | null
   }
 
   export type HifzDailyEntrySumAggregateOutputType = {
     id: number | null
     studentId: number | null
+    sabqMistake: number | null
+    sabqAtkann: number | null
+    sabaqiMistake: number | null
+    sabaqiAtkann: number | null
+    manzilBeforeMistake: number | null
+    manzilBeforeAtkann: number | null
+    manzilAfterMistake: number | null
+    manzilAfterAtkann: number | null
+    count: number | null
   }
 
   export type HifzDailyEntryMinAggregateOutputType = {
@@ -22339,8 +22357,21 @@ export namespace Prisma {
     studentId: number | null
     date: Date | null
     sabq: string | null
+    sabqListener: string | null
+    sabqMistake: number | null
+    sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiMistake: number | null
+    sabaqiAtkann: number | null
     manzil: string | null
+    manzilBeforeDetail: string | null
+    manzilBeforeMistake: number | null
+    manzilBeforeAtkann: number | null
+    manzilAfterDetail: string | null
+    manzilAfterMistake: number | null
+    manzilAfterAtkann: number | null
+    lessonDetail: string | null
+    count: number | null
     performanceStatus: string | null
     remarks: string | null
     status: string | null
@@ -22353,8 +22384,21 @@ export namespace Prisma {
     studentId: number | null
     date: Date | null
     sabq: string | null
+    sabqListener: string | null
+    sabqMistake: number | null
+    sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiMistake: number | null
+    sabaqiAtkann: number | null
     manzil: string | null
+    manzilBeforeDetail: string | null
+    manzilBeforeMistake: number | null
+    manzilBeforeAtkann: number | null
+    manzilAfterDetail: string | null
+    manzilAfterMistake: number | null
+    manzilAfterAtkann: number | null
+    lessonDetail: string | null
+    count: number | null
     performanceStatus: string | null
     remarks: string | null
     status: string | null
@@ -22367,8 +22411,21 @@ export namespace Prisma {
     studentId: number
     date: number
     sabq: number
+    sabqListener: number
+    sabqMistake: number
+    sabqAtkann: number
     sabaqi: number
+    sabaqiMistake: number
+    sabaqiAtkann: number
     manzil: number
+    manzilBeforeDetail: number
+    manzilBeforeMistake: number
+    manzilBeforeAtkann: number
+    manzilAfterDetail: number
+    manzilAfterMistake: number
+    manzilAfterAtkann: number
+    lessonDetail: number
+    count: number
     performanceStatus: number
     remarks: number
     status: number
@@ -22381,11 +22438,29 @@ export namespace Prisma {
   export type HifzDailyEntryAvgAggregateInputType = {
     id?: true
     studentId?: true
+    sabqMistake?: true
+    sabqAtkann?: true
+    sabaqiMistake?: true
+    sabaqiAtkann?: true
+    manzilBeforeMistake?: true
+    manzilBeforeAtkann?: true
+    manzilAfterMistake?: true
+    manzilAfterAtkann?: true
+    count?: true
   }
 
   export type HifzDailyEntrySumAggregateInputType = {
     id?: true
     studentId?: true
+    sabqMistake?: true
+    sabqAtkann?: true
+    sabaqiMistake?: true
+    sabaqiAtkann?: true
+    manzilBeforeMistake?: true
+    manzilBeforeAtkann?: true
+    manzilAfterMistake?: true
+    manzilAfterAtkann?: true
+    count?: true
   }
 
   export type HifzDailyEntryMinAggregateInputType = {
@@ -22393,8 +22468,21 @@ export namespace Prisma {
     studentId?: true
     date?: true
     sabq?: true
+    sabqListener?: true
+    sabqMistake?: true
+    sabqAtkann?: true
     sabaqi?: true
+    sabaqiMistake?: true
+    sabaqiAtkann?: true
     manzil?: true
+    manzilBeforeDetail?: true
+    manzilBeforeMistake?: true
+    manzilBeforeAtkann?: true
+    manzilAfterDetail?: true
+    manzilAfterMistake?: true
+    manzilAfterAtkann?: true
+    lessonDetail?: true
+    count?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -22407,8 +22495,21 @@ export namespace Prisma {
     studentId?: true
     date?: true
     sabq?: true
+    sabqListener?: true
+    sabqMistake?: true
+    sabqAtkann?: true
     sabaqi?: true
+    sabaqiMistake?: true
+    sabaqiAtkann?: true
     manzil?: true
+    manzilBeforeDetail?: true
+    manzilBeforeMistake?: true
+    manzilBeforeAtkann?: true
+    manzilAfterDetail?: true
+    manzilAfterMistake?: true
+    manzilAfterAtkann?: true
+    lessonDetail?: true
+    count?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -22421,8 +22522,21 @@ export namespace Prisma {
     studentId?: true
     date?: true
     sabq?: true
+    sabqListener?: true
+    sabqMistake?: true
+    sabqAtkann?: true
     sabaqi?: true
+    sabaqiMistake?: true
+    sabaqiAtkann?: true
     manzil?: true
+    manzilBeforeDetail?: true
+    manzilBeforeMistake?: true
+    manzilBeforeAtkann?: true
+    manzilAfterDetail?: true
+    manzilAfterMistake?: true
+    manzilAfterAtkann?: true
+    lessonDetail?: true
+    count?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -22522,8 +22636,21 @@ export namespace Prisma {
     studentId: number
     date: Date
     sabq: string | null
+    sabqListener: string | null
+    sabqMistake: number | null
+    sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiMistake: number | null
+    sabaqiAtkann: number | null
     manzil: string | null
+    manzilBeforeDetail: string | null
+    manzilBeforeMistake: number | null
+    manzilBeforeAtkann: number | null
+    manzilAfterDetail: string | null
+    manzilAfterMistake: number | null
+    manzilAfterAtkann: number | null
+    lessonDetail: string | null
+    count: number | null
     performanceStatus: string
     remarks: string | null
     status: string
@@ -22555,8 +22682,21 @@ export namespace Prisma {
     studentId?: boolean
     date?: boolean
     sabq?: boolean
+    sabqListener?: boolean
+    sabqMistake?: boolean
+    sabqAtkann?: boolean
     sabaqi?: boolean
+    sabaqiMistake?: boolean
+    sabaqiAtkann?: boolean
     manzil?: boolean
+    manzilBeforeDetail?: boolean
+    manzilBeforeMistake?: boolean
+    manzilBeforeAtkann?: boolean
+    manzilAfterDetail?: boolean
+    manzilAfterMistake?: boolean
+    manzilAfterAtkann?: boolean
+    lessonDetail?: boolean
+    count?: boolean
     performanceStatus?: boolean
     remarks?: boolean
     status?: boolean
@@ -22572,8 +22712,21 @@ export namespace Prisma {
     studentId?: boolean
     date?: boolean
     sabq?: boolean
+    sabqListener?: boolean
+    sabqMistake?: boolean
+    sabqAtkann?: boolean
     sabaqi?: boolean
+    sabaqiMistake?: boolean
+    sabaqiAtkann?: boolean
     manzil?: boolean
+    manzilBeforeDetail?: boolean
+    manzilBeforeMistake?: boolean
+    manzilBeforeAtkann?: boolean
+    manzilAfterDetail?: boolean
+    manzilAfterMistake?: boolean
+    manzilAfterAtkann?: boolean
+    lessonDetail?: boolean
+    count?: boolean
     performanceStatus?: boolean
     remarks?: boolean
     status?: boolean
@@ -22581,7 +22734,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type HifzDailyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "date" | "sabq" | "sabaqi" | "manzil" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzDailyEntry"]>
+  export type HifzDailyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "date" | "sabq" | "sabqListener" | "sabqMistake" | "sabqAtkann" | "sabaqi" | "sabaqiMistake" | "sabaqiAtkann" | "manzil" | "manzilBeforeDetail" | "manzilBeforeMistake" | "manzilBeforeAtkann" | "manzilAfterDetail" | "manzilAfterMistake" | "manzilAfterAtkann" | "lessonDetail" | "count" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzDailyEntry"]>
   export type HifzDailyEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -22596,8 +22749,21 @@ export namespace Prisma {
       studentId: number
       date: Date
       sabq: string | null
+      sabqListener: string | null
+      sabqMistake: number | null
+      sabqAtkann: number | null
       sabaqi: string | null
+      sabaqiMistake: number | null
+      sabaqiAtkann: number | null
       manzil: string | null
+      manzilBeforeDetail: string | null
+      manzilBeforeMistake: number | null
+      manzilBeforeAtkann: number | null
+      manzilAfterDetail: string | null
+      manzilAfterMistake: number | null
+      manzilAfterAtkann: number | null
+      lessonDetail: string | null
+      count: number | null
       performanceStatus: string
       remarks: string | null
       status: string
@@ -22977,8 +23143,21 @@ export namespace Prisma {
     readonly studentId: FieldRef<"HifzDailyEntry", 'Int'>
     readonly date: FieldRef<"HifzDailyEntry", 'DateTime'>
     readonly sabq: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqListener: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqMistake: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly sabqAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly sabaqi: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabaqiMistake: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly sabaqiAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly manzil: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforeDetail: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforeMistake: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly manzilBeforeAtkann: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly manzilAfterDetail: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilAfterMistake: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly manzilAfterAtkann: FieldRef<"HifzDailyEntry", 'Int'>
+    readonly lessonDetail: FieldRef<"HifzDailyEntry", 'String'>
+    readonly count: FieldRef<"HifzDailyEntry", 'Int'>
     readonly performanceStatus: FieldRef<"HifzDailyEntry", 'String'>
     readonly remarks: FieldRef<"HifzDailyEntry", 'String'>
     readonly status: FieldRef<"HifzDailyEntry", 'String'>
@@ -23360,22 +23539,45 @@ export namespace Prisma {
   export type HifzWeeklyEntryAvgAggregateOutputType = {
     id: number | null
     studentId: number | null
+    sawal1: number | null
+    sawal2: number | null
+    sawal3: number | null
+    tahajji: number | null
+    panja: number | null
+    khudKhwani: number | null
   }
 
   export type HifzWeeklyEntrySumAggregateOutputType = {
     id: number | null
     studentId: number | null
+    sawal1: number | null
+    sawal2: number | null
+    sawal3: number | null
+    tahajji: number | null
+    panja: number | null
+    khudKhwani: number | null
   }
 
   export type HifzWeeklyEntryMinAggregateOutputType = {
     id: number | null
     studentId: number | null
+    weekLabel: string | null
+    className: string | null
+    sectionName: string | null
+    teacherName: string | null
     weekStartDate: Date | null
     weekEndDate: Date | null
     siparaFrom: string | null
     siparaTo: string | null
     lessonFrom: string | null
     lessonTo: string | null
+    sawal1: number | null
+    sawal2: number | null
+    sawal3: number | null
+    tahajji: number | null
+    panja: number | null
+    khudKhwani: number | null
+    classWork: string | null
     performanceStatus: string | null
     remarks: string | null
     status: string | null
@@ -23386,12 +23588,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryMaxAggregateOutputType = {
     id: number | null
     studentId: number | null
+    weekLabel: string | null
+    className: string | null
+    sectionName: string | null
+    teacherName: string | null
     weekStartDate: Date | null
     weekEndDate: Date | null
     siparaFrom: string | null
     siparaTo: string | null
     lessonFrom: string | null
     lessonTo: string | null
+    sawal1: number | null
+    sawal2: number | null
+    sawal3: number | null
+    tahajji: number | null
+    panja: number | null
+    khudKhwani: number | null
+    classWork: string | null
     performanceStatus: string | null
     remarks: string | null
     status: string | null
@@ -23402,12 +23615,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryCountAggregateOutputType = {
     id: number
     studentId: number
+    weekLabel: number
+    className: number
+    sectionName: number
+    teacherName: number
     weekStartDate: number
     weekEndDate: number
     siparaFrom: number
     siparaTo: number
     lessonFrom: number
     lessonTo: number
+    sawal1: number
+    sawal2: number
+    sawal3: number
+    tahajji: number
+    panja: number
+    khudKhwani: number
+    classWork: number
     performanceStatus: number
     remarks: number
     status: number
@@ -23420,22 +23644,45 @@ export namespace Prisma {
   export type HifzWeeklyEntryAvgAggregateInputType = {
     id?: true
     studentId?: true
+    sawal1?: true
+    sawal2?: true
+    sawal3?: true
+    tahajji?: true
+    panja?: true
+    khudKhwani?: true
   }
 
   export type HifzWeeklyEntrySumAggregateInputType = {
     id?: true
     studentId?: true
+    sawal1?: true
+    sawal2?: true
+    sawal3?: true
+    tahajji?: true
+    panja?: true
+    khudKhwani?: true
   }
 
   export type HifzWeeklyEntryMinAggregateInputType = {
     id?: true
     studentId?: true
+    weekLabel?: true
+    className?: true
+    sectionName?: true
+    teacherName?: true
     weekStartDate?: true
     weekEndDate?: true
     siparaFrom?: true
     siparaTo?: true
     lessonFrom?: true
     lessonTo?: true
+    sawal1?: true
+    sawal2?: true
+    sawal3?: true
+    tahajji?: true
+    panja?: true
+    khudKhwani?: true
+    classWork?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -23446,12 +23693,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryMaxAggregateInputType = {
     id?: true
     studentId?: true
+    weekLabel?: true
+    className?: true
+    sectionName?: true
+    teacherName?: true
     weekStartDate?: true
     weekEndDate?: true
     siparaFrom?: true
     siparaTo?: true
     lessonFrom?: true
     lessonTo?: true
+    sawal1?: true
+    sawal2?: true
+    sawal3?: true
+    tahajji?: true
+    panja?: true
+    khudKhwani?: true
+    classWork?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -23462,12 +23720,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryCountAggregateInputType = {
     id?: true
     studentId?: true
+    weekLabel?: true
+    className?: true
+    sectionName?: true
+    teacherName?: true
     weekStartDate?: true
     weekEndDate?: true
     siparaFrom?: true
     siparaTo?: true
     lessonFrom?: true
     lessonTo?: true
+    sawal1?: true
+    sawal2?: true
+    sawal3?: true
+    tahajji?: true
+    panja?: true
+    khudKhwani?: true
+    classWork?: true
     performanceStatus?: true
     remarks?: true
     status?: true
@@ -23565,12 +23834,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryGroupByOutputType = {
     id: number
     studentId: number
+    weekLabel: string | null
+    className: string | null
+    sectionName: string | null
+    teacherName: string | null
     weekStartDate: Date
     weekEndDate: Date
     siparaFrom: string | null
     siparaTo: string | null
     lessonFrom: string | null
     lessonTo: string | null
+    sawal1: number | null
+    sawal2: number | null
+    sawal3: number | null
+    tahajji: number | null
+    panja: number | null
+    khudKhwani: number | null
+    classWork: string | null
     performanceStatus: string
     remarks: string | null
     status: string
@@ -23600,12 +23880,23 @@ export namespace Prisma {
   export type HifzWeeklyEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
+    weekLabel?: boolean
+    className?: boolean
+    sectionName?: boolean
+    teacherName?: boolean
     weekStartDate?: boolean
     weekEndDate?: boolean
     siparaFrom?: boolean
     siparaTo?: boolean
     lessonFrom?: boolean
     lessonTo?: boolean
+    sawal1?: boolean
+    sawal2?: boolean
+    sawal3?: boolean
+    tahajji?: boolean
+    panja?: boolean
+    khudKhwani?: boolean
+    classWork?: boolean
     performanceStatus?: boolean
     remarks?: boolean
     status?: boolean
@@ -23619,12 +23910,23 @@ export namespace Prisma {
   export type HifzWeeklyEntrySelectScalar = {
     id?: boolean
     studentId?: boolean
+    weekLabel?: boolean
+    className?: boolean
+    sectionName?: boolean
+    teacherName?: boolean
     weekStartDate?: boolean
     weekEndDate?: boolean
     siparaFrom?: boolean
     siparaTo?: boolean
     lessonFrom?: boolean
     lessonTo?: boolean
+    sawal1?: boolean
+    sawal2?: boolean
+    sawal3?: boolean
+    tahajji?: boolean
+    panja?: boolean
+    khudKhwani?: boolean
+    classWork?: boolean
     performanceStatus?: boolean
     remarks?: boolean
     status?: boolean
@@ -23632,7 +23934,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type HifzWeeklyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "weekStartDate" | "weekEndDate" | "siparaFrom" | "siparaTo" | "lessonFrom" | "lessonTo" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzWeeklyEntry"]>
+  export type HifzWeeklyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "weekLabel" | "className" | "sectionName" | "teacherName" | "weekStartDate" | "weekEndDate" | "siparaFrom" | "siparaTo" | "lessonFrom" | "lessonTo" | "sawal1" | "sawal2" | "sawal3" | "tahajji" | "panja" | "khudKhwani" | "classWork" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzWeeklyEntry"]>
   export type HifzWeeklyEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -23645,12 +23947,23 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       studentId: number
+      weekLabel: string | null
+      className: string | null
+      sectionName: string | null
+      teacherName: string | null
       weekStartDate: Date
       weekEndDate: Date
       siparaFrom: string | null
       siparaTo: string | null
       lessonFrom: string | null
       lessonTo: string | null
+      sawal1: number | null
+      sawal2: number | null
+      sawal3: number | null
+      tahajji: number | null
+      panja: number | null
+      khudKhwani: number | null
+      classWork: string | null
       performanceStatus: string
       remarks: string | null
       status: string
@@ -24028,12 +24341,23 @@ export namespace Prisma {
   interface HifzWeeklyEntryFieldRefs {
     readonly id: FieldRef<"HifzWeeklyEntry", 'Int'>
     readonly studentId: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly weekLabel: FieldRef<"HifzWeeklyEntry", 'String'>
+    readonly className: FieldRef<"HifzWeeklyEntry", 'String'>
+    readonly sectionName: FieldRef<"HifzWeeklyEntry", 'String'>
+    readonly teacherName: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly weekStartDate: FieldRef<"HifzWeeklyEntry", 'DateTime'>
     readonly weekEndDate: FieldRef<"HifzWeeklyEntry", 'DateTime'>
     readonly siparaFrom: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly siparaTo: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly lessonFrom: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly lessonTo: FieldRef<"HifzWeeklyEntry", 'String'>
+    readonly sawal1: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly sawal2: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly sawal3: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly tahajji: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly panja: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly khudKhwani: FieldRef<"HifzWeeklyEntry", 'Int'>
+    readonly classWork: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly performanceStatus: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly remarks: FieldRef<"HifzWeeklyEntry", 'String'>
     readonly status: FieldRef<"HifzWeeklyEntry", 'String'>
@@ -31097,8 +31421,21 @@ export namespace Prisma {
     studentId: 'studentId',
     date: 'date',
     sabq: 'sabq',
+    sabqListener: 'sabqListener',
+    sabqMistake: 'sabqMistake',
+    sabqAtkann: 'sabqAtkann',
     sabaqi: 'sabaqi',
+    sabaqiMistake: 'sabaqiMistake',
+    sabaqiAtkann: 'sabaqiAtkann',
     manzil: 'manzil',
+    manzilBeforeDetail: 'manzilBeforeDetail',
+    manzilBeforeMistake: 'manzilBeforeMistake',
+    manzilBeforeAtkann: 'manzilBeforeAtkann',
+    manzilAfterDetail: 'manzilAfterDetail',
+    manzilAfterMistake: 'manzilAfterMistake',
+    manzilAfterAtkann: 'manzilAfterAtkann',
+    lessonDetail: 'lessonDetail',
+    count: 'count',
     performanceStatus: 'performanceStatus',
     remarks: 'remarks',
     status: 'status',
@@ -31112,12 +31449,23 @@ export namespace Prisma {
   export const HifzWeeklyEntryScalarFieldEnum: {
     id: 'id',
     studentId: 'studentId',
+    weekLabel: 'weekLabel',
+    className: 'className',
+    sectionName: 'sectionName',
+    teacherName: 'teacherName',
     weekStartDate: 'weekStartDate',
     weekEndDate: 'weekEndDate',
     siparaFrom: 'siparaFrom',
     siparaTo: 'siparaTo',
     lessonFrom: 'lessonFrom',
     lessonTo: 'lessonTo',
+    sawal1: 'sawal1',
+    sawal2: 'sawal2',
+    sawal3: 'sawal3',
+    tahajji: 'tahajji',
+    panja: 'panja',
+    khudKhwani: 'khudKhwani',
+    classWork: 'classWork',
     performanceStatus: 'performanceStatus',
     remarks: 'remarks',
     status: 'status',
@@ -31477,8 +31825,12 @@ export namespace Prisma {
 
   export const HifzDailyEntryOrderByRelevanceFieldEnum: {
     sabq: 'sabq',
+    sabqListener: 'sabqListener',
     sabaqi: 'sabaqi',
     manzil: 'manzil',
+    manzilBeforeDetail: 'manzilBeforeDetail',
+    manzilAfterDetail: 'manzilAfterDetail',
+    lessonDetail: 'lessonDetail',
     performanceStatus: 'performanceStatus',
     remarks: 'remarks',
     status: 'status'
@@ -31488,10 +31840,15 @@ export namespace Prisma {
 
 
   export const HifzWeeklyEntryOrderByRelevanceFieldEnum: {
+    weekLabel: 'weekLabel',
+    className: 'className',
+    sectionName: 'sectionName',
+    teacherName: 'teacherName',
     siparaFrom: 'siparaFrom',
     siparaTo: 'siparaTo',
     lessonFrom: 'lessonFrom',
     lessonTo: 'lessonTo',
+    classWork: 'classWork',
     performanceStatus: 'performanceStatus',
     remarks: 'remarks',
     status: 'status'
@@ -33205,8 +33562,21 @@ export namespace Prisma {
     studentId?: IntFilter<"HifzDailyEntry"> | number
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    count?: IntNullableFilter<"HifzDailyEntry"> | number | null
     performanceStatus?: StringFilter<"HifzDailyEntry"> | string
     remarks?: StringNullableFilter<"HifzDailyEntry"> | string | null
     status?: StringFilter<"HifzDailyEntry"> | string
@@ -33220,8 +33590,21 @@ export namespace Prisma {
     studentId?: SortOrder
     date?: SortOrder
     sabq?: SortOrderInput | SortOrder
+    sabqListener?: SortOrderInput | SortOrder
+    sabqMistake?: SortOrderInput | SortOrder
+    sabqAtkann?: SortOrderInput | SortOrder
     sabaqi?: SortOrderInput | SortOrder
+    sabaqiMistake?: SortOrderInput | SortOrder
+    sabaqiAtkann?: SortOrderInput | SortOrder
     manzil?: SortOrderInput | SortOrder
+    manzilBeforeDetail?: SortOrderInput | SortOrder
+    manzilBeforeMistake?: SortOrderInput | SortOrder
+    manzilBeforeAtkann?: SortOrderInput | SortOrder
+    manzilAfterDetail?: SortOrderInput | SortOrder
+    manzilAfterMistake?: SortOrderInput | SortOrder
+    manzilAfterAtkann?: SortOrderInput | SortOrder
+    lessonDetail?: SortOrderInput | SortOrder
+    count?: SortOrderInput | SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -33240,8 +33623,21 @@ export namespace Prisma {
     studentId?: IntFilter<"HifzDailyEntry"> | number
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    count?: IntNullableFilter<"HifzDailyEntry"> | number | null
     performanceStatus?: StringFilter<"HifzDailyEntry"> | string
     remarks?: StringNullableFilter<"HifzDailyEntry"> | string | null
     status?: StringFilter<"HifzDailyEntry"> | string
@@ -33255,8 +33651,21 @@ export namespace Prisma {
     studentId?: SortOrder
     date?: SortOrder
     sabq?: SortOrderInput | SortOrder
+    sabqListener?: SortOrderInput | SortOrder
+    sabqMistake?: SortOrderInput | SortOrder
+    sabqAtkann?: SortOrderInput | SortOrder
     sabaqi?: SortOrderInput | SortOrder
+    sabaqiMistake?: SortOrderInput | SortOrder
+    sabaqiAtkann?: SortOrderInput | SortOrder
     manzil?: SortOrderInput | SortOrder
+    manzilBeforeDetail?: SortOrderInput | SortOrder
+    manzilBeforeMistake?: SortOrderInput | SortOrder
+    manzilBeforeAtkann?: SortOrderInput | SortOrder
+    manzilAfterDetail?: SortOrderInput | SortOrder
+    manzilAfterMistake?: SortOrderInput | SortOrder
+    manzilAfterAtkann?: SortOrderInput | SortOrder
+    lessonDetail?: SortOrderInput | SortOrder
+    count?: SortOrderInput | SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -33277,8 +33686,21 @@ export namespace Prisma {
     studentId?: IntWithAggregatesFilter<"HifzDailyEntry"> | number
     date?: DateTimeWithAggregatesFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqListener?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    sabqAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabaqiMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    sabaqiAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    manzilBeforeAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    manzilAfterDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilAfterMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    manzilAfterAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
+    lessonDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    count?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     performanceStatus?: StringWithAggregatesFilter<"HifzDailyEntry"> | string
     remarks?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     status?: StringWithAggregatesFilter<"HifzDailyEntry"> | string
@@ -33292,12 +33714,23 @@ export namespace Prisma {
     NOT?: HifzWeeklyEntryWhereInput | HifzWeeklyEntryWhereInput[]
     id?: IntFilter<"HifzWeeklyEntry"> | number
     studentId?: IntFilter<"HifzWeeklyEntry"> | number
+    weekLabel?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    className?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sectionName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    teacherName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     weekStartDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     weekEndDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     siparaFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     siparaTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sawal1?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal2?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal3?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    tahajji?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    panja?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    khudKhwani?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    classWork?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     performanceStatus?: StringFilter<"HifzWeeklyEntry"> | string
     remarks?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     status?: StringFilter<"HifzWeeklyEntry"> | string
@@ -33309,12 +33742,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryOrderByWithRelationInput = {
     id?: SortOrder
     studentId?: SortOrder
+    weekLabel?: SortOrderInput | SortOrder
+    className?: SortOrderInput | SortOrder
+    sectionName?: SortOrderInput | SortOrder
+    teacherName?: SortOrderInput | SortOrder
     weekStartDate?: SortOrder
     weekEndDate?: SortOrder
     siparaFrom?: SortOrderInput | SortOrder
     siparaTo?: SortOrderInput | SortOrder
     lessonFrom?: SortOrderInput | SortOrder
     lessonTo?: SortOrderInput | SortOrder
+    sawal1?: SortOrderInput | SortOrder
+    sawal2?: SortOrderInput | SortOrder
+    sawal3?: SortOrderInput | SortOrder
+    tahajji?: SortOrderInput | SortOrder
+    panja?: SortOrderInput | SortOrder
+    khudKhwani?: SortOrderInput | SortOrder
+    classWork?: SortOrderInput | SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -33331,12 +33775,23 @@ export namespace Prisma {
     OR?: HifzWeeklyEntryWhereInput[]
     NOT?: HifzWeeklyEntryWhereInput | HifzWeeklyEntryWhereInput[]
     studentId?: IntFilter<"HifzWeeklyEntry"> | number
+    weekLabel?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    className?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sectionName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    teacherName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     weekStartDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     weekEndDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     siparaFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     siparaTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sawal1?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal2?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal3?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    tahajji?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    panja?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    khudKhwani?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    classWork?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     performanceStatus?: StringFilter<"HifzWeeklyEntry"> | string
     remarks?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     status?: StringFilter<"HifzWeeklyEntry"> | string
@@ -33348,12 +33803,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryOrderByWithAggregationInput = {
     id?: SortOrder
     studentId?: SortOrder
+    weekLabel?: SortOrderInput | SortOrder
+    className?: SortOrderInput | SortOrder
+    sectionName?: SortOrderInput | SortOrder
+    teacherName?: SortOrderInput | SortOrder
     weekStartDate?: SortOrder
     weekEndDate?: SortOrder
     siparaFrom?: SortOrderInput | SortOrder
     siparaTo?: SortOrderInput | SortOrder
     lessonFrom?: SortOrderInput | SortOrder
     lessonTo?: SortOrderInput | SortOrder
+    sawal1?: SortOrderInput | SortOrder
+    sawal2?: SortOrderInput | SortOrder
+    sawal3?: SortOrderInput | SortOrder
+    tahajji?: SortOrderInput | SortOrder
+    panja?: SortOrderInput | SortOrder
+    khudKhwani?: SortOrderInput | SortOrder
+    classWork?: SortOrderInput | SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -33372,12 +33838,23 @@ export namespace Prisma {
     NOT?: HifzWeeklyEntryScalarWhereWithAggregatesInput | HifzWeeklyEntryScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"HifzWeeklyEntry"> | number
     studentId?: IntWithAggregatesFilter<"HifzWeeklyEntry"> | number
+    weekLabel?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
+    className?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
+    sectionName?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
+    teacherName?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     weekStartDate?: DateTimeWithAggregatesFilter<"HifzWeeklyEntry"> | Date | string
     weekEndDate?: DateTimeWithAggregatesFilter<"HifzWeeklyEntry"> | Date | string
     siparaFrom?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     siparaTo?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     lessonFrom?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     lessonTo?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
+    sawal1?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    sawal2?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    sawal3?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    tahajji?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    panja?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    khudKhwani?: IntNullableWithAggregatesFilter<"HifzWeeklyEntry"> | number | null
+    classWork?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     performanceStatus?: StringWithAggregatesFilter<"HifzWeeklyEntry"> | string
     remarks?: StringNullableWithAggregatesFilter<"HifzWeeklyEntry"> | string | null
     status?: StringWithAggregatesFilter<"HifzWeeklyEntry"> | string
@@ -35616,8 +36093,21 @@ export namespace Prisma {
   export type HifzDailyEntryCreateInput = {
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35631,8 +36121,21 @@ export namespace Prisma {
     studentId: number
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35643,8 +36146,21 @@ export namespace Prisma {
   export type HifzDailyEntryUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35658,8 +36174,21 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35672,8 +36201,21 @@ export namespace Prisma {
     studentId: number
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35684,8 +36226,21 @@ export namespace Prisma {
   export type HifzDailyEntryUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35698,8 +36253,21 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35708,12 +36276,23 @@ export namespace Prisma {
   }
 
   export type HifzWeeklyEntryCreateInput = {
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35725,12 +36304,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryUncheckedCreateInput = {
     id?: number
     studentId: number
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35739,12 +36329,23 @@ export namespace Prisma {
   }
 
   export type HifzWeeklyEntryUpdateInput = {
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35756,12 +36357,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     studentId?: IntFieldUpdateOperationsInput | number
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35772,12 +36384,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryCreateManyInput = {
     id?: number
     studentId: number
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -35786,12 +36409,23 @@ export namespace Prisma {
   }
 
   export type HifzWeeklyEntryUpdateManyMutationInput = {
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -35802,12 +36436,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     studentId?: IntFieldUpdateOperationsInput | number
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -37889,6 +38534,17 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type HifzDailyEntryOrderByRelevanceInput = {
     fields: HifzDailyEntryOrderByRelevanceFieldEnum | HifzDailyEntryOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -37905,8 +38561,21 @@ export namespace Prisma {
     studentId?: SortOrder
     date?: SortOrder
     sabq?: SortOrder
+    sabqListener?: SortOrder
+    sabqMistake?: SortOrder
+    sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiMistake?: SortOrder
+    sabaqiAtkann?: SortOrder
     manzil?: SortOrder
+    manzilBeforeDetail?: SortOrder
+    manzilBeforeMistake?: SortOrder
+    manzilBeforeAtkann?: SortOrder
+    manzilAfterDetail?: SortOrder
+    manzilAfterMistake?: SortOrder
+    manzilAfterAtkann?: SortOrder
+    lessonDetail?: SortOrder
+    count?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -37917,6 +38586,15 @@ export namespace Prisma {
   export type HifzDailyEntryAvgOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    sabqMistake?: SortOrder
+    sabqAtkann?: SortOrder
+    sabaqiMistake?: SortOrder
+    sabaqiAtkann?: SortOrder
+    manzilBeforeMistake?: SortOrder
+    manzilBeforeAtkann?: SortOrder
+    manzilAfterMistake?: SortOrder
+    manzilAfterAtkann?: SortOrder
+    count?: SortOrder
   }
 
   export type HifzDailyEntryMaxOrderByAggregateInput = {
@@ -37924,8 +38602,21 @@ export namespace Prisma {
     studentId?: SortOrder
     date?: SortOrder
     sabq?: SortOrder
+    sabqListener?: SortOrder
+    sabqMistake?: SortOrder
+    sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiMistake?: SortOrder
+    sabaqiAtkann?: SortOrder
     manzil?: SortOrder
+    manzilBeforeDetail?: SortOrder
+    manzilBeforeMistake?: SortOrder
+    manzilBeforeAtkann?: SortOrder
+    manzilAfterDetail?: SortOrder
+    manzilAfterMistake?: SortOrder
+    manzilAfterAtkann?: SortOrder
+    lessonDetail?: SortOrder
+    count?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -37938,8 +38629,21 @@ export namespace Prisma {
     studentId?: SortOrder
     date?: SortOrder
     sabq?: SortOrder
+    sabqListener?: SortOrder
+    sabqMistake?: SortOrder
+    sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiMistake?: SortOrder
+    sabaqiAtkann?: SortOrder
     manzil?: SortOrder
+    manzilBeforeDetail?: SortOrder
+    manzilBeforeMistake?: SortOrder
+    manzilBeforeAtkann?: SortOrder
+    manzilAfterDetail?: SortOrder
+    manzilAfterMistake?: SortOrder
+    manzilAfterAtkann?: SortOrder
+    lessonDetail?: SortOrder
+    count?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -37950,6 +38654,31 @@ export namespace Prisma {
   export type HifzDailyEntrySumOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    sabqMistake?: SortOrder
+    sabqAtkann?: SortOrder
+    sabaqiMistake?: SortOrder
+    sabaqiAtkann?: SortOrder
+    manzilBeforeMistake?: SortOrder
+    manzilBeforeAtkann?: SortOrder
+    manzilAfterMistake?: SortOrder
+    manzilAfterAtkann?: SortOrder
+    count?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type HifzWeeklyEntryOrderByRelevanceInput = {
@@ -37967,12 +38696,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    weekLabel?: SortOrder
+    className?: SortOrder
+    sectionName?: SortOrder
+    teacherName?: SortOrder
     weekStartDate?: SortOrder
     weekEndDate?: SortOrder
     siparaFrom?: SortOrder
     siparaTo?: SortOrder
     lessonFrom?: SortOrder
     lessonTo?: SortOrder
+    sawal1?: SortOrder
+    sawal2?: SortOrder
+    sawal3?: SortOrder
+    tahajji?: SortOrder
+    panja?: SortOrder
+    khudKhwani?: SortOrder
+    classWork?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -37983,17 +38723,34 @@ export namespace Prisma {
   export type HifzWeeklyEntryAvgOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    sawal1?: SortOrder
+    sawal2?: SortOrder
+    sawal3?: SortOrder
+    tahajji?: SortOrder
+    panja?: SortOrder
+    khudKhwani?: SortOrder
   }
 
   export type HifzWeeklyEntryMaxOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    weekLabel?: SortOrder
+    className?: SortOrder
+    sectionName?: SortOrder
+    teacherName?: SortOrder
     weekStartDate?: SortOrder
     weekEndDate?: SortOrder
     siparaFrom?: SortOrder
     siparaTo?: SortOrder
     lessonFrom?: SortOrder
     lessonTo?: SortOrder
+    sawal1?: SortOrder
+    sawal2?: SortOrder
+    sawal3?: SortOrder
+    tahajji?: SortOrder
+    panja?: SortOrder
+    khudKhwani?: SortOrder
+    classWork?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -38004,12 +38761,23 @@ export namespace Prisma {
   export type HifzWeeklyEntryMinOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    weekLabel?: SortOrder
+    className?: SortOrder
+    sectionName?: SortOrder
+    teacherName?: SortOrder
     weekStartDate?: SortOrder
     weekEndDate?: SortOrder
     siparaFrom?: SortOrder
     siparaTo?: SortOrder
     lessonFrom?: SortOrder
     lessonTo?: SortOrder
+    sawal1?: SortOrder
+    sawal2?: SortOrder
+    sawal3?: SortOrder
+    tahajji?: SortOrder
+    panja?: SortOrder
+    khudKhwani?: SortOrder
+    classWork?: SortOrder
     performanceStatus?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -38020,6 +38788,12 @@ export namespace Prisma {
   export type HifzWeeklyEntrySumOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    sawal1?: SortOrder
+    sawal2?: SortOrder
+    sawal3?: SortOrder
+    tahajji?: SortOrder
+    panja?: SortOrder
+    khudKhwani?: SortOrder
   }
 
   export type HifzMonthlyEntryOrderByRelevanceInput = {
@@ -38093,17 +38867,6 @@ export namespace Prisma {
     year?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type HifzSiparaEntryOrderByRelevanceInput = {
     fields: HifzSiparaEntryOrderByRelevanceFieldEnum | HifzSiparaEntryOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -38172,22 +38935,6 @@ export namespace Prisma {
     studentId?: SortOrder
     siparaNumber?: SortOrder
     totalDays?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type FinanceHeadOrderByRelevanceInput = {
@@ -39876,6 +40623,14 @@ export namespace Prisma {
     connect?: StudentWhereUniqueInput
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type StudentUpdateOneRequiredWithoutHifzDailyEntriesNestedInput = {
     create?: XOR<StudentCreateWithoutHifzDailyEntriesInput, StudentUncheckedCreateWithoutHifzDailyEntriesInput>
     connectOrCreate?: StudentCreateOrConnectWithoutHifzDailyEntriesInput
@@ -39916,14 +40671,6 @@ export namespace Prisma {
     create?: XOR<StudentCreateWithoutHifzSiparaEntriesInput, StudentUncheckedCreateWithoutHifzSiparaEntriesInput>
     connectOrCreate?: StudentCreateOrConnectWithoutHifzSiparaEntriesInput
     connect?: StudentWhereUniqueInput
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type StudentUpdateOneRequiredWithoutHifzSiparaEntriesNestedInput = {
@@ -41640,8 +42387,21 @@ export namespace Prisma {
   export type HifzDailyEntryCreateWithoutStudentInput = {
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -41653,8 +42413,21 @@ export namespace Prisma {
     id?: number
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -41673,12 +42446,23 @@ export namespace Prisma {
   }
 
   export type HifzWeeklyEntryCreateWithoutStudentInput = {
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -41688,12 +42472,23 @@ export namespace Prisma {
 
   export type HifzWeeklyEntryUncheckedCreateWithoutStudentInput = {
     id?: number
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -41954,8 +42749,21 @@ export namespace Prisma {
     studentId?: IntFilter<"HifzDailyEntry"> | number
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
+    lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    count?: IntNullableFilter<"HifzDailyEntry"> | number | null
     performanceStatus?: StringFilter<"HifzDailyEntry"> | string
     remarks?: StringNullableFilter<"HifzDailyEntry"> | string | null
     status?: StringFilter<"HifzDailyEntry"> | string
@@ -41985,12 +42793,23 @@ export namespace Prisma {
     NOT?: HifzWeeklyEntryScalarWhereInput | HifzWeeklyEntryScalarWhereInput[]
     id?: IntFilter<"HifzWeeklyEntry"> | number
     studentId?: IntFilter<"HifzWeeklyEntry"> | number
+    weekLabel?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    className?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sectionName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    teacherName?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     weekStartDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     weekEndDate?: DateTimeFilter<"HifzWeeklyEntry"> | Date | string
     siparaFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     siparaTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonFrom?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     lessonTo?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
+    sawal1?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal2?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    sawal3?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    tahajji?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    panja?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    khudKhwani?: IntNullableFilter<"HifzWeeklyEntry"> | number | null
+    classWork?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     performanceStatus?: StringFilter<"HifzWeeklyEntry"> | string
     remarks?: StringNullableFilter<"HifzWeeklyEntry"> | string | null
     status?: StringFilter<"HifzWeeklyEntry"> | string
@@ -45547,8 +46366,21 @@ export namespace Prisma {
     id?: number
     date: Date | string
     sabq?: string | null
+    sabqListener?: string | null
+    sabqMistake?: number | null
+    sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiMistake?: number | null
+    sabaqiAtkann?: number | null
     manzil?: string | null
+    manzilBeforeDetail?: string | null
+    manzilBeforeMistake?: number | null
+    manzilBeforeAtkann?: number | null
+    manzilAfterDetail?: string | null
+    manzilAfterMistake?: number | null
+    manzilAfterAtkann?: number | null
+    lessonDetail?: string | null
+    count?: number | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -45558,12 +46390,23 @@ export namespace Prisma {
 
   export type HifzWeeklyEntryCreateManyStudentInput = {
     id?: number
+    weekLabel?: string | null
+    className?: string | null
+    sectionName?: string | null
+    teacherName?: string | null
     weekStartDate: Date | string
     weekEndDate: Date | string
     siparaFrom?: string | null
     siparaTo?: string | null
     lessonFrom?: string | null
     lessonTo?: string | null
+    sawal1?: number | null
+    sawal2?: number | null
+    sawal3?: number | null
+    tahajji?: number | null
+    panja?: number | null
+    khudKhwani?: number | null
+    classWork?: string | null
     performanceStatus: string
     remarks?: string | null
     status?: string
@@ -45731,8 +46574,21 @@ export namespace Prisma {
   export type HifzDailyEntryUpdateWithoutStudentInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -45744,8 +46600,21 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -45757,8 +46626,21 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
+    manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    count?: NullableIntFieldUpdateOperationsInput | number | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -45767,12 +46649,23 @@ export namespace Prisma {
   }
 
   export type HifzWeeklyEntryUpdateWithoutStudentInput = {
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -45782,12 +46675,23 @@ export namespace Prisma {
 
   export type HifzWeeklyEntryUncheckedUpdateWithoutStudentInput = {
     id?: IntFieldUpdateOperationsInput | number
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -45797,12 +46701,23 @@ export namespace Prisma {
 
   export type HifzWeeklyEntryUncheckedUpdateManyWithoutStudentInput = {
     id?: IntFieldUpdateOperationsInput | number
+    weekLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionName?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
     weekStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
     weekEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
     siparaFrom?: NullableStringFieldUpdateOperationsInput | string | null
     siparaTo?: NullableStringFieldUpdateOperationsInput | string | null
     lessonFrom?: NullableStringFieldUpdateOperationsInput | string | null
     lessonTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sawal1?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal2?: NullableIntFieldUpdateOperationsInput | number | null
+    sawal3?: NullableIntFieldUpdateOperationsInput | number | null
+    tahajji?: NullableIntFieldUpdateOperationsInput | number | null
+    panja?: NullableIntFieldUpdateOperationsInput | number | null
+    khudKhwani?: NullableIntFieldUpdateOperationsInput | number | null
+    classWork?: NullableStringFieldUpdateOperationsInput | string | null
     performanceStatus?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string

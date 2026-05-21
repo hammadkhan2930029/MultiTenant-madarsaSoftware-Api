@@ -5,12 +5,23 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 const select = {
   id: true,
   studentId: true,
+  weekLabel: true,
+  className: true,
+  sectionName: true,
+  teacherName: true,
   weekStartDate: true,
   weekEndDate: true,
   siparaFrom: true,
   siparaTo: true,
   lessonFrom: true,
   lessonTo: true,
+  sawal1: true,
+  sawal2: true,
+  sawal3: true,
+  tahajji: true,
+  panja: true,
+  khudKhwani: true,
+  classWork: true,
   performanceStatus: true,
   remarks: true,
   status: true,
@@ -19,6 +30,25 @@ const select = {
   student: { select: { id: true, admissionNumber: true, fullName: true } },
 };
 
+const nullableFields = [
+  'weekLabel',
+  'className',
+  'sectionName',
+  'teacherName',
+  'siparaFrom',
+  'siparaTo',
+  'lessonFrom',
+  'lessonTo',
+  'sawal1',
+  'sawal2',
+  'sawal3',
+  'tahajji',
+  'panja',
+  'khudKhwani',
+  'classWork',
+  'remarks',
+];
+
 const normalizeDate = (value) => {
   const date = new Date(value);
   date.setHours(0, 0, 0, 0);
@@ -26,7 +56,19 @@ const normalizeDate = (value) => {
 };
 const ensureStudent = async (studentId) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });
-  if (!student) throw new AppError('Student not found.', 404);
+  if (!student) throw new AppError('طالب علم نہیں ملا۔', 404);
+};
+
+const normalizePayload = (payload) => {
+  const data = { ...payload };
+
+  nullableFields.forEach((field) => {
+    if (data[field] === undefined || data[field] === '') {
+      data[field] = null;
+    }
+  });
+
+  return data;
 };
 
 export const weeklyHifzService = {
@@ -34,10 +76,11 @@ export const weeklyHifzService = {
     await ensureStudent(payload.studentId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
+    const data = normalizePayload(payload);
     return prisma.hifzWeeklyEntry.upsert({
       where: { studentId_weekStartDate_weekEndDate: { studentId: payload.studentId, weekStartDate, weekEndDate } },
-      create: { ...payload, weekStartDate, weekEndDate, remarks: payload.remarks || null },
-      update: { ...payload, weekStartDate, weekEndDate, remarks: payload.remarks || null },
+      create: { ...data, weekStartDate, weekEndDate },
+      update: { ...data, weekStartDate, weekEndDate },
       select,
     });
   },
@@ -64,28 +107,28 @@ export const weeklyHifzService = {
   },
   async getEntryById(id) {
     const entry = await prisma.hifzWeeklyEntry.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('Weekly jaiza entry not found.', 404);
+    if (!entry) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
     return entry;
   },
   async updateEntry(id, payload) {
     const existing = await prisma.hifzWeeklyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Weekly jaiza entry not found.', 404);
+    if (!existing) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
     await ensureStudent(payload.studentId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const duplicate = await prisma.hifzWeeklyEntry.findFirst({
       where: { id: { not: id }, studentId: payload.studentId, weekStartDate, weekEndDate },
     });
-    if (duplicate) throw new AppError('Weekly jaiza for this student and week already exists.', 409);
+    if (duplicate) throw new AppError('اس طالب علم کا اس ہفتے کا جائزہ پہلے سے موجود ہے۔', 409);
     return prisma.hifzWeeklyEntry.update({
       where: { id },
-      data: { ...payload, weekStartDate, weekEndDate, remarks: payload.remarks || null },
+      data: { ...normalizePayload(payload), weekStartDate, weekEndDate },
       select,
     });
   },
   async deactivateEntry(id) {
     const existing = await prisma.hifzWeeklyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Weekly jaiza entry not found.', 404);
+    if (!existing) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
     return prisma.hifzWeeklyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };
