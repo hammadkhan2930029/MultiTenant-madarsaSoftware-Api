@@ -114,3 +114,11 @@ export const assignStudentClassValidationSchema = z.object({
   }),
   query: z.object({}).default({}),
 });
+
+export const classAssignmentIdValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({
+    assignmentId: z.coerce.number().int().positive('Assignment id must be a valid number.'),
+  }),
+  query: z.object({}).default({}),
+});

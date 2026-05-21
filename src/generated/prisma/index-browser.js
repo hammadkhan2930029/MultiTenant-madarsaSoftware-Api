@@ -228,6 +228,20 @@ exports.Prisma.AcademicSessionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudentScheduleScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  classId: 'classId',
+  sectionId: 'sectionId',
+  subjects: 'subjects',
+  days: 'days',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudentScalarFieldEnum = {
   id: 'id',
   admissionNumber: 'admissionNumber',
@@ -410,6 +424,29 @@ exports.Prisma.FinanceHeadScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudentFeeVoucherScalarFieldEnum = {
+  id: 'id',
+  voucherNo: 'voucherNo',
+  studentId: 'studentId',
+  feeMonth: 'feeMonth',
+  feeYear: 'feeYear',
+  monthlyFee: 'monthlyFee',
+  admissionFee: 'admissionFee',
+  arrears: 'arrears',
+  discount: 'discount',
+  fine: 'fine',
+  totalAmount: 'totalAmount',
+  paidAmount: 'paidAmount',
+  dueAmount: 'dueAmount',
+  dueDate: 'dueDate',
+  paidDate: 'paidDate',
+  paymentMethod: 'paymentMethod',
+  remarks: 'remarks',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.FundCollectionScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -439,6 +476,10 @@ exports.Prisma.SalaryEntryScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.AdminOrderByRelevanceFieldEnum = {
@@ -514,6 +555,23 @@ exports.Prisma.SectionOrderByRelevanceFieldEnum = {
 
 exports.Prisma.AcademicSessionOrderByRelevanceFieldEnum = {
   name: 'name',
+  status: 'status'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.StudentScheduleOrderByRelevanceFieldEnum = {
+  startTime: 'startTime',
+  endTime: 'endTime',
   status: 'status'
 };
 
@@ -628,6 +686,13 @@ exports.Prisma.FinanceHeadOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.StudentFeeVoucherOrderByRelevanceFieldEnum = {
+  voucherNo: 'voucherNo',
+  paymentMethod: 'paymentMethod',
+  remarks: 'remarks',
+  status: 'status'
+};
+
 exports.Prisma.FundCollectionOrderByRelevanceFieldEnum = {
   remarks: 'remarks',
   status: 'status'
@@ -650,6 +715,7 @@ exports.Prisma.ModelName = {
   AcademicClass: 'AcademicClass',
   Section: 'Section',
   AcademicSession: 'AcademicSession',
+  StudentSchedule: 'StudentSchedule',
   Student: 'Student',
   Parent: 'Parent',
   StudentParent: 'StudentParent',
@@ -662,6 +728,7 @@ exports.Prisma.ModelName = {
   HifzMonthlyEntry: 'HifzMonthlyEntry',
   HifzSiparaEntry: 'HifzSiparaEntry',
   FinanceHead: 'FinanceHead',
+  StudentFeeVoucher: 'StudentFeeVoucher',
   FundCollection: 'FundCollection',
   SalaryEntry: 'SalaryEntry'
 };

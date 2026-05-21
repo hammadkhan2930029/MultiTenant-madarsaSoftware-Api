@@ -9,6 +9,7 @@ import {
   getStudentById,
   updateStudent,
   assignClassToStudent,
+  removeClassAssignment,
 } from './students.controller.js';
 import {
   createStudentValidationSchema,
@@ -16,6 +17,7 @@ import {
   studentIdValidationSchema,
   updateStudentValidationSchema,
   assignStudentClassValidationSchema,
+  classAssignmentIdValidationSchema,
 } from './students.validation.js';
 
 const router = Router();
@@ -39,5 +41,10 @@ router.put(
   updateStudent
 );
 router.post('/:id/assign-class', validate(assignStudentClassValidationSchema), assignClassToStudent);
+router.patch(
+  '/class-assignments/:assignmentId/remove',
+  validate(classAssignmentIdValidationSchema),
+  removeClassAssignment
+);
 
 export { router as studentsRoutes };

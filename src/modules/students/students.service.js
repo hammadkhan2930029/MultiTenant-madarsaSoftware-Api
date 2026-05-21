@@ -421,4 +421,28 @@ export const studentsService = {
       return assignment;
     });
   },
+
+  async removeClassAssignment(assignmentId) {
+    const assignment = await prisma.studentClassAssignment.findUnique({
+      where: { id: assignmentId },
+    });
+
+    if (!assignment) {
+      throw new AppError('Class assignment not found.', 404);
+    }
+
+    return prisma.studentClassAssignment.update({
+      where: { id: assignmentId },
+      data: { status: 'inactive' },
+      select: {
+        id: true,
+        status: true,
+        assignedAt: true,
+        branch: { select: { id: true, name: true, code: true } },
+        class: { select: { id: true, name: true } },
+        section: { select: { id: true, name: true } },
+        session: { select: { id: true, name: true, startDate: true, endDate: true } },
+      },
+    });
+  },
 };

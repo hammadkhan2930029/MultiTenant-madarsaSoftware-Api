@@ -118,6 +118,7 @@ model AcademicClass {
   sections  Section[]
   assignments StudentClassAssignment[]
   studentAttendances StudentAttendance[]
+  studentSchedules StudentSchedule[]
 
   @@unique([branchId, name])
   @@map("classes")
@@ -133,6 +134,7 @@ model Section {
   class     AcademicClass @relation(fields: [classId], references: [id])
   assignments StudentClassAssignment[]
   studentAttendances StudentAttendance[]
+  studentSchedules StudentSchedule[]
 
   @@unique([classId, name])
   @@map("sections")
@@ -147,8 +149,29 @@ model AcademicSession {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   assignments StudentClassAssignment[]
+  studentSchedules StudentSchedule[]
 
   @@map("sessions")
+}
+
+model StudentSchedule {
+  id        Int             @id @default(autoincrement())
+  sessionId Int
+  classId   Int
+  sectionId Int
+  subjects  Json
+  days      Json
+  startTime String          @db.VarChar(10)
+  endTime   String          @db.VarChar(10)
+  status    String          @default("active") @db.VarChar(50)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  session   AcademicSession @relation(fields: [sessionId], references: [id])
+  class     AcademicClass   @relation(fields: [classId], references: [id])
+  section   Section         @relation(fields: [sectionId], references: [id])
+
+  @@index([sessionId, classId, sectionId])
+  @@map("student_schedules")
 }
 
 model Student {
@@ -192,6 +215,7 @@ model Student {
   hifzMonthlyEntries HifzMonthlyEntry[]
   hifzSiparaEntries HifzSiparaEntry[]
   fundCollections  FundCollection[]
+  feeVouchers      StudentFeeVoucher[]
 
   @@map("students")
 }
@@ -392,6 +416,34 @@ model FinanceHead {
   salaryEntries   SalaryEntry[]
 
   @@map("finance_heads")
+}
+
+model StudentFeeVoucher {
+  id             Int      @id @default(autoincrement())
+  voucherNo      String   @unique @db.VarChar(100)
+  studentId      Int
+  feeMonth       Int
+  feeYear        Int
+  monthlyFee     Decimal  @db.Decimal(10, 2)
+  admissionFee   Decimal  @default(0) @db.Decimal(10, 2)
+  arrears        Decimal  @default(0) @db.Decimal(10, 2)
+  discount       Decimal  @default(0) @db.Decimal(10, 2)
+  fine           Decimal  @default(0) @db.Decimal(10, 2)
+  totalAmount    Decimal  @db.Decimal(10, 2)
+  paidAmount     Decimal  @default(0) @db.Decimal(10, 2)
+  dueAmount      Decimal  @db.Decimal(10, 2)
+  dueDate        DateTime?
+  paidDate       DateTime?
+  paymentMethod  String?  @db.VarChar(50)
+  remarks        String?  @db.VarChar(255)
+  status         String   @default("unpaid") @db.VarChar(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  student        Student  @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, feeMonth, feeYear])
+  @@index([feeMonth, feeYear, status])
+  @@map("student_fee_vouchers")
 }
 
 model FundCollection {

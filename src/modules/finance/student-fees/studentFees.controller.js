@@ -1,0 +1,28 @@
+import { apiResponse } from '../../../utils/apiResponse.js';
+import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { studentFeesService } from './studentFees.service.js';
+
+export const generateStudentFees = asyncHandler(async (req, res) => {
+  const result = await studentFeesService.generateFees(req.body);
+  return apiResponse(res, { statusCode: 201, message: 'Student fees generated successfully.', data: result });
+});
+
+export const getStudentFees = asyncHandler(async (req, res) => {
+  const result = await studentFeesService.getFees(req.query);
+  return apiResponse(res, { message: 'Student fees fetched successfully.', data: result });
+});
+
+export const getStudentFeeById = asyncHandler(async (req, res) => {
+  const result = await studentFeesService.getFeeById(Number(req.params.id));
+  return apiResponse(res, { message: 'Student fee voucher fetched successfully.', data: result });
+});
+
+export const getStudentFeeHistory = asyncHandler(async (req, res) => {
+  const result = await studentFeesService.getStudentFeeHistory(Number(req.params.studentId));
+  return apiResponse(res, { message: 'Student fee history fetched successfully.', data: result });
+});
+
+export const saveStudentFeePayment = asyncHandler(async (req, res) => {
+  const result = await studentFeesService.savePayment(Number(req.params.id), req.body);
+  return apiResponse(res, { message: 'Student fee payment saved successfully.', data: result });
+});

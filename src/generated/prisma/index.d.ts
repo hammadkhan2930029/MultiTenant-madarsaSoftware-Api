@@ -64,6 +64,11 @@ export type Section = $Result.DefaultSelection<Prisma.$SectionPayload>
  */
 export type AcademicSession = $Result.DefaultSelection<Prisma.$AcademicSessionPayload>
 /**
+ * Model StudentSchedule
+ * 
+ */
+export type StudentSchedule = $Result.DefaultSelection<Prisma.$StudentSchedulePayload>
+/**
  * Model Student
  * 
  */
@@ -123,6 +128,11 @@ export type HifzSiparaEntry = $Result.DefaultSelection<Prisma.$HifzSiparaEntryPa
  * 
  */
 export type FinanceHead = $Result.DefaultSelection<Prisma.$FinanceHeadPayload>
+/**
+ * Model StudentFeeVoucher
+ * 
+ */
+export type StudentFeeVoucher = $Result.DefaultSelection<Prisma.$StudentFeeVoucherPayload>
 /**
  * Model FundCollection
  * 
@@ -353,6 +363,16 @@ export class PrismaClient<
   get academicSession(): Prisma.AcademicSessionDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.studentSchedule`: Exposes CRUD operations for the **StudentSchedule** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudentSchedules
+    * const studentSchedules = await prisma.studentSchedule.findMany()
+    * ```
+    */
+  get studentSchedule(): Prisma.StudentScheduleDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.student`: Exposes CRUD operations for the **Student** model.
     * Example usage:
     * ```ts
@@ -471,6 +491,16 @@ export class PrismaClient<
     * ```
     */
   get financeHead(): Prisma.FinanceHeadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studentFeeVoucher`: Exposes CRUD operations for the **StudentFeeVoucher** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudentFeeVouchers
+    * const studentFeeVouchers = await prisma.studentFeeVoucher.findMany()
+    * ```
+    */
+  get studentFeeVoucher(): Prisma.StudentFeeVoucherDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.fundCollection`: Exposes CRUD operations for the **FundCollection** model.
@@ -942,6 +972,7 @@ export namespace Prisma {
     AcademicClass: 'AcademicClass',
     Section: 'Section',
     AcademicSession: 'AcademicSession',
+    StudentSchedule: 'StudentSchedule',
     Student: 'Student',
     Parent: 'Parent',
     StudentParent: 'StudentParent',
@@ -954,6 +985,7 @@ export namespace Prisma {
     HifzMonthlyEntry: 'HifzMonthlyEntry',
     HifzSiparaEntry: 'HifzSiparaEntry',
     FinanceHead: 'FinanceHead',
+    StudentFeeVoucher: 'StudentFeeVoucher',
     FundCollection: 'FundCollection',
     SalaryEntry: 'SalaryEntry'
   };
@@ -974,7 +1006,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "admin" | "madrassaProfile" | "city" | "shift" | "department" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "fundCollection" | "salaryEntry"
+      modelProps: "admin" | "madrassaProfile" | "city" | "shift" | "department" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "studentFeeVoucher" | "fundCollection" | "salaryEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1635,6 +1667,72 @@ export namespace Prisma {
           count: {
             args: Prisma.AcademicSessionCountArgs<ExtArgs>
             result: $Utils.Optional<AcademicSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      StudentSchedule: {
+        payload: Prisma.$StudentSchedulePayload<ExtArgs>
+        fields: Prisma.StudentScheduleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudentScheduleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudentScheduleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          findFirst: {
+            args: Prisma.StudentScheduleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudentScheduleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          findMany: {
+            args: Prisma.StudentScheduleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>[]
+          }
+          create: {
+            args: Prisma.StudentScheduleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          createMany: {
+            args: Prisma.StudentScheduleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StudentScheduleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          update: {
+            args: Prisma.StudentScheduleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          deleteMany: {
+            args: Prisma.StudentScheduleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudentScheduleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StudentScheduleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentSchedulePayload>
+          }
+          aggregate: {
+            args: Prisma.StudentScheduleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudentSchedule>
+          }
+          groupBy: {
+            args: Prisma.StudentScheduleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudentScheduleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudentScheduleCountArgs<ExtArgs>
+            result: $Utils.Optional<StudentScheduleCountAggregateOutputType> | number
           }
         }
       }
@@ -2430,6 +2528,72 @@ export namespace Prisma {
           }
         }
       }
+      StudentFeeVoucher: {
+        payload: Prisma.$StudentFeeVoucherPayload<ExtArgs>
+        fields: Prisma.StudentFeeVoucherFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudentFeeVoucherFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudentFeeVoucherFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          findFirst: {
+            args: Prisma.StudentFeeVoucherFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudentFeeVoucherFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          findMany: {
+            args: Prisma.StudentFeeVoucherFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>[]
+          }
+          create: {
+            args: Prisma.StudentFeeVoucherCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          createMany: {
+            args: Prisma.StudentFeeVoucherCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StudentFeeVoucherDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          update: {
+            args: Prisma.StudentFeeVoucherUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudentFeeVoucherDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudentFeeVoucherUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StudentFeeVoucherUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentFeeVoucherPayload>
+          }
+          aggregate: {
+            args: Prisma.StudentFeeVoucherAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudentFeeVoucher>
+          }
+          groupBy: {
+            args: Prisma.StudentFeeVoucherGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudentFeeVoucherGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudentFeeVoucherCountArgs<ExtArgs>
+            result: $Utils.Optional<StudentFeeVoucherCountAggregateOutputType> | number
+          }
+        }
+      }
       FundCollection: {
         payload: Prisma.$FundCollectionPayload<ExtArgs>
         fields: Prisma.FundCollectionFieldRefs
@@ -2668,6 +2832,7 @@ export namespace Prisma {
     academicClass?: AcademicClassOmit
     section?: SectionOmit
     academicSession?: AcademicSessionOmit
+    studentSchedule?: StudentScheduleOmit
     student?: StudentOmit
     parent?: ParentOmit
     studentParent?: StudentParentOmit
@@ -2680,6 +2845,7 @@ export namespace Prisma {
     hifzMonthlyEntry?: HifzMonthlyEntryOmit
     hifzSiparaEntry?: HifzSiparaEntryOmit
     financeHead?: FinanceHeadOmit
+    studentFeeVoucher?: StudentFeeVoucherOmit
     fundCollection?: FundCollectionOmit
     salaryEntry?: SalaryEntryOmit
   }
@@ -2823,12 +2989,14 @@ export namespace Prisma {
     sections: number
     assignments: number
     studentAttendances: number
+    studentSchedules: number
   }
 
   export type AcademicClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sections?: boolean | AcademicClassCountOutputTypeCountSectionsArgs
     assignments?: boolean | AcademicClassCountOutputTypeCountAssignmentsArgs
     studentAttendances?: boolean | AcademicClassCountOutputTypeCountStudentAttendancesArgs
+    studentSchedules?: boolean | AcademicClassCountOutputTypeCountStudentSchedulesArgs
   }
 
   // Custom InputTypes
@@ -2863,6 +3031,13 @@ export namespace Prisma {
     where?: StudentAttendanceWhereInput
   }
 
+  /**
+   * AcademicClassCountOutputType without action
+   */
+  export type AcademicClassCountOutputTypeCountStudentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentScheduleWhereInput
+  }
+
 
   /**
    * Count Type SectionCountOutputType
@@ -2871,11 +3046,13 @@ export namespace Prisma {
   export type SectionCountOutputType = {
     assignments: number
     studentAttendances: number
+    studentSchedules: number
   }
 
   export type SectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignments?: boolean | SectionCountOutputTypeCountAssignmentsArgs
     studentAttendances?: boolean | SectionCountOutputTypeCountStudentAttendancesArgs
+    studentSchedules?: boolean | SectionCountOutputTypeCountStudentSchedulesArgs
   }
 
   // Custom InputTypes
@@ -2903,6 +3080,13 @@ export namespace Prisma {
     where?: StudentAttendanceWhereInput
   }
 
+  /**
+   * SectionCountOutputType without action
+   */
+  export type SectionCountOutputTypeCountStudentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentScheduleWhereInput
+  }
+
 
   /**
    * Count Type AcademicSessionCountOutputType
@@ -2910,10 +3094,12 @@ export namespace Prisma {
 
   export type AcademicSessionCountOutputType = {
     assignments: number
+    studentSchedules: number
   }
 
   export type AcademicSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignments?: boolean | AcademicSessionCountOutputTypeCountAssignmentsArgs
+    studentSchedules?: boolean | AcademicSessionCountOutputTypeCountStudentSchedulesArgs
   }
 
   // Custom InputTypes
@@ -2934,6 +3120,13 @@ export namespace Prisma {
     where?: StudentClassAssignmentWhereInput
   }
 
+  /**
+   * AcademicSessionCountOutputType without action
+   */
+  export type AcademicSessionCountOutputTypeCountStudentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentScheduleWhereInput
+  }
+
 
   /**
    * Count Type StudentCountOutputType
@@ -2948,6 +3141,7 @@ export namespace Prisma {
     hifzMonthlyEntries: number
     hifzSiparaEntries: number
     fundCollections: number
+    feeVouchers: number
   }
 
   export type StudentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2959,6 +3153,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: boolean | StudentCountOutputTypeCountHifzMonthlyEntriesArgs
     hifzSiparaEntries?: boolean | StudentCountOutputTypeCountHifzSiparaEntriesArgs
     fundCollections?: boolean | StudentCountOutputTypeCountFundCollectionsArgs
+    feeVouchers?: boolean | StudentCountOutputTypeCountFeeVouchersArgs
   }
 
   // Custom InputTypes
@@ -3026,6 +3221,13 @@ export namespace Prisma {
    */
   export type StudentCountOutputTypeCountFundCollectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FundCollectionWhereInput
+  }
+
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeCountFeeVouchersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentFeeVoucherWhereInput
   }
 
 
@@ -10301,6 +10503,7 @@ export namespace Prisma {
     sections?: boolean | AcademicClass$sectionsArgs<ExtArgs>
     assignments?: boolean | AcademicClass$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
+    studentSchedules?: boolean | AcademicClass$studentSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicClass"]>
 
@@ -10321,6 +10524,7 @@ export namespace Prisma {
     sections?: boolean | AcademicClass$sectionsArgs<ExtArgs>
     assignments?: boolean | AcademicClass$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
+    studentSchedules?: boolean | AcademicClass$studentSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -10331,6 +10535,7 @@ export namespace Prisma {
       sections: Prisma.$SectionPayload<ExtArgs>[]
       assignments: Prisma.$StudentClassAssignmentPayload<ExtArgs>[]
       studentAttendances: Prisma.$StudentAttendancePayload<ExtArgs>[]
+      studentSchedules: Prisma.$StudentSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10683,6 +10888,7 @@ export namespace Prisma {
     sections<T extends AcademicClass$sectionsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignments<T extends AcademicClass$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentClassAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentAttendances<T extends AcademicClass$studentAttendancesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$studentAttendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentSchedules<T extends AcademicClass$studentSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$studentSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11133,6 +11339,30 @@ export namespace Prisma {
   }
 
   /**
+   * AcademicClass.studentSchedules
+   */
+  export type AcademicClass$studentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    where?: StudentScheduleWhereInput
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    cursor?: StudentScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
    * AcademicClass without action
    */
   export type AcademicClassDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11364,6 +11594,7 @@ export namespace Prisma {
     class?: boolean | AcademicClassDefaultArgs<ExtArgs>
     assignments?: boolean | Section$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | Section$studentAttendancesArgs<ExtArgs>
+    studentSchedules?: boolean | Section$studentSchedulesArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["section"]>
 
@@ -11383,6 +11614,7 @@ export namespace Prisma {
     class?: boolean | AcademicClassDefaultArgs<ExtArgs>
     assignments?: boolean | Section$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | Section$studentAttendancesArgs<ExtArgs>
+    studentSchedules?: boolean | Section$studentSchedulesArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -11392,6 +11624,7 @@ export namespace Prisma {
       class: Prisma.$AcademicClassPayload<ExtArgs>
       assignments: Prisma.$StudentClassAssignmentPayload<ExtArgs>[]
       studentAttendances: Prisma.$StudentAttendancePayload<ExtArgs>[]
+      studentSchedules: Prisma.$StudentSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -11743,6 +11976,7 @@ export namespace Prisma {
     class<T extends AcademicClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClassDefaultArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignments<T extends Section$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Section$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentClassAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentAttendances<T extends Section$studentAttendancesArgs<ExtArgs> = {}>(args?: Subset<T, Section$studentAttendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentSchedules<T extends Section$studentSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Section$studentSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12169,6 +12403,30 @@ export namespace Prisma {
   }
 
   /**
+   * Section.studentSchedules
+   */
+  export type Section$studentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    where?: StudentScheduleWhereInput
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    cursor?: StudentScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
    * Section without action
    */
   export type SectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12402,6 +12660,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     assignments?: boolean | AcademicSession$assignmentsArgs<ExtArgs>
+    studentSchedules?: boolean | AcademicSession$studentSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicSession"]>
 
@@ -12420,6 +12679,7 @@ export namespace Prisma {
   export type AcademicSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["academicSession"]>
   export type AcademicSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignments?: boolean | AcademicSession$assignmentsArgs<ExtArgs>
+    studentSchedules?: boolean | AcademicSession$studentSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -12427,6 +12687,7 @@ export namespace Prisma {
     name: "AcademicSession"
     objects: {
       assignments: Prisma.$StudentClassAssignmentPayload<ExtArgs>[]
+      studentSchedules: Prisma.$StudentSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12777,6 +13038,7 @@ export namespace Prisma {
   export interface Prisma__AcademicSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     assignments<T extends AcademicSession$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentClassAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentSchedules<T extends AcademicSession$studentSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$studentSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13180,6 +13442,30 @@ export namespace Prisma {
   }
 
   /**
+   * AcademicSession.studentSchedules
+   */
+  export type AcademicSession$studentSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    where?: StudentScheduleWhereInput
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    cursor?: StudentScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
    * AcademicSession without action
    */
   export type AcademicSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13195,6 +13481,1047 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AcademicSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StudentSchedule
+   */
+
+  export type AggregateStudentSchedule = {
+    _count: StudentScheduleCountAggregateOutputType | null
+    _avg: StudentScheduleAvgAggregateOutputType | null
+    _sum: StudentScheduleSumAggregateOutputType | null
+    _min: StudentScheduleMinAggregateOutputType | null
+    _max: StudentScheduleMaxAggregateOutputType | null
+  }
+
+  export type StudentScheduleAvgAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    sectionId: number | null
+  }
+
+  export type StudentScheduleSumAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    sectionId: number | null
+  }
+
+  export type StudentScheduleMinAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    sectionId: number | null
+    startTime: string | null
+    endTime: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentScheduleMaxAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    sectionId: number | null
+    startTime: string | null
+    endTime: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentScheduleCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    classId: number
+    sectionId: number
+    subjects: number
+    days: number
+    startTime: number
+    endTime: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StudentScheduleAvgAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    sectionId?: true
+  }
+
+  export type StudentScheduleSumAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    sectionId?: true
+  }
+
+  export type StudentScheduleMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    sectionId?: true
+    startTime?: true
+    endTime?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentScheduleMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    sectionId?: true
+    startTime?: true
+    endTime?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentScheduleCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    sectionId?: true
+    subjects?: true
+    days?: true
+    startTime?: true
+    endTime?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StudentScheduleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentSchedule to aggregate.
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentSchedules to fetch.
+     */
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudentScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudentSchedules
+    **/
+    _count?: true | StudentScheduleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StudentScheduleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StudentScheduleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudentScheduleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudentScheduleMaxAggregateInputType
+  }
+
+  export type GetStudentScheduleAggregateType<T extends StudentScheduleAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudentSchedule]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudentSchedule[P]>
+      : GetScalarType<T[P], AggregateStudentSchedule[P]>
+  }
+
+
+
+
+  export type StudentScheduleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentScheduleWhereInput
+    orderBy?: StudentScheduleOrderByWithAggregationInput | StudentScheduleOrderByWithAggregationInput[]
+    by: StudentScheduleScalarFieldEnum[] | StudentScheduleScalarFieldEnum
+    having?: StudentScheduleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudentScheduleCountAggregateInputType | true
+    _avg?: StudentScheduleAvgAggregateInputType
+    _sum?: StudentScheduleSumAggregateInputType
+    _min?: StudentScheduleMinAggregateInputType
+    _max?: StudentScheduleMaxAggregateInputType
+  }
+
+  export type StudentScheduleGroupByOutputType = {
+    id: number
+    sessionId: number
+    classId: number
+    sectionId: number
+    subjects: JsonValue
+    days: JsonValue
+    startTime: string
+    endTime: string
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: StudentScheduleCountAggregateOutputType | null
+    _avg: StudentScheduleAvgAggregateOutputType | null
+    _sum: StudentScheduleSumAggregateOutputType | null
+    _min: StudentScheduleMinAggregateOutputType | null
+    _max: StudentScheduleMaxAggregateOutputType | null
+  }
+
+  type GetStudentScheduleGroupByPayload<T extends StudentScheduleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudentScheduleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudentScheduleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudentScheduleGroupByOutputType[P]>
+            : GetScalarType<T[P], StudentScheduleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudentScheduleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    classId?: boolean
+    sectionId?: boolean
+    subjects?: boolean
+    days?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | AcademicSessionDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studentSchedule"]>
+
+
+
+  export type StudentScheduleSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    classId?: boolean
+    sectionId?: boolean
+    subjects?: boolean
+    days?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StudentScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "classId" | "sectionId" | "subjects" | "days" | "startTime" | "endTime" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["studentSchedule"]>
+  export type StudentScheduleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | AcademicSessionDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }
+
+  export type $StudentSchedulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudentSchedule"
+    objects: {
+      session: Prisma.$AcademicSessionPayload<ExtArgs>
+      class: Prisma.$AcademicClassPayload<ExtArgs>
+      section: Prisma.$SectionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      sessionId: number
+      classId: number
+      sectionId: number
+      subjects: Prisma.JsonValue
+      days: Prisma.JsonValue
+      startTime: string
+      endTime: string
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["studentSchedule"]>
+    composites: {}
+  }
+
+  type StudentScheduleGetPayload<S extends boolean | null | undefined | StudentScheduleDefaultArgs> = $Result.GetResult<Prisma.$StudentSchedulePayload, S>
+
+  type StudentScheduleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudentScheduleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudentScheduleCountAggregateInputType | true
+    }
+
+  export interface StudentScheduleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudentSchedule'], meta: { name: 'StudentSchedule' } }
+    /**
+     * Find zero or one StudentSchedule that matches the filter.
+     * @param {StudentScheduleFindUniqueArgs} args - Arguments to find a StudentSchedule
+     * @example
+     * // Get one StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudentScheduleFindUniqueArgs>(args: SelectSubset<T, StudentScheduleFindUniqueArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudentSchedule that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudentScheduleFindUniqueOrThrowArgs} args - Arguments to find a StudentSchedule
+     * @example
+     * // Get one StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudentScheduleFindUniqueOrThrowArgs>(args: SelectSubset<T, StudentScheduleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentSchedule that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleFindFirstArgs} args - Arguments to find a StudentSchedule
+     * @example
+     * // Get one StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudentScheduleFindFirstArgs>(args?: SelectSubset<T, StudentScheduleFindFirstArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentSchedule that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleFindFirstOrThrowArgs} args - Arguments to find a StudentSchedule
+     * @example
+     * // Get one StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudentScheduleFindFirstOrThrowArgs>(args?: SelectSubset<T, StudentScheduleFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudentSchedules that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudentSchedules
+     * const studentSchedules = await prisma.studentSchedule.findMany()
+     * 
+     * // Get first 10 StudentSchedules
+     * const studentSchedules = await prisma.studentSchedule.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studentScheduleWithIdOnly = await prisma.studentSchedule.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudentScheduleFindManyArgs>(args?: SelectSubset<T, StudentScheduleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudentSchedule.
+     * @param {StudentScheduleCreateArgs} args - Arguments to create a StudentSchedule.
+     * @example
+     * // Create one StudentSchedule
+     * const StudentSchedule = await prisma.studentSchedule.create({
+     *   data: {
+     *     // ... data to create a StudentSchedule
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudentScheduleCreateArgs>(args: SelectSubset<T, StudentScheduleCreateArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudentSchedules.
+     * @param {StudentScheduleCreateManyArgs} args - Arguments to create many StudentSchedules.
+     * @example
+     * // Create many StudentSchedules
+     * const studentSchedule = await prisma.studentSchedule.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudentScheduleCreateManyArgs>(args?: SelectSubset<T, StudentScheduleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StudentSchedule.
+     * @param {StudentScheduleDeleteArgs} args - Arguments to delete one StudentSchedule.
+     * @example
+     * // Delete one StudentSchedule
+     * const StudentSchedule = await prisma.studentSchedule.delete({
+     *   where: {
+     *     // ... filter to delete one StudentSchedule
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudentScheduleDeleteArgs>(args: SelectSubset<T, StudentScheduleDeleteArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudentSchedule.
+     * @param {StudentScheduleUpdateArgs} args - Arguments to update one StudentSchedule.
+     * @example
+     * // Update one StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudentScheduleUpdateArgs>(args: SelectSubset<T, StudentScheduleUpdateArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudentSchedules.
+     * @param {StudentScheduleDeleteManyArgs} args - Arguments to filter StudentSchedules to delete.
+     * @example
+     * // Delete a few StudentSchedules
+     * const { count } = await prisma.studentSchedule.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudentScheduleDeleteManyArgs>(args?: SelectSubset<T, StudentScheduleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudentSchedules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudentSchedules
+     * const studentSchedule = await prisma.studentSchedule.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudentScheduleUpdateManyArgs>(args: SelectSubset<T, StudentScheduleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StudentSchedule.
+     * @param {StudentScheduleUpsertArgs} args - Arguments to update or create a StudentSchedule.
+     * @example
+     * // Update or create a StudentSchedule
+     * const studentSchedule = await prisma.studentSchedule.upsert({
+     *   create: {
+     *     // ... data to create a StudentSchedule
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudentSchedule we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudentScheduleUpsertArgs>(args: SelectSubset<T, StudentScheduleUpsertArgs<ExtArgs>>): Prisma__StudentScheduleClient<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudentSchedules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleCountArgs} args - Arguments to filter StudentSchedules to count.
+     * @example
+     * // Count the number of StudentSchedules
+     * const count = await prisma.studentSchedule.count({
+     *   where: {
+     *     // ... the filter for the StudentSchedules we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudentScheduleCountArgs>(
+      args?: Subset<T, StudentScheduleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudentScheduleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudentSchedule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudentScheduleAggregateArgs>(args: Subset<T, StudentScheduleAggregateArgs>): Prisma.PrismaPromise<GetStudentScheduleAggregateType<T>>
+
+    /**
+     * Group by StudentSchedule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentScheduleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudentScheduleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudentScheduleGroupByArgs['orderBy'] }
+        : { orderBy?: StudentScheduleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudentScheduleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudentScheduleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudentSchedule model
+   */
+  readonly fields: StudentScheduleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudentSchedule.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudentScheduleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends AcademicSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSessionDefaultArgs<ExtArgs>>): Prisma__AcademicSessionClient<$Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    class<T extends AcademicClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClassDefaultArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudentSchedule model
+   */
+  interface StudentScheduleFieldRefs {
+    readonly id: FieldRef<"StudentSchedule", 'Int'>
+    readonly sessionId: FieldRef<"StudentSchedule", 'Int'>
+    readonly classId: FieldRef<"StudentSchedule", 'Int'>
+    readonly sectionId: FieldRef<"StudentSchedule", 'Int'>
+    readonly subjects: FieldRef<"StudentSchedule", 'Json'>
+    readonly days: FieldRef<"StudentSchedule", 'Json'>
+    readonly startTime: FieldRef<"StudentSchedule", 'String'>
+    readonly endTime: FieldRef<"StudentSchedule", 'String'>
+    readonly status: FieldRef<"StudentSchedule", 'String'>
+    readonly createdAt: FieldRef<"StudentSchedule", 'DateTime'>
+    readonly updatedAt: FieldRef<"StudentSchedule", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudentSchedule findUnique
+   */
+  export type StudentScheduleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentSchedule to fetch.
+     */
+    where: StudentScheduleWhereUniqueInput
+  }
+
+  /**
+   * StudentSchedule findUniqueOrThrow
+   */
+  export type StudentScheduleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentSchedule to fetch.
+     */
+    where: StudentScheduleWhereUniqueInput
+  }
+
+  /**
+   * StudentSchedule findFirst
+   */
+  export type StudentScheduleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentSchedule to fetch.
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentSchedules to fetch.
+     */
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentSchedules.
+     */
+    cursor?: StudentScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentSchedules.
+     */
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * StudentSchedule findFirstOrThrow
+   */
+  export type StudentScheduleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentSchedule to fetch.
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentSchedules to fetch.
+     */
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentSchedules.
+     */
+    cursor?: StudentScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentSchedules.
+     */
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * StudentSchedule findMany
+   */
+  export type StudentScheduleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentSchedules to fetch.
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentSchedules to fetch.
+     */
+    orderBy?: StudentScheduleOrderByWithRelationInput | StudentScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudentSchedules.
+     */
+    cursor?: StudentScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentSchedules.
+     */
+    skip?: number
+    distinct?: StudentScheduleScalarFieldEnum | StudentScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * StudentSchedule create
+   */
+  export type StudentScheduleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudentSchedule.
+     */
+    data: XOR<StudentScheduleCreateInput, StudentScheduleUncheckedCreateInput>
+  }
+
+  /**
+   * StudentSchedule createMany
+   */
+  export type StudentScheduleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudentSchedules.
+     */
+    data: StudentScheduleCreateManyInput | StudentScheduleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudentSchedule update
+   */
+  export type StudentScheduleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudentSchedule.
+     */
+    data: XOR<StudentScheduleUpdateInput, StudentScheduleUncheckedUpdateInput>
+    /**
+     * Choose, which StudentSchedule to update.
+     */
+    where: StudentScheduleWhereUniqueInput
+  }
+
+  /**
+   * StudentSchedule updateMany
+   */
+  export type StudentScheduleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudentSchedules.
+     */
+    data: XOR<StudentScheduleUpdateManyMutationInput, StudentScheduleUncheckedUpdateManyInput>
+    /**
+     * Filter which StudentSchedules to update
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * Limit how many StudentSchedules to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentSchedule upsert
+   */
+  export type StudentScheduleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudentSchedule to update in case it exists.
+     */
+    where: StudentScheduleWhereUniqueInput
+    /**
+     * In case the StudentSchedule found by the `where` argument doesn't exist, create a new StudentSchedule with this data.
+     */
+    create: XOR<StudentScheduleCreateInput, StudentScheduleUncheckedCreateInput>
+    /**
+     * In case the StudentSchedule was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudentScheduleUpdateInput, StudentScheduleUncheckedUpdateInput>
+  }
+
+  /**
+   * StudentSchedule delete
+   */
+  export type StudentScheduleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
+    /**
+     * Filter which StudentSchedule to delete.
+     */
+    where: StudentScheduleWhereUniqueInput
+  }
+
+  /**
+   * StudentSchedule deleteMany
+   */
+  export type StudentScheduleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentSchedules to delete
+     */
+    where?: StudentScheduleWhereInput
+    /**
+     * Limit how many StudentSchedules to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentSchedule without action
+   */
+  export type StudentScheduleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentSchedule
+     */
+    select?: StudentScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentSchedule
+     */
+    omit?: StudentScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentScheduleInclude<ExtArgs> | null
   }
 
 
@@ -13628,6 +14955,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: boolean | Student$hifzMonthlyEntriesArgs<ExtArgs>
     hifzSiparaEntries?: boolean | Student$hifzSiparaEntriesArgs<ExtArgs>
     fundCollections?: boolean | Student$fundCollectionsArgs<ExtArgs>
+    feeVouchers?: boolean | Student$feeVouchersArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
@@ -13678,6 +15006,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: boolean | Student$hifzMonthlyEntriesArgs<ExtArgs>
     hifzSiparaEntries?: boolean | Student$hifzSiparaEntriesArgs<ExtArgs>
     fundCollections?: boolean | Student$fundCollectionsArgs<ExtArgs>
+    feeVouchers?: boolean | Student$feeVouchersArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -13692,6 +15021,7 @@ export namespace Prisma {
       hifzMonthlyEntries: Prisma.$HifzMonthlyEntryPayload<ExtArgs>[]
       hifzSiparaEntries: Prisma.$HifzSiparaEntryPayload<ExtArgs>[]
       fundCollections: Prisma.$FundCollectionPayload<ExtArgs>[]
+      feeVouchers: Prisma.$StudentFeeVoucherPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -14074,6 +15404,7 @@ export namespace Prisma {
     hifzMonthlyEntries<T extends Student$hifzMonthlyEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Student$hifzMonthlyEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HifzMonthlyEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hifzSiparaEntries<T extends Student$hifzSiparaEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Student$hifzSiparaEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HifzSiparaEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fundCollections<T extends Student$fundCollectionsArgs<ExtArgs> = {}>(args?: Subset<T, Student$fundCollectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FundCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feeVouchers<T extends Student$feeVouchersArgs<ExtArgs> = {}>(args?: Subset<T, Student$feeVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14667,6 +15998,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FundCollectionScalarFieldEnum | FundCollectionScalarFieldEnum[]
+  }
+
+  /**
+   * Student.feeVouchers
+   */
+  export type Student$feeVouchersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    where?: StudentFeeVoucherWhereInput
+    orderBy?: StudentFeeVoucherOrderByWithRelationInput | StudentFeeVoucherOrderByWithRelationInput[]
+    cursor?: StudentFeeVoucherWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentFeeVoucherScalarFieldEnum | StudentFeeVoucherScalarFieldEnum[]
   }
 
   /**
@@ -26189,6 +27544,1178 @@ export namespace Prisma {
 
 
   /**
+   * Model StudentFeeVoucher
+   */
+
+  export type AggregateStudentFeeVoucher = {
+    _count: StudentFeeVoucherCountAggregateOutputType | null
+    _avg: StudentFeeVoucherAvgAggregateOutputType | null
+    _sum: StudentFeeVoucherSumAggregateOutputType | null
+    _min: StudentFeeVoucherMinAggregateOutputType | null
+    _max: StudentFeeVoucherMaxAggregateOutputType | null
+  }
+
+  export type StudentFeeVoucherAvgAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    feeMonth: number | null
+    feeYear: number | null
+    monthlyFee: Decimal | null
+    admissionFee: Decimal | null
+    arrears: Decimal | null
+    discount: Decimal | null
+    fine: Decimal | null
+    totalAmount: Decimal | null
+    paidAmount: Decimal | null
+    dueAmount: Decimal | null
+  }
+
+  export type StudentFeeVoucherSumAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    feeMonth: number | null
+    feeYear: number | null
+    monthlyFee: Decimal | null
+    admissionFee: Decimal | null
+    arrears: Decimal | null
+    discount: Decimal | null
+    fine: Decimal | null
+    totalAmount: Decimal | null
+    paidAmount: Decimal | null
+    dueAmount: Decimal | null
+  }
+
+  export type StudentFeeVoucherMinAggregateOutputType = {
+    id: number | null
+    voucherNo: string | null
+    studentId: number | null
+    feeMonth: number | null
+    feeYear: number | null
+    monthlyFee: Decimal | null
+    admissionFee: Decimal | null
+    arrears: Decimal | null
+    discount: Decimal | null
+    fine: Decimal | null
+    totalAmount: Decimal | null
+    paidAmount: Decimal | null
+    dueAmount: Decimal | null
+    dueDate: Date | null
+    paidDate: Date | null
+    paymentMethod: string | null
+    remarks: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentFeeVoucherMaxAggregateOutputType = {
+    id: number | null
+    voucherNo: string | null
+    studentId: number | null
+    feeMonth: number | null
+    feeYear: number | null
+    monthlyFee: Decimal | null
+    admissionFee: Decimal | null
+    arrears: Decimal | null
+    discount: Decimal | null
+    fine: Decimal | null
+    totalAmount: Decimal | null
+    paidAmount: Decimal | null
+    dueAmount: Decimal | null
+    dueDate: Date | null
+    paidDate: Date | null
+    paymentMethod: string | null
+    remarks: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentFeeVoucherCountAggregateOutputType = {
+    id: number
+    voucherNo: number
+    studentId: number
+    feeMonth: number
+    feeYear: number
+    monthlyFee: number
+    admissionFee: number
+    arrears: number
+    discount: number
+    fine: number
+    totalAmount: number
+    paidAmount: number
+    dueAmount: number
+    dueDate: number
+    paidDate: number
+    paymentMethod: number
+    remarks: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StudentFeeVoucherAvgAggregateInputType = {
+    id?: true
+    studentId?: true
+    feeMonth?: true
+    feeYear?: true
+    monthlyFee?: true
+    admissionFee?: true
+    arrears?: true
+    discount?: true
+    fine?: true
+    totalAmount?: true
+    paidAmount?: true
+    dueAmount?: true
+  }
+
+  export type StudentFeeVoucherSumAggregateInputType = {
+    id?: true
+    studentId?: true
+    feeMonth?: true
+    feeYear?: true
+    monthlyFee?: true
+    admissionFee?: true
+    arrears?: true
+    discount?: true
+    fine?: true
+    totalAmount?: true
+    paidAmount?: true
+    dueAmount?: true
+  }
+
+  export type StudentFeeVoucherMinAggregateInputType = {
+    id?: true
+    voucherNo?: true
+    studentId?: true
+    feeMonth?: true
+    feeYear?: true
+    monthlyFee?: true
+    admissionFee?: true
+    arrears?: true
+    discount?: true
+    fine?: true
+    totalAmount?: true
+    paidAmount?: true
+    dueAmount?: true
+    dueDate?: true
+    paidDate?: true
+    paymentMethod?: true
+    remarks?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentFeeVoucherMaxAggregateInputType = {
+    id?: true
+    voucherNo?: true
+    studentId?: true
+    feeMonth?: true
+    feeYear?: true
+    monthlyFee?: true
+    admissionFee?: true
+    arrears?: true
+    discount?: true
+    fine?: true
+    totalAmount?: true
+    paidAmount?: true
+    dueAmount?: true
+    dueDate?: true
+    paidDate?: true
+    paymentMethod?: true
+    remarks?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentFeeVoucherCountAggregateInputType = {
+    id?: true
+    voucherNo?: true
+    studentId?: true
+    feeMonth?: true
+    feeYear?: true
+    monthlyFee?: true
+    admissionFee?: true
+    arrears?: true
+    discount?: true
+    fine?: true
+    totalAmount?: true
+    paidAmount?: true
+    dueAmount?: true
+    dueDate?: true
+    paidDate?: true
+    paymentMethod?: true
+    remarks?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StudentFeeVoucherAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentFeeVoucher to aggregate.
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentFeeVouchers to fetch.
+     */
+    orderBy?: StudentFeeVoucherOrderByWithRelationInput | StudentFeeVoucherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudentFeeVoucherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentFeeVouchers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentFeeVouchers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudentFeeVouchers
+    **/
+    _count?: true | StudentFeeVoucherCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StudentFeeVoucherAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StudentFeeVoucherSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudentFeeVoucherMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudentFeeVoucherMaxAggregateInputType
+  }
+
+  export type GetStudentFeeVoucherAggregateType<T extends StudentFeeVoucherAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudentFeeVoucher]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudentFeeVoucher[P]>
+      : GetScalarType<T[P], AggregateStudentFeeVoucher[P]>
+  }
+
+
+
+
+  export type StudentFeeVoucherGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentFeeVoucherWhereInput
+    orderBy?: StudentFeeVoucherOrderByWithAggregationInput | StudentFeeVoucherOrderByWithAggregationInput[]
+    by: StudentFeeVoucherScalarFieldEnum[] | StudentFeeVoucherScalarFieldEnum
+    having?: StudentFeeVoucherScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudentFeeVoucherCountAggregateInputType | true
+    _avg?: StudentFeeVoucherAvgAggregateInputType
+    _sum?: StudentFeeVoucherSumAggregateInputType
+    _min?: StudentFeeVoucherMinAggregateInputType
+    _max?: StudentFeeVoucherMaxAggregateInputType
+  }
+
+  export type StudentFeeVoucherGroupByOutputType = {
+    id: number
+    voucherNo: string
+    studentId: number
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal
+    admissionFee: Decimal
+    arrears: Decimal
+    discount: Decimal
+    fine: Decimal
+    totalAmount: Decimal
+    paidAmount: Decimal
+    dueAmount: Decimal
+    dueDate: Date | null
+    paidDate: Date | null
+    paymentMethod: string | null
+    remarks: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: StudentFeeVoucherCountAggregateOutputType | null
+    _avg: StudentFeeVoucherAvgAggregateOutputType | null
+    _sum: StudentFeeVoucherSumAggregateOutputType | null
+    _min: StudentFeeVoucherMinAggregateOutputType | null
+    _max: StudentFeeVoucherMaxAggregateOutputType | null
+  }
+
+  type GetStudentFeeVoucherGroupByPayload<T extends StudentFeeVoucherGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudentFeeVoucherGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudentFeeVoucherGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudentFeeVoucherGroupByOutputType[P]>
+            : GetScalarType<T[P], StudentFeeVoucherGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudentFeeVoucherSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    voucherNo?: boolean
+    studentId?: boolean
+    feeMonth?: boolean
+    feeYear?: boolean
+    monthlyFee?: boolean
+    admissionFee?: boolean
+    arrears?: boolean
+    discount?: boolean
+    fine?: boolean
+    totalAmount?: boolean
+    paidAmount?: boolean
+    dueAmount?: boolean
+    dueDate?: boolean
+    paidDate?: boolean
+    paymentMethod?: boolean
+    remarks?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studentFeeVoucher"]>
+
+
+
+  export type StudentFeeVoucherSelectScalar = {
+    id?: boolean
+    voucherNo?: boolean
+    studentId?: boolean
+    feeMonth?: boolean
+    feeYear?: boolean
+    monthlyFee?: boolean
+    admissionFee?: boolean
+    arrears?: boolean
+    discount?: boolean
+    fine?: boolean
+    totalAmount?: boolean
+    paidAmount?: boolean
+    dueAmount?: boolean
+    dueDate?: boolean
+    paidDate?: boolean
+    paymentMethod?: boolean
+    remarks?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StudentFeeVoucherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "voucherNo" | "studentId" | "feeMonth" | "feeYear" | "monthlyFee" | "admissionFee" | "arrears" | "discount" | "fine" | "totalAmount" | "paidAmount" | "dueAmount" | "dueDate" | "paidDate" | "paymentMethod" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["studentFeeVoucher"]>
+  export type StudentFeeVoucherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+
+  export type $StudentFeeVoucherPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudentFeeVoucher"
+    objects: {
+      student: Prisma.$StudentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      voucherNo: string
+      studentId: number
+      feeMonth: number
+      feeYear: number
+      monthlyFee: Prisma.Decimal
+      admissionFee: Prisma.Decimal
+      arrears: Prisma.Decimal
+      discount: Prisma.Decimal
+      fine: Prisma.Decimal
+      totalAmount: Prisma.Decimal
+      paidAmount: Prisma.Decimal
+      dueAmount: Prisma.Decimal
+      dueDate: Date | null
+      paidDate: Date | null
+      paymentMethod: string | null
+      remarks: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["studentFeeVoucher"]>
+    composites: {}
+  }
+
+  type StudentFeeVoucherGetPayload<S extends boolean | null | undefined | StudentFeeVoucherDefaultArgs> = $Result.GetResult<Prisma.$StudentFeeVoucherPayload, S>
+
+  type StudentFeeVoucherCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudentFeeVoucherFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudentFeeVoucherCountAggregateInputType | true
+    }
+
+  export interface StudentFeeVoucherDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudentFeeVoucher'], meta: { name: 'StudentFeeVoucher' } }
+    /**
+     * Find zero or one StudentFeeVoucher that matches the filter.
+     * @param {StudentFeeVoucherFindUniqueArgs} args - Arguments to find a StudentFeeVoucher
+     * @example
+     * // Get one StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudentFeeVoucherFindUniqueArgs>(args: SelectSubset<T, StudentFeeVoucherFindUniqueArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudentFeeVoucher that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudentFeeVoucherFindUniqueOrThrowArgs} args - Arguments to find a StudentFeeVoucher
+     * @example
+     * // Get one StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudentFeeVoucherFindUniqueOrThrowArgs>(args: SelectSubset<T, StudentFeeVoucherFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentFeeVoucher that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherFindFirstArgs} args - Arguments to find a StudentFeeVoucher
+     * @example
+     * // Get one StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudentFeeVoucherFindFirstArgs>(args?: SelectSubset<T, StudentFeeVoucherFindFirstArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentFeeVoucher that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherFindFirstOrThrowArgs} args - Arguments to find a StudentFeeVoucher
+     * @example
+     * // Get one StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudentFeeVoucherFindFirstOrThrowArgs>(args?: SelectSubset<T, StudentFeeVoucherFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudentFeeVouchers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudentFeeVouchers
+     * const studentFeeVouchers = await prisma.studentFeeVoucher.findMany()
+     * 
+     * // Get first 10 StudentFeeVouchers
+     * const studentFeeVouchers = await prisma.studentFeeVoucher.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studentFeeVoucherWithIdOnly = await prisma.studentFeeVoucher.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudentFeeVoucherFindManyArgs>(args?: SelectSubset<T, StudentFeeVoucherFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudentFeeVoucher.
+     * @param {StudentFeeVoucherCreateArgs} args - Arguments to create a StudentFeeVoucher.
+     * @example
+     * // Create one StudentFeeVoucher
+     * const StudentFeeVoucher = await prisma.studentFeeVoucher.create({
+     *   data: {
+     *     // ... data to create a StudentFeeVoucher
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudentFeeVoucherCreateArgs>(args: SelectSubset<T, StudentFeeVoucherCreateArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudentFeeVouchers.
+     * @param {StudentFeeVoucherCreateManyArgs} args - Arguments to create many StudentFeeVouchers.
+     * @example
+     * // Create many StudentFeeVouchers
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudentFeeVoucherCreateManyArgs>(args?: SelectSubset<T, StudentFeeVoucherCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StudentFeeVoucher.
+     * @param {StudentFeeVoucherDeleteArgs} args - Arguments to delete one StudentFeeVoucher.
+     * @example
+     * // Delete one StudentFeeVoucher
+     * const StudentFeeVoucher = await prisma.studentFeeVoucher.delete({
+     *   where: {
+     *     // ... filter to delete one StudentFeeVoucher
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudentFeeVoucherDeleteArgs>(args: SelectSubset<T, StudentFeeVoucherDeleteArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudentFeeVoucher.
+     * @param {StudentFeeVoucherUpdateArgs} args - Arguments to update one StudentFeeVoucher.
+     * @example
+     * // Update one StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudentFeeVoucherUpdateArgs>(args: SelectSubset<T, StudentFeeVoucherUpdateArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudentFeeVouchers.
+     * @param {StudentFeeVoucherDeleteManyArgs} args - Arguments to filter StudentFeeVouchers to delete.
+     * @example
+     * // Delete a few StudentFeeVouchers
+     * const { count } = await prisma.studentFeeVoucher.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudentFeeVoucherDeleteManyArgs>(args?: SelectSubset<T, StudentFeeVoucherDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudentFeeVouchers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudentFeeVouchers
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudentFeeVoucherUpdateManyArgs>(args: SelectSubset<T, StudentFeeVoucherUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StudentFeeVoucher.
+     * @param {StudentFeeVoucherUpsertArgs} args - Arguments to update or create a StudentFeeVoucher.
+     * @example
+     * // Update or create a StudentFeeVoucher
+     * const studentFeeVoucher = await prisma.studentFeeVoucher.upsert({
+     *   create: {
+     *     // ... data to create a StudentFeeVoucher
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudentFeeVoucher we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudentFeeVoucherUpsertArgs>(args: SelectSubset<T, StudentFeeVoucherUpsertArgs<ExtArgs>>): Prisma__StudentFeeVoucherClient<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudentFeeVouchers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherCountArgs} args - Arguments to filter StudentFeeVouchers to count.
+     * @example
+     * // Count the number of StudentFeeVouchers
+     * const count = await prisma.studentFeeVoucher.count({
+     *   where: {
+     *     // ... the filter for the StudentFeeVouchers we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudentFeeVoucherCountArgs>(
+      args?: Subset<T, StudentFeeVoucherCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudentFeeVoucherCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudentFeeVoucher.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudentFeeVoucherAggregateArgs>(args: Subset<T, StudentFeeVoucherAggregateArgs>): Prisma.PrismaPromise<GetStudentFeeVoucherAggregateType<T>>
+
+    /**
+     * Group by StudentFeeVoucher.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentFeeVoucherGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudentFeeVoucherGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudentFeeVoucherGroupByArgs['orderBy'] }
+        : { orderBy?: StudentFeeVoucherGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudentFeeVoucherGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudentFeeVoucherGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudentFeeVoucher model
+   */
+  readonly fields: StudentFeeVoucherFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudentFeeVoucher.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudentFeeVoucherClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudentFeeVoucher model
+   */
+  interface StudentFeeVoucherFieldRefs {
+    readonly id: FieldRef<"StudentFeeVoucher", 'Int'>
+    readonly voucherNo: FieldRef<"StudentFeeVoucher", 'String'>
+    readonly studentId: FieldRef<"StudentFeeVoucher", 'Int'>
+    readonly feeMonth: FieldRef<"StudentFeeVoucher", 'Int'>
+    readonly feeYear: FieldRef<"StudentFeeVoucher", 'Int'>
+    readonly monthlyFee: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly admissionFee: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly arrears: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly discount: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly fine: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly totalAmount: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly paidAmount: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly dueAmount: FieldRef<"StudentFeeVoucher", 'Decimal'>
+    readonly dueDate: FieldRef<"StudentFeeVoucher", 'DateTime'>
+    readonly paidDate: FieldRef<"StudentFeeVoucher", 'DateTime'>
+    readonly paymentMethod: FieldRef<"StudentFeeVoucher", 'String'>
+    readonly remarks: FieldRef<"StudentFeeVoucher", 'String'>
+    readonly status: FieldRef<"StudentFeeVoucher", 'String'>
+    readonly createdAt: FieldRef<"StudentFeeVoucher", 'DateTime'>
+    readonly updatedAt: FieldRef<"StudentFeeVoucher", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudentFeeVoucher findUnique
+   */
+  export type StudentFeeVoucherFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentFeeVoucher to fetch.
+     */
+    where: StudentFeeVoucherWhereUniqueInput
+  }
+
+  /**
+   * StudentFeeVoucher findUniqueOrThrow
+   */
+  export type StudentFeeVoucherFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentFeeVoucher to fetch.
+     */
+    where: StudentFeeVoucherWhereUniqueInput
+  }
+
+  /**
+   * StudentFeeVoucher findFirst
+   */
+  export type StudentFeeVoucherFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentFeeVoucher to fetch.
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentFeeVouchers to fetch.
+     */
+    orderBy?: StudentFeeVoucherOrderByWithRelationInput | StudentFeeVoucherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentFeeVouchers.
+     */
+    cursor?: StudentFeeVoucherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentFeeVouchers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentFeeVouchers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentFeeVouchers.
+     */
+    distinct?: StudentFeeVoucherScalarFieldEnum | StudentFeeVoucherScalarFieldEnum[]
+  }
+
+  /**
+   * StudentFeeVoucher findFirstOrThrow
+   */
+  export type StudentFeeVoucherFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentFeeVoucher to fetch.
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentFeeVouchers to fetch.
+     */
+    orderBy?: StudentFeeVoucherOrderByWithRelationInput | StudentFeeVoucherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentFeeVouchers.
+     */
+    cursor?: StudentFeeVoucherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentFeeVouchers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentFeeVouchers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentFeeVouchers.
+     */
+    distinct?: StudentFeeVoucherScalarFieldEnum | StudentFeeVoucherScalarFieldEnum[]
+  }
+
+  /**
+   * StudentFeeVoucher findMany
+   */
+  export type StudentFeeVoucherFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentFeeVouchers to fetch.
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentFeeVouchers to fetch.
+     */
+    orderBy?: StudentFeeVoucherOrderByWithRelationInput | StudentFeeVoucherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudentFeeVouchers.
+     */
+    cursor?: StudentFeeVoucherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentFeeVouchers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentFeeVouchers.
+     */
+    skip?: number
+    distinct?: StudentFeeVoucherScalarFieldEnum | StudentFeeVoucherScalarFieldEnum[]
+  }
+
+  /**
+   * StudentFeeVoucher create
+   */
+  export type StudentFeeVoucherCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudentFeeVoucher.
+     */
+    data: XOR<StudentFeeVoucherCreateInput, StudentFeeVoucherUncheckedCreateInput>
+  }
+
+  /**
+   * StudentFeeVoucher createMany
+   */
+  export type StudentFeeVoucherCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudentFeeVouchers.
+     */
+    data: StudentFeeVoucherCreateManyInput | StudentFeeVoucherCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudentFeeVoucher update
+   */
+  export type StudentFeeVoucherUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudentFeeVoucher.
+     */
+    data: XOR<StudentFeeVoucherUpdateInput, StudentFeeVoucherUncheckedUpdateInput>
+    /**
+     * Choose, which StudentFeeVoucher to update.
+     */
+    where: StudentFeeVoucherWhereUniqueInput
+  }
+
+  /**
+   * StudentFeeVoucher updateMany
+   */
+  export type StudentFeeVoucherUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudentFeeVouchers.
+     */
+    data: XOR<StudentFeeVoucherUpdateManyMutationInput, StudentFeeVoucherUncheckedUpdateManyInput>
+    /**
+     * Filter which StudentFeeVouchers to update
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * Limit how many StudentFeeVouchers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentFeeVoucher upsert
+   */
+  export type StudentFeeVoucherUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudentFeeVoucher to update in case it exists.
+     */
+    where: StudentFeeVoucherWhereUniqueInput
+    /**
+     * In case the StudentFeeVoucher found by the `where` argument doesn't exist, create a new StudentFeeVoucher with this data.
+     */
+    create: XOR<StudentFeeVoucherCreateInput, StudentFeeVoucherUncheckedCreateInput>
+    /**
+     * In case the StudentFeeVoucher was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudentFeeVoucherUpdateInput, StudentFeeVoucherUncheckedUpdateInput>
+  }
+
+  /**
+   * StudentFeeVoucher delete
+   */
+  export type StudentFeeVoucherDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+    /**
+     * Filter which StudentFeeVoucher to delete.
+     */
+    where: StudentFeeVoucherWhereUniqueInput
+  }
+
+  /**
+   * StudentFeeVoucher deleteMany
+   */
+  export type StudentFeeVoucherDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentFeeVouchers to delete
+     */
+    where?: StudentFeeVoucherWhereInput
+    /**
+     * Limit how many StudentFeeVouchers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentFeeVoucher without action
+   */
+  export type StudentFeeVoucherDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentFeeVoucher
+     */
+    select?: StudentFeeVoucherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentFeeVoucher
+     */
+    omit?: StudentFeeVoucherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentFeeVoucherInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model FundCollection
    */
 
@@ -28415,6 +30942,23 @@ export namespace Prisma {
   export type AcademicSessionScalarFieldEnum = (typeof AcademicSessionScalarFieldEnum)[keyof typeof AcademicSessionScalarFieldEnum]
 
 
+  export const StudentScheduleScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    classId: 'classId',
+    sectionId: 'sectionId',
+    subjects: 'subjects',
+    days: 'days',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StudentScheduleScalarFieldEnum = (typeof StudentScheduleScalarFieldEnum)[keyof typeof StudentScheduleScalarFieldEnum]
+
+
   export const StudentScalarFieldEnum: {
     id: 'id',
     admissionNumber: 'admissionNumber',
@@ -28633,6 +31177,32 @@ export namespace Prisma {
   export type FinanceHeadScalarFieldEnum = (typeof FinanceHeadScalarFieldEnum)[keyof typeof FinanceHeadScalarFieldEnum]
 
 
+  export const StudentFeeVoucherScalarFieldEnum: {
+    id: 'id',
+    voucherNo: 'voucherNo',
+    studentId: 'studentId',
+    feeMonth: 'feeMonth',
+    feeYear: 'feeYear',
+    monthlyFee: 'monthlyFee',
+    admissionFee: 'admissionFee',
+    arrears: 'arrears',
+    discount: 'discount',
+    fine: 'fine',
+    totalAmount: 'totalAmount',
+    paidAmount: 'paidAmount',
+    dueAmount: 'dueAmount',
+    dueDate: 'dueDate',
+    paidDate: 'paidDate',
+    paymentMethod: 'paymentMethod',
+    remarks: 'remarks',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StudentFeeVoucherScalarFieldEnum = (typeof StudentFeeVoucherScalarFieldEnum)[keyof typeof StudentFeeVoucherScalarFieldEnum]
+
+
   export const FundCollectionScalarFieldEnum: {
     id: 'id',
     studentId: 'studentId',
@@ -28671,6 +31241,13 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const AdminOrderByRelevanceFieldEnum: {
@@ -28780,6 +31357,32 @@ export namespace Prisma {
   };
 
   export type AcademicSessionOrderByRelevanceFieldEnum = (typeof AcademicSessionOrderByRelevanceFieldEnum)[keyof typeof AcademicSessionOrderByRelevanceFieldEnum]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
+  };
+
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const StudentScheduleOrderByRelevanceFieldEnum: {
+    startTime: 'startTime',
+    endTime: 'endTime',
+    status: 'status'
+  };
+
+  export type StudentScheduleOrderByRelevanceFieldEnum = (typeof StudentScheduleOrderByRelevanceFieldEnum)[keyof typeof StudentScheduleOrderByRelevanceFieldEnum]
 
 
   export const StudentOrderByRelevanceFieldEnum: {
@@ -28929,6 +31532,16 @@ export namespace Prisma {
   export type FinanceHeadOrderByRelevanceFieldEnum = (typeof FinanceHeadOrderByRelevanceFieldEnum)[keyof typeof FinanceHeadOrderByRelevanceFieldEnum]
 
 
+  export const StudentFeeVoucherOrderByRelevanceFieldEnum: {
+    voucherNo: 'voucherNo',
+    paymentMethod: 'paymentMethod',
+    remarks: 'remarks',
+    status: 'status'
+  };
+
+  export type StudentFeeVoucherOrderByRelevanceFieldEnum = (typeof StudentFeeVoucherOrderByRelevanceFieldEnum)[keyof typeof StudentFeeVoucherOrderByRelevanceFieldEnum]
+
+
   export const FundCollectionOrderByRelevanceFieldEnum: {
     remarks: 'remarks',
     status: 'status'
@@ -28968,6 +31581,20 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -29527,6 +32154,7 @@ export namespace Prisma {
     sections?: SectionListRelationFilter
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }
 
   export type AcademicClassOrderByWithRelationInput = {
@@ -29540,6 +32168,7 @@ export namespace Prisma {
     sections?: SectionOrderByRelationAggregateInput
     assignments?: StudentClassAssignmentOrderByRelationAggregateInput
     studentAttendances?: StudentAttendanceOrderByRelationAggregateInput
+    studentSchedules?: StudentScheduleOrderByRelationAggregateInput
     _relevance?: AcademicClassOrderByRelevanceInput
   }
 
@@ -29558,6 +32187,7 @@ export namespace Prisma {
     sections?: SectionListRelationFilter
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }, "id" | "branchId_name">
 
   export type AcademicClassOrderByWithAggregationInput = {
@@ -29599,6 +32229,7 @@ export namespace Prisma {
     class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }
 
   export type SectionOrderByWithRelationInput = {
@@ -29611,6 +32242,7 @@ export namespace Prisma {
     class?: AcademicClassOrderByWithRelationInput
     assignments?: StudentClassAssignmentOrderByRelationAggregateInput
     studentAttendances?: StudentAttendanceOrderByRelationAggregateInput
+    studentSchedules?: StudentScheduleOrderByRelationAggregateInput
     _relevance?: SectionOrderByRelevanceInput
   }
 
@@ -29628,6 +32260,7 @@ export namespace Prisma {
     class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }, "id" | "classId_name">
 
   export type SectionOrderByWithAggregationInput = {
@@ -29668,6 +32301,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AcademicSession"> | Date | string
     updatedAt?: DateTimeFilter<"AcademicSession"> | Date | string
     assignments?: StudentClassAssignmentListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }
 
   export type AcademicSessionOrderByWithRelationInput = {
@@ -29679,6 +32313,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     assignments?: StudentClassAssignmentOrderByRelationAggregateInput
+    studentSchedules?: StudentScheduleOrderByRelationAggregateInput
     _relevance?: AcademicSessionOrderByRelevanceInput
   }
 
@@ -29694,6 +32329,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AcademicSession"> | Date | string
     updatedAt?: DateTimeFilter<"AcademicSession"> | Date | string
     assignments?: StudentClassAssignmentListRelationFilter
+    studentSchedules?: StudentScheduleListRelationFilter
   }, "id" | "name">
 
   export type AcademicSessionOrderByWithAggregationInput = {
@@ -29722,6 +32358,100 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"AcademicSession"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AcademicSession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AcademicSession"> | Date | string
+  }
+
+  export type StudentScheduleWhereInput = {
+    AND?: StudentScheduleWhereInput | StudentScheduleWhereInput[]
+    OR?: StudentScheduleWhereInput[]
+    NOT?: StudentScheduleWhereInput | StudentScheduleWhereInput[]
+    id?: IntFilter<"StudentSchedule"> | number
+    sessionId?: IntFilter<"StudentSchedule"> | number
+    classId?: IntFilter<"StudentSchedule"> | number
+    sectionId?: IntFilter<"StudentSchedule"> | number
+    subjects?: JsonFilter<"StudentSchedule">
+    days?: JsonFilter<"StudentSchedule">
+    startTime?: StringFilter<"StudentSchedule"> | string
+    endTime?: StringFilter<"StudentSchedule"> | string
+    status?: StringFilter<"StudentSchedule"> | string
+    createdAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+    session?: XOR<AcademicSessionScalarRelationFilter, AcademicSessionWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+  }
+
+  export type StudentScheduleOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+    subjects?: SortOrder
+    days?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    session?: AcademicSessionOrderByWithRelationInput
+    class?: AcademicClassOrderByWithRelationInput
+    section?: SectionOrderByWithRelationInput
+    _relevance?: StudentScheduleOrderByRelevanceInput
+  }
+
+  export type StudentScheduleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: StudentScheduleWhereInput | StudentScheduleWhereInput[]
+    OR?: StudentScheduleWhereInput[]
+    NOT?: StudentScheduleWhereInput | StudentScheduleWhereInput[]
+    sessionId?: IntFilter<"StudentSchedule"> | number
+    classId?: IntFilter<"StudentSchedule"> | number
+    sectionId?: IntFilter<"StudentSchedule"> | number
+    subjects?: JsonFilter<"StudentSchedule">
+    days?: JsonFilter<"StudentSchedule">
+    startTime?: StringFilter<"StudentSchedule"> | string
+    endTime?: StringFilter<"StudentSchedule"> | string
+    status?: StringFilter<"StudentSchedule"> | string
+    createdAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+    session?: XOR<AcademicSessionScalarRelationFilter, AcademicSessionWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+  }, "id">
+
+  export type StudentScheduleOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+    subjects?: SortOrder
+    days?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StudentScheduleCountOrderByAggregateInput
+    _avg?: StudentScheduleAvgOrderByAggregateInput
+    _max?: StudentScheduleMaxOrderByAggregateInput
+    _min?: StudentScheduleMinOrderByAggregateInput
+    _sum?: StudentScheduleSumOrderByAggregateInput
+  }
+
+  export type StudentScheduleScalarWhereWithAggregatesInput = {
+    AND?: StudentScheduleScalarWhereWithAggregatesInput | StudentScheduleScalarWhereWithAggregatesInput[]
+    OR?: StudentScheduleScalarWhereWithAggregatesInput[]
+    NOT?: StudentScheduleScalarWhereWithAggregatesInput | StudentScheduleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"StudentSchedule"> | number
+    sessionId?: IntWithAggregatesFilter<"StudentSchedule"> | number
+    classId?: IntWithAggregatesFilter<"StudentSchedule"> | number
+    sectionId?: IntWithAggregatesFilter<"StudentSchedule"> | number
+    subjects?: JsonWithAggregatesFilter<"StudentSchedule">
+    days?: JsonWithAggregatesFilter<"StudentSchedule">
+    startTime?: StringWithAggregatesFilter<"StudentSchedule"> | string
+    endTime?: StringWithAggregatesFilter<"StudentSchedule"> | string
+    status?: StringWithAggregatesFilter<"StudentSchedule"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StudentSchedule"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StudentSchedule"> | Date | string
   }
 
   export type StudentWhereInput = {
@@ -29768,6 +32498,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryListRelationFilter
     hifzSiparaEntries?: HifzSiparaEntryListRelationFilter
     fundCollections?: FundCollectionListRelationFilter
+    feeVouchers?: StudentFeeVoucherListRelationFilter
   }
 
   export type StudentOrderByWithRelationInput = {
@@ -29811,6 +32542,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryOrderByRelationAggregateInput
     hifzSiparaEntries?: HifzSiparaEntryOrderByRelationAggregateInput
     fundCollections?: FundCollectionOrderByRelationAggregateInput
+    feeVouchers?: StudentFeeVoucherOrderByRelationAggregateInput
     _relevance?: StudentOrderByRelevanceInput
   }
 
@@ -29858,6 +32590,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryListRelationFilter
     hifzSiparaEntries?: HifzSiparaEntryListRelationFilter
     fundCollections?: FundCollectionListRelationFilter
+    feeVouchers?: StudentFeeVoucherListRelationFilter
   }, "id" | "admissionNumber">
 
   export type StudentOrderByWithAggregationInput = {
@@ -30911,6 +33644,140 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FinanceHead"> | Date | string
   }
 
+  export type StudentFeeVoucherWhereInput = {
+    AND?: StudentFeeVoucherWhereInput | StudentFeeVoucherWhereInput[]
+    OR?: StudentFeeVoucherWhereInput[]
+    NOT?: StudentFeeVoucherWhereInput | StudentFeeVoucherWhereInput[]
+    id?: IntFilter<"StudentFeeVoucher"> | number
+    voucherNo?: StringFilter<"StudentFeeVoucher"> | string
+    studentId?: IntFilter<"StudentFeeVoucher"> | number
+    feeMonth?: IntFilter<"StudentFeeVoucher"> | number
+    feeYear?: IntFilter<"StudentFeeVoucher"> | number
+    monthlyFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paidDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paymentMethod?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    remarks?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    status?: StringFilter<"StudentFeeVoucher"> | string
+    createdAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }
+
+  export type StudentFeeVoucherOrderByWithRelationInput = {
+    id?: SortOrder
+    voucherNo?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    paidDate?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    student?: StudentOrderByWithRelationInput
+    _relevance?: StudentFeeVoucherOrderByRelevanceInput
+  }
+
+  export type StudentFeeVoucherWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    voucherNo?: string
+    studentId_feeMonth_feeYear?: StudentFeeVoucherStudentIdFeeMonthFeeYearCompoundUniqueInput
+    AND?: StudentFeeVoucherWhereInput | StudentFeeVoucherWhereInput[]
+    OR?: StudentFeeVoucherWhereInput[]
+    NOT?: StudentFeeVoucherWhereInput | StudentFeeVoucherWhereInput[]
+    studentId?: IntFilter<"StudentFeeVoucher"> | number
+    feeMonth?: IntFilter<"StudentFeeVoucher"> | number
+    feeYear?: IntFilter<"StudentFeeVoucher"> | number
+    monthlyFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paidDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paymentMethod?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    remarks?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    status?: StringFilter<"StudentFeeVoucher"> | string
+    createdAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }, "id" | "voucherNo" | "studentId_feeMonth_feeYear">
+
+  export type StudentFeeVoucherOrderByWithAggregationInput = {
+    id?: SortOrder
+    voucherNo?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    paidDate?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StudentFeeVoucherCountOrderByAggregateInput
+    _avg?: StudentFeeVoucherAvgOrderByAggregateInput
+    _max?: StudentFeeVoucherMaxOrderByAggregateInput
+    _min?: StudentFeeVoucherMinOrderByAggregateInput
+    _sum?: StudentFeeVoucherSumOrderByAggregateInput
+  }
+
+  export type StudentFeeVoucherScalarWhereWithAggregatesInput = {
+    AND?: StudentFeeVoucherScalarWhereWithAggregatesInput | StudentFeeVoucherScalarWhereWithAggregatesInput[]
+    OR?: StudentFeeVoucherScalarWhereWithAggregatesInput[]
+    NOT?: StudentFeeVoucherScalarWhereWithAggregatesInput | StudentFeeVoucherScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"StudentFeeVoucher"> | number
+    voucherNo?: StringWithAggregatesFilter<"StudentFeeVoucher"> | string
+    studentId?: IntWithAggregatesFilter<"StudentFeeVoucher"> | number
+    feeMonth?: IntWithAggregatesFilter<"StudentFeeVoucher"> | number
+    feeYear?: IntWithAggregatesFilter<"StudentFeeVoucher"> | number
+    monthlyFee?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    fine?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalWithAggregatesFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueDate?: DateTimeNullableWithAggregatesFilter<"StudentFeeVoucher"> | Date | string | null
+    paidDate?: DateTimeNullableWithAggregatesFilter<"StudentFeeVoucher"> | Date | string | null
+    paymentMethod?: StringNullableWithAggregatesFilter<"StudentFeeVoucher"> | string | null
+    remarks?: StringNullableWithAggregatesFilter<"StudentFeeVoucher"> | string | null
+    status?: StringWithAggregatesFilter<"StudentFeeVoucher"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StudentFeeVoucher"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StudentFeeVoucher"> | Date | string
+  }
+
   export type FundCollectionWhereInput = {
     AND?: FundCollectionWhereInput | FundCollectionWhereInput[]
     OR?: FundCollectionWhereInput[]
@@ -31644,6 +34511,7 @@ export namespace Prisma {
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateInput = {
@@ -31656,6 +34524,7 @@ export namespace Prisma {
     sections?: SectionUncheckedCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUpdateInput = {
@@ -31667,6 +34536,7 @@ export namespace Prisma {
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateInput = {
@@ -31679,6 +34549,7 @@ export namespace Prisma {
     sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassCreateManyInput = {
@@ -31714,6 +34585,7 @@ export namespace Prisma {
     class: AcademicClassCreateNestedOneWithoutSectionsInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSectionInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateInput = {
@@ -31725,6 +34597,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSectionInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUpdateInput = {
@@ -31735,6 +34608,7 @@ export namespace Prisma {
     class?: AcademicClassUpdateOneRequiredWithoutSectionsNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutSectionNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateInput = {
@@ -31746,6 +34620,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionCreateManyInput = {
@@ -31781,6 +34656,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateInput = {
@@ -31792,6 +34668,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUpdateInput = {
@@ -31802,6 +34679,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateInput = {
@@ -31813,6 +34691,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionCreateManyInput = {
@@ -31839,6 +34718,98 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleCreateInput = {
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutStudentSchedulesInput
+    class: AcademicClassCreateNestedOneWithoutStudentSchedulesInput
+    section: SectionCreateNestedOneWithoutStudentSchedulesInput
+  }
+
+  export type StudentScheduleUncheckedCreateInput = {
+    id?: number
+    sessionId: number
+    classId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleUpdateInput = {
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutStudentSchedulesNestedInput
+    section?: SectionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+  }
+
+  export type StudentScheduleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleCreateManyInput = {
+    id?: number
+    sessionId: number
+    classId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleUpdateManyMutationInput = {
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31884,6 +34855,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateInput = {
@@ -31927,6 +34899,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUpdateInput = {
@@ -31969,6 +34942,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateInput = {
@@ -32012,6 +34986,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateManyInput = {
@@ -33117,6 +36092,163 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StudentFeeVoucherCreateInput = {
+    voucherNo: string
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student: StudentCreateNestedOneWithoutFeeVouchersInput
+  }
+
+  export type StudentFeeVoucherUncheckedCreateInput = {
+    id?: number
+    voucherNo: string
+    studentId: number
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentFeeVoucherUpdateInput = {
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneRequiredWithoutFeeVouchersNestedInput
+  }
+
+  export type StudentFeeVoucherUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    studentId?: IntFieldUpdateOperationsInput | number
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentFeeVoucherCreateManyInput = {
+    id?: number
+    voucherNo: string
+    studentId: number
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentFeeVoucherUpdateManyMutationInput = {
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentFeeVoucherUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    studentId?: IntFieldUpdateOperationsInput | number
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FundCollectionCreateInput = {
     amount: Decimal | DecimalJsLike | number | string
     paymentDate: Date | string
@@ -33812,7 +36944,17 @@ export namespace Prisma {
     none?: SectionWhereInput
   }
 
+  export type StudentScheduleListRelationFilter = {
+    every?: StudentScheduleWhereInput
+    some?: StudentScheduleWhereInput
+    none?: StudentScheduleWhereInput
+  }
+
   export type SectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentScheduleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33960,6 +37102,123 @@ export namespace Prisma {
   export type AcademicSessionSumOrderByAggregateInput = {
     id?: SortOrder
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type AcademicSessionScalarRelationFilter = {
+    is?: AcademicSessionWhereInput
+    isNot?: AcademicSessionWhereInput
+  }
+
+  export type SectionScalarRelationFilter = {
+    is?: SectionWhereInput
+    isNot?: SectionWhereInput
+  }
+
+  export type StudentScheduleOrderByRelevanceInput = {
+    fields: StudentScheduleOrderByRelevanceFieldEnum | StudentScheduleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StudentScheduleCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+    subjects?: SortOrder
+    days?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentScheduleAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+  }
+
+  export type StudentScheduleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentScheduleMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentScheduleSumOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    sectionId?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
@@ -34019,6 +37278,12 @@ export namespace Prisma {
     none?: FundCollectionWhereInput
   }
 
+  export type StudentFeeVoucherListRelationFilter = {
+    every?: StudentFeeVoucherWhereInput
+    some?: StudentFeeVoucherWhereInput
+    none?: StudentFeeVoucherWhereInput
+  }
+
   export type StudentParentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -34040,6 +37305,10 @@ export namespace Prisma {
   }
 
   export type FundCollectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentFeeVoucherOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34327,16 +37596,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type SectionScalarRelationFilter = {
-    is?: SectionWhereInput
-    isNot?: SectionWhereInput
-  }
-
-  export type AcademicSessionScalarRelationFilter = {
-    is?: AcademicSessionWhereInput
-    isNot?: AcademicSessionWhereInput
   }
 
   export type StudentClassAssignmentOrderByRelevanceInput = {
@@ -34975,6 +38234,117 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type StudentFeeVoucherOrderByRelevanceInput = {
+    fields: StudentFeeVoucherOrderByRelevanceFieldEnum | StudentFeeVoucherOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StudentFeeVoucherStudentIdFeeMonthFeeYearCompoundUniqueInput = {
+    studentId: number
+    feeMonth: number
+    feeYear: number
+  }
+
+  export type StudentFeeVoucherCountOrderByAggregateInput = {
+    id?: SortOrder
+    voucherNo?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+    dueDate?: SortOrder
+    paidDate?: SortOrder
+    paymentMethod?: SortOrder
+    remarks?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentFeeVoucherAvgOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+  }
+
+  export type StudentFeeVoucherMaxOrderByAggregateInput = {
+    id?: SortOrder
+    voucherNo?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+    dueDate?: SortOrder
+    paidDate?: SortOrder
+    paymentMethod?: SortOrder
+    remarks?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentFeeVoucherMinOrderByAggregateInput = {
+    id?: SortOrder
+    voucherNo?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+    dueDate?: SortOrder
+    paidDate?: SortOrder
+    paymentMethod?: SortOrder
+    remarks?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentFeeVoucherSumOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    feeMonth?: SortOrder
+    feeYear?: SortOrder
+    monthlyFee?: SortOrder
+    admissionFee?: SortOrder
+    arrears?: SortOrder
+    discount?: SortOrder
+    fine?: SortOrder
+    totalAmount?: SortOrder
+    paidAmount?: SortOrder
+    dueAmount?: SortOrder
+  }
+
   export type FinanceHeadScalarRelationFilter = {
     is?: FinanceHeadWhereInput
     isNot?: FinanceHeadWhereInput
@@ -35369,6 +38739,13 @@ export namespace Prisma {
     connect?: StudentAttendanceWhereUniqueInput | StudentAttendanceWhereUniqueInput[]
   }
 
+  export type StudentScheduleCreateNestedManyWithoutClassInput = {
+    create?: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput> | StudentScheduleCreateWithoutClassInput[] | StudentScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutClassInput | StudentScheduleCreateOrConnectWithoutClassInput[]
+    createMany?: StudentScheduleCreateManyClassInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+  }
+
   export type SectionUncheckedCreateNestedManyWithoutClassInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -35388,6 +38765,13 @@ export namespace Prisma {
     connectOrCreate?: StudentAttendanceCreateOrConnectWithoutClassInput | StudentAttendanceCreateOrConnectWithoutClassInput[]
     createMany?: StudentAttendanceCreateManyClassInputEnvelope
     connect?: StudentAttendanceWhereUniqueInput | StudentAttendanceWhereUniqueInput[]
+  }
+
+  export type StudentScheduleUncheckedCreateNestedManyWithoutClassInput = {
+    create?: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput> | StudentScheduleCreateWithoutClassInput[] | StudentScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutClassInput | StudentScheduleCreateOrConnectWithoutClassInput[]
+    createMany?: StudentScheduleCreateManyClassInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
   }
 
   export type BranchUpdateOneRequiredWithoutClassesNestedInput = {
@@ -35440,6 +38824,20 @@ export namespace Prisma {
     deleteMany?: StudentAttendanceScalarWhereInput | StudentAttendanceScalarWhereInput[]
   }
 
+  export type StudentScheduleUpdateManyWithoutClassNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput> | StudentScheduleCreateWithoutClassInput[] | StudentScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutClassInput | StudentScheduleCreateOrConnectWithoutClassInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutClassInput | StudentScheduleUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: StudentScheduleCreateManyClassInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutClassInput | StudentScheduleUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutClassInput | StudentScheduleUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
   export type SectionUncheckedUpdateManyWithoutClassNestedInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -35482,6 +38880,20 @@ export namespace Prisma {
     deleteMany?: StudentAttendanceScalarWhereInput | StudentAttendanceScalarWhereInput[]
   }
 
+  export type StudentScheduleUncheckedUpdateManyWithoutClassNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput> | StudentScheduleCreateWithoutClassInput[] | StudentScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutClassInput | StudentScheduleCreateOrConnectWithoutClassInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutClassInput | StudentScheduleUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: StudentScheduleCreateManyClassInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutClassInput | StudentScheduleUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutClassInput | StudentScheduleUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
   export type AcademicClassCreateNestedOneWithoutSectionsInput = {
     create?: XOR<AcademicClassCreateWithoutSectionsInput, AcademicClassUncheckedCreateWithoutSectionsInput>
     connectOrCreate?: AcademicClassCreateOrConnectWithoutSectionsInput
@@ -35502,6 +38914,13 @@ export namespace Prisma {
     connect?: StudentAttendanceWhereUniqueInput | StudentAttendanceWhereUniqueInput[]
   }
 
+  export type StudentScheduleCreateNestedManyWithoutSectionInput = {
+    create?: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput> | StudentScheduleCreateWithoutSectionInput[] | StudentScheduleUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSectionInput | StudentScheduleCreateOrConnectWithoutSectionInput[]
+    createMany?: StudentScheduleCreateManySectionInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+  }
+
   export type StudentClassAssignmentUncheckedCreateNestedManyWithoutSectionInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSectionInput, StudentClassAssignmentUncheckedCreateWithoutSectionInput> | StudentClassAssignmentCreateWithoutSectionInput[] | StudentClassAssignmentUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSectionInput | StudentClassAssignmentCreateOrConnectWithoutSectionInput[]
@@ -35514,6 +38933,13 @@ export namespace Prisma {
     connectOrCreate?: StudentAttendanceCreateOrConnectWithoutSectionInput | StudentAttendanceCreateOrConnectWithoutSectionInput[]
     createMany?: StudentAttendanceCreateManySectionInputEnvelope
     connect?: StudentAttendanceWhereUniqueInput | StudentAttendanceWhereUniqueInput[]
+  }
+
+  export type StudentScheduleUncheckedCreateNestedManyWithoutSectionInput = {
+    create?: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput> | StudentScheduleCreateWithoutSectionInput[] | StudentScheduleUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSectionInput | StudentScheduleCreateOrConnectWithoutSectionInput[]
+    createMany?: StudentScheduleCreateManySectionInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
   }
 
   export type AcademicClassUpdateOneRequiredWithoutSectionsNestedInput = {
@@ -35552,6 +38978,20 @@ export namespace Prisma {
     deleteMany?: StudentAttendanceScalarWhereInput | StudentAttendanceScalarWhereInput[]
   }
 
+  export type StudentScheduleUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput> | StudentScheduleCreateWithoutSectionInput[] | StudentScheduleUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSectionInput | StudentScheduleCreateOrConnectWithoutSectionInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutSectionInput | StudentScheduleUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: StudentScheduleCreateManySectionInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutSectionInput | StudentScheduleUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutSectionInput | StudentScheduleUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
   export type StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSectionInput, StudentClassAssignmentUncheckedCreateWithoutSectionInput> | StudentClassAssignmentCreateWithoutSectionInput[] | StudentClassAssignmentUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSectionInput | StudentClassAssignmentCreateOrConnectWithoutSectionInput[]
@@ -35580,6 +39020,20 @@ export namespace Prisma {
     deleteMany?: StudentAttendanceScalarWhereInput | StudentAttendanceScalarWhereInput[]
   }
 
+  export type StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput> | StudentScheduleCreateWithoutSectionInput[] | StudentScheduleUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSectionInput | StudentScheduleCreateOrConnectWithoutSectionInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutSectionInput | StudentScheduleUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: StudentScheduleCreateManySectionInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutSectionInput | StudentScheduleUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutSectionInput | StudentScheduleUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
   export type StudentClassAssignmentCreateNestedManyWithoutSessionInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSessionInput, StudentClassAssignmentUncheckedCreateWithoutSessionInput> | StudentClassAssignmentCreateWithoutSessionInput[] | StudentClassAssignmentUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSessionInput | StudentClassAssignmentCreateOrConnectWithoutSessionInput[]
@@ -35587,11 +39041,25 @@ export namespace Prisma {
     connect?: StudentClassAssignmentWhereUniqueInput | StudentClassAssignmentWhereUniqueInput[]
   }
 
+  export type StudentScheduleCreateNestedManyWithoutSessionInput = {
+    create?: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput> | StudentScheduleCreateWithoutSessionInput[] | StudentScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSessionInput | StudentScheduleCreateOrConnectWithoutSessionInput[]
+    createMany?: StudentScheduleCreateManySessionInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+  }
+
   export type StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSessionInput, StudentClassAssignmentUncheckedCreateWithoutSessionInput> | StudentClassAssignmentCreateWithoutSessionInput[] | StudentClassAssignmentUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSessionInput | StudentClassAssignmentCreateOrConnectWithoutSessionInput[]
     createMany?: StudentClassAssignmentCreateManySessionInputEnvelope
     connect?: StudentClassAssignmentWhereUniqueInput | StudentClassAssignmentWhereUniqueInput[]
+  }
+
+  export type StudentScheduleUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput> | StudentScheduleCreateWithoutSessionInput[] | StudentScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSessionInput | StudentScheduleCreateOrConnectWithoutSessionInput[]
+    createMany?: StudentScheduleCreateManySessionInputEnvelope
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
   }
 
   export type StudentClassAssignmentUpdateManyWithoutSessionNestedInput = {
@@ -35608,6 +39076,20 @@ export namespace Prisma {
     deleteMany?: StudentClassAssignmentScalarWhereInput | StudentClassAssignmentScalarWhereInput[]
   }
 
+  export type StudentScheduleUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput> | StudentScheduleCreateWithoutSessionInput[] | StudentScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSessionInput | StudentScheduleCreateOrConnectWithoutSessionInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutSessionInput | StudentScheduleUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: StudentScheduleCreateManySessionInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutSessionInput | StudentScheduleUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutSessionInput | StudentScheduleUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
   export type StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSessionInput, StudentClassAssignmentUncheckedCreateWithoutSessionInput> | StudentClassAssignmentCreateWithoutSessionInput[] | StudentClassAssignmentUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSessionInput | StudentClassAssignmentCreateOrConnectWithoutSessionInput[]
@@ -35620,6 +39102,62 @@ export namespace Prisma {
     update?: StudentClassAssignmentUpdateWithWhereUniqueWithoutSessionInput | StudentClassAssignmentUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: StudentClassAssignmentUpdateManyWithWhereWithoutSessionInput | StudentClassAssignmentUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: StudentClassAssignmentScalarWhereInput | StudentClassAssignmentScalarWhereInput[]
+  }
+
+  export type StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput> | StudentScheduleCreateWithoutSessionInput[] | StudentScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: StudentScheduleCreateOrConnectWithoutSessionInput | StudentScheduleCreateOrConnectWithoutSessionInput[]
+    upsert?: StudentScheduleUpsertWithWhereUniqueWithoutSessionInput | StudentScheduleUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: StudentScheduleCreateManySessionInputEnvelope
+    set?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    disconnect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    delete?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    connect?: StudentScheduleWhereUniqueInput | StudentScheduleWhereUniqueInput[]
+    update?: StudentScheduleUpdateWithWhereUniqueWithoutSessionInput | StudentScheduleUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: StudentScheduleUpdateManyWithWhereWithoutSessionInput | StudentScheduleUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+  }
+
+  export type AcademicSessionCreateNestedOneWithoutStudentSchedulesInput = {
+    create?: XOR<AcademicSessionCreateWithoutStudentSchedulesInput, AcademicSessionUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: AcademicSessionCreateOrConnectWithoutStudentSchedulesInput
+    connect?: AcademicSessionWhereUniqueInput
+  }
+
+  export type AcademicClassCreateNestedOneWithoutStudentSchedulesInput = {
+    create?: XOR<AcademicClassCreateWithoutStudentSchedulesInput, AcademicClassUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutStudentSchedulesInput
+    connect?: AcademicClassWhereUniqueInput
+  }
+
+  export type SectionCreateNestedOneWithoutStudentSchedulesInput = {
+    create?: XOR<SectionCreateWithoutStudentSchedulesInput, SectionUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutStudentSchedulesInput
+    connect?: SectionWhereUniqueInput
+  }
+
+  export type AcademicSessionUpdateOneRequiredWithoutStudentSchedulesNestedInput = {
+    create?: XOR<AcademicSessionCreateWithoutStudentSchedulesInput, AcademicSessionUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: AcademicSessionCreateOrConnectWithoutStudentSchedulesInput
+    upsert?: AcademicSessionUpsertWithoutStudentSchedulesInput
+    connect?: AcademicSessionWhereUniqueInput
+    update?: XOR<XOR<AcademicSessionUpdateToOneWithWhereWithoutStudentSchedulesInput, AcademicSessionUpdateWithoutStudentSchedulesInput>, AcademicSessionUncheckedUpdateWithoutStudentSchedulesInput>
+  }
+
+  export type AcademicClassUpdateOneRequiredWithoutStudentSchedulesNestedInput = {
+    create?: XOR<AcademicClassCreateWithoutStudentSchedulesInput, AcademicClassUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutStudentSchedulesInput
+    upsert?: AcademicClassUpsertWithoutStudentSchedulesInput
+    connect?: AcademicClassWhereUniqueInput
+    update?: XOR<XOR<AcademicClassUpdateToOneWithWhereWithoutStudentSchedulesInput, AcademicClassUpdateWithoutStudentSchedulesInput>, AcademicClassUncheckedUpdateWithoutStudentSchedulesInput>
+  }
+
+  export type SectionUpdateOneRequiredWithoutStudentSchedulesNestedInput = {
+    create?: XOR<SectionCreateWithoutStudentSchedulesInput, SectionUncheckedCreateWithoutStudentSchedulesInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutStudentSchedulesInput
+    upsert?: SectionUpsertWithoutStudentSchedulesInput
+    connect?: SectionWhereUniqueInput
+    update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutStudentSchedulesInput, SectionUpdateWithoutStudentSchedulesInput>, SectionUncheckedUpdateWithoutStudentSchedulesInput>
   }
 
   export type StudentParentCreateNestedManyWithoutStudentInput = {
@@ -35678,6 +39216,13 @@ export namespace Prisma {
     connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
   }
 
+  export type StudentFeeVoucherCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentFeeVoucherCreateManyStudentInputEnvelope
+    connect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+  }
+
   export type StudentParentUncheckedCreateNestedManyWithoutStudentInput = {
     create?: XOR<StudentParentCreateWithoutStudentInput, StudentParentUncheckedCreateWithoutStudentInput> | StudentParentCreateWithoutStudentInput[] | StudentParentUncheckedCreateWithoutStudentInput[]
     connectOrCreate?: StudentParentCreateOrConnectWithoutStudentInput | StudentParentCreateOrConnectWithoutStudentInput[]
@@ -35732,6 +39277,13 @@ export namespace Prisma {
     connectOrCreate?: FundCollectionCreateOrConnectWithoutStudentInput | FundCollectionCreateOrConnectWithoutStudentInput[]
     createMany?: FundCollectionCreateManyStudentInputEnvelope
     connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
+  }
+
+  export type StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentFeeVoucherCreateManyStudentInputEnvelope
+    connect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -35858,6 +39410,20 @@ export namespace Prisma {
     deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
   }
 
+  export type StudentFeeVoucherUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput | StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentFeeVoucherCreateManyStudentInputEnvelope
+    set?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    disconnect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    delete?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    connect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    update?: StudentFeeVoucherUpdateWithWhereUniqueWithoutStudentInput | StudentFeeVoucherUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentFeeVoucherUpdateManyWithWhereWithoutStudentInput | StudentFeeVoucherUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentFeeVoucherScalarWhereInput | StudentFeeVoucherScalarWhereInput[]
+  }
+
   export type StudentParentUncheckedUpdateManyWithoutStudentNestedInput = {
     create?: XOR<StudentParentCreateWithoutStudentInput, StudentParentUncheckedCreateWithoutStudentInput> | StudentParentCreateWithoutStudentInput[] | StudentParentUncheckedCreateWithoutStudentInput[]
     connectOrCreate?: StudentParentCreateOrConnectWithoutStudentInput | StudentParentCreateOrConnectWithoutStudentInput[]
@@ -35968,6 +39534,20 @@ export namespace Prisma {
     update?: FundCollectionUpdateWithWhereUniqueWithoutStudentInput | FundCollectionUpdateWithWhereUniqueWithoutStudentInput[]
     updateMany?: FundCollectionUpdateManyWithWhereWithoutStudentInput | FundCollectionUpdateManyWithWhereWithoutStudentInput[]
     deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
+  }
+
+  export type StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput | StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentFeeVoucherCreateManyStudentInputEnvelope
+    set?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    disconnect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    delete?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    connect?: StudentFeeVoucherWhereUniqueInput | StudentFeeVoucherWhereUniqueInput[]
+    update?: StudentFeeVoucherUpdateWithWhereUniqueWithoutStudentInput | StudentFeeVoucherUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentFeeVoucherUpdateManyWithWhereWithoutStudentInput | StudentFeeVoucherUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentFeeVoucherScalarWhereInput | StudentFeeVoucherScalarWhereInput[]
   }
 
   export type StudentParentCreateNestedManyWithoutParentInput = {
@@ -36438,6 +40018,20 @@ export namespace Prisma {
     deleteMany?: SalaryEntryScalarWhereInput | SalaryEntryScalarWhereInput[]
   }
 
+  export type StudentCreateNestedOneWithoutFeeVouchersInput = {
+    create?: XOR<StudentCreateWithoutFeeVouchersInput, StudentUncheckedCreateWithoutFeeVouchersInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutFeeVouchersInput
+    connect?: StudentWhereUniqueInput
+  }
+
+  export type StudentUpdateOneRequiredWithoutFeeVouchersNestedInput = {
+    create?: XOR<StudentCreateWithoutFeeVouchersInput, StudentUncheckedCreateWithoutFeeVouchersInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutFeeVouchersInput
+    upsert?: StudentUpsertWithoutFeeVouchersInput
+    connect?: StudentWhereUniqueInput
+    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutFeeVouchersInput, StudentUpdateWithoutFeeVouchersInput>, StudentUncheckedUpdateWithoutFeeVouchersInput>
+  }
+
   export type StudentCreateNestedOneWithoutFundCollectionsInput = {
     create?: XOR<StudentCreateWithoutFundCollectionsInput, StudentUncheckedCreateWithoutFundCollectionsInput>
     connectOrCreate?: StudentCreateOrConnectWithoutFundCollectionsInput
@@ -36632,6 +40226,29 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -36905,6 +40522,7 @@ export namespace Prisma {
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutBranchInput = {
@@ -36916,6 +40534,7 @@ export namespace Prisma {
     sections?: SectionUncheckedCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutBranchInput = {
@@ -37182,6 +40801,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSectionInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutClassInput = {
@@ -37192,6 +40812,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSectionInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutClassInput = {
@@ -37267,6 +40888,41 @@ export namespace Prisma {
 
   export type StudentAttendanceCreateManyClassInputEnvelope = {
     data: StudentAttendanceCreateManyClassInput | StudentAttendanceCreateManyClassInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentScheduleCreateWithoutClassInput = {
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutStudentSchedulesInput
+    section: SectionCreateNestedOneWithoutStudentSchedulesInput
+  }
+
+  export type StudentScheduleUncheckedCreateWithoutClassInput = {
+    id?: number
+    sessionId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleCreateOrConnectWithoutClassInput = {
+    where: StudentScheduleWhereUniqueInput
+    create: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput>
+  }
+
+  export type StudentScheduleCreateManyClassInputEnvelope = {
+    data: StudentScheduleCreateManyClassInput | StudentScheduleCreateManyClassInput[]
     skipDuplicates?: boolean
   }
 
@@ -37366,6 +41022,39 @@ export namespace Prisma {
     data: XOR<StudentAttendanceUpdateManyMutationInput, StudentAttendanceUncheckedUpdateManyWithoutClassInput>
   }
 
+  export type StudentScheduleUpsertWithWhereUniqueWithoutClassInput = {
+    where: StudentScheduleWhereUniqueInput
+    update: XOR<StudentScheduleUpdateWithoutClassInput, StudentScheduleUncheckedUpdateWithoutClassInput>
+    create: XOR<StudentScheduleCreateWithoutClassInput, StudentScheduleUncheckedCreateWithoutClassInput>
+  }
+
+  export type StudentScheduleUpdateWithWhereUniqueWithoutClassInput = {
+    where: StudentScheduleWhereUniqueInput
+    data: XOR<StudentScheduleUpdateWithoutClassInput, StudentScheduleUncheckedUpdateWithoutClassInput>
+  }
+
+  export type StudentScheduleUpdateManyWithWhereWithoutClassInput = {
+    where: StudentScheduleScalarWhereInput
+    data: XOR<StudentScheduleUpdateManyMutationInput, StudentScheduleUncheckedUpdateManyWithoutClassInput>
+  }
+
+  export type StudentScheduleScalarWhereInput = {
+    AND?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+    OR?: StudentScheduleScalarWhereInput[]
+    NOT?: StudentScheduleScalarWhereInput | StudentScheduleScalarWhereInput[]
+    id?: IntFilter<"StudentSchedule"> | number
+    sessionId?: IntFilter<"StudentSchedule"> | number
+    classId?: IntFilter<"StudentSchedule"> | number
+    sectionId?: IntFilter<"StudentSchedule"> | number
+    subjects?: JsonFilter<"StudentSchedule">
+    days?: JsonFilter<"StudentSchedule">
+    startTime?: StringFilter<"StudentSchedule"> | string
+    endTime?: StringFilter<"StudentSchedule"> | string
+    status?: StringFilter<"StudentSchedule"> | string
+    createdAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentSchedule"> | Date | string
+  }
+
   export type AcademicClassCreateWithoutSectionsInput = {
     name: string
     status?: string
@@ -37374,6 +41063,7 @@ export namespace Prisma {
     branch: BranchCreateNestedOneWithoutClassesInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutSectionsInput = {
@@ -37385,6 +41075,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutSectionsInput = {
@@ -37458,6 +41149,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentScheduleCreateWithoutSectionInput = {
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutStudentSchedulesInput
+    class: AcademicClassCreateNestedOneWithoutStudentSchedulesInput
+  }
+
+  export type StudentScheduleUncheckedCreateWithoutSectionInput = {
+    id?: number
+    sessionId: number
+    classId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleCreateOrConnectWithoutSectionInput = {
+    where: StudentScheduleWhereUniqueInput
+    create: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput>
+  }
+
+  export type StudentScheduleCreateManySectionInputEnvelope = {
+    data: StudentScheduleCreateManySectionInput | StudentScheduleCreateManySectionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AcademicClassUpsertWithoutSectionsInput = {
     update: XOR<AcademicClassUpdateWithoutSectionsInput, AcademicClassUncheckedUpdateWithoutSectionsInput>
     create: XOR<AcademicClassCreateWithoutSectionsInput, AcademicClassUncheckedCreateWithoutSectionsInput>
@@ -37477,6 +41203,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutSectionsInput = {
@@ -37488,6 +41215,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type StudentClassAssignmentUpsertWithWhereUniqueWithoutSectionInput = {
@@ -37520,6 +41248,22 @@ export namespace Prisma {
   export type StudentAttendanceUpdateManyWithWhereWithoutSectionInput = {
     where: StudentAttendanceScalarWhereInput
     data: XOR<StudentAttendanceUpdateManyMutationInput, StudentAttendanceUncheckedUpdateManyWithoutSectionInput>
+  }
+
+  export type StudentScheduleUpsertWithWhereUniqueWithoutSectionInput = {
+    where: StudentScheduleWhereUniqueInput
+    update: XOR<StudentScheduleUpdateWithoutSectionInput, StudentScheduleUncheckedUpdateWithoutSectionInput>
+    create: XOR<StudentScheduleCreateWithoutSectionInput, StudentScheduleUncheckedCreateWithoutSectionInput>
+  }
+
+  export type StudentScheduleUpdateWithWhereUniqueWithoutSectionInput = {
+    where: StudentScheduleWhereUniqueInput
+    data: XOR<StudentScheduleUpdateWithoutSectionInput, StudentScheduleUncheckedUpdateWithoutSectionInput>
+  }
+
+  export type StudentScheduleUpdateManyWithWhereWithoutSectionInput = {
+    where: StudentScheduleScalarWhereInput
+    data: XOR<StudentScheduleUpdateManyMutationInput, StudentScheduleUncheckedUpdateManyWithoutSectionInput>
   }
 
   export type StudentClassAssignmentCreateWithoutSessionInput = {
@@ -37555,6 +41299,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentScheduleCreateWithoutSessionInput = {
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    class: AcademicClassCreateNestedOneWithoutStudentSchedulesInput
+    section: SectionCreateNestedOneWithoutStudentSchedulesInput
+  }
+
+  export type StudentScheduleUncheckedCreateWithoutSessionInput = {
+    id?: number
+    classId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleCreateOrConnectWithoutSessionInput = {
+    where: StudentScheduleWhereUniqueInput
+    create: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput>
+  }
+
+  export type StudentScheduleCreateManySessionInputEnvelope = {
+    data: StudentScheduleCreateManySessionInput | StudentScheduleCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StudentClassAssignmentUpsertWithWhereUniqueWithoutSessionInput = {
     where: StudentClassAssignmentWhereUniqueInput
     update: XOR<StudentClassAssignmentUpdateWithoutSessionInput, StudentClassAssignmentUncheckedUpdateWithoutSessionInput>
@@ -37569,6 +41348,200 @@ export namespace Prisma {
   export type StudentClassAssignmentUpdateManyWithWhereWithoutSessionInput = {
     where: StudentClassAssignmentScalarWhereInput
     data: XOR<StudentClassAssignmentUpdateManyMutationInput, StudentClassAssignmentUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type StudentScheduleUpsertWithWhereUniqueWithoutSessionInput = {
+    where: StudentScheduleWhereUniqueInput
+    update: XOR<StudentScheduleUpdateWithoutSessionInput, StudentScheduleUncheckedUpdateWithoutSessionInput>
+    create: XOR<StudentScheduleCreateWithoutSessionInput, StudentScheduleUncheckedCreateWithoutSessionInput>
+  }
+
+  export type StudentScheduleUpdateWithWhereUniqueWithoutSessionInput = {
+    where: StudentScheduleWhereUniqueInput
+    data: XOR<StudentScheduleUpdateWithoutSessionInput, StudentScheduleUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type StudentScheduleUpdateManyWithWhereWithoutSessionInput = {
+    where: StudentScheduleScalarWhereInput
+    data: XOR<StudentScheduleUpdateManyMutationInput, StudentScheduleUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type AcademicSessionCreateWithoutStudentSchedulesInput = {
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
+  }
+
+  export type AcademicSessionUncheckedCreateWithoutStudentSchedulesInput = {
+    id?: number
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type AcademicSessionCreateOrConnectWithoutStudentSchedulesInput = {
+    where: AcademicSessionWhereUniqueInput
+    create: XOR<AcademicSessionCreateWithoutStudentSchedulesInput, AcademicSessionUncheckedCreateWithoutStudentSchedulesInput>
+  }
+
+  export type AcademicClassCreateWithoutStudentSchedulesInput = {
+    name: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch: BranchCreateNestedOneWithoutClassesInput
+    sections?: SectionCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassUncheckedCreateWithoutStudentSchedulesInput = {
+    id?: number
+    name: string
+    branchId: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sections?: SectionUncheckedCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassCreateOrConnectWithoutStudentSchedulesInput = {
+    where: AcademicClassWhereUniqueInput
+    create: XOR<AcademicClassCreateWithoutStudentSchedulesInput, AcademicClassUncheckedCreateWithoutStudentSchedulesInput>
+  }
+
+  export type SectionCreateWithoutStudentSchedulesInput = {
+    name: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    class: AcademicClassCreateNestedOneWithoutSectionsInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutSectionInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionUncheckedCreateWithoutStudentSchedulesInput = {
+    id?: number
+    name: string
+    classId: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSectionInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionCreateOrConnectWithoutStudentSchedulesInput = {
+    where: SectionWhereUniqueInput
+    create: XOR<SectionCreateWithoutStudentSchedulesInput, SectionUncheckedCreateWithoutStudentSchedulesInput>
+  }
+
+  export type AcademicSessionUpsertWithoutStudentSchedulesInput = {
+    update: XOR<AcademicSessionUpdateWithoutStudentSchedulesInput, AcademicSessionUncheckedUpdateWithoutStudentSchedulesInput>
+    create: XOR<AcademicSessionCreateWithoutStudentSchedulesInput, AcademicSessionUncheckedCreateWithoutStudentSchedulesInput>
+    where?: AcademicSessionWhereInput
+  }
+
+  export type AcademicSessionUpdateToOneWithWhereWithoutStudentSchedulesInput = {
+    where?: AcademicSessionWhereInput
+    data: XOR<AcademicSessionUpdateWithoutStudentSchedulesInput, AcademicSessionUncheckedUpdateWithoutStudentSchedulesInput>
+  }
+
+  export type AcademicSessionUpdateWithoutStudentSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AcademicSessionUncheckedUpdateWithoutStudentSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AcademicClassUpsertWithoutStudentSchedulesInput = {
+    update: XOR<AcademicClassUpdateWithoutStudentSchedulesInput, AcademicClassUncheckedUpdateWithoutStudentSchedulesInput>
+    create: XOR<AcademicClassCreateWithoutStudentSchedulesInput, AcademicClassUncheckedCreateWithoutStudentSchedulesInput>
+    where?: AcademicClassWhereInput
+  }
+
+  export type AcademicClassUpdateToOneWithWhereWithoutStudentSchedulesInput = {
+    where?: AcademicClassWhereInput
+    data: XOR<AcademicClassUpdateWithoutStudentSchedulesInput, AcademicClassUncheckedUpdateWithoutStudentSchedulesInput>
+  }
+
+  export type AcademicClassUpdateWithoutStudentSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    sections?: SectionUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+  }
+
+  export type AcademicClassUncheckedUpdateWithoutStudentSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+  }
+
+  export type SectionUpsertWithoutStudentSchedulesInput = {
+    update: XOR<SectionUpdateWithoutStudentSchedulesInput, SectionUncheckedUpdateWithoutStudentSchedulesInput>
+    create: XOR<SectionCreateWithoutStudentSchedulesInput, SectionUncheckedCreateWithoutStudentSchedulesInput>
+    where?: SectionWhereInput
+  }
+
+  export type SectionUpdateToOneWithWhereWithoutStudentSchedulesInput = {
+    where?: SectionWhereInput
+    data: XOR<SectionUpdateWithoutStudentSchedulesInput, SectionUncheckedUpdateWithoutStudentSchedulesInput>
+  }
+
+  export type SectionUpdateWithoutStudentSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    class?: AcademicClassUpdateOneRequiredWithoutSectionsNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutSectionNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutSectionNestedInput
+  }
+
+  export type SectionUncheckedUpdateWithoutStudentSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    classId?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type StudentParentCreateWithoutStudentInput = {
@@ -37843,6 +41816,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentFeeVoucherCreateWithoutStudentInput = {
+    voucherNo: string
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentFeeVoucherUncheckedCreateWithoutStudentInput = {
+    id?: number
+    voucherNo: string
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentFeeVoucherCreateOrConnectWithoutStudentInput = {
+    where: StudentFeeVoucherWhereUniqueInput
+    create: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentFeeVoucherCreateManyStudentInputEnvelope = {
+    data: StudentFeeVoucherCreateManyStudentInput | StudentFeeVoucherCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StudentParentUpsertWithWhereUniqueWithoutStudentInput = {
     where: StudentParentWhereUniqueInput
     update: XOR<StudentParentUpdateWithoutStudentInput, StudentParentUncheckedUpdateWithoutStudentInput>
@@ -38071,6 +42097,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"FundCollection"> | Date | string
   }
 
+  export type StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput = {
+    where: StudentFeeVoucherWhereUniqueInput
+    update: XOR<StudentFeeVoucherUpdateWithoutStudentInput, StudentFeeVoucherUncheckedUpdateWithoutStudentInput>
+    create: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentFeeVoucherUpdateWithWhereUniqueWithoutStudentInput = {
+    where: StudentFeeVoucherWhereUniqueInput
+    data: XOR<StudentFeeVoucherUpdateWithoutStudentInput, StudentFeeVoucherUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type StudentFeeVoucherUpdateManyWithWhereWithoutStudentInput = {
+    where: StudentFeeVoucherScalarWhereInput
+    data: XOR<StudentFeeVoucherUpdateManyMutationInput, StudentFeeVoucherUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type StudentFeeVoucherScalarWhereInput = {
+    AND?: StudentFeeVoucherScalarWhereInput | StudentFeeVoucherScalarWhereInput[]
+    OR?: StudentFeeVoucherScalarWhereInput[]
+    NOT?: StudentFeeVoucherScalarWhereInput | StudentFeeVoucherScalarWhereInput[]
+    id?: IntFilter<"StudentFeeVoucher"> | number
+    voucherNo?: StringFilter<"StudentFeeVoucher"> | string
+    studentId?: IntFilter<"StudentFeeVoucher"> | number
+    feeMonth?: IntFilter<"StudentFeeVoucher"> | number
+    feeYear?: IntFilter<"StudentFeeVoucher"> | number
+    monthlyFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFilter<"StudentFeeVoucher"> | Decimal | DecimalJsLike | number | string
+    dueDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paidDate?: DateTimeNullableFilter<"StudentFeeVoucher"> | Date | string | null
+    paymentMethod?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    remarks?: StringNullableFilter<"StudentFeeVoucher"> | string | null
+    status?: StringFilter<"StudentFeeVoucher"> | string
+    createdAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentFeeVoucher"> | Date | string
+  }
+
   export type StudentParentCreateWithoutParentInput = {
     relationship: string
     isPrimary?: boolean
@@ -38153,6 +42221,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutParentsInput = {
@@ -38195,6 +42264,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutParentsInput = {
@@ -38284,6 +42354,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutParentsInput = {
@@ -38326,6 +42397,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type ParentUpsertWithoutStudentsInput = {
@@ -38405,6 +42477,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutAssignmentsInput = {
@@ -38447,6 +42520,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutAssignmentsInput = {
@@ -38492,6 +42566,7 @@ export namespace Prisma {
     branch: BranchCreateNestedOneWithoutClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutAssignmentsInput = {
@@ -38503,6 +42578,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     sections?: SectionUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutAssignmentsInput = {
@@ -38517,6 +42593,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     class: AcademicClassCreateNestedOneWithoutSectionsInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutAssignmentsInput = {
@@ -38527,6 +42604,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutAssignmentsInput = {
@@ -38541,6 +42619,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateWithoutAssignmentsInput = {
@@ -38551,6 +42630,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionCreateOrConnectWithoutAssignmentsInput = {
@@ -38608,6 +42688,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutAssignmentsInput = {
@@ -38650,6 +42731,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type BranchUpsertWithoutAssignmentsInput = {
@@ -38707,6 +42789,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutAssignmentsInput = {
@@ -38718,6 +42801,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutAssignmentsInput = {
@@ -38738,6 +42822,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     class?: AcademicClassUpdateOneRequiredWithoutSectionsNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutAssignmentsInput = {
@@ -38748,6 +42833,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type AcademicSessionUpsertWithoutAssignmentsInput = {
@@ -38768,6 +42854,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateWithoutAssignmentsInput = {
@@ -38778,6 +42865,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type TeacherAttendanceCreateWithoutTeacherInput = {
@@ -38932,6 +43020,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutAttendancesInput = {
@@ -38974,6 +43063,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutAttendancesInput = {
@@ -39019,6 +43109,7 @@ export namespace Prisma {
     branch: BranchCreateNestedOneWithoutClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutStudentAttendancesInput = {
@@ -39030,6 +43121,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     sections?: SectionUncheckedCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutStudentAttendancesInput = {
@@ -39044,6 +43136,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     class: AcademicClassCreateNestedOneWithoutSectionsInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutStudentAttendancesInput = {
@@ -39054,6 +43147,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSectionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutStudentAttendancesInput = {
@@ -39111,6 +43205,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutAttendancesInput = {
@@ -39153,6 +43248,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type BranchUpsertWithoutStudentAttendancesInput = {
@@ -39210,6 +43306,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutStudentAttendancesInput = {
@@ -39221,6 +43318,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutStudentAttendancesInput = {
@@ -39241,6 +43339,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     class?: AcademicClassUpdateOneRequiredWithoutSectionsNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutStudentAttendancesInput = {
@@ -39251,6 +43350,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type TeacherCreateWithoutAttendancesInput = {
@@ -39440,6 +43540,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutHifzDailyEntriesInput = {
@@ -39482,6 +43583,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutHifzDailyEntriesInput = {
@@ -39539,6 +43641,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutHifzDailyEntriesInput = {
@@ -39581,6 +43684,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutHifzWeeklyEntriesInput = {
@@ -39622,6 +43726,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutHifzWeeklyEntriesInput = {
@@ -39664,6 +43769,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutHifzWeeklyEntriesInput = {
@@ -39721,6 +43827,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutHifzWeeklyEntriesInput = {
@@ -39763,6 +43870,7 @@ export namespace Prisma {
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutHifzMonthlyEntriesInput = {
@@ -39804,6 +43912,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutHifzMonthlyEntriesInput = {
@@ -39846,6 +43955,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutHifzMonthlyEntriesInput = {
@@ -39903,6 +44013,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutHifzMonthlyEntriesInput = {
@@ -39945,6 +44056,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutHifzSiparaEntriesInput = {
@@ -39986,6 +44098,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutHifzSiparaEntriesInput = {
@@ -40028,6 +44141,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutHifzSiparaEntriesInput = {
@@ -40085,6 +44199,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutHifzSiparaEntriesInput = {
@@ -40127,6 +44242,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FundCollectionCreateWithoutFinanceHeadInput = {
@@ -40227,6 +44343,192 @@ export namespace Prisma {
     data: XOR<SalaryEntryUpdateManyMutationInput, SalaryEntryUncheckedUpdateManyWithoutFinanceHeadInput>
   }
 
+  export type StudentCreateWithoutFeeVouchersInput = {
+    admissionNumber: string
+    admissionDate?: Date | string | null
+    admissionFee?: Decimal | DecimalJsLike | number | string | null
+    fullName: string
+    fatherName: string
+    gender: string
+    caste?: string | null
+    cnic?: string | null
+    dob?: Date | string | null
+    bForm?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+    email?: string | null
+    address?: string | null
+    currentAddress?: string | null
+    permanentAddress?: string | null
+    district?: string | null
+    prevMadrassa?: string | null
+    prevSchool?: string | null
+    secularEdu?: string | null
+    religiousEdu?: string | null
+    requiredClass?: string | null
+    requiredJamaat?: string | null
+    teacherName?: string | null
+    medicalCondition?: string | null
+    monthlyFee?: Decimal | DecimalJsLike | number | string | null
+    reside?: string | null
+    imageUrl?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parents?: StudentParentCreateNestedManyWithoutStudentInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutStudentInput
+    attendances?: StudentAttendanceCreateNestedManyWithoutStudentInput
+    hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutStudentInput
+    hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
+    hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
+    hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
+    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutFeeVouchersInput = {
+    id?: number
+    admissionNumber: string
+    admissionDate?: Date | string | null
+    admissionFee?: Decimal | DecimalJsLike | number | string | null
+    fullName: string
+    fatherName: string
+    gender: string
+    caste?: string | null
+    cnic?: string | null
+    dob?: Date | string | null
+    bForm?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+    email?: string | null
+    address?: string | null
+    currentAddress?: string | null
+    permanentAddress?: string | null
+    district?: string | null
+    prevMadrassa?: string | null
+    prevSchool?: string | null
+    secularEdu?: string | null
+    religiousEdu?: string | null
+    requiredClass?: string | null
+    requiredJamaat?: string | null
+    teacherName?: string | null
+    medicalCondition?: string | null
+    monthlyFee?: Decimal | DecimalJsLike | number | string | null
+    reside?: string | null
+    imageUrl?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parents?: StudentParentUncheckedCreateNestedManyWithoutStudentInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutStudentInput
+    attendances?: StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutStudentInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
+    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutFeeVouchersInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutFeeVouchersInput, StudentUncheckedCreateWithoutFeeVouchersInput>
+  }
+
+  export type StudentUpsertWithoutFeeVouchersInput = {
+    update: XOR<StudentUpdateWithoutFeeVouchersInput, StudentUncheckedUpdateWithoutFeeVouchersInput>
+    create: XOR<StudentCreateWithoutFeeVouchersInput, StudentUncheckedCreateWithoutFeeVouchersInput>
+    where?: StudentWhereInput
+  }
+
+  export type StudentUpdateToOneWithWhereWithoutFeeVouchersInput = {
+    where?: StudentWhereInput
+    data: XOR<StudentUpdateWithoutFeeVouchersInput, StudentUncheckedUpdateWithoutFeeVouchersInput>
+  }
+
+  export type StudentUpdateWithoutFeeVouchersInput = {
+    admissionNumber?: StringFieldUpdateOperationsInput | string
+    admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admissionFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fullName?: StringFieldUpdateOperationsInput | string
+    fatherName?: StringFieldUpdateOperationsInput | string
+    gender?: StringFieldUpdateOperationsInput | string
+    caste?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bForm?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    currentAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    permanentAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    prevMadrassa?: NullableStringFieldUpdateOperationsInput | string | null
+    prevSchool?: NullableStringFieldUpdateOperationsInput | string | null
+    secularEdu?: NullableStringFieldUpdateOperationsInput | string | null
+    religiousEdu?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredClass?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredJamaat?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
+    medicalCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    monthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reside?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parents?: StudentParentUpdateManyWithoutStudentNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutStudentNestedInput
+    attendances?: StudentAttendanceUpdateManyWithoutStudentNestedInput
+    hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutStudentNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
+    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutFeeVouchersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    admissionNumber?: StringFieldUpdateOperationsInput | string
+    admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admissionFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fullName?: StringFieldUpdateOperationsInput | string
+    fatherName?: StringFieldUpdateOperationsInput | string
+    gender?: StringFieldUpdateOperationsInput | string
+    caste?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bForm?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    currentAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    permanentAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    prevMadrassa?: NullableStringFieldUpdateOperationsInput | string | null
+    prevSchool?: NullableStringFieldUpdateOperationsInput | string | null
+    secularEdu?: NullableStringFieldUpdateOperationsInput | string | null
+    religiousEdu?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredClass?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredJamaat?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
+    medicalCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    monthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reside?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parents?: StudentParentUncheckedUpdateManyWithoutStudentNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+    attendances?: StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutStudentNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
+    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
   export type StudentCreateWithoutFundCollectionsInput = {
     admissionNumber: string
     admissionDate?: Date | string | null
@@ -40266,6 +44568,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutFundCollectionsInput = {
@@ -40308,6 +44611,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutFundCollectionsInput = {
@@ -40391,6 +44695,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutFundCollectionsInput = {
@@ -40433,6 +44738,7 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FinanceHeadUpsertWithoutFundCollectionsInput = {
@@ -40657,6 +44963,7 @@ export namespace Prisma {
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutBranchInput = {
@@ -40668,6 +44975,7 @@ export namespace Prisma {
     sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateManyWithoutBranchInput = {
@@ -40809,6 +45117,19 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type StudentScheduleCreateManyClassInput = {
+    id?: number
+    sessionId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SectionUpdateWithoutClassInput = {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -40816,6 +45137,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUpdateManyWithoutSectionNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutClassInput = {
@@ -40826,6 +45148,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateManyWithoutClassInput = {
@@ -40906,6 +45229,44 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StudentScheduleUpdateWithoutClassInput = {
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+    section?: SectionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+  }
+
+  export type StudentScheduleUncheckedUpdateWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleUncheckedUpdateManyWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudentClassAssignmentCreateManySectionInput = {
     id?: number
     studentId: number
@@ -40926,6 +45287,19 @@ export namespace Prisma {
     date: Date | string
     status: string
     remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleCreateManySectionInput = {
+    id?: number
+    sessionId: number
+    classId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41000,6 +45374,44 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StudentScheduleUpdateWithoutSectionInput = {
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutStudentSchedulesNestedInput
+  }
+
+  export type StudentScheduleUncheckedUpdateWithoutSectionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleUncheckedUpdateManyWithoutSectionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudentClassAssignmentCreateManySessionInput = {
     id?: number
     studentId: number
@@ -41008,6 +45420,19 @@ export namespace Prisma {
     sectionId: number
     status?: string
     assignedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentScheduleCreateManySessionInput = {
+    id?: number
+    classId: number
+    sectionId: number
+    subjects: JsonNullValueInput | InputJsonValue
+    days: JsonNullValueInput | InputJsonValue
+    startTime: string
+    endTime: string
+    status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41043,6 +45468,44 @@ export namespace Prisma {
     sectionId?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleUpdateWithoutSessionInput = {
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    class?: AcademicClassUpdateOneRequiredWithoutStudentSchedulesNestedInput
+    section?: SectionUpdateOneRequiredWithoutStudentSchedulesNestedInput
+  }
+
+  export type StudentScheduleUncheckedUpdateWithoutSessionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentScheduleUncheckedUpdateManyWithoutSessionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    sectionId?: IntFieldUpdateOperationsInput | number
+    subjects?: JsonNullValueInput | InputJsonValue
+    days?: JsonNullValueInput | InputJsonValue
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41141,6 +45604,28 @@ export namespace Prisma {
     financeHeadId: number
     amount: Decimal | DecimalJsLike | number | string
     paymentDate: Date | string
+    remarks?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentFeeVoucherCreateManyStudentInput = {
+    id?: number
+    voucherNo: string
+    feeMonth: number
+    feeYear: number
+    monthlyFee: Decimal | DecimalJsLike | number | string
+    admissionFee?: Decimal | DecimalJsLike | number | string
+    arrears?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    fine?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    dueAmount: Decimal | DecimalJsLike | number | string
+    dueDate?: Date | string | null
+    paidDate?: Date | string | null
+    paymentMethod?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -41433,6 +45918,71 @@ export namespace Prisma {
     financeHeadId?: IntFieldUpdateOperationsInput | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentFeeVoucherUpdateWithoutStudentInput = {
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentFeeVoucherUncheckedUpdateWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentFeeVoucherUncheckedUpdateManyWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    feeMonth?: IntFieldUpdateOperationsInput | number
+    feeYear?: IntFieldUpdateOperationsInput | number
+    monthlyFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    admissionFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    arrears?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fine?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

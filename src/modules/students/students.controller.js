@@ -54,3 +54,12 @@ export const assignClassToStudent = asyncHandler(async (req, res) => {
     data: assignment,
   });
 });
+
+export const removeClassAssignment = asyncHandler(async (req, res) => {
+  const assignment = await studentsService.removeClassAssignment(Number(req.params.assignmentId));
+
+  return apiResponse(res, {
+    message: 'Student class assignment removed successfully.',
+    data: assignment,
+  });
+});
