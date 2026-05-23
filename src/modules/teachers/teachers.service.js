@@ -46,7 +46,7 @@ export const teachersService = {
       });
 
       if (duplicateTeacher) {
-        throw new AppError('Teacher with the same phone or CNIC already exists.', 409);
+        throw new AppError('اسی فون نمبر یا شناختی کارڈ کے ساتھ استاد پہلے سے موجود ہے۔', 409);
       }
     }
 
@@ -107,7 +107,7 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('Teacher not found.', 404);
+      throw new AppError('استاد نہیں ملا۔', 404);
     }
 
     return teacher;
@@ -119,7 +119,7 @@ export const teachersService = {
     });
 
     if (!existingTeacher) {
-      throw new AppError('Teacher not found.', 404);
+      throw new AppError('استاد نہیں ملا۔', 404);
     }
 
     if (body.phone || body.cnic) {
@@ -128,7 +128,7 @@ export const teachersService = {
       });
 
       if (duplicateTeacher) {
-        throw new AppError('Another teacher with the same phone or CNIC already exists.', 409);
+        throw new AppError('اسی فون نمبر یا شناختی کارڈ کے ساتھ کوئی دوسرا استاد پہلے سے موجود ہے۔', 409);
       }
     }
 
@@ -156,11 +156,11 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('Teacher not found.', 404);
+      throw new AppError('استاد نہیں ملا۔', 404);
     }
 
     if (teacher.status === status) {
-      throw new AppError(`Teacher is already ${status}.`, 400);
+      throw new AppError('استاد کی حالت پہلے ہی یہی ہے۔', 400);
     }
 
     return prisma.teacher.update({
@@ -184,7 +184,7 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('Teacher not found.', 404);
+      throw new AppError('استاد نہیں ملا۔', 404);
     }
 
     if (teacher._count.attendances || teacher._count.salaryEntries) {

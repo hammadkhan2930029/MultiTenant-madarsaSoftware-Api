@@ -3333,7 +3333,6 @@ export namespace Prisma {
     hifzWeeklyEntries: number
     hifzMonthlyEntries: number
     hifzSiparaEntries: number
-    fundCollections: number
     feeVouchers: number
   }
 
@@ -3345,7 +3344,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: boolean | StudentCountOutputTypeCountHifzWeeklyEntriesArgs
     hifzMonthlyEntries?: boolean | StudentCountOutputTypeCountHifzMonthlyEntriesArgs
     hifzSiparaEntries?: boolean | StudentCountOutputTypeCountHifzSiparaEntriesArgs
-    fundCollections?: boolean | StudentCountOutputTypeCountFundCollectionsArgs
     feeVouchers?: boolean | StudentCountOutputTypeCountFeeVouchersArgs
   }
 
@@ -3407,13 +3405,6 @@ export namespace Prisma {
    */
   export type StudentCountOutputTypeCountHifzSiparaEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: HifzSiparaEntryWhereInput
-  }
-
-  /**
-   * StudentCountOutputType without action
-   */
-  export type StudentCountOutputTypeCountFundCollectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FundCollectionWhereInput
   }
 
   /**
@@ -3509,12 +3500,10 @@ export namespace Prisma {
    */
 
   export type FinanceHeadCountOutputType = {
-    fundCollections: number
     salaryEntries: number
   }
 
   export type FinanceHeadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    fundCollections?: boolean | FinanceHeadCountOutputTypeCountFundCollectionsArgs
     salaryEntries?: boolean | FinanceHeadCountOutputTypeCountSalaryEntriesArgs
   }
 
@@ -3527,13 +3516,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the FinanceHeadCountOutputType
      */
     select?: FinanceHeadCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * FinanceHeadCountOutputType without action
-   */
-  export type FinanceHeadCountOutputTypeCountFundCollectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FundCollectionWhereInput
   }
 
   /**
@@ -17238,7 +17220,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: boolean | Student$hifzWeeklyEntriesArgs<ExtArgs>
     hifzMonthlyEntries?: boolean | Student$hifzMonthlyEntriesArgs<ExtArgs>
     hifzSiparaEntries?: boolean | Student$hifzSiparaEntriesArgs<ExtArgs>
-    fundCollections?: boolean | Student$fundCollectionsArgs<ExtArgs>
     feeVouchers?: boolean | Student$feeVouchersArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
@@ -17289,7 +17270,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: boolean | Student$hifzWeeklyEntriesArgs<ExtArgs>
     hifzMonthlyEntries?: boolean | Student$hifzMonthlyEntriesArgs<ExtArgs>
     hifzSiparaEntries?: boolean | Student$hifzSiparaEntriesArgs<ExtArgs>
-    fundCollections?: boolean | Student$fundCollectionsArgs<ExtArgs>
     feeVouchers?: boolean | Student$feeVouchersArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -17304,7 +17284,6 @@ export namespace Prisma {
       hifzWeeklyEntries: Prisma.$HifzWeeklyEntryPayload<ExtArgs>[]
       hifzMonthlyEntries: Prisma.$HifzMonthlyEntryPayload<ExtArgs>[]
       hifzSiparaEntries: Prisma.$HifzSiparaEntryPayload<ExtArgs>[]
-      fundCollections: Prisma.$FundCollectionPayload<ExtArgs>[]
       feeVouchers: Prisma.$StudentFeeVoucherPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -17687,7 +17666,6 @@ export namespace Prisma {
     hifzWeeklyEntries<T extends Student$hifzWeeklyEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Student$hifzWeeklyEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HifzWeeklyEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hifzMonthlyEntries<T extends Student$hifzMonthlyEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Student$hifzMonthlyEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HifzMonthlyEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hifzSiparaEntries<T extends Student$hifzSiparaEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Student$hifzSiparaEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HifzSiparaEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    fundCollections<T extends Student$fundCollectionsArgs<ExtArgs> = {}>(args?: Subset<T, Student$fundCollectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FundCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeVouchers<T extends Student$feeVouchersArgs<ExtArgs> = {}>(args?: Subset<T, Student$feeVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentFeeVoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -18258,30 +18236,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: HifzSiparaEntryScalarFieldEnum | HifzSiparaEntryScalarFieldEnum[]
-  }
-
-  /**
-   * Student.fundCollections
-   */
-  export type Student$fundCollectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FundCollection
-     */
-    select?: FundCollectionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FundCollection
-     */
-    omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    where?: FundCollectionWhereInput
-    orderBy?: FundCollectionOrderByWithRelationInput | FundCollectionOrderByWithRelationInput[]
-    cursor?: FundCollectionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FundCollectionScalarFieldEnum | FundCollectionScalarFieldEnum[]
   }
 
   /**
@@ -29354,7 +29308,6 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    fundCollections?: boolean | FinanceHead$fundCollectionsArgs<ExtArgs>
     salaryEntries?: boolean | FinanceHead$salaryEntriesArgs<ExtArgs>
     _count?: boolean | FinanceHeadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["financeHead"]>
@@ -29373,7 +29326,6 @@ export namespace Prisma {
 
   export type FinanceHeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["financeHead"]>
   export type FinanceHeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    fundCollections?: boolean | FinanceHead$fundCollectionsArgs<ExtArgs>
     salaryEntries?: boolean | FinanceHead$salaryEntriesArgs<ExtArgs>
     _count?: boolean | FinanceHeadCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -29381,7 +29333,6 @@ export namespace Prisma {
   export type $FinanceHeadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FinanceHead"
     objects: {
-      fundCollections: Prisma.$FundCollectionPayload<ExtArgs>[]
       salaryEntries: Prisma.$SalaryEntryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -29732,7 +29683,6 @@ export namespace Prisma {
    */
   export interface Prisma__FinanceHeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    fundCollections<T extends FinanceHead$fundCollectionsArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHead$fundCollectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FundCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salaryEntries<T extends FinanceHead$salaryEntriesArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHead$salaryEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -30110,30 +30060,6 @@ export namespace Prisma {
      * Limit how many FinanceHeads to delete.
      */
     limit?: number
-  }
-
-  /**
-   * FinanceHead.fundCollections
-   */
-  export type FinanceHead$fundCollectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FundCollection
-     */
-    select?: FundCollectionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FundCollection
-     */
-    omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    where?: FundCollectionWhereInput
-    orderBy?: FundCollectionOrderByWithRelationInput | FundCollectionOrderByWithRelationInput[]
-    cursor?: FundCollectionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FundCollectionScalarFieldEnum | FundCollectionScalarFieldEnum[]
   }
 
   /**
@@ -31365,23 +31291,27 @@ export namespace Prisma {
 
   export type FundCollectionAvgAggregateOutputType = {
     id: number | null
-    studentId: number | null
-    financeHeadId: number | null
     amount: Decimal | null
   }
 
   export type FundCollectionSumAggregateOutputType = {
     id: number | null
-    studentId: number | null
-    financeHeadId: number | null
     amount: Decimal | null
   }
 
   export type FundCollectionMinAggregateOutputType = {
     id: number | null
-    studentId: number | null
-    financeHeadId: number | null
+    collectionGroupId: string | null
+    donorName: string | null
+    careOf: string | null
+    phone: string | null
+    paymentMode: string | null
+    donationType: string | null
+    donationSubType: string | null
+    purpose: string | null
     amount: Decimal | null
+    receiptNo: string | null
+    details: string | null
     paymentDate: Date | null
     remarks: string | null
     status: string | null
@@ -31391,9 +31321,17 @@ export namespace Prisma {
 
   export type FundCollectionMaxAggregateOutputType = {
     id: number | null
-    studentId: number | null
-    financeHeadId: number | null
+    collectionGroupId: string | null
+    donorName: string | null
+    careOf: string | null
+    phone: string | null
+    paymentMode: string | null
+    donationType: string | null
+    donationSubType: string | null
+    purpose: string | null
     amount: Decimal | null
+    receiptNo: string | null
+    details: string | null
     paymentDate: Date | null
     remarks: string | null
     status: string | null
@@ -31403,9 +31341,17 @@ export namespace Prisma {
 
   export type FundCollectionCountAggregateOutputType = {
     id: number
-    studentId: number
-    financeHeadId: number
+    collectionGroupId: number
+    donorName: number
+    careOf: number
+    phone: number
+    paymentMode: number
+    donationType: number
+    donationSubType: number
+    purpose: number
     amount: number
+    receiptNo: number
+    details: number
     paymentDate: number
     remarks: number
     status: number
@@ -31417,23 +31363,27 @@ export namespace Prisma {
 
   export type FundCollectionAvgAggregateInputType = {
     id?: true
-    studentId?: true
-    financeHeadId?: true
     amount?: true
   }
 
   export type FundCollectionSumAggregateInputType = {
     id?: true
-    studentId?: true
-    financeHeadId?: true
     amount?: true
   }
 
   export type FundCollectionMinAggregateInputType = {
     id?: true
-    studentId?: true
-    financeHeadId?: true
+    collectionGroupId?: true
+    donorName?: true
+    careOf?: true
+    phone?: true
+    paymentMode?: true
+    donationType?: true
+    donationSubType?: true
+    purpose?: true
     amount?: true
+    receiptNo?: true
+    details?: true
     paymentDate?: true
     remarks?: true
     status?: true
@@ -31443,9 +31393,17 @@ export namespace Prisma {
 
   export type FundCollectionMaxAggregateInputType = {
     id?: true
-    studentId?: true
-    financeHeadId?: true
+    collectionGroupId?: true
+    donorName?: true
+    careOf?: true
+    phone?: true
+    paymentMode?: true
+    donationType?: true
+    donationSubType?: true
+    purpose?: true
     amount?: true
+    receiptNo?: true
+    details?: true
     paymentDate?: true
     remarks?: true
     status?: true
@@ -31455,9 +31413,17 @@ export namespace Prisma {
 
   export type FundCollectionCountAggregateInputType = {
     id?: true
-    studentId?: true
-    financeHeadId?: true
+    collectionGroupId?: true
+    donorName?: true
+    careOf?: true
+    phone?: true
+    paymentMode?: true
+    donationType?: true
+    donationSubType?: true
+    purpose?: true
     amount?: true
+    receiptNo?: true
+    details?: true
     paymentDate?: true
     remarks?: true
     status?: true
@@ -31554,9 +31520,17 @@ export namespace Prisma {
 
   export type FundCollectionGroupByOutputType = {
     id: number
-    studentId: number
-    financeHeadId: number
+    collectionGroupId: string
+    donorName: string
+    careOf: string | null
+    phone: string | null
+    paymentMode: string
+    donationType: string
+    donationSubType: string
+    purpose: string | null
     amount: Decimal
+    receiptNo: string | null
+    details: string | null
     paymentDate: Date
     remarks: string | null
     status: string
@@ -31585,25 +31559,39 @@ export namespace Prisma {
 
   export type FundCollectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    studentId?: boolean
-    financeHeadId?: boolean
+    collectionGroupId?: boolean
+    donorName?: boolean
+    careOf?: boolean
+    phone?: boolean
+    paymentMode?: boolean
+    donationType?: boolean
+    donationSubType?: boolean
+    purpose?: boolean
     amount?: boolean
+    receiptNo?: boolean
+    details?: boolean
     paymentDate?: boolean
     remarks?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    student?: boolean | StudentDefaultArgs<ExtArgs>
-    financeHead?: boolean | FinanceHeadDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["fundCollection"]>
 
 
 
   export type FundCollectionSelectScalar = {
     id?: boolean
-    studentId?: boolean
-    financeHeadId?: boolean
+    collectionGroupId?: boolean
+    donorName?: boolean
+    careOf?: boolean
+    phone?: boolean
+    paymentMode?: boolean
+    donationType?: boolean
+    donationSubType?: boolean
+    purpose?: boolean
     amount?: boolean
+    receiptNo?: boolean
+    details?: boolean
     paymentDate?: boolean
     remarks?: boolean
     status?: boolean
@@ -31611,23 +31599,24 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FundCollectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "financeHeadId" | "amount" | "paymentDate" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["fundCollection"]>
-  export type FundCollectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    student?: boolean | StudentDefaultArgs<ExtArgs>
-    financeHead?: boolean | FinanceHeadDefaultArgs<ExtArgs>
-  }
+  export type FundCollectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "collectionGroupId" | "donorName" | "careOf" | "phone" | "paymentMode" | "donationType" | "donationSubType" | "purpose" | "amount" | "receiptNo" | "details" | "paymentDate" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["fundCollection"]>
 
   export type $FundCollectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FundCollection"
-    objects: {
-      student: Prisma.$StudentPayload<ExtArgs>
-      financeHead: Prisma.$FinanceHeadPayload<ExtArgs>
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      studentId: number
-      financeHeadId: number
+      collectionGroupId: string
+      donorName: string
+      careOf: string | null
+      phone: string | null
+      paymentMode: string
+      donationType: string
+      donationSubType: string
+      purpose: string | null
       amount: Prisma.Decimal
+      receiptNo: string | null
+      details: string | null
       paymentDate: Date
       remarks: string | null
       status: string
@@ -31973,8 +31962,6 @@ export namespace Prisma {
    */
   export interface Prisma__FundCollectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    financeHead<T extends FinanceHeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHeadDefaultArgs<ExtArgs>>): Prisma__FinanceHeadClient<$Result.GetResult<Prisma.$FinanceHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32005,9 +31992,17 @@ export namespace Prisma {
    */
   interface FundCollectionFieldRefs {
     readonly id: FieldRef<"FundCollection", 'Int'>
-    readonly studentId: FieldRef<"FundCollection", 'Int'>
-    readonly financeHeadId: FieldRef<"FundCollection", 'Int'>
+    readonly collectionGroupId: FieldRef<"FundCollection", 'String'>
+    readonly donorName: FieldRef<"FundCollection", 'String'>
+    readonly careOf: FieldRef<"FundCollection", 'String'>
+    readonly phone: FieldRef<"FundCollection", 'String'>
+    readonly paymentMode: FieldRef<"FundCollection", 'String'>
+    readonly donationType: FieldRef<"FundCollection", 'String'>
+    readonly donationSubType: FieldRef<"FundCollection", 'String'>
+    readonly purpose: FieldRef<"FundCollection", 'String'>
     readonly amount: FieldRef<"FundCollection", 'Decimal'>
+    readonly receiptNo: FieldRef<"FundCollection", 'String'>
+    readonly details: FieldRef<"FundCollection", 'String'>
     readonly paymentDate: FieldRef<"FundCollection", 'DateTime'>
     readonly remarks: FieldRef<"FundCollection", 'String'>
     readonly status: FieldRef<"FundCollection", 'String'>
@@ -32030,10 +32025,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * Filter, which FundCollection to fetch.
      */
     where: FundCollectionWhereUniqueInput
@@ -32052,10 +32043,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * Filter, which FundCollection to fetch.
      */
     where: FundCollectionWhereUniqueInput
@@ -32073,10 +32060,6 @@ export namespace Prisma {
      * Omit specific fields from the FundCollection
      */
     omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
     /**
      * Filter, which FundCollection to fetch.
      */
@@ -32126,10 +32109,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * Filter, which FundCollection to fetch.
      */
     where?: FundCollectionWhereInput
@@ -32178,10 +32157,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * Filter, which FundCollections to fetch.
      */
     where?: FundCollectionWhereInput
@@ -32225,10 +32200,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * The data needed to create a FundCollection.
      */
     data: XOR<FundCollectionCreateInput, FundCollectionUncheckedCreateInput>
@@ -32257,10 +32228,6 @@ export namespace Prisma {
      * Omit specific fields from the FundCollection
      */
     omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
     /**
      * The data needed to update a FundCollection.
      */
@@ -32302,10 +32269,6 @@ export namespace Prisma {
      */
     omit?: FundCollectionOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
-    /**
      * The filter to search for the FundCollection to update in case it exists.
      */
     where: FundCollectionWhereUniqueInput
@@ -32331,10 +32294,6 @@ export namespace Prisma {
      * Omit specific fields from the FundCollection
      */
     omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
     /**
      * Filter which FundCollection to delete.
      */
@@ -32367,10 +32326,6 @@ export namespace Prisma {
      * Omit specific fields from the FundCollection
      */
     omit?: FundCollectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FundCollectionInclude<ExtArgs> | null
   }
 
 
@@ -33896,9 +33851,17 @@ export namespace Prisma {
 
   export const FundCollectionScalarFieldEnum: {
     id: 'id',
-    studentId: 'studentId',
-    financeHeadId: 'financeHeadId',
+    collectionGroupId: 'collectionGroupId',
+    donorName: 'donorName',
+    careOf: 'careOf',
+    phone: 'phone',
+    paymentMode: 'paymentMode',
+    donationType: 'donationType',
+    donationSubType: 'donationSubType',
+    purpose: 'purpose',
     amount: 'amount',
+    receiptNo: 'receiptNo',
+    details: 'details',
     paymentDate: 'paymentDate',
     remarks: 'remarks',
     status: 'status',
@@ -34262,6 +34225,16 @@ export namespace Prisma {
 
 
   export const FundCollectionOrderByRelevanceFieldEnum: {
+    collectionGroupId: 'collectionGroupId',
+    donorName: 'donorName',
+    careOf: 'careOf',
+    phone: 'phone',
+    paymentMode: 'paymentMode',
+    donationType: 'donationType',
+    donationSubType: 'donationSubType',
+    purpose: 'purpose',
+    receiptNo: 'receiptNo',
+    details: 'details',
     remarks: 'remarks',
     status: 'status'
   };
@@ -35392,7 +35365,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryListRelationFilter
     hifzMonthlyEntries?: HifzMonthlyEntryListRelationFilter
     hifzSiparaEntries?: HifzSiparaEntryListRelationFilter
-    fundCollections?: FundCollectionListRelationFilter
     feeVouchers?: StudentFeeVoucherListRelationFilter
   }
 
@@ -35436,7 +35408,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryOrderByRelationAggregateInput
     hifzMonthlyEntries?: HifzMonthlyEntryOrderByRelationAggregateInput
     hifzSiparaEntries?: HifzSiparaEntryOrderByRelationAggregateInput
-    fundCollections?: FundCollectionOrderByRelationAggregateInput
     feeVouchers?: StudentFeeVoucherOrderByRelationAggregateInput
     _relevance?: StudentOrderByRelevanceInput
   }
@@ -35484,7 +35455,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryListRelationFilter
     hifzMonthlyEntries?: HifzMonthlyEntryListRelationFilter
     hifzSiparaEntries?: HifzSiparaEntryListRelationFilter
-    fundCollections?: FundCollectionListRelationFilter
     feeVouchers?: StudentFeeVoucherListRelationFilter
   }, "id" | "admissionNumber">
 
@@ -36602,7 +36572,6 @@ export namespace Prisma {
     status?: StringFilter<"FinanceHead"> | string
     createdAt?: DateTimeFilter<"FinanceHead"> | Date | string
     updatedAt?: DateTimeFilter<"FinanceHead"> | Date | string
-    fundCollections?: FundCollectionListRelationFilter
     salaryEntries?: SalaryEntryListRelationFilter
   }
 
@@ -36614,7 +36583,6 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    fundCollections?: FundCollectionOrderByRelationAggregateInput
     salaryEntries?: SalaryEntryOrderByRelationAggregateInput
     _relevance?: FinanceHeadOrderByRelevanceInput
   }
@@ -36630,7 +36598,6 @@ export namespace Prisma {
     status?: StringFilter<"FinanceHead"> | string
     createdAt?: DateTimeFilter<"FinanceHead"> | Date | string
     updatedAt?: DateTimeFilter<"FinanceHead"> | Date | string
-    fundCollections?: FundCollectionListRelationFilter
     salaryEntries?: SalaryEntryListRelationFilter
   }, "id" | "name">
 
@@ -36801,30 +36768,42 @@ export namespace Prisma {
     OR?: FundCollectionWhereInput[]
     NOT?: FundCollectionWhereInput | FundCollectionWhereInput[]
     id?: IntFilter<"FundCollection"> | number
-    studentId?: IntFilter<"FundCollection"> | number
-    financeHeadId?: IntFilter<"FundCollection"> | number
+    collectionGroupId?: StringFilter<"FundCollection"> | string
+    donorName?: StringFilter<"FundCollection"> | string
+    careOf?: StringNullableFilter<"FundCollection"> | string | null
+    phone?: StringNullableFilter<"FundCollection"> | string | null
+    paymentMode?: StringFilter<"FundCollection"> | string
+    donationType?: StringFilter<"FundCollection"> | string
+    donationSubType?: StringFilter<"FundCollection"> | string
+    purpose?: StringNullableFilter<"FundCollection"> | string | null
     amount?: DecimalFilter<"FundCollection"> | Decimal | DecimalJsLike | number | string
+    receiptNo?: StringNullableFilter<"FundCollection"> | string | null
+    details?: StringNullableFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
     remarks?: StringNullableFilter<"FundCollection"> | string | null
     status?: StringFilter<"FundCollection"> | string
     createdAt?: DateTimeFilter<"FundCollection"> | Date | string
     updatedAt?: DateTimeFilter<"FundCollection"> | Date | string
-    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
-    financeHead?: XOR<FinanceHeadScalarRelationFilter, FinanceHeadWhereInput>
   }
 
   export type FundCollectionOrderByWithRelationInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
+    collectionGroupId?: SortOrder
+    donorName?: SortOrder
+    careOf?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    paymentMode?: SortOrder
+    donationType?: SortOrder
+    donationSubType?: SortOrder
+    purpose?: SortOrderInput | SortOrder
     amount?: SortOrder
+    receiptNo?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
     paymentDate?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    student?: StudentOrderByWithRelationInput
-    financeHead?: FinanceHeadOrderByWithRelationInput
     _relevance?: FundCollectionOrderByRelevanceInput
   }
 
@@ -36833,23 +36812,37 @@ export namespace Prisma {
     AND?: FundCollectionWhereInput | FundCollectionWhereInput[]
     OR?: FundCollectionWhereInput[]
     NOT?: FundCollectionWhereInput | FundCollectionWhereInput[]
-    studentId?: IntFilter<"FundCollection"> | number
-    financeHeadId?: IntFilter<"FundCollection"> | number
+    collectionGroupId?: StringFilter<"FundCollection"> | string
+    donorName?: StringFilter<"FundCollection"> | string
+    careOf?: StringNullableFilter<"FundCollection"> | string | null
+    phone?: StringNullableFilter<"FundCollection"> | string | null
+    paymentMode?: StringFilter<"FundCollection"> | string
+    donationType?: StringFilter<"FundCollection"> | string
+    donationSubType?: StringFilter<"FundCollection"> | string
+    purpose?: StringNullableFilter<"FundCollection"> | string | null
     amount?: DecimalFilter<"FundCollection"> | Decimal | DecimalJsLike | number | string
+    receiptNo?: StringNullableFilter<"FundCollection"> | string | null
+    details?: StringNullableFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
     remarks?: StringNullableFilter<"FundCollection"> | string | null
     status?: StringFilter<"FundCollection"> | string
     createdAt?: DateTimeFilter<"FundCollection"> | Date | string
     updatedAt?: DateTimeFilter<"FundCollection"> | Date | string
-    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
-    financeHead?: XOR<FinanceHeadScalarRelationFilter, FinanceHeadWhereInput>
   }, "id">
 
   export type FundCollectionOrderByWithAggregationInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
+    collectionGroupId?: SortOrder
+    donorName?: SortOrder
+    careOf?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    paymentMode?: SortOrder
+    donationType?: SortOrder
+    donationSubType?: SortOrder
+    purpose?: SortOrderInput | SortOrder
     amount?: SortOrder
+    receiptNo?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
     paymentDate?: SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -36867,9 +36860,17 @@ export namespace Prisma {
     OR?: FundCollectionScalarWhereWithAggregatesInput[]
     NOT?: FundCollectionScalarWhereWithAggregatesInput | FundCollectionScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"FundCollection"> | number
-    studentId?: IntWithAggregatesFilter<"FundCollection"> | number
-    financeHeadId?: IntWithAggregatesFilter<"FundCollection"> | number
+    collectionGroupId?: StringWithAggregatesFilter<"FundCollection"> | string
+    donorName?: StringWithAggregatesFilter<"FundCollection"> | string
+    careOf?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    paymentMode?: StringWithAggregatesFilter<"FundCollection"> | string
+    donationType?: StringWithAggregatesFilter<"FundCollection"> | string
+    donationSubType?: StringWithAggregatesFilter<"FundCollection"> | string
+    purpose?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     amount?: DecimalWithAggregatesFilter<"FundCollection"> | Decimal | DecimalJsLike | number | string
+    receiptNo?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    details?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeWithAggregatesFilter<"FundCollection"> | Date | string
     remarks?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     status?: StringWithAggregatesFilter<"FundCollection"> | string
@@ -38049,7 +38050,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -38093,7 +38093,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -38136,7 +38135,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -38180,7 +38178,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -39391,7 +39388,6 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fundCollections?: FundCollectionCreateNestedManyWithoutFinanceHeadInput
     salaryEntries?: SalaryEntryCreateNestedManyWithoutFinanceHeadInput
   }
 
@@ -39403,7 +39399,6 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutFinanceHeadInput
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput
   }
 
@@ -39414,7 +39409,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fundCollections?: FundCollectionUpdateManyWithoutFinanceHeadNestedInput
     salaryEntries?: SalaryEntryUpdateManyWithoutFinanceHeadNestedInput
   }
 
@@ -39426,7 +39420,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutFinanceHeadNestedInput
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput
   }
 
@@ -39617,21 +39610,37 @@ export namespace Prisma {
   }
 
   export type FundCollectionCreateInput = {
+    collectionGroupId: string
+    donorName: string
+    careOf?: string | null
+    phone?: string | null
+    paymentMode: string
+    donationType: string
+    donationSubType: string
+    purpose?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    receiptNo?: string | null
+    details?: string | null
     paymentDate: Date | string
     remarks?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    student: StudentCreateNestedOneWithoutFundCollectionsInput
-    financeHead: FinanceHeadCreateNestedOneWithoutFundCollectionsInput
   }
 
   export type FundCollectionUncheckedCreateInput = {
     id?: number
-    studentId: number
-    financeHeadId: number
+    collectionGroupId: string
+    donorName: string
+    careOf?: string | null
+    phone?: string | null
+    paymentMode: string
+    donationType: string
+    donationSubType: string
+    purpose?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    receiptNo?: string | null
+    details?: string | null
     paymentDate: Date | string
     remarks?: string | null
     status?: string
@@ -39640,21 +39649,37 @@ export namespace Prisma {
   }
 
   export type FundCollectionUpdateInput = {
+    collectionGroupId?: StringFieldUpdateOperationsInput | string
+    donorName?: StringFieldUpdateOperationsInput | string
+    careOf?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMode?: StringFieldUpdateOperationsInput | string
+    donationType?: StringFieldUpdateOperationsInput | string
+    donationSubType?: StringFieldUpdateOperationsInput | string
+    purpose?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    student?: StudentUpdateOneRequiredWithoutFundCollectionsNestedInput
-    financeHead?: FinanceHeadUpdateOneRequiredWithoutFundCollectionsNestedInput
   }
 
   export type FundCollectionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
-    financeHeadId?: IntFieldUpdateOperationsInput | number
+    collectionGroupId?: StringFieldUpdateOperationsInput | string
+    donorName?: StringFieldUpdateOperationsInput | string
+    careOf?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMode?: StringFieldUpdateOperationsInput | string
+    donationType?: StringFieldUpdateOperationsInput | string
+    donationSubType?: StringFieldUpdateOperationsInput | string
+    purpose?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -39664,9 +39689,17 @@ export namespace Prisma {
 
   export type FundCollectionCreateManyInput = {
     id?: number
-    studentId: number
-    financeHeadId: number
+    collectionGroupId: string
+    donorName: string
+    careOf?: string | null
+    phone?: string | null
+    paymentMode: string
+    donationType: string
+    donationSubType: string
+    purpose?: string | null
     amount: Decimal | DecimalJsLike | number | string
+    receiptNo?: string | null
+    details?: string | null
     paymentDate: Date | string
     remarks?: string | null
     status?: string
@@ -39675,7 +39708,17 @@ export namespace Prisma {
   }
 
   export type FundCollectionUpdateManyMutationInput = {
+    collectionGroupId?: StringFieldUpdateOperationsInput | string
+    donorName?: StringFieldUpdateOperationsInput | string
+    careOf?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMode?: StringFieldUpdateOperationsInput | string
+    donationType?: StringFieldUpdateOperationsInput | string
+    donationSubType?: StringFieldUpdateOperationsInput | string
+    purpose?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -39685,9 +39728,17 @@ export namespace Prisma {
 
   export type FundCollectionUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
-    financeHeadId?: IntFieldUpdateOperationsInput | number
+    collectionGroupId?: StringFieldUpdateOperationsInput | string
+    donorName?: StringFieldUpdateOperationsInput | string
+    careOf?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMode?: StringFieldUpdateOperationsInput | string
+    donationType?: StringFieldUpdateOperationsInput | string
+    donationSubType?: StringFieldUpdateOperationsInput | string
+    purpose?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -40761,12 +40812,6 @@ export namespace Prisma {
     none?: HifzSiparaEntryWhereInput
   }
 
-  export type FundCollectionListRelationFilter = {
-    every?: FundCollectionWhereInput
-    some?: FundCollectionWhereInput
-    none?: FundCollectionWhereInput
-  }
-
   export type StudentFeeVoucherListRelationFilter = {
     every?: StudentFeeVoucherWhereInput
     some?: StudentFeeVoucherWhereInput
@@ -40790,10 +40835,6 @@ export namespace Prisma {
   }
 
   export type HifzSiparaEntryOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FundCollectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -41931,11 +41972,6 @@ export namespace Prisma {
     dueAmount?: SortOrder
   }
 
-  export type FinanceHeadScalarRelationFilter = {
-    is?: FinanceHeadWhereInput
-    isNot?: FinanceHeadWhereInput
-  }
-
   export type FundCollectionOrderByRelevanceInput = {
     fields: FundCollectionOrderByRelevanceFieldEnum | FundCollectionOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -41944,9 +41980,17 @@ export namespace Prisma {
 
   export type FundCollectionCountOrderByAggregateInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
+    collectionGroupId?: SortOrder
+    donorName?: SortOrder
+    careOf?: SortOrder
+    phone?: SortOrder
+    paymentMode?: SortOrder
+    donationType?: SortOrder
+    donationSubType?: SortOrder
+    purpose?: SortOrder
     amount?: SortOrder
+    receiptNo?: SortOrder
+    details?: SortOrder
     paymentDate?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -41956,16 +42000,22 @@ export namespace Prisma {
 
   export type FundCollectionAvgOrderByAggregateInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
     amount?: SortOrder
   }
 
   export type FundCollectionMaxOrderByAggregateInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
+    collectionGroupId?: SortOrder
+    donorName?: SortOrder
+    careOf?: SortOrder
+    phone?: SortOrder
+    paymentMode?: SortOrder
+    donationType?: SortOrder
+    donationSubType?: SortOrder
+    purpose?: SortOrder
     amount?: SortOrder
+    receiptNo?: SortOrder
+    details?: SortOrder
     paymentDate?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -41975,9 +42025,17 @@ export namespace Prisma {
 
   export type FundCollectionMinOrderByAggregateInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
+    collectionGroupId?: SortOrder
+    donorName?: SortOrder
+    careOf?: SortOrder
+    phone?: SortOrder
+    paymentMode?: SortOrder
+    donationType?: SortOrder
+    donationSubType?: SortOrder
+    purpose?: SortOrder
     amount?: SortOrder
+    receiptNo?: SortOrder
+    details?: SortOrder
     paymentDate?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
@@ -41987,9 +42045,12 @@ export namespace Prisma {
 
   export type FundCollectionSumOrderByAggregateInput = {
     id?: SortOrder
-    studentId?: SortOrder
-    financeHeadId?: SortOrder
     amount?: SortOrder
+  }
+
+  export type FinanceHeadScalarRelationFilter = {
+    is?: FinanceHeadWhereInput
+    isNot?: FinanceHeadWhereInput
   }
 
   export type SalaryEntryOrderByRelevanceInput = {
@@ -42977,13 +43038,6 @@ export namespace Prisma {
     connect?: HifzSiparaEntryWhereUniqueInput | HifzSiparaEntryWhereUniqueInput[]
   }
 
-  export type FundCollectionCreateNestedManyWithoutStudentInput = {
-    create?: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput> | FundCollectionCreateWithoutStudentInput[] | FundCollectionUncheckedCreateWithoutStudentInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutStudentInput | FundCollectionCreateOrConnectWithoutStudentInput[]
-    createMany?: FundCollectionCreateManyStudentInputEnvelope
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-  }
-
   export type StudentFeeVoucherCreateNestedManyWithoutStudentInput = {
     create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
     connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
@@ -43038,13 +43092,6 @@ export namespace Prisma {
     connectOrCreate?: HifzSiparaEntryCreateOrConnectWithoutStudentInput | HifzSiparaEntryCreateOrConnectWithoutStudentInput[]
     createMany?: HifzSiparaEntryCreateManyStudentInputEnvelope
     connect?: HifzSiparaEntryWhereUniqueInput | HifzSiparaEntryWhereUniqueInput[]
-  }
-
-  export type FundCollectionUncheckedCreateNestedManyWithoutStudentInput = {
-    create?: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput> | FundCollectionCreateWithoutStudentInput[] | FundCollectionUncheckedCreateWithoutStudentInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutStudentInput | FundCollectionCreateOrConnectWithoutStudentInput[]
-    createMany?: FundCollectionCreateManyStudentInputEnvelope
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
   }
 
   export type StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput = {
@@ -43164,20 +43211,6 @@ export namespace Prisma {
     deleteMany?: HifzSiparaEntryScalarWhereInput | HifzSiparaEntryScalarWhereInput[]
   }
 
-  export type FundCollectionUpdateManyWithoutStudentNestedInput = {
-    create?: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput> | FundCollectionCreateWithoutStudentInput[] | FundCollectionUncheckedCreateWithoutStudentInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutStudentInput | FundCollectionCreateOrConnectWithoutStudentInput[]
-    upsert?: FundCollectionUpsertWithWhereUniqueWithoutStudentInput | FundCollectionUpsertWithWhereUniqueWithoutStudentInput[]
-    createMany?: FundCollectionCreateManyStudentInputEnvelope
-    set?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    disconnect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    delete?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    update?: FundCollectionUpdateWithWhereUniqueWithoutStudentInput | FundCollectionUpdateWithWhereUniqueWithoutStudentInput[]
-    updateMany?: FundCollectionUpdateManyWithWhereWithoutStudentInput | FundCollectionUpdateManyWithWhereWithoutStudentInput[]
-    deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
-  }
-
   export type StudentFeeVoucherUpdateManyWithoutStudentNestedInput = {
     create?: XOR<StudentFeeVoucherCreateWithoutStudentInput, StudentFeeVoucherUncheckedCreateWithoutStudentInput> | StudentFeeVoucherCreateWithoutStudentInput[] | StudentFeeVoucherUncheckedCreateWithoutStudentInput[]
     connectOrCreate?: StudentFeeVoucherCreateOrConnectWithoutStudentInput | StudentFeeVoucherCreateOrConnectWithoutStudentInput[]
@@ -43288,20 +43321,6 @@ export namespace Prisma {
     update?: HifzSiparaEntryUpdateWithWhereUniqueWithoutStudentInput | HifzSiparaEntryUpdateWithWhereUniqueWithoutStudentInput[]
     updateMany?: HifzSiparaEntryUpdateManyWithWhereWithoutStudentInput | HifzSiparaEntryUpdateManyWithWhereWithoutStudentInput[]
     deleteMany?: HifzSiparaEntryScalarWhereInput | HifzSiparaEntryScalarWhereInput[]
-  }
-
-  export type FundCollectionUncheckedUpdateManyWithoutStudentNestedInput = {
-    create?: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput> | FundCollectionCreateWithoutStudentInput[] | FundCollectionUncheckedCreateWithoutStudentInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutStudentInput | FundCollectionCreateOrConnectWithoutStudentInput[]
-    upsert?: FundCollectionUpsertWithWhereUniqueWithoutStudentInput | FundCollectionUpsertWithWhereUniqueWithoutStudentInput[]
-    createMany?: FundCollectionCreateManyStudentInputEnvelope
-    set?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    disconnect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    delete?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    update?: FundCollectionUpdateWithWhereUniqueWithoutStudentInput | FundCollectionUpdateWithWhereUniqueWithoutStudentInput[]
-    updateMany?: FundCollectionUpdateManyWithWhereWithoutStudentInput | FundCollectionUpdateManyWithWhereWithoutStudentInput[]
-    deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
   }
 
   export type StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput = {
@@ -43744,13 +43763,6 @@ export namespace Prisma {
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutHifzSiparaEntriesInput, StudentUpdateWithoutHifzSiparaEntriesInput>, StudentUncheckedUpdateWithoutHifzSiparaEntriesInput>
   }
 
-  export type FundCollectionCreateNestedManyWithoutFinanceHeadInput = {
-    create?: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput> | FundCollectionCreateWithoutFinanceHeadInput[] | FundCollectionUncheckedCreateWithoutFinanceHeadInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutFinanceHeadInput | FundCollectionCreateOrConnectWithoutFinanceHeadInput[]
-    createMany?: FundCollectionCreateManyFinanceHeadInputEnvelope
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-  }
-
   export type SalaryEntryCreateNestedManyWithoutFinanceHeadInput = {
     create?: XOR<SalaryEntryCreateWithoutFinanceHeadInput, SalaryEntryUncheckedCreateWithoutFinanceHeadInput> | SalaryEntryCreateWithoutFinanceHeadInput[] | SalaryEntryUncheckedCreateWithoutFinanceHeadInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutFinanceHeadInput | SalaryEntryCreateOrConnectWithoutFinanceHeadInput[]
@@ -43758,32 +43770,11 @@ export namespace Prisma {
     connect?: SalaryEntryWhereUniqueInput | SalaryEntryWhereUniqueInput[]
   }
 
-  export type FundCollectionUncheckedCreateNestedManyWithoutFinanceHeadInput = {
-    create?: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput> | FundCollectionCreateWithoutFinanceHeadInput[] | FundCollectionUncheckedCreateWithoutFinanceHeadInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutFinanceHeadInput | FundCollectionCreateOrConnectWithoutFinanceHeadInput[]
-    createMany?: FundCollectionCreateManyFinanceHeadInputEnvelope
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-  }
-
   export type SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput = {
     create?: XOR<SalaryEntryCreateWithoutFinanceHeadInput, SalaryEntryUncheckedCreateWithoutFinanceHeadInput> | SalaryEntryCreateWithoutFinanceHeadInput[] | SalaryEntryUncheckedCreateWithoutFinanceHeadInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutFinanceHeadInput | SalaryEntryCreateOrConnectWithoutFinanceHeadInput[]
     createMany?: SalaryEntryCreateManyFinanceHeadInputEnvelope
     connect?: SalaryEntryWhereUniqueInput | SalaryEntryWhereUniqueInput[]
-  }
-
-  export type FundCollectionUpdateManyWithoutFinanceHeadNestedInput = {
-    create?: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput> | FundCollectionCreateWithoutFinanceHeadInput[] | FundCollectionUncheckedCreateWithoutFinanceHeadInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutFinanceHeadInput | FundCollectionCreateOrConnectWithoutFinanceHeadInput[]
-    upsert?: FundCollectionUpsertWithWhereUniqueWithoutFinanceHeadInput | FundCollectionUpsertWithWhereUniqueWithoutFinanceHeadInput[]
-    createMany?: FundCollectionCreateManyFinanceHeadInputEnvelope
-    set?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    disconnect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    delete?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    update?: FundCollectionUpdateWithWhereUniqueWithoutFinanceHeadInput | FundCollectionUpdateWithWhereUniqueWithoutFinanceHeadInput[]
-    updateMany?: FundCollectionUpdateManyWithWhereWithoutFinanceHeadInput | FundCollectionUpdateManyWithWhereWithoutFinanceHeadInput[]
-    deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
   }
 
   export type SalaryEntryUpdateManyWithoutFinanceHeadNestedInput = {
@@ -43798,20 +43789,6 @@ export namespace Prisma {
     update?: SalaryEntryUpdateWithWhereUniqueWithoutFinanceHeadInput | SalaryEntryUpdateWithWhereUniqueWithoutFinanceHeadInput[]
     updateMany?: SalaryEntryUpdateManyWithWhereWithoutFinanceHeadInput | SalaryEntryUpdateManyWithWhereWithoutFinanceHeadInput[]
     deleteMany?: SalaryEntryScalarWhereInput | SalaryEntryScalarWhereInput[]
-  }
-
-  export type FundCollectionUncheckedUpdateManyWithoutFinanceHeadNestedInput = {
-    create?: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput> | FundCollectionCreateWithoutFinanceHeadInput[] | FundCollectionUncheckedCreateWithoutFinanceHeadInput[]
-    connectOrCreate?: FundCollectionCreateOrConnectWithoutFinanceHeadInput | FundCollectionCreateOrConnectWithoutFinanceHeadInput[]
-    upsert?: FundCollectionUpsertWithWhereUniqueWithoutFinanceHeadInput | FundCollectionUpsertWithWhereUniqueWithoutFinanceHeadInput[]
-    createMany?: FundCollectionCreateManyFinanceHeadInputEnvelope
-    set?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    disconnect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    delete?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    connect?: FundCollectionWhereUniqueInput | FundCollectionWhereUniqueInput[]
-    update?: FundCollectionUpdateWithWhereUniqueWithoutFinanceHeadInput | FundCollectionUpdateWithWhereUniqueWithoutFinanceHeadInput[]
-    updateMany?: FundCollectionUpdateManyWithWhereWithoutFinanceHeadInput | FundCollectionUpdateManyWithWhereWithoutFinanceHeadInput[]
-    deleteMany?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
   }
 
   export type SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput = {
@@ -43840,34 +43817,6 @@ export namespace Prisma {
     upsert?: StudentUpsertWithoutFeeVouchersInput
     connect?: StudentWhereUniqueInput
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutFeeVouchersInput, StudentUpdateWithoutFeeVouchersInput>, StudentUncheckedUpdateWithoutFeeVouchersInput>
-  }
-
-  export type StudentCreateNestedOneWithoutFundCollectionsInput = {
-    create?: XOR<StudentCreateWithoutFundCollectionsInput, StudentUncheckedCreateWithoutFundCollectionsInput>
-    connectOrCreate?: StudentCreateOrConnectWithoutFundCollectionsInput
-    connect?: StudentWhereUniqueInput
-  }
-
-  export type FinanceHeadCreateNestedOneWithoutFundCollectionsInput = {
-    create?: XOR<FinanceHeadCreateWithoutFundCollectionsInput, FinanceHeadUncheckedCreateWithoutFundCollectionsInput>
-    connectOrCreate?: FinanceHeadCreateOrConnectWithoutFundCollectionsInput
-    connect?: FinanceHeadWhereUniqueInput
-  }
-
-  export type StudentUpdateOneRequiredWithoutFundCollectionsNestedInput = {
-    create?: XOR<StudentCreateWithoutFundCollectionsInput, StudentUncheckedCreateWithoutFundCollectionsInput>
-    connectOrCreate?: StudentCreateOrConnectWithoutFundCollectionsInput
-    upsert?: StudentUpsertWithoutFundCollectionsInput
-    connect?: StudentWhereUniqueInput
-    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutFundCollectionsInput, StudentUpdateWithoutFundCollectionsInput>, StudentUncheckedUpdateWithoutFundCollectionsInput>
-  }
-
-  export type FinanceHeadUpdateOneRequiredWithoutFundCollectionsNestedInput = {
-    create?: XOR<FinanceHeadCreateWithoutFundCollectionsInput, FinanceHeadUncheckedCreateWithoutFundCollectionsInput>
-    connectOrCreate?: FinanceHeadCreateOrConnectWithoutFundCollectionsInput
-    upsert?: FinanceHeadUpsertWithoutFundCollectionsInput
-    connect?: FinanceHeadWhereUniqueInput
-    update?: XOR<XOR<FinanceHeadUpdateToOneWithWhereWithoutFundCollectionsInput, FinanceHeadUpdateWithoutFundCollectionsInput>, FinanceHeadUncheckedUpdateWithoutFundCollectionsInput>
   }
 
   export type TeacherCreateNestedOneWithoutSalaryEntriesInput = {
@@ -46116,37 +46065,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type FundCollectionCreateWithoutStudentInput = {
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    financeHead: FinanceHeadCreateNestedOneWithoutFundCollectionsInput
-  }
-
-  export type FundCollectionUncheckedCreateWithoutStudentInput = {
-    id?: number
-    financeHeadId: number
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FundCollectionCreateOrConnectWithoutStudentInput = {
-    where: FundCollectionWhereUniqueInput
-    create: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput>
-  }
-
-  export type FundCollectionCreateManyStudentInputEnvelope = {
-    data: FundCollectionCreateManyStudentInput | FundCollectionCreateManyStudentInput[]
-    skipDuplicates?: boolean
-  }
-
   export type StudentFeeVoucherCreateWithoutStudentInput = {
     voucherNo: string
     feeMonth: number
@@ -46421,37 +46339,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"HifzSiparaEntry"> | Date | string
   }
 
-  export type FundCollectionUpsertWithWhereUniqueWithoutStudentInput = {
-    where: FundCollectionWhereUniqueInput
-    update: XOR<FundCollectionUpdateWithoutStudentInput, FundCollectionUncheckedUpdateWithoutStudentInput>
-    create: XOR<FundCollectionCreateWithoutStudentInput, FundCollectionUncheckedCreateWithoutStudentInput>
-  }
-
-  export type FundCollectionUpdateWithWhereUniqueWithoutStudentInput = {
-    where: FundCollectionWhereUniqueInput
-    data: XOR<FundCollectionUpdateWithoutStudentInput, FundCollectionUncheckedUpdateWithoutStudentInput>
-  }
-
-  export type FundCollectionUpdateManyWithWhereWithoutStudentInput = {
-    where: FundCollectionScalarWhereInput
-    data: XOR<FundCollectionUpdateManyMutationInput, FundCollectionUncheckedUpdateManyWithoutStudentInput>
-  }
-
-  export type FundCollectionScalarWhereInput = {
-    AND?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
-    OR?: FundCollectionScalarWhereInput[]
-    NOT?: FundCollectionScalarWhereInput | FundCollectionScalarWhereInput[]
-    id?: IntFilter<"FundCollection"> | number
-    studentId?: IntFilter<"FundCollection"> | number
-    financeHeadId?: IntFilter<"FundCollection"> | number
-    amount?: DecimalFilter<"FundCollection"> | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
-    remarks?: StringNullableFilter<"FundCollection"> | string | null
-    status?: StringFilter<"FundCollection"> | string
-    createdAt?: DateTimeFilter<"FundCollection"> | Date | string
-    updatedAt?: DateTimeFilter<"FundCollection"> | Date | string
-  }
-
   export type StudentFeeVoucherUpsertWithWhereUniqueWithoutStudentInput = {
     where: StudentFeeVoucherWhereUniqueInput
     update: XOR<StudentFeeVoucherUpdateWithoutStudentInput, StudentFeeVoucherUncheckedUpdateWithoutStudentInput>
@@ -46575,7 +46462,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -46618,7 +46504,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -46708,7 +46593,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -46751,7 +46635,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -46831,7 +46714,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -46874,7 +46756,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -47048,7 +46929,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -47091,7 +46971,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -47439,7 +47318,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -47482,7 +47360,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -47628,7 +47505,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -47671,7 +47547,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -47971,7 +47846,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -48014,7 +47888,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -48072,7 +47945,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -48115,7 +47987,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -48157,7 +48028,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -48200,7 +48070,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -48258,7 +48127,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -48301,7 +48169,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -48343,7 +48210,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutStudentInput
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -48386,7 +48252,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -48444,7 +48309,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutStudentNestedInput
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -48487,7 +48351,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
   }
 
@@ -48529,7 +48392,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutStudentInput
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
   }
 
@@ -48572,7 +48434,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
     feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
   }
 
@@ -48630,7 +48491,6 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutStudentNestedInput
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
   }
 
@@ -48673,39 +48533,7 @@ export namespace Prisma {
     hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
     feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
-  }
-
-  export type FundCollectionCreateWithoutFinanceHeadInput = {
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    student: StudentCreateNestedOneWithoutFundCollectionsInput
-  }
-
-  export type FundCollectionUncheckedCreateWithoutFinanceHeadInput = {
-    id?: number
-    studentId: number
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FundCollectionCreateOrConnectWithoutFinanceHeadInput = {
-    where: FundCollectionWhereUniqueInput
-    create: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput>
-  }
-
-  export type FundCollectionCreateManyFinanceHeadInputEnvelope = {
-    data: FundCollectionCreateManyFinanceHeadInput | FundCollectionCreateManyFinanceHeadInput[]
-    skipDuplicates?: boolean
   }
 
   export type SalaryEntryCreateWithoutFinanceHeadInput = {
@@ -48741,22 +48569,6 @@ export namespace Prisma {
   export type SalaryEntryCreateManyFinanceHeadInputEnvelope = {
     data: SalaryEntryCreateManyFinanceHeadInput | SalaryEntryCreateManyFinanceHeadInput[]
     skipDuplicates?: boolean
-  }
-
-  export type FundCollectionUpsertWithWhereUniqueWithoutFinanceHeadInput = {
-    where: FundCollectionWhereUniqueInput
-    update: XOR<FundCollectionUpdateWithoutFinanceHeadInput, FundCollectionUncheckedUpdateWithoutFinanceHeadInput>
-    create: XOR<FundCollectionCreateWithoutFinanceHeadInput, FundCollectionUncheckedCreateWithoutFinanceHeadInput>
-  }
-
-  export type FundCollectionUpdateWithWhereUniqueWithoutFinanceHeadInput = {
-    where: FundCollectionWhereUniqueInput
-    data: XOR<FundCollectionUpdateWithoutFinanceHeadInput, FundCollectionUncheckedUpdateWithoutFinanceHeadInput>
-  }
-
-  export type FundCollectionUpdateManyWithWhereWithoutFinanceHeadInput = {
-    where: FundCollectionScalarWhereInput
-    data: XOR<FundCollectionUpdateManyMutationInput, FundCollectionUncheckedUpdateManyWithoutFinanceHeadInput>
   }
 
   export type SalaryEntryUpsertWithWhereUniqueWithoutFinanceHeadInput = {
@@ -48814,7 +48626,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutFeeVouchersInput = {
@@ -48857,7 +48668,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutFeeVouchersInput = {
@@ -48915,7 +48725,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutFeeVouchersInput = {
@@ -48958,251 +48767,6 @@ export namespace Prisma {
     hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
     hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutStudentNestedInput
-  }
-
-  export type StudentCreateWithoutFundCollectionsInput = {
-    admissionNumber: string
-    admissionDate?: Date | string | null
-    admissionFee?: Decimal | DecimalJsLike | number | string | null
-    fullName: string
-    fatherName: string
-    gender: string
-    caste?: string | null
-    cnic?: string | null
-    dob?: Date | string | null
-    bForm?: string | null
-    phone?: string | null
-    whatsapp?: string | null
-    email?: string | null
-    address?: string | null
-    currentAddress?: string | null
-    permanentAddress?: string | null
-    district?: string | null
-    prevMadrassa?: string | null
-    prevSchool?: string | null
-    secularEdu?: string | null
-    religiousEdu?: string | null
-    requiredClass?: string | null
-    requiredJamaat?: string | null
-    teacherName?: string | null
-    medicalCondition?: string | null
-    monthlyFee?: Decimal | DecimalJsLike | number | string | null
-    reside?: string | null
-    imageUrl?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    parents?: StudentParentCreateNestedManyWithoutStudentInput
-    assignments?: StudentClassAssignmentCreateNestedManyWithoutStudentInput
-    attendances?: StudentAttendanceCreateNestedManyWithoutStudentInput
-    hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutStudentInput
-    hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutStudentInput
-    hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutStudentInput
-    hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutStudentInput
-    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutStudentInput
-  }
-
-  export type StudentUncheckedCreateWithoutFundCollectionsInput = {
-    id?: number
-    admissionNumber: string
-    admissionDate?: Date | string | null
-    admissionFee?: Decimal | DecimalJsLike | number | string | null
-    fullName: string
-    fatherName: string
-    gender: string
-    caste?: string | null
-    cnic?: string | null
-    dob?: Date | string | null
-    bForm?: string | null
-    phone?: string | null
-    whatsapp?: string | null
-    email?: string | null
-    address?: string | null
-    currentAddress?: string | null
-    permanentAddress?: string | null
-    district?: string | null
-    prevMadrassa?: string | null
-    prevSchool?: string | null
-    secularEdu?: string | null
-    religiousEdu?: string | null
-    requiredClass?: string | null
-    requiredJamaat?: string | null
-    teacherName?: string | null
-    medicalCondition?: string | null
-    monthlyFee?: Decimal | DecimalJsLike | number | string | null
-    reside?: string | null
-    imageUrl?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    parents?: StudentParentUncheckedCreateNestedManyWithoutStudentInput
-    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutStudentInput
-    attendances?: StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
-    hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutStudentInput
-    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutStudentInput
-    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutStudentInput
-    hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutStudentInput
-    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutStudentInput
-  }
-
-  export type StudentCreateOrConnectWithoutFundCollectionsInput = {
-    where: StudentWhereUniqueInput
-    create: XOR<StudentCreateWithoutFundCollectionsInput, StudentUncheckedCreateWithoutFundCollectionsInput>
-  }
-
-  export type FinanceHeadCreateWithoutFundCollectionsInput = {
-    name: string
-    type: string
-    description?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    salaryEntries?: SalaryEntryCreateNestedManyWithoutFinanceHeadInput
-  }
-
-  export type FinanceHeadUncheckedCreateWithoutFundCollectionsInput = {
-    id?: number
-    name: string
-    type: string
-    description?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput
-  }
-
-  export type FinanceHeadCreateOrConnectWithoutFundCollectionsInput = {
-    where: FinanceHeadWhereUniqueInput
-    create: XOR<FinanceHeadCreateWithoutFundCollectionsInput, FinanceHeadUncheckedCreateWithoutFundCollectionsInput>
-  }
-
-  export type StudentUpsertWithoutFundCollectionsInput = {
-    update: XOR<StudentUpdateWithoutFundCollectionsInput, StudentUncheckedUpdateWithoutFundCollectionsInput>
-    create: XOR<StudentCreateWithoutFundCollectionsInput, StudentUncheckedCreateWithoutFundCollectionsInput>
-    where?: StudentWhereInput
-  }
-
-  export type StudentUpdateToOneWithWhereWithoutFundCollectionsInput = {
-    where?: StudentWhereInput
-    data: XOR<StudentUpdateWithoutFundCollectionsInput, StudentUncheckedUpdateWithoutFundCollectionsInput>
-  }
-
-  export type StudentUpdateWithoutFundCollectionsInput = {
-    admissionNumber?: StringFieldUpdateOperationsInput | string
-    admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    admissionFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    fatherName?: StringFieldUpdateOperationsInput | string
-    gender?: StringFieldUpdateOperationsInput | string
-    caste?: NullableStringFieldUpdateOperationsInput | string | null
-    cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bForm?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    currentAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    permanentAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    district?: NullableStringFieldUpdateOperationsInput | string | null
-    prevMadrassa?: NullableStringFieldUpdateOperationsInput | string | null
-    prevSchool?: NullableStringFieldUpdateOperationsInput | string | null
-    secularEdu?: NullableStringFieldUpdateOperationsInput | string | null
-    religiousEdu?: NullableStringFieldUpdateOperationsInput | string | null
-    requiredClass?: NullableStringFieldUpdateOperationsInput | string | null
-    requiredJamaat?: NullableStringFieldUpdateOperationsInput | string | null
-    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
-    medicalCondition?: NullableStringFieldUpdateOperationsInput | string | null
-    monthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    reside?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    parents?: StudentParentUpdateManyWithoutStudentNestedInput
-    assignments?: StudentClassAssignmentUpdateManyWithoutStudentNestedInput
-    attendances?: StudentAttendanceUpdateManyWithoutStudentNestedInput
-    hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutStudentNestedInput
-    hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutStudentNestedInput
-    hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutStudentNestedInput
-    hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutStudentNestedInput
-    feeVouchers?: StudentFeeVoucherUpdateManyWithoutStudentNestedInput
-  }
-
-  export type StudentUncheckedUpdateWithoutFundCollectionsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    admissionNumber?: StringFieldUpdateOperationsInput | string
-    admissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    admissionFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    fatherName?: StringFieldUpdateOperationsInput | string
-    gender?: StringFieldUpdateOperationsInput | string
-    caste?: NullableStringFieldUpdateOperationsInput | string | null
-    cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bForm?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    currentAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    permanentAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    district?: NullableStringFieldUpdateOperationsInput | string | null
-    prevMadrassa?: NullableStringFieldUpdateOperationsInput | string | null
-    prevSchool?: NullableStringFieldUpdateOperationsInput | string | null
-    secularEdu?: NullableStringFieldUpdateOperationsInput | string | null
-    religiousEdu?: NullableStringFieldUpdateOperationsInput | string | null
-    requiredClass?: NullableStringFieldUpdateOperationsInput | string | null
-    requiredJamaat?: NullableStringFieldUpdateOperationsInput | string | null
-    teacherName?: NullableStringFieldUpdateOperationsInput | string | null
-    medicalCondition?: NullableStringFieldUpdateOperationsInput | string | null
-    monthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    reside?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    parents?: StudentParentUncheckedUpdateManyWithoutStudentNestedInput
-    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutStudentNestedInput
-    attendances?: StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
-    hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutStudentNestedInput
-    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutStudentNestedInput
-    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutStudentNestedInput
-    hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutStudentNestedInput
-    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutStudentNestedInput
-  }
-
-  export type FinanceHeadUpsertWithoutFundCollectionsInput = {
-    update: XOR<FinanceHeadUpdateWithoutFundCollectionsInput, FinanceHeadUncheckedUpdateWithoutFundCollectionsInput>
-    create: XOR<FinanceHeadCreateWithoutFundCollectionsInput, FinanceHeadUncheckedCreateWithoutFundCollectionsInput>
-    where?: FinanceHeadWhereInput
-  }
-
-  export type FinanceHeadUpdateToOneWithWhereWithoutFundCollectionsInput = {
-    where?: FinanceHeadWhereInput
-    data: XOR<FinanceHeadUpdateWithoutFundCollectionsInput, FinanceHeadUncheckedUpdateWithoutFundCollectionsInput>
-  }
-
-  export type FinanceHeadUpdateWithoutFundCollectionsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    salaryEntries?: SalaryEntryUpdateManyWithoutFinanceHeadNestedInput
-  }
-
-  export type FinanceHeadUncheckedUpdateWithoutFundCollectionsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type TeacherCreateWithoutSalaryEntriesInput = {
@@ -49252,7 +48816,6 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fundCollections?: FundCollectionCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadUncheckedCreateWithoutSalaryEntriesInput = {
@@ -49263,7 +48826,6 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadCreateOrConnectWithoutSalaryEntriesInput = {
@@ -49335,7 +48897,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fundCollections?: FundCollectionUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type FinanceHeadUncheckedUpdateWithoutSalaryEntriesInput = {
@@ -49346,7 +48907,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fundCollections?: FundCollectionUncheckedUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type AcademicClassCreateManyBranchInput = {
@@ -50228,17 +49788,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FundCollectionCreateManyStudentInput = {
-    id?: number
-    financeHeadId: number
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type StudentFeeVoucherCreateManyStudentInput = {
     id?: number
     voucherNo: string
@@ -50593,38 +50142,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FundCollectionUpdateWithoutStudentInput = {
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    financeHead?: FinanceHeadUpdateOneRequiredWithoutFundCollectionsNestedInput
-  }
-
-  export type FundCollectionUncheckedUpdateWithoutStudentInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    financeHeadId?: IntFieldUpdateOperationsInput | number
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FundCollectionUncheckedUpdateManyWithoutStudentInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    financeHeadId?: IntFieldUpdateOperationsInput | number
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type StudentFeeVoucherUpdateWithoutStudentInput = {
     voucherNo?: StringFieldUpdateOperationsInput | string
     feeMonth?: IntFieldUpdateOperationsInput | number
@@ -50870,17 +50387,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FundCollectionCreateManyFinanceHeadInput = {
-    id?: number
-    studentId: number
-    amount: Decimal | DecimalJsLike | number | string
-    paymentDate: Date | string
-    remarks?: string | null
-    status?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type SalaryEntryCreateManyFinanceHeadInput = {
     id?: number
     teacherId: number
@@ -50892,38 +50398,6 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type FundCollectionUpdateWithoutFinanceHeadInput = {
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    student?: StudentUpdateOneRequiredWithoutFundCollectionsNestedInput
-  }
-
-  export type FundCollectionUncheckedUpdateWithoutFinanceHeadInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FundCollectionUncheckedUpdateManyWithoutFinanceHeadInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SalaryEntryUpdateWithoutFinanceHeadInput = {

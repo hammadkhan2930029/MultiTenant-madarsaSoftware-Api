@@ -514,11 +514,12 @@ const ensureSiparaHifz = (studentId) =>
     },
   });
 
-const ensureFundCollection = async (studentId, financeHeadId) => {
+const ensureFundCollection = async () => {
   const existing = await prisma.fundCollection.findFirst({
     where: {
-      studentId,
-      financeHeadId,
+      collectionGroupId: 'FG-SEED-001',
+      donorName: 'Seed Donor',
+      receiptNo: 'R-001',
       paymentDate: sampleDates.fundPayment,
     },
   });
@@ -528,7 +529,16 @@ const ensureFundCollection = async (studentId, financeHeadId) => {
       where: { id: existing.id },
       data: {
         amount: toDecimal(3500),
-        remarks: 'Seeded monthly fee collection',
+        collectionGroupId: 'FG-SEED-001',
+        careOf: 'Seed Care Of',
+        phone: '03000000000',
+        paymentMode: 'نقد',
+        donationType: 'صدقات واجبہ',
+        donationSubType: 'زکوٰۃ',
+        purpose: 'مدرسہ فنڈ',
+        receiptNo: 'R-001',
+        details: 'Seeded donation collection',
+        remarks: 'Seeded donation collection',
         status: 'active',
       },
     });
@@ -536,11 +546,19 @@ const ensureFundCollection = async (studentId, financeHeadId) => {
 
   return prisma.fundCollection.create({
     data: {
-      studentId,
-      financeHeadId,
+      donorName: 'Seed Donor',
+      collectionGroupId: 'FG-SEED-001',
+      careOf: 'Seed Care Of',
+      phone: '03000000000',
+      paymentMode: 'نقد',
+      donationType: 'صدقات واجبہ',
+      donationSubType: 'زکوٰۃ',
+      purpose: 'مدرسہ فنڈ',
       amount: toDecimal(3500),
+      receiptNo: 'R-001',
+      details: 'Seeded donation collection',
       paymentDate: sampleDates.fundPayment,
-      remarks: 'Seeded monthly fee collection',
+      remarks: 'Seeded donation collection',
       status: 'active',
     },
   });
@@ -685,10 +703,10 @@ const main = async () => {
     basicSalary: 22000,
   });
 
-  const incomeHead = await ensureFinanceHead({
-    name: 'Monthly Fee',
+  await ensureFinanceHead({
+    name: 'Donation Income',
     type: 'income',
-    description: 'Student monthly fee collection',
+    description: 'General donation collection',
   });
 
   const expenseHead = await ensureFinanceHead({
@@ -703,7 +721,7 @@ const main = async () => {
   await ensureWeeklyHifz(student1.id);
   await ensureMonthlyHifz(student1.id);
   await ensureSiparaHifz(student1.id);
-  await ensureFundCollection(student1.id, incomeHead.id);
+  await ensureFundCollection();
   await ensureSalaryEntry(teacher.id, expenseHead.id);
 
   const summary = await countSnapshot();

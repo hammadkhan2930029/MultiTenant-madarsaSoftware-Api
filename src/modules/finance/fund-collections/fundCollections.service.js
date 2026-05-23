@@ -4,14 +4,22 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 
 const select = {
   id: true,
+  collectionGroupId: true,
+  donorName: true,
+  careOf: true,
+  phone: true,
+  paymentMode: true,
+  donationType: true,
+  donationSubType: true,
+  purpose: true,
   amount: true,
+  receiptNo: true,
+  details: true,
   paymentDate: true,
   remarks: true,
   status: true,
   createdAt: true,
   updatedAt: true,
-  student: { select: { id: true, admissionNumber: true, fullName: true } },
-  financeHead: { select: { id: true, name: true, type: true } },
 };
 
 const normalizeDate = (value) => {
@@ -20,19 +28,8 @@ const normalizeDate = (value) => {
   return date;
 };
 
-const ensureReferences = async ({ studentId, financeHeadId }) => {
-  const [student, head] = await Promise.all([
-    prisma.student.findUnique({ where: { id: studentId } }),
-    prisma.financeHead.findUnique({ where: { id: financeHeadId } }),
-  ]);
-  if (!student) throw new AppError('Student not found.', 404);
-  if (!head) throw new AppError('Finance head not found.', 404);
-  if (head.type !== 'income') throw new AppError('Selected finance head must be an income head.', 400);
-};
-
 export const fundCollectionsService = {
   async createEntry(payload) {
-    await ensureReferences(payload);
     return prisma.fundCollection.create({
       data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null },
       select,
@@ -41,8 +38,23 @@ export const fundCollectionsService = {
   async getEntries(query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
-      ...(query.studentId ? { studentId: query.studentId } : {}),
-      ...(query.financeHeadId ? { financeHeadId: query.financeHeadId } : {}),
+      ...(query.paymentMode ? { paymentMode: query.paymentMode } : {}),
+      ...(query.donationType ? { donationType: query.donationType } : {}),
+      ...(query.donationSubType ? { donationSubType: query.donationSubType } : {}),
+      ...(query.phone ? { phone: query.phone } : {}),
+      ...(query.collectionGroupId ? { collectionGroupId: query.collectionGroupId } : {}),
+      ...(query.search
+        ? {
+            OR: [
+              { donorName: { contains: query.search } },
+              { careOf: { contains: query.search } },
+              { phone: { contains: query.search } },
+              { purpose: { contains: query.search } },
+              { receiptNo: { contains: query.search } },
+              { collectionGroupId: { contains: query.search } },
+            ],
+          }
+        : {}),
       ...(query.fromDate || query.toDate
         ? {
             paymentDate: {
@@ -61,13 +73,12 @@ export const fundCollectionsService = {
   },
   async getEntryById(id) {
     const entry = await prisma.fundCollection.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('Fund collection entry not found.', 404);
+    if (!entry) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
     return entry;
   },
   async updateEntry(id, payload) {
     const existing = await prisma.fundCollection.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Fund collection entry not found.', 404);
-    await ensureReferences(payload);
+    if (!existing) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
     return prisma.fundCollection.update({
       where: { id },
       data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
@@ -76,7 +87,7 @@ export const fundCollectionsService = {
   },
   async deactivateEntry(id) {
     const existing = await prisma.fundCollection.findUnique({ where: { id } });
-    if (!existing) throw new AppError('Fund collection entry not found.', 404);
+    if (!existing) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
     return prisma.fundCollection.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

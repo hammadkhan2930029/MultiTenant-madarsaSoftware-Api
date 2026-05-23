@@ -10,7 +10,7 @@ export const createTeacher = asyncHandler(async (req, res) => {
 
   return apiResponse(res, {
     statusCode: 201,
-    message: 'Teacher created successfully.',
+    message: 'استاد کامیابی سے شامل ہو گیا۔',
     data: teacher,
   });
 });
@@ -19,7 +19,7 @@ export const getTeachers = asyncHandler(async (req, res) => {
   const teachers = await teachersService.getTeachers(req.query);
 
   return apiResponse(res, {
-    message: 'Teachers fetched successfully.',
+    message: 'اساتذہ کامیابی سے لوڈ ہو گئے۔',
     data: teachers,
   });
 });
@@ -28,7 +28,7 @@ export const getTeacherById = asyncHandler(async (req, res) => {
   const teacher = await teachersService.getTeacherById(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Teacher profile fetched successfully.',
+    message: 'استاد کی تفصیل کامیابی سے لوڈ ہو گئی۔',
     data: teacher,
   });
 });
@@ -40,7 +40,7 @@ export const updateTeacher = asyncHandler(async (req, res) => {
   });
 
   return apiResponse(res, {
-    message: 'Teacher updated successfully.',
+    message: 'استاد کی معلومات کامیابی سے تبدیل ہو گئیں۔',
     data: teacher,
   });
 });
@@ -49,7 +49,7 @@ export const updateTeacherStatus = asyncHandler(async (req, res) => {
   const teacher = await teachersService.updateTeacherStatus(Number(req.params.id), req.body.status);
 
   return apiResponse(res, {
-    message: 'Teacher status updated successfully.',
+    message: 'استاد کی حالت کامیابی سے تبدیل ہو گئی۔',
     data: teacher,
   });
 });
@@ -58,7 +58,7 @@ export const deleteTeacher = asyncHandler(async (req, res) => {
   const teacher = await teachersService.deleteTeacher(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Teacher deleted successfully.',
+    message: 'استاد کامیابی سے حذف کر دیا گیا۔',
     data: teacher,
   });
 });

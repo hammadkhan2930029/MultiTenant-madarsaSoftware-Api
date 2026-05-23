@@ -26,23 +26,23 @@ const ensureTeacherScheduleReferences = async ({ teacherId, sessionId, classId, 
   ]);
 
   if (!teacher || teacher.status !== 'active') {
-    throw new AppError('Active teacher not found.', 404);
+    throw new AppError('فعال استاد نہیں ملا۔', 404);
   }
 
   if (!session || session.status !== 'active') {
-    throw new AppError('Active session not found.', 404);
+    throw new AppError('فعال سیشن نہیں ملا۔', 404);
   }
 
   if (!academicClass || academicClass.status !== 'active') {
-    throw new AppError('Active class not found.', 404);
+    throw new AppError('فعال کلاس نہیں ملی۔', 404);
   }
 
   if (!section || section.status !== 'active') {
-    throw new AppError('Active section not found.', 404);
+    throw new AppError('فعال سیکشن نہیں ملا۔', 404);
   }
 
   if (section.classId !== classId) {
-    throw new AppError('Section does not belong to the selected class.', 400);
+    throw new AppError('یہ سیکشن منتخب کلاس سے متعلق نہیں ہے۔', 400);
   }
 };
 
@@ -97,7 +97,7 @@ export const teacherSchedulesService = {
     const schedule = await prisma.teacherSchedule.findUnique({ where: { id } });
 
     if (!schedule) {
-      throw new AppError('Schedule not found.', 404);
+      throw new AppError('شیڈول نہیں ملا۔', 404);
     }
 
     return prisma.teacherSchedule.update({

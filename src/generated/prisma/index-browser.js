@@ -498,9 +498,17 @@ exports.Prisma.StudentFeeVoucherScalarFieldEnum = {
 
 exports.Prisma.FundCollectionScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
-  financeHeadId: 'financeHeadId',
+  collectionGroupId: 'collectionGroupId',
+  donorName: 'donorName',
+  careOf: 'careOf',
+  phone: 'phone',
+  paymentMode: 'paymentMode',
+  donationType: 'donationType',
+  donationSubType: 'donationSubType',
+  purpose: 'purpose',
   amount: 'amount',
+  receiptNo: 'receiptNo',
+  details: 'details',
   paymentDate: 'paymentDate',
   remarks: 'remarks',
   status: 'status',
@@ -765,6 +773,16 @@ exports.Prisma.StudentFeeVoucherOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.FundCollectionOrderByRelevanceFieldEnum = {
+  collectionGroupId: 'collectionGroupId',
+  donorName: 'donorName',
+  careOf: 'careOf',
+  phone: 'phone',
+  paymentMode: 'paymentMode',
+  donationType: 'donationType',
+  donationSubType: 'donationSubType',
+  purpose: 'purpose',
+  receiptNo: 'receiptNo',
+  details: 'details',
   remarks: 'remarks',
   status: 'status'
 };

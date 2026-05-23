@@ -62,8 +62,10 @@ export const fundCollectionsReportValidationSchema = withDateRangeValidation(
     body: z.object({}).default({}),
     params: z.object({}).default({}),
     query: baseQuerySchema.extend({
-      studentId: z.coerce.number().int().positive().optional(),
-      financeHeadId: z.coerce.number().int().positive().optional(),
+      paymentMode: z.enum(['نقد', 'چیک', 'آن لائن']).optional(),
+      donationType: z.enum(['صدقات واجبہ', 'صدقات نافلہ']).optional(),
+      donationSubType: z.string().trim().optional(),
+      search: z.string().trim().optional(),
       status: reportStatusSchema.optional(),
     }),
   })

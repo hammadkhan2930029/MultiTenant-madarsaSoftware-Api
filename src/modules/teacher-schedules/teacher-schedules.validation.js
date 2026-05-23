@@ -3,14 +3,14 @@ import { z } from 'zod';
 const nonEmptyStringArray = (message) => z.array(z.string().trim().min(1)).min(1, message);
 
 const teacherScheduleBodySchema = z.object({
-  teacherId: z.coerce.number().int().positive('Teacher id must be a valid number.'),
-  sessionId: z.coerce.number().int().positive('Session id must be a valid number.'),
-  classId: z.coerce.number().int().positive('Class id must be a valid number.'),
-  sectionId: z.coerce.number().int().positive('Section id must be a valid number.'),
-  subjects: nonEmptyStringArray('At least one subject is required.'),
-  days: nonEmptyStringArray('At least one day is required.'),
-  startTime: z.string().trim().min(1, 'Start time is required.').max(10, 'Start time is too long.'),
-  endTime: z.string().trim().min(1, 'End time is required.').max(10, 'End time is too long.'),
+  teacherId: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
+  sessionId: z.coerce.number().int().positive('سیشن کا نمبر درست ہونا چاہیے۔'),
+  classId: z.coerce.number().int().positive('کلاس کا نمبر درست ہونا چاہیے۔'),
+  sectionId: z.coerce.number().int().positive('سیکشن کا نمبر درست ہونا چاہیے۔'),
+  subjects: nonEmptyStringArray('کم از کم ایک مضمون لازمی ہے۔'),
+  days: nonEmptyStringArray('کم از کم ایک دن لازمی ہے۔'),
+  startTime: z.string().trim().min(1, 'شروع کا وقت لازمی ہے۔').max(10, 'شروع کا وقت بہت لمبا ہے۔'),
+  endTime: z.string().trim().min(1, 'ختم کا وقت لازمی ہے۔').max(10, 'ختم کا وقت بہت لمبا ہے۔'),
   status: z.enum(['active', 'inactive']).optional(),
 });
 
@@ -37,7 +37,7 @@ export const listTeacherSchedulesValidationSchema = z.object({
 export const teacherScheduleIdValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({
-    id: z.coerce.number().int().positive('Schedule id must be a valid number.'),
+    id: z.coerce.number().int().positive('شیڈول کا نمبر درست ہونا چاہیے۔'),
   }),
   query: z.object({}).default({}),
 });

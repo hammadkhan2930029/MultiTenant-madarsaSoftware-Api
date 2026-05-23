@@ -3,7 +3,7 @@ import { z } from 'zod';
 const attendanceStatus = z.enum(['Present', 'Absent', 'Leave', 'Late']);
 
 const optionalRemarks = z
-  .union([z.string().trim().max(255, 'Remarks are too long.'), z.literal(''), z.undefined()])
+  .union([z.string().trim().max(255, 'نوٹ بہت لمبا ہے۔'), z.literal(''), z.undefined()])
   .transform((value) => (value === '' ? undefined : value));
 
 export const markStudentAttendanceValidationSchema = z.object({
@@ -37,9 +37,9 @@ export const getStudentAttendanceValidationSchema = z.object({
 
 export const markTeacherAttendanceValidationSchema = z.object({
   body: z.object({
-    teacherId: z.coerce.number().int().positive('Teacher id must be a valid number.'),
-    branchId: z.coerce.number().int().positive('Branch id must be a valid number.'),
-    date: z.coerce.date({ message: 'Attendance date is required.' }),
+    teacherId: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
+    branchId: z.coerce.number().int().positive('برانچ کا نمبر درست ہونا چاہیے۔'),
+    date: z.coerce.date({ message: 'حاضری کی تاریخ لازمی ہے۔' }),
     status: attendanceStatus,
     remarks: optionalRemarks,
   }),
@@ -64,7 +64,7 @@ export const deleteTeacherAttendanceValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),
   query: z.object({
-    teacherId: z.coerce.number().int().positive('Teacher id must be a valid number.'),
-    date: z.coerce.date({ message: 'Attendance date is required.' }),
+    teacherId: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
+    date: z.coerce.date({ message: 'حاضری کی تاریخ لازمی ہے۔' }),
   }),
 });

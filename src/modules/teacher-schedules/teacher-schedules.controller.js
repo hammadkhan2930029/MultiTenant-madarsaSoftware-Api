@@ -7,7 +7,7 @@ export const createTeacherSchedule = asyncHandler(async (req, res) => {
 
   return apiResponse(res, {
     statusCode: 201,
-    message: 'Teacher schedule saved successfully.',
+    message: 'استاد کا شیڈول کامیابی سے محفوظ ہو گیا۔',
     data: schedule,
   });
 });
@@ -16,7 +16,7 @@ export const getTeacherSchedules = asyncHandler(async (req, res) => {
   const schedules = await teacherSchedulesService.getTeacherSchedules(req.query);
 
   return apiResponse(res, {
-    message: 'Teacher schedules fetched successfully.',
+    message: 'اساتذہ کے شیڈول کامیابی سے لوڈ ہو گئے۔',
     data: schedules,
   });
 });
@@ -25,7 +25,7 @@ export const deleteTeacherSchedule = asyncHandler(async (req, res) => {
   const schedule = await teacherSchedulesService.deleteTeacherSchedule(Number(req.params.id));
 
   return apiResponse(res, {
-    message: 'Teacher schedule removed successfully.',
+    message: 'استاد کا شیڈول کامیابی سے ختم کر دیا گیا۔',
     data: schedule,
   });
 });

@@ -6,16 +6,16 @@ const optionalStringField = (max, message) =>
   );
 
 const teacherBodySchema = z.object({
-  fullName: z.string().trim().min(2, 'Teacher full name is required.').max(150, 'Teacher full name is too long.'),
+  fullName: z.string().trim().min(2, 'استاد کا نام لازمی ہے۔').max(150, 'استاد کا نام بہت لمبا ہے۔'),
   email: z
-    .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])
+    .union([z.string().trim().email('درست ای میل درج کریں۔').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
-  phone: optionalStringField(50, 'Phone is too long.'),
-  cnic: optionalStringField(50, 'CNIC is too long.'),
-  subject: z.string().trim().min(2, 'Subject is required.').max(150, 'Subject is too long.'),
-  qualification: optionalStringField(150, 'Qualification is too long.'),
-  address: optionalStringField(255, 'Address is too long.'),
-  basicSalary: z.coerce.number().positive('Basic salary must be greater than zero.'),
+  phone: optionalStringField(50, 'فون نمبر بہت لمبا ہے۔'),
+  cnic: optionalStringField(50, 'شناختی کارڈ نمبر بہت لمبا ہے۔'),
+  subject: z.string().trim().min(2, 'مضمون لازمی ہے۔').max(150, 'مضمون بہت لمبا ہے۔'),
+  qualification: optionalStringField(150, 'تعلیمی قابلیت بہت لمبی ہے۔'),
+  address: optionalStringField(255, 'پتہ بہت لمبا ہے۔'),
+  basicSalary: z.coerce.number().positive('بنیادی تنخواہ صفر سے زیادہ ہونی چاہیے۔'),
   status: z.enum(['active', 'inactive']).optional(),
 });
 
@@ -40,7 +40,7 @@ export const listTeachersValidationSchema = z.object({
 export const teacherIdValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({
-    id: z.coerce.number().int().positive('Teacher id must be a valid number.'),
+    id: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
   }),
   query: z.object({}).default({}),
 });
@@ -48,7 +48,7 @@ export const teacherIdValidationSchema = z.object({
 export const updateTeacherValidationSchema = z.object({
   body: teacherBodySchema,
   params: z.object({
-    id: z.coerce.number().int().positive('Teacher id must be a valid number.'),
+    id: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
   }),
   query: z.object({}).default({}),
 });
@@ -58,7 +58,7 @@ export const updateTeacherStatusValidationSchema = z.object({
     status: z.enum(['active', 'inactive']),
   }),
   params: z.object({
-    id: z.coerce.number().int().positive('Teacher id must be a valid number.'),
+    id: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
   }),
   query: z.object({}).default({}),
 });

@@ -234,15 +234,22 @@ export const reportsService = {
   async getFundCollectionsReport(query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
-      ...(query.studentId ? { studentId: query.studentId } : {}),
-      ...(query.financeHeadId ? { financeHeadId: query.financeHeadId } : {}),
       ...(query.status ? { status: query.status } : {}),
-      ...buildDateRangeFilter(query.fromDate, query.toDate, 'paymentDate'),
-      ...(query.branchId || query.classId || query.sectionId
+      ...(query.paymentMode ? { paymentMode: query.paymentMode } : {}),
+      ...(query.donationType ? { donationType: query.donationType } : {}),
+      ...(query.donationSubType ? { donationSubType: query.donationSubType } : {}),
+      ...(query.search
         ? {
-            student: buildStudentAssignmentFilter(query),
+            OR: [
+              { donorName: { contains: query.search } },
+              { careOf: { contains: query.search } },
+              { phone: { contains: query.search } },
+              { purpose: { contains: query.search } },
+              { receiptNo: { contains: query.search } },
+            ],
           }
         : {}),
+      ...buildDateRangeFilter(query.fromDate, query.toDate, 'paymentDate'),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -253,28 +260,20 @@ export const reportsService = {
         orderBy: { paymentDate: 'desc' },
         select: {
           id: true,
+          collectionGroupId: true,
+          donorName: true,
+          careOf: true,
+          phone: true,
+          paymentMode: true,
+          donationType: true,
+          donationSubType: true,
+          purpose: true,
           amount: true,
+          receiptNo: true,
+          details: true,
           paymentDate: true,
           remarks: true,
           status: true,
-          student: {
-            select: {
-              id: true,
-              admissionNumber: true,
-              fullName: true,
-              assignments: {
-                where: { status: 'active' },
-                take: 1,
-                orderBy: { assignedAt: 'desc' },
-                select: {
-                  branch: { select: { id: true, name: true } },
-                  class: { select: { id: true, name: true } },
-                  section: { select: { id: true, name: true } },
-                },
-              },
-            },
-          },
-          financeHead: { select: { id: true, name: true, type: true } },
         },
       }),
       prisma.fundCollection.count({ where }),

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const bodySchema = z.object({
-  name: z.string().trim().min(2, 'Head name is required.').max(150, 'Head name is too long.'),
+  name: z.string().trim().min(2, 'مالیاتی قسم کا نام لازمی ہے۔').max(150, 'مالیاتی قسم کا نام بہت لمبا ہے۔'),
   type: z.enum(['income', 'expense']),
   description: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),

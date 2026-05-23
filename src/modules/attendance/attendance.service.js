@@ -94,7 +94,7 @@ const ensureStudentAttendanceReferences = async ({ studentId, branchId, classId,
   ]);
 
   if (!student) throw new AppError('Student not found.', 404);
-  if (!branch) throw new AppError('Branch not found.', 404);
+  if (!branch) throw new AppError('برانچ نہیں ملی۔', 404);
   if (!academicClass) throw new AppError('Class not found.', 404);
   if (!section) throw new AppError('Section not found.', 404);
 
@@ -117,8 +117,8 @@ const ensureTeacherAttendanceReferences = async ({ teacherId, branchId }) => {
     prisma.branch.findUnique({ where: { id: branchId } }),
   ]);
 
-  if (!teacher) throw new AppError('Teacher not found.', 404);
-  if (!branch) throw new AppError('Branch not found.', 404);
+  if (!teacher) throw new AppError('استاد نہیں ملا۔', 404);
+  if (!branch) throw new AppError('برانچ نہیں ملی۔', 404);
 };
 
 export const attendanceService = {

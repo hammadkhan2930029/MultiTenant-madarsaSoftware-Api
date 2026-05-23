@@ -252,7 +252,6 @@ model Student {
   hifzWeeklyEntries HifzWeeklyEntry[]
   hifzMonthlyEntries HifzMonthlyEntry[]
   hifzSiparaEntries HifzSiparaEntry[]
-  fundCollections  FundCollection[]
   feeVouchers      StudentFeeVoucher[]
 
   @@map("students")
@@ -475,7 +474,6 @@ model FinanceHead {
   status          String           @default("active") @db.VarChar(50)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  fundCollections FundCollection[]
   salaryEntries   SalaryEntry[]
 
   @@map("finance_heads")
@@ -510,18 +508,25 @@ model StudentFeeVoucher {
 }
 
 model FundCollection {
-  id            Int         @id @default(autoincrement())
-  studentId     Int
-  financeHeadId Int
-  amount        Decimal     @db.Decimal(10, 2)
-  paymentDate   DateTime
-  remarks       String?     @db.VarChar(255)
-  status        String      @default("active") @db.VarChar(50)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  student       Student     @relation(fields: [studentId], references: [id])
-  financeHead   FinanceHead @relation(fields: [financeHeadId], references: [id])
+  id              Int      @id @default(autoincrement())
+  collectionGroupId String @db.VarChar(100)
+  donorName       String   @db.VarChar(150)
+  careOf          String?  @db.VarChar(150)
+  phone           String?  @db.VarChar(50)
+  paymentMode     String   @db.VarChar(50)
+  donationType    String   @db.VarChar(100)
+  donationSubType String   @db.VarChar(100)
+  purpose         String?  @db.VarChar(255)
+  amount          Decimal  @db.Decimal(10, 2)
+  receiptNo       String?  @db.VarChar(100)
+  details         String?  @db.VarChar(255)
+  paymentDate     DateTime
+  remarks         String?  @db.VarChar(255)
+  status          String   @default("active") @db.VarChar(50)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
+  @@index([collectionGroupId])
   @@map("fund_collections")
 }
 

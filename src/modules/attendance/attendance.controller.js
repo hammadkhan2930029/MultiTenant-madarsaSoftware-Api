@@ -26,7 +26,7 @@ export const markTeacherAttendance = asyncHandler(async (req, res) => {
 
   return apiResponse(res, {
     statusCode: 201,
-    message: 'Teacher attendance saved successfully.',
+    message: 'استاد کی حاضری کامیابی سے محفوظ ہو گئی۔',
     data: attendance,
   });
 });
@@ -35,7 +35,7 @@ export const getTeacherAttendance = asyncHandler(async (req, res) => {
   const attendances = await attendanceService.getTeacherAttendance(req.query);
 
   return apiResponse(res, {
-    message: 'Teacher attendance fetched successfully.',
+    message: 'استاد کی حاضری کامیابی سے لوڈ ہو گئی۔',
     data: attendances,
   });
 });
@@ -44,7 +44,7 @@ export const deleteTeacherAttendance = asyncHandler(async (req, res) => {
   const attendance = await attendanceService.deleteTeacherAttendance(req.query);
 
   return apiResponse(res, {
-    message: 'Teacher attendance cleared successfully.',
+    message: 'استاد کی حاضری کامیابی سے صاف کر دی گئی۔',
     data: attendance,
   });
 });
