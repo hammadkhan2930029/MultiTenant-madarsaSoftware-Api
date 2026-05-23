@@ -169,4 +169,31 @@ export const teachersService = {
       select: teacherSelect,
     });
   },
+
+  async deleteTeacher(id) {
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            attendances: true,
+            salaryEntries: true,
+          },
+        },
+      },
+    });
+
+    if (!teacher) {
+      throw new AppError('Teacher not found.', 404);
+    }
+
+    if (teacher._count.attendances || teacher._count.salaryEntries) {
+      throw new AppError('اس استاد کا حاضری یا تنخواہ ریکارڈ موجود ہے، حذف نہیں ہو سکتا۔', 400);
+    }
+
+    return prisma.teacher.delete({
+      where: { id },
+      select: teacherSelect,
+    });
+  },
 };

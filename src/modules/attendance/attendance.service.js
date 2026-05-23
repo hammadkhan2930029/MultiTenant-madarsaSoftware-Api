@@ -40,6 +40,8 @@ const studentAttendanceSelect = {
 
 const teacherAttendanceSelect = {
   id: true,
+  teacherId: true,
+  branchId: true,
   date: true,
   status: true,
   remarks: true,
@@ -63,9 +65,15 @@ const teacherAttendanceSelect = {
 };
 
 const normalizeDate = (value) => {
+  if (typeof value === 'string') {
+    const [year, month, day] = value.slice(0, 10).split('-').map(Number);
+    if (year && month && day) {
+      return new Date(Date.UTC(year, month - 1, day));
+    }
+  }
+
   const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date;
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
 const ensureStudentAttendanceReferences = async ({ studentId, branchId, classId, sectionId }) => {
@@ -228,5 +236,32 @@ export const attendanceService = {
       items,
       meta: buildPaginationMeta({ totalItems, page, limit }),
     };
+  },
+
+  async deleteTeacherAttendance(query) {
+    const attendanceDate = normalizeDate(query.date);
+    const existingAttendance = await prisma.teacherAttendance.findUnique({
+      where: {
+        teacherId_date: {
+          teacherId: query.teacherId,
+          date: attendanceDate,
+        },
+      },
+      select: teacherAttendanceSelect,
+    });
+
+    if (!existingAttendance) {
+      return null;
+    }
+
+    return prisma.teacherAttendance.delete({
+      where: {
+        teacherId_date: {
+          teacherId: query.teacherId,
+          date: attendanceDate,
+        },
+      },
+      select: teacherAttendanceSelect,
+    });
   },
 };

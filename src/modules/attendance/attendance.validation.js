@@ -56,6 +56,15 @@ export const getTeacherAttendanceValidationSchema = z.object({
     branchId: z.coerce.number().int().positive().optional(),
     status: attendanceStatus.optional(),
     page: z.coerce.number().int().positive().optional(),
-    limit: z.coerce.number().int().positive().max(100).optional(),
+    limit: z.coerce.number().int().positive().max(400).optional(),
+  }),
+});
+
+export const deleteTeacherAttendanceValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({}).default({}),
+  query: z.object({
+    teacherId: z.coerce.number().int().positive('Teacher id must be a valid number.'),
+    date: z.coerce.date({ message: 'Attendance date is required.' }),
   }),
 });

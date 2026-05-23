@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const statusEnum = z.enum(['Excellent', 'Good', 'Average', 'Weak']);
+const performanceStatusSchema = z.string().trim().min(1).max(50);
 const optionalText = z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v));
 const optionalField = z.union([z.string().trim().max(150), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v));
 const bodySchema = z.object({
@@ -10,7 +10,7 @@ const bodySchema = z.object({
   endDate: z.coerce.date().optional(),
   totalDays: z.coerce.number().int().positive().optional(),
   quality: optionalField,
-  performanceStatus: statusEnum,
+  performanceStatus: performanceStatusSchema,
   remarks: optionalText,
   status: z.enum(['active', 'inactive']).optional(),
 }).superRefine((value, ctx) => {
@@ -27,7 +27,7 @@ export const listSiparaValidationSchema = z.object({
     studentId: z.coerce.number().int().positive().optional(),
     siparaNumber: z.coerce.number().int().min(1).max(30).optional(),
     date: z.coerce.date().optional(),
-    performanceStatus: statusEnum.optional(),
+    performanceStatus: performanceStatusSchema.optional(),
     status: z.enum(['active', 'inactive']).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),

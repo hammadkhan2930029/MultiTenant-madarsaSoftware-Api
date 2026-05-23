@@ -53,3 +53,12 @@ export const updateTeacherStatus = asyncHandler(async (req, res) => {
     data: teacher,
   });
 });
+
+export const deleteTeacher = asyncHandler(async (req, res) => {
+  const teacher = await teachersService.deleteTeacher(Number(req.params.id));
+
+  return apiResponse(res, {
+    message: 'Teacher deleted successfully.',
+    data: teacher,
+  });
+});

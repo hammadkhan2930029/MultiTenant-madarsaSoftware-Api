@@ -8,6 +8,7 @@ import {
   getTeacherById,
   updateTeacher,
   updateTeacherStatus,
+  deleteTeacher,
 } from './teachers.controller.js';
 import {
   createTeacherValidationSchema,
@@ -26,5 +27,6 @@ router.get('/', validate(listTeachersValidationSchema), getTeachers);
 router.get('/:id', validate(teacherIdValidationSchema), getTeacherById);
 router.put('/:id', teacherImageUpload.single('image'), validate(updateTeacherValidationSchema), updateTeacher);
 router.patch('/:id/status', validate(updateTeacherStatusValidationSchema), updateTeacherStatus);
+router.delete('/:id', validate(teacherIdValidationSchema), deleteTeacher);
 
 export { router as teachersRoutes };

@@ -80,6 +80,18 @@ model Department {
   @@map("departments")
 }
 
+model Qualification {
+  id        Int      @id @default(autoincrement())
+  title     String   @unique @db.VarChar(150)
+  category  String?  @db.VarChar(150)
+  level     String?  @db.VarChar(150)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("qualifications")
+}
+
 model Subject {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(150)
@@ -119,6 +131,7 @@ model AcademicClass {
   assignments StudentClassAssignment[]
   studentAttendances StudentAttendance[]
   studentSchedules StudentSchedule[]
+  teacherSchedules TeacherSchedule[]
 
   @@unique([branchId, name])
   @@map("classes")
@@ -135,6 +148,7 @@ model Section {
   assignments StudentClassAssignment[]
   studentAttendances StudentAttendance[]
   studentSchedules StudentSchedule[]
+  teacherSchedules TeacherSchedule[]
 
   @@unique([classId, name])
   @@map("sections")
@@ -150,6 +164,7 @@ model AcademicSession {
   updatedAt DateTime @updatedAt
   assignments StudentClassAssignment[]
   studentSchedules StudentSchedule[]
+  teacherSchedules TeacherSchedule[]
 
   @@map("sessions")
 }
@@ -172,6 +187,29 @@ model StudentSchedule {
 
   @@index([sessionId, classId, sectionId])
   @@map("student_schedules")
+}
+
+model TeacherSchedule {
+  id        Int             @id @default(autoincrement())
+  teacherId Int
+  sessionId Int
+  classId   Int
+  sectionId Int
+  subjects  Json
+  days      Json
+  startTime String          @db.VarChar(10)
+  endTime   String          @db.VarChar(10)
+  status    String          @default("active") @db.VarChar(50)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  teacher   Teacher         @relation(fields: [teacherId], references: [id])
+  session   AcademicSession @relation(fields: [sessionId], references: [id])
+  class     AcademicClass   @relation(fields: [classId], references: [id])
+  section   Section         @relation(fields: [sectionId], references: [id])
+
+  @@index([teacherId])
+  @@index([sessionId, classId, sectionId])
+  @@map("teacher_schedules")
 }
 
 model Student {
@@ -288,6 +326,7 @@ model Teacher {
   updatedAt    DateTime @updatedAt
   attendances  TeacherAttendance[]
   salaryEntries SalaryEntry[]
+  schedules    TeacherSchedule[]
 
   @@map("teachers")
 }

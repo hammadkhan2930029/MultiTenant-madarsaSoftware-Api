@@ -21,9 +21,11 @@ import { financeRoutes } from './modules/finance/finance.routes.js';
 import { reportsRoutes } from './modules/reports/reports.routes.js';
 import { citiesRoutes } from './modules/cities/cities.routes.js';
 import { departmentsRoutes } from './modules/departments/departments.routes.js';
+import { qualificationsRoutes } from './modules/qualifications/qualifications.routes.js';
 import { shiftsRoutes } from './modules/shifts/shifts.routes.js';
 import { subjectsRoutes } from './modules/subjects/subjects.routes.js';
 import { schedulesRoutes } from './modules/schedules/schedules.routes.js';
+import { teacherSchedulesRoutes } from './modules/teacher-schedules/teacher-schedules.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -77,9 +79,11 @@ app.use('/api/finance', financeRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/cities', citiesRoutes);
 app.use('/api/departments', departmentsRoutes);
+app.use('/api/qualifications', qualificationsRoutes);
 app.use('/api/shifts', shiftsRoutes);
 app.use('/api/subjects', subjectsRoutes);
 app.use('/api/schedules', schedulesRoutes);
+app.use('/api/teacher-schedules', teacherSchedulesRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

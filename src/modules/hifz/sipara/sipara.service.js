@@ -19,9 +19,16 @@ const select = {
 };
 const normalizeDate = (value) => {
   if (!value) return null;
+  if (typeof value === 'string') {
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      const [, year, month, day] = match;
+      return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+    }
+  }
+
   const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date;
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 const ensureStudent = async (studentId) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });

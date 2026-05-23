@@ -39,3 +39,12 @@ export const getTeacherAttendance = asyncHandler(async (req, res) => {
     data: attendances,
   });
 });
+
+export const deleteTeacherAttendance = asyncHandler(async (req, res) => {
+  const attendance = await attendanceService.deleteTeacherAttendance(req.query);
+
+  return apiResponse(res, {
+    message: 'Teacher attendance cleared successfully.',
+    data: attendance,
+  });
+});

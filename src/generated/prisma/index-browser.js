@@ -181,6 +181,16 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.QualificationScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  category: 'category',
+  level: 'level',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -230,6 +240,21 @@ exports.Prisma.AcademicSessionScalarFieldEnum = {
 
 exports.Prisma.StudentScheduleScalarFieldEnum = {
   id: 'id',
+  sessionId: 'sessionId',
+  classId: 'classId',
+  sectionId: 'sectionId',
+  subjects: 'subjects',
+  days: 'days',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeacherScheduleScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
   sessionId: 'sessionId',
   classId: 'classId',
   sectionId: 'sectionId',
@@ -554,6 +579,13 @@ exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.QualificationOrderByRelevanceFieldEnum = {
+  title: 'title',
+  category: 'category',
+  level: 'level',
+  status: 'status'
+};
+
 exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
   name: 'name',
   detail: 'detail',
@@ -594,6 +626,12 @@ exports.Prisma.QueryMode = {
 };
 
 exports.Prisma.StudentScheduleOrderByRelevanceFieldEnum = {
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status'
+};
+
+exports.Prisma.TeacherScheduleOrderByRelevanceFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status'
@@ -743,12 +781,14 @@ exports.Prisma.ModelName = {
   City: 'City',
   Shift: 'Shift',
   Department: 'Department',
+  Qualification: 'Qualification',
   Subject: 'Subject',
   Branch: 'Branch',
   AcademicClass: 'AcademicClass',
   Section: 'Section',
   AcademicSession: 'AcademicSession',
   StudentSchedule: 'StudentSchedule',
+  TeacherSchedule: 'TeacherSchedule',
   Student: 'Student',
   Parent: 'Parent',
   StudentParent: 'StudentParent',
