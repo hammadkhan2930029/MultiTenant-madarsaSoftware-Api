@@ -79,6 +79,11 @@ export type StudentSchedule = $Result.DefaultSelection<Prisma.$StudentSchedulePa
  */
 export type TeacherSchedule = $Result.DefaultSelection<Prisma.$TeacherSchedulePayload>
 /**
+ * Model ExamSchedule
+ * 
+ */
+export type ExamSchedule = $Result.DefaultSelection<Prisma.$ExamSchedulePayload>
+/**
  * Model Student
  * 
  */
@@ -153,6 +158,16 @@ export type FundCollection = $Result.DefaultSelection<Prisma.$FundCollectionPayl
  * 
  */
 export type SalaryEntry = $Result.DefaultSelection<Prisma.$SalaryEntryPayload>
+/**
+ * Model FinanceTransaction
+ * 
+ */
+export type FinanceTransaction = $Result.DefaultSelection<Prisma.$FinanceTransactionPayload>
+/**
+ * Model FinancialRecord
+ * 
+ */
+export type FinancialRecord = $Result.DefaultSelection<Prisma.$FinancialRecordPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -403,6 +418,16 @@ export class PrismaClient<
   get teacherSchedule(): Prisma.TeacherScheduleDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.examSchedule`: Exposes CRUD operations for the **ExamSchedule** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamSchedules
+    * const examSchedules = await prisma.examSchedule.findMany()
+    * ```
+    */
+  get examSchedule(): Prisma.ExamScheduleDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.student`: Exposes CRUD operations for the **Student** model.
     * Example usage:
     * ```ts
@@ -551,6 +576,26 @@ export class PrismaClient<
     * ```
     */
   get salaryEntry(): Prisma.SalaryEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.financeTransaction`: Exposes CRUD operations for the **FinanceTransaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FinanceTransactions
+    * const financeTransactions = await prisma.financeTransaction.findMany()
+    * ```
+    */
+  get financeTransaction(): Prisma.FinanceTransactionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.financialRecord`: Exposes CRUD operations for the **FinancialRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FinancialRecords
+    * const financialRecords = await prisma.financialRecord.findMany()
+    * ```
+    */
+  get financialRecord(): Prisma.FinancialRecordDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1005,6 +1050,7 @@ export namespace Prisma {
     AcademicSession: 'AcademicSession',
     StudentSchedule: 'StudentSchedule',
     TeacherSchedule: 'TeacherSchedule',
+    ExamSchedule: 'ExamSchedule',
     Student: 'Student',
     Parent: 'Parent',
     StudentParent: 'StudentParent',
@@ -1019,7 +1065,9 @@ export namespace Prisma {
     FinanceHead: 'FinanceHead',
     StudentFeeVoucher: 'StudentFeeVoucher',
     FundCollection: 'FundCollection',
-    SalaryEntry: 'SalaryEntry'
+    SalaryEntry: 'SalaryEntry',
+    FinanceTransaction: 'FinanceTransaction',
+    FinancialRecord: 'FinancialRecord'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1038,7 +1086,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "admin" | "madrassaProfile" | "city" | "shift" | "department" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "studentFeeVoucher" | "fundCollection" | "salaryEntry"
+      modelProps: "admin" | "madrassaProfile" | "city" | "shift" | "department" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "examSchedule" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "studentFeeVoucher" | "fundCollection" | "salaryEntry" | "financeTransaction" | "financialRecord"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1897,6 +1945,72 @@ export namespace Prisma {
           count: {
             args: Prisma.TeacherScheduleCountArgs<ExtArgs>
             result: $Utils.Optional<TeacherScheduleCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamSchedule: {
+        payload: Prisma.$ExamSchedulePayload<ExtArgs>
+        fields: Prisma.ExamScheduleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamScheduleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamScheduleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          findFirst: {
+            args: Prisma.ExamScheduleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamScheduleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          findMany: {
+            args: Prisma.ExamScheduleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>[]
+          }
+          create: {
+            args: Prisma.ExamScheduleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          createMany: {
+            args: Prisma.ExamScheduleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ExamScheduleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          update: {
+            args: Prisma.ExamScheduleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamScheduleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamScheduleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ExamScheduleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamSchedulePayload>
+          }
+          aggregate: {
+            args: Prisma.ExamScheduleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamSchedule>
+          }
+          groupBy: {
+            args: Prisma.ExamScheduleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamScheduleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamScheduleCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamScheduleCountAggregateOutputType> | number
           }
         }
       }
@@ -2890,6 +3004,138 @@ export namespace Prisma {
           }
         }
       }
+      FinanceTransaction: {
+        payload: Prisma.$FinanceTransactionPayload<ExtArgs>
+        fields: Prisma.FinanceTransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FinanceTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FinanceTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.FinanceTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FinanceTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          findMany: {
+            args: Prisma.FinanceTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>[]
+          }
+          create: {
+            args: Prisma.FinanceTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          createMany: {
+            args: Prisma.FinanceTransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FinanceTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          update: {
+            args: Prisma.FinanceTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.FinanceTransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FinanceTransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FinanceTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinanceTransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.FinanceTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFinanceTransaction>
+          }
+          groupBy: {
+            args: Prisma.FinanceTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FinanceTransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FinanceTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<FinanceTransactionCountAggregateOutputType> | number
+          }
+        }
+      }
+      FinancialRecord: {
+        payload: Prisma.$FinancialRecordPayload<ExtArgs>
+        fields: Prisma.FinancialRecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FinancialRecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FinancialRecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          findFirst: {
+            args: Prisma.FinancialRecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FinancialRecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          findMany: {
+            args: Prisma.FinancialRecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>[]
+          }
+          create: {
+            args: Prisma.FinancialRecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          createMany: {
+            args: Prisma.FinancialRecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FinancialRecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          update: {
+            args: Prisma.FinancialRecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.FinancialRecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FinancialRecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FinancialRecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FinancialRecordPayload>
+          }
+          aggregate: {
+            args: Prisma.FinancialRecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFinancialRecord>
+          }
+          groupBy: {
+            args: Prisma.FinancialRecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FinancialRecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FinancialRecordCountArgs<ExtArgs>
+            result: $Utils.Optional<FinancialRecordCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2999,6 +3245,7 @@ export namespace Prisma {
     academicSession?: AcademicSessionOmit
     studentSchedule?: StudentScheduleOmit
     teacherSchedule?: TeacherScheduleOmit
+    examSchedule?: ExamScheduleOmit
     student?: StudentOmit
     parent?: ParentOmit
     studentParent?: StudentParentOmit
@@ -3014,6 +3261,8 @@ export namespace Prisma {
     studentFeeVoucher?: StudentFeeVoucherOmit
     fundCollection?: FundCollectionOmit
     salaryEntry?: SalaryEntryOmit
+    financeTransaction?: FinanceTransactionOmit
+    financialRecord?: FinancialRecordOmit
   }
 
   /* Types for Logging */
@@ -3090,6 +3339,68 @@ export namespace Prisma {
 
 
   /**
+   * Count Type AdminCountOutputType
+   */
+
+  export type AdminCountOutputType = {
+    financialRecords: number
+  }
+
+  export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    financialRecords?: boolean | AdminCountOutputTypeCountFinancialRecordsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminCountOutputType
+     */
+    select?: AdminCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountFinancialRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FinancialRecordWhereInput
+  }
+
+
+  /**
+   * Count Type SubjectCountOutputType
+   */
+
+  export type SubjectCountOutputType = {
+    examSchedules: number
+  }
+
+  export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    examSchedules?: boolean | SubjectCountOutputTypeCountExamSchedulesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubjectCountOutputType
+     */
+    select?: SubjectCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountExamSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamScheduleWhereInput
+  }
+
+
+  /**
    * Count Type BranchCountOutputType
    */
 
@@ -3157,6 +3468,7 @@ export namespace Prisma {
     studentAttendances: number
     studentSchedules: number
     teacherSchedules: number
+    examSchedules: number
   }
 
   export type AcademicClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3165,6 +3477,7 @@ export namespace Prisma {
     studentAttendances?: boolean | AcademicClassCountOutputTypeCountStudentAttendancesArgs
     studentSchedules?: boolean | AcademicClassCountOutputTypeCountStudentSchedulesArgs
     teacherSchedules?: boolean | AcademicClassCountOutputTypeCountTeacherSchedulesArgs
+    examSchedules?: boolean | AcademicClassCountOutputTypeCountExamSchedulesArgs
   }
 
   // Custom InputTypes
@@ -3211,6 +3524,13 @@ export namespace Prisma {
    */
   export type AcademicClassCountOutputTypeCountTeacherSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeacherScheduleWhereInput
+  }
+
+  /**
+   * AcademicClassCountOutputType without action
+   */
+  export type AcademicClassCountOutputTypeCountExamSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamScheduleWhereInput
   }
 
 
@@ -3280,12 +3600,14 @@ export namespace Prisma {
     assignments: number
     studentSchedules: number
     teacherSchedules: number
+    examSchedules: number
   }
 
   export type AcademicSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignments?: boolean | AcademicSessionCountOutputTypeCountAssignmentsArgs
     studentSchedules?: boolean | AcademicSessionCountOutputTypeCountStudentSchedulesArgs
     teacherSchedules?: boolean | AcademicSessionCountOutputTypeCountTeacherSchedulesArgs
+    examSchedules?: boolean | AcademicSessionCountOutputTypeCountExamSchedulesArgs
   }
 
   // Custom InputTypes
@@ -3318,6 +3640,13 @@ export namespace Prisma {
    */
   export type AcademicSessionCountOutputTypeCountTeacherSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeacherScheduleWhereInput
+  }
+
+  /**
+   * AcademicSessionCountOutputType without action
+   */
+  export type AcademicSessionCountOutputTypeCountExamSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamScheduleWhereInput
   }
 
 
@@ -3501,10 +3830,12 @@ export namespace Prisma {
 
   export type FinanceHeadCountOutputType = {
     salaryEntries: number
+    transactions: number
   }
 
   export type FinanceHeadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     salaryEntries?: boolean | FinanceHeadCountOutputTypeCountSalaryEntriesArgs
+    transactions?: boolean | FinanceHeadCountOutputTypeCountTransactionsArgs
   }
 
   // Custom InputTypes
@@ -3523,6 +3854,13 @@ export namespace Prisma {
    */
   export type FinanceHeadCountOutputTypeCountSalaryEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SalaryEntryWhereInput
+  }
+
+  /**
+   * FinanceHeadCountOutputType without action
+   */
+  export type FinanceHeadCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FinanceTransactionWhereInput
   }
 
 
@@ -3761,6 +4099,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     madrassaProfile?: boolean | Admin$madrassaProfileArgs<ExtArgs>
+    financialRecords?: boolean | Admin$financialRecordsArgs<ExtArgs>
+    _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
 
@@ -3780,12 +4120,15 @@ export namespace Prisma {
   export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "username" | "password" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     madrassaProfile?: boolean | Admin$madrassaProfileArgs<ExtArgs>
+    financialRecords?: boolean | Admin$financialRecordsArgs<ExtArgs>
+    _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $AdminPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Admin"
     objects: {
       madrassaProfile: Prisma.$MadrassaProfilePayload<ExtArgs> | null
+      financialRecords: Prisma.$FinancialRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4138,6 +4481,7 @@ export namespace Prisma {
   export interface Prisma__AdminClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     madrassaProfile<T extends Admin$madrassaProfileArgs<ExtArgs> = {}>(args?: Subset<T, Admin$madrassaProfileArgs<ExtArgs>>): Prisma__MadrassaProfileClient<$Result.GetResult<Prisma.$MadrassaProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    financialRecords<T extends Admin$financialRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$financialRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4535,6 +4879,30 @@ export namespace Prisma {
      */
     include?: MadrassaProfileInclude<ExtArgs> | null
     where?: MadrassaProfileWhereInput
+  }
+
+  /**
+   * Admin.financialRecords
+   */
+  export type Admin$financialRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    where?: FinancialRecordWhereInput
+    orderBy?: FinancialRecordOrderByWithRelationInput | FinancialRecordOrderByWithRelationInput[]
+    cursor?: FinancialRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FinancialRecordScalarFieldEnum | FinancialRecordScalarFieldEnum[]
   }
 
   /**
@@ -9595,6 +9963,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    examSchedules?: boolean | Subject$examSchedulesArgs<ExtArgs>
+    _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
 
@@ -9609,10 +9979,16 @@ export namespace Prisma {
   }
 
   export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "detail" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
+  export type SubjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    examSchedules?: boolean | Subject$examSchedulesArgs<ExtArgs>
+    _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
+  }
 
   export type $SubjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Subject"
-    objects: {}
+    objects: {
+      examSchedules: Prisma.$ExamSchedulePayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
@@ -9960,6 +10336,7 @@ export namespace Prisma {
    */
   export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    examSchedules<T extends Subject$examSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$examSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10012,6 +10389,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * Filter, which Subject to fetch.
      */
     where: SubjectWhereUniqueInput
@@ -10030,6 +10411,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * Filter, which Subject to fetch.
      */
     where: SubjectWhereUniqueInput
@@ -10047,6 +10432,10 @@ export namespace Prisma {
      * Omit specific fields from the Subject
      */
     omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
     /**
      * Filter, which Subject to fetch.
      */
@@ -10096,6 +10485,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * Filter, which Subject to fetch.
      */
     where?: SubjectWhereInput
@@ -10144,6 +10537,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * Filter, which Subjects to fetch.
      */
     where?: SubjectWhereInput
@@ -10187,6 +10584,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * The data needed to create a Subject.
      */
     data: XOR<SubjectCreateInput, SubjectUncheckedCreateInput>
@@ -10215,6 +10616,10 @@ export namespace Prisma {
      * Omit specific fields from the Subject
      */
     omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
     /**
      * The data needed to update a Subject.
      */
@@ -10256,6 +10661,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * The filter to search for the Subject to update in case it exists.
      */
     where: SubjectWhereUniqueInput
@@ -10282,6 +10691,10 @@ export namespace Prisma {
      */
     omit?: SubjectOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    /**
      * Filter which Subject to delete.
      */
     where: SubjectWhereUniqueInput
@@ -10302,6 +10715,30 @@ export namespace Prisma {
   }
 
   /**
+   * Subject.examSchedules
+   */
+  export type Subject$examSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    where?: ExamScheduleWhereInput
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    cursor?: ExamScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
+  }
+
+  /**
    * Subject without action
    */
   export type SubjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10313,6 +10750,10 @@ export namespace Prisma {
      * Omit specific fields from the Subject
      */
     omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
   }
 
 
@@ -11627,6 +12068,7 @@ export namespace Prisma {
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
     studentSchedules?: boolean | AcademicClass$studentSchedulesArgs<ExtArgs>
     teacherSchedules?: boolean | AcademicClass$teacherSchedulesArgs<ExtArgs>
+    examSchedules?: boolean | AcademicClass$examSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicClass"]>
 
@@ -11649,6 +12091,7 @@ export namespace Prisma {
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
     studentSchedules?: boolean | AcademicClass$studentSchedulesArgs<ExtArgs>
     teacherSchedules?: boolean | AcademicClass$teacherSchedulesArgs<ExtArgs>
+    examSchedules?: boolean | AcademicClass$examSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -11661,6 +12104,7 @@ export namespace Prisma {
       studentAttendances: Prisma.$StudentAttendancePayload<ExtArgs>[]
       studentSchedules: Prisma.$StudentSchedulePayload<ExtArgs>[]
       teacherSchedules: Prisma.$TeacherSchedulePayload<ExtArgs>[]
+      examSchedules: Prisma.$ExamSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12015,6 +12459,7 @@ export namespace Prisma {
     studentAttendances<T extends AcademicClass$studentAttendancesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$studentAttendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentSchedules<T extends AcademicClass$studentSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$studentSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teacherSchedules<T extends AcademicClass$teacherSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$teacherSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examSchedules<T extends AcademicClass$examSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$examSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12510,6 +12955,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TeacherScheduleScalarFieldEnum | TeacherScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * AcademicClass.examSchedules
+   */
+  export type AcademicClass$examSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    where?: ExamScheduleWhereInput
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    cursor?: ExamScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
   }
 
   /**
@@ -13840,6 +14309,7 @@ export namespace Prisma {
     assignments?: boolean | AcademicSession$assignmentsArgs<ExtArgs>
     studentSchedules?: boolean | AcademicSession$studentSchedulesArgs<ExtArgs>
     teacherSchedules?: boolean | AcademicSession$teacherSchedulesArgs<ExtArgs>
+    examSchedules?: boolean | AcademicSession$examSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicSession"]>
 
@@ -13860,6 +14330,7 @@ export namespace Prisma {
     assignments?: boolean | AcademicSession$assignmentsArgs<ExtArgs>
     studentSchedules?: boolean | AcademicSession$studentSchedulesArgs<ExtArgs>
     teacherSchedules?: boolean | AcademicSession$teacherSchedulesArgs<ExtArgs>
+    examSchedules?: boolean | AcademicSession$examSchedulesArgs<ExtArgs>
     _count?: boolean | AcademicSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -13869,6 +14340,7 @@ export namespace Prisma {
       assignments: Prisma.$StudentClassAssignmentPayload<ExtArgs>[]
       studentSchedules: Prisma.$StudentSchedulePayload<ExtArgs>[]
       teacherSchedules: Prisma.$TeacherSchedulePayload<ExtArgs>[]
+      examSchedules: Prisma.$ExamSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -14221,6 +14693,7 @@ export namespace Prisma {
     assignments<T extends AcademicSession$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentClassAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentSchedules<T extends AcademicSession$studentSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$studentSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teacherSchedules<T extends AcademicSession$teacherSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$teacherSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examSchedules<T extends AcademicSession$examSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSession$examSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14669,6 +15142,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TeacherScheduleScalarFieldEnum | TeacherScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * AcademicSession.examSchedules
+   */
+  export type AcademicSession$examSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    where?: ExamScheduleWhereInput
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    cursor?: ExamScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
   }
 
   /**
@@ -16788,6 +17285,1103 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TeacherScheduleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamSchedule
+   */
+
+  export type AggregateExamSchedule = {
+    _count: ExamScheduleCountAggregateOutputType | null
+    _avg: ExamScheduleAvgAggregateOutputType | null
+    _sum: ExamScheduleSumAggregateOutputType | null
+    _min: ExamScheduleMinAggregateOutputType | null
+    _max: ExamScheduleMaxAggregateOutputType | null
+  }
+
+  export type ExamScheduleAvgAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    subjectId: number | null
+    totalMarks: number | null
+  }
+
+  export type ExamScheduleSumAggregateOutputType = {
+    id: number | null
+    sessionId: number | null
+    classId: number | null
+    subjectId: number | null
+    totalMarks: number | null
+  }
+
+  export type ExamScheduleMinAggregateOutputType = {
+    id: number | null
+    examName: string | null
+    sessionId: number | null
+    classId: number | null
+    subjectId: number | null
+    examDate: Date | null
+    startTime: string | null
+    endTime: string | null
+    totalMarks: number | null
+    room: string | null
+    invigilator: string | null
+    notes: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamScheduleMaxAggregateOutputType = {
+    id: number | null
+    examName: string | null
+    sessionId: number | null
+    classId: number | null
+    subjectId: number | null
+    examDate: Date | null
+    startTime: string | null
+    endTime: string | null
+    totalMarks: number | null
+    room: string | null
+    invigilator: string | null
+    notes: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamScheduleCountAggregateOutputType = {
+    id: number
+    examName: number
+    sessionId: number
+    classId: number
+    subjectId: number
+    examDate: number
+    startTime: number
+    endTime: number
+    totalMarks: number
+    room: number
+    invigilator: number
+    notes: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ExamScheduleAvgAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    subjectId?: true
+    totalMarks?: true
+  }
+
+  export type ExamScheduleSumAggregateInputType = {
+    id?: true
+    sessionId?: true
+    classId?: true
+    subjectId?: true
+    totalMarks?: true
+  }
+
+  export type ExamScheduleMinAggregateInputType = {
+    id?: true
+    examName?: true
+    sessionId?: true
+    classId?: true
+    subjectId?: true
+    examDate?: true
+    startTime?: true
+    endTime?: true
+    totalMarks?: true
+    room?: true
+    invigilator?: true
+    notes?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamScheduleMaxAggregateInputType = {
+    id?: true
+    examName?: true
+    sessionId?: true
+    classId?: true
+    subjectId?: true
+    examDate?: true
+    startTime?: true
+    endTime?: true
+    totalMarks?: true
+    room?: true
+    invigilator?: true
+    notes?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamScheduleCountAggregateInputType = {
+    id?: true
+    examName?: true
+    sessionId?: true
+    classId?: true
+    subjectId?: true
+    examDate?: true
+    startTime?: true
+    endTime?: true
+    totalMarks?: true
+    room?: true
+    invigilator?: true
+    notes?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ExamScheduleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamSchedule to aggregate.
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSchedules to fetch.
+     */
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamSchedules
+    **/
+    _count?: true | ExamScheduleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamScheduleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamScheduleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamScheduleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamScheduleMaxAggregateInputType
+  }
+
+  export type GetExamScheduleAggregateType<T extends ExamScheduleAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamSchedule]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamSchedule[P]>
+      : GetScalarType<T[P], AggregateExamSchedule[P]>
+  }
+
+
+
+
+  export type ExamScheduleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamScheduleWhereInput
+    orderBy?: ExamScheduleOrderByWithAggregationInput | ExamScheduleOrderByWithAggregationInput[]
+    by: ExamScheduleScalarFieldEnum[] | ExamScheduleScalarFieldEnum
+    having?: ExamScheduleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamScheduleCountAggregateInputType | true
+    _avg?: ExamScheduleAvgAggregateInputType
+    _sum?: ExamScheduleSumAggregateInputType
+    _min?: ExamScheduleMinAggregateInputType
+    _max?: ExamScheduleMaxAggregateInputType
+  }
+
+  export type ExamScheduleGroupByOutputType = {
+    id: number
+    examName: string
+    sessionId: number
+    classId: number
+    subjectId: number
+    examDate: Date
+    startTime: string
+    endTime: string
+    totalMarks: number | null
+    room: string | null
+    invigilator: string | null
+    notes: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ExamScheduleCountAggregateOutputType | null
+    _avg: ExamScheduleAvgAggregateOutputType | null
+    _sum: ExamScheduleSumAggregateOutputType | null
+    _min: ExamScheduleMinAggregateOutputType | null
+    _max: ExamScheduleMaxAggregateOutputType | null
+  }
+
+  type GetExamScheduleGroupByPayload<T extends ExamScheduleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamScheduleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamScheduleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamScheduleGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamScheduleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamScheduleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    examName?: boolean
+    sessionId?: boolean
+    classId?: boolean
+    subjectId?: boolean
+    examDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    totalMarks?: boolean
+    room?: boolean
+    invigilator?: boolean
+    notes?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | AcademicSessionDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examSchedule"]>
+
+
+
+  export type ExamScheduleSelectScalar = {
+    id?: boolean
+    examName?: boolean
+    sessionId?: boolean
+    classId?: boolean
+    subjectId?: boolean
+    examDate?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    totalMarks?: boolean
+    room?: boolean
+    invigilator?: boolean
+    notes?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ExamScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examName" | "sessionId" | "classId" | "subjectId" | "examDate" | "startTime" | "endTime" | "totalMarks" | "room" | "invigilator" | "notes" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["examSchedule"]>
+  export type ExamScheduleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | AcademicSessionDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }
+
+  export type $ExamSchedulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamSchedule"
+    objects: {
+      session: Prisma.$AcademicSessionPayload<ExtArgs>
+      class: Prisma.$AcademicClassPayload<ExtArgs>
+      subject: Prisma.$SubjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      examName: string
+      sessionId: number
+      classId: number
+      subjectId: number
+      examDate: Date
+      startTime: string
+      endTime: string
+      totalMarks: number | null
+      room: string | null
+      invigilator: string | null
+      notes: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["examSchedule"]>
+    composites: {}
+  }
+
+  type ExamScheduleGetPayload<S extends boolean | null | undefined | ExamScheduleDefaultArgs> = $Result.GetResult<Prisma.$ExamSchedulePayload, S>
+
+  type ExamScheduleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamScheduleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamScheduleCountAggregateInputType | true
+    }
+
+  export interface ExamScheduleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamSchedule'], meta: { name: 'ExamSchedule' } }
+    /**
+     * Find zero or one ExamSchedule that matches the filter.
+     * @param {ExamScheduleFindUniqueArgs} args - Arguments to find a ExamSchedule
+     * @example
+     * // Get one ExamSchedule
+     * const examSchedule = await prisma.examSchedule.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamScheduleFindUniqueArgs>(args: SelectSubset<T, ExamScheduleFindUniqueArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamSchedule that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamScheduleFindUniqueOrThrowArgs} args - Arguments to find a ExamSchedule
+     * @example
+     * // Get one ExamSchedule
+     * const examSchedule = await prisma.examSchedule.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamScheduleFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamScheduleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamSchedule that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleFindFirstArgs} args - Arguments to find a ExamSchedule
+     * @example
+     * // Get one ExamSchedule
+     * const examSchedule = await prisma.examSchedule.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamScheduleFindFirstArgs>(args?: SelectSubset<T, ExamScheduleFindFirstArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamSchedule that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleFindFirstOrThrowArgs} args - Arguments to find a ExamSchedule
+     * @example
+     * // Get one ExamSchedule
+     * const examSchedule = await prisma.examSchedule.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamScheduleFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamScheduleFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamSchedules that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamSchedules
+     * const examSchedules = await prisma.examSchedule.findMany()
+     * 
+     * // Get first 10 ExamSchedules
+     * const examSchedules = await prisma.examSchedule.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examScheduleWithIdOnly = await prisma.examSchedule.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamScheduleFindManyArgs>(args?: SelectSubset<T, ExamScheduleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamSchedule.
+     * @param {ExamScheduleCreateArgs} args - Arguments to create a ExamSchedule.
+     * @example
+     * // Create one ExamSchedule
+     * const ExamSchedule = await prisma.examSchedule.create({
+     *   data: {
+     *     // ... data to create a ExamSchedule
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamScheduleCreateArgs>(args: SelectSubset<T, ExamScheduleCreateArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamSchedules.
+     * @param {ExamScheduleCreateManyArgs} args - Arguments to create many ExamSchedules.
+     * @example
+     * // Create many ExamSchedules
+     * const examSchedule = await prisma.examSchedule.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamScheduleCreateManyArgs>(args?: SelectSubset<T, ExamScheduleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ExamSchedule.
+     * @param {ExamScheduleDeleteArgs} args - Arguments to delete one ExamSchedule.
+     * @example
+     * // Delete one ExamSchedule
+     * const ExamSchedule = await prisma.examSchedule.delete({
+     *   where: {
+     *     // ... filter to delete one ExamSchedule
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamScheduleDeleteArgs>(args: SelectSubset<T, ExamScheduleDeleteArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamSchedule.
+     * @param {ExamScheduleUpdateArgs} args - Arguments to update one ExamSchedule.
+     * @example
+     * // Update one ExamSchedule
+     * const examSchedule = await prisma.examSchedule.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamScheduleUpdateArgs>(args: SelectSubset<T, ExamScheduleUpdateArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamSchedules.
+     * @param {ExamScheduleDeleteManyArgs} args - Arguments to filter ExamSchedules to delete.
+     * @example
+     * // Delete a few ExamSchedules
+     * const { count } = await prisma.examSchedule.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamScheduleDeleteManyArgs>(args?: SelectSubset<T, ExamScheduleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamSchedules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamSchedules
+     * const examSchedule = await prisma.examSchedule.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamScheduleUpdateManyArgs>(args: SelectSubset<T, ExamScheduleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ExamSchedule.
+     * @param {ExamScheduleUpsertArgs} args - Arguments to update or create a ExamSchedule.
+     * @example
+     * // Update or create a ExamSchedule
+     * const examSchedule = await prisma.examSchedule.upsert({
+     *   create: {
+     *     // ... data to create a ExamSchedule
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamSchedule we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamScheduleUpsertArgs>(args: SelectSubset<T, ExamScheduleUpsertArgs<ExtArgs>>): Prisma__ExamScheduleClient<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamSchedules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleCountArgs} args - Arguments to filter ExamSchedules to count.
+     * @example
+     * // Count the number of ExamSchedules
+     * const count = await prisma.examSchedule.count({
+     *   where: {
+     *     // ... the filter for the ExamSchedules we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamScheduleCountArgs>(
+      args?: Subset<T, ExamScheduleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamScheduleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamSchedule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamScheduleAggregateArgs>(args: Subset<T, ExamScheduleAggregateArgs>): Prisma.PrismaPromise<GetExamScheduleAggregateType<T>>
+
+    /**
+     * Group by ExamSchedule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamScheduleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamScheduleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamScheduleGroupByArgs['orderBy'] }
+        : { orderBy?: ExamScheduleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamScheduleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamScheduleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamSchedule model
+   */
+  readonly fields: ExamScheduleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamSchedule.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamScheduleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends AcademicSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicSessionDefaultArgs<ExtArgs>>): Prisma__AcademicSessionClient<$Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    class<T extends AcademicClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClassDefaultArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamSchedule model
+   */
+  interface ExamScheduleFieldRefs {
+    readonly id: FieldRef<"ExamSchedule", 'Int'>
+    readonly examName: FieldRef<"ExamSchedule", 'String'>
+    readonly sessionId: FieldRef<"ExamSchedule", 'Int'>
+    readonly classId: FieldRef<"ExamSchedule", 'Int'>
+    readonly subjectId: FieldRef<"ExamSchedule", 'Int'>
+    readonly examDate: FieldRef<"ExamSchedule", 'DateTime'>
+    readonly startTime: FieldRef<"ExamSchedule", 'String'>
+    readonly endTime: FieldRef<"ExamSchedule", 'String'>
+    readonly totalMarks: FieldRef<"ExamSchedule", 'Int'>
+    readonly room: FieldRef<"ExamSchedule", 'String'>
+    readonly invigilator: FieldRef<"ExamSchedule", 'String'>
+    readonly notes: FieldRef<"ExamSchedule", 'String'>
+    readonly status: FieldRef<"ExamSchedule", 'String'>
+    readonly createdAt: FieldRef<"ExamSchedule", 'DateTime'>
+    readonly updatedAt: FieldRef<"ExamSchedule", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamSchedule findUnique
+   */
+  export type ExamScheduleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSchedule to fetch.
+     */
+    where: ExamScheduleWhereUniqueInput
+  }
+
+  /**
+   * ExamSchedule findUniqueOrThrow
+   */
+  export type ExamScheduleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSchedule to fetch.
+     */
+    where: ExamScheduleWhereUniqueInput
+  }
+
+  /**
+   * ExamSchedule findFirst
+   */
+  export type ExamScheduleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSchedule to fetch.
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSchedules to fetch.
+     */
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamSchedules.
+     */
+    cursor?: ExamScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamSchedules.
+     */
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSchedule findFirstOrThrow
+   */
+  export type ExamScheduleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSchedule to fetch.
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSchedules to fetch.
+     */
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamSchedules.
+     */
+    cursor?: ExamScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSchedules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamSchedules.
+     */
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSchedule findMany
+   */
+  export type ExamScheduleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamSchedules to fetch.
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamSchedules to fetch.
+     */
+    orderBy?: ExamScheduleOrderByWithRelationInput | ExamScheduleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamSchedules.
+     */
+    cursor?: ExamScheduleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamSchedules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamSchedules.
+     */
+    skip?: number
+    distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSchedule create
+   */
+  export type ExamScheduleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamSchedule.
+     */
+    data: XOR<ExamScheduleCreateInput, ExamScheduleUncheckedCreateInput>
+  }
+
+  /**
+   * ExamSchedule createMany
+   */
+  export type ExamScheduleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamSchedules.
+     */
+    data: ExamScheduleCreateManyInput | ExamScheduleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExamSchedule update
+   */
+  export type ExamScheduleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamSchedule.
+     */
+    data: XOR<ExamScheduleUpdateInput, ExamScheduleUncheckedUpdateInput>
+    /**
+     * Choose, which ExamSchedule to update.
+     */
+    where: ExamScheduleWhereUniqueInput
+  }
+
+  /**
+   * ExamSchedule updateMany
+   */
+  export type ExamScheduleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamSchedules.
+     */
+    data: XOR<ExamScheduleUpdateManyMutationInput, ExamScheduleUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamSchedules to update
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * Limit how many ExamSchedules to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamSchedule upsert
+   */
+  export type ExamScheduleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamSchedule to update in case it exists.
+     */
+    where: ExamScheduleWhereUniqueInput
+    /**
+     * In case the ExamSchedule found by the `where` argument doesn't exist, create a new ExamSchedule with this data.
+     */
+    create: XOR<ExamScheduleCreateInput, ExamScheduleUncheckedCreateInput>
+    /**
+     * In case the ExamSchedule was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamScheduleUpdateInput, ExamScheduleUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamSchedule delete
+   */
+  export type ExamScheduleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
+    /**
+     * Filter which ExamSchedule to delete.
+     */
+    where: ExamScheduleWhereUniqueInput
+  }
+
+  /**
+   * ExamSchedule deleteMany
+   */
+  export type ExamScheduleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamSchedules to delete
+     */
+    where?: ExamScheduleWhereInput
+    /**
+     * Limit how many ExamSchedules to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamSchedule without action
+   */
+  export type ExamScheduleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSchedule
+     */
+    select?: ExamScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSchedule
+     */
+    omit?: ExamScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamScheduleInclude<ExtArgs> | null
   }
 
 
@@ -29309,6 +30903,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     salaryEntries?: boolean | FinanceHead$salaryEntriesArgs<ExtArgs>
+    transactions?: boolean | FinanceHead$transactionsArgs<ExtArgs>
     _count?: boolean | FinanceHeadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["financeHead"]>
 
@@ -29327,6 +30922,7 @@ export namespace Prisma {
   export type FinanceHeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["financeHead"]>
   export type FinanceHeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     salaryEntries?: boolean | FinanceHead$salaryEntriesArgs<ExtArgs>
+    transactions?: boolean | FinanceHead$transactionsArgs<ExtArgs>
     _count?: boolean | FinanceHeadCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -29334,6 +30930,7 @@ export namespace Prisma {
     name: "FinanceHead"
     objects: {
       salaryEntries: Prisma.$SalaryEntryPayload<ExtArgs>[]
+      transactions: Prisma.$FinanceTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -29684,6 +31281,7 @@ export namespace Prisma {
   export interface Prisma__FinanceHeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     salaryEntries<T extends FinanceHead$salaryEntriesArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHead$salaryEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transactions<T extends FinanceHead$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHead$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30084,6 +31682,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SalaryEntryScalarFieldEnum | SalaryEntryScalarFieldEnum[]
+  }
+
+  /**
+   * FinanceHead.transactions
+   */
+  export type FinanceHead$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    where?: FinanceTransactionWhereInput
+    orderBy?: FinanceTransactionOrderByWithRelationInput | FinanceTransactionOrderByWithRelationInput[]
+    cursor?: FinanceTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FinanceTransactionScalarFieldEnum | FinanceTransactionScalarFieldEnum[]
   }
 
   /**
@@ -33383,6 +35005,2099 @@ export namespace Prisma {
 
 
   /**
+   * Model FinanceTransaction
+   */
+
+  export type AggregateFinanceTransaction = {
+    _count: FinanceTransactionCountAggregateOutputType | null
+    _avg: FinanceTransactionAvgAggregateOutputType | null
+    _sum: FinanceTransactionSumAggregateOutputType | null
+    _min: FinanceTransactionMinAggregateOutputType | null
+    _max: FinanceTransactionMaxAggregateOutputType | null
+  }
+
+  export type FinanceTransactionAvgAggregateOutputType = {
+    id: number | null
+    financeHeadId: number | null
+    amount: Decimal | null
+  }
+
+  export type FinanceTransactionSumAggregateOutputType = {
+    id: number | null
+    financeHeadId: number | null
+    amount: Decimal | null
+  }
+
+  export type FinanceTransactionMinAggregateOutputType = {
+    id: number | null
+    financeHeadId: number | null
+    type: string | null
+    amount: Decimal | null
+    transactionDate: Date | null
+    paymentMode: string | null
+    paymentStatus: string | null
+    slipNo: string | null
+    details: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FinanceTransactionMaxAggregateOutputType = {
+    id: number | null
+    financeHeadId: number | null
+    type: string | null
+    amount: Decimal | null
+    transactionDate: Date | null
+    paymentMode: string | null
+    paymentStatus: string | null
+    slipNo: string | null
+    details: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FinanceTransactionCountAggregateOutputType = {
+    id: number
+    financeHeadId: number
+    type: number
+    amount: number
+    transactionDate: number
+    paymentMode: number
+    paymentStatus: number
+    slipNo: number
+    details: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FinanceTransactionAvgAggregateInputType = {
+    id?: true
+    financeHeadId?: true
+    amount?: true
+  }
+
+  export type FinanceTransactionSumAggregateInputType = {
+    id?: true
+    financeHeadId?: true
+    amount?: true
+  }
+
+  export type FinanceTransactionMinAggregateInputType = {
+    id?: true
+    financeHeadId?: true
+    type?: true
+    amount?: true
+    transactionDate?: true
+    paymentMode?: true
+    paymentStatus?: true
+    slipNo?: true
+    details?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FinanceTransactionMaxAggregateInputType = {
+    id?: true
+    financeHeadId?: true
+    type?: true
+    amount?: true
+    transactionDate?: true
+    paymentMode?: true
+    paymentStatus?: true
+    slipNo?: true
+    details?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FinanceTransactionCountAggregateInputType = {
+    id?: true
+    financeHeadId?: true
+    type?: true
+    amount?: true
+    transactionDate?: true
+    paymentMode?: true
+    paymentStatus?: true
+    slipNo?: true
+    details?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FinanceTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FinanceTransaction to aggregate.
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinanceTransactions to fetch.
+     */
+    orderBy?: FinanceTransactionOrderByWithRelationInput | FinanceTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FinanceTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinanceTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinanceTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FinanceTransactions
+    **/
+    _count?: true | FinanceTransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FinanceTransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FinanceTransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FinanceTransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FinanceTransactionMaxAggregateInputType
+  }
+
+  export type GetFinanceTransactionAggregateType<T extends FinanceTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateFinanceTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFinanceTransaction[P]>
+      : GetScalarType<T[P], AggregateFinanceTransaction[P]>
+  }
+
+
+
+
+  export type FinanceTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FinanceTransactionWhereInput
+    orderBy?: FinanceTransactionOrderByWithAggregationInput | FinanceTransactionOrderByWithAggregationInput[]
+    by: FinanceTransactionScalarFieldEnum[] | FinanceTransactionScalarFieldEnum
+    having?: FinanceTransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FinanceTransactionCountAggregateInputType | true
+    _avg?: FinanceTransactionAvgAggregateInputType
+    _sum?: FinanceTransactionSumAggregateInputType
+    _min?: FinanceTransactionMinAggregateInputType
+    _max?: FinanceTransactionMaxAggregateInputType
+  }
+
+  export type FinanceTransactionGroupByOutputType = {
+    id: number
+    financeHeadId: number
+    type: string
+    amount: Decimal
+    transactionDate: Date
+    paymentMode: string | null
+    paymentStatus: string | null
+    slipNo: string | null
+    details: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: FinanceTransactionCountAggregateOutputType | null
+    _avg: FinanceTransactionAvgAggregateOutputType | null
+    _sum: FinanceTransactionSumAggregateOutputType | null
+    _min: FinanceTransactionMinAggregateOutputType | null
+    _max: FinanceTransactionMaxAggregateOutputType | null
+  }
+
+  type GetFinanceTransactionGroupByPayload<T extends FinanceTransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FinanceTransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FinanceTransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FinanceTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], FinanceTransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FinanceTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    financeHeadId?: boolean
+    type?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    paymentMode?: boolean
+    paymentStatus?: boolean
+    slipNo?: boolean
+    details?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    financeHead?: boolean | FinanceHeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["financeTransaction"]>
+
+
+
+  export type FinanceTransactionSelectScalar = {
+    id?: boolean
+    financeHeadId?: boolean
+    type?: boolean
+    amount?: boolean
+    transactionDate?: boolean
+    paymentMode?: boolean
+    paymentStatus?: boolean
+    slipNo?: boolean
+    details?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FinanceTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "financeHeadId" | "type" | "amount" | "transactionDate" | "paymentMode" | "paymentStatus" | "slipNo" | "details" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["financeTransaction"]>
+  export type FinanceTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    financeHead?: boolean | FinanceHeadDefaultArgs<ExtArgs>
+  }
+
+  export type $FinanceTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FinanceTransaction"
+    objects: {
+      financeHead: Prisma.$FinanceHeadPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      financeHeadId: number
+      type: string
+      amount: Prisma.Decimal
+      transactionDate: Date
+      paymentMode: string | null
+      paymentStatus: string | null
+      slipNo: string | null
+      details: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["financeTransaction"]>
+    composites: {}
+  }
+
+  type FinanceTransactionGetPayload<S extends boolean | null | undefined | FinanceTransactionDefaultArgs> = $Result.GetResult<Prisma.$FinanceTransactionPayload, S>
+
+  type FinanceTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FinanceTransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FinanceTransactionCountAggregateInputType | true
+    }
+
+  export interface FinanceTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FinanceTransaction'], meta: { name: 'FinanceTransaction' } }
+    /**
+     * Find zero or one FinanceTransaction that matches the filter.
+     * @param {FinanceTransactionFindUniqueArgs} args - Arguments to find a FinanceTransaction
+     * @example
+     * // Get one FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FinanceTransactionFindUniqueArgs>(args: SelectSubset<T, FinanceTransactionFindUniqueArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FinanceTransaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FinanceTransactionFindUniqueOrThrowArgs} args - Arguments to find a FinanceTransaction
+     * @example
+     * // Get one FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FinanceTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, FinanceTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FinanceTransaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionFindFirstArgs} args - Arguments to find a FinanceTransaction
+     * @example
+     * // Get one FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FinanceTransactionFindFirstArgs>(args?: SelectSubset<T, FinanceTransactionFindFirstArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FinanceTransaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionFindFirstOrThrowArgs} args - Arguments to find a FinanceTransaction
+     * @example
+     * // Get one FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FinanceTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, FinanceTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FinanceTransactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FinanceTransactions
+     * const financeTransactions = await prisma.financeTransaction.findMany()
+     * 
+     * // Get first 10 FinanceTransactions
+     * const financeTransactions = await prisma.financeTransaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const financeTransactionWithIdOnly = await prisma.financeTransaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FinanceTransactionFindManyArgs>(args?: SelectSubset<T, FinanceTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FinanceTransaction.
+     * @param {FinanceTransactionCreateArgs} args - Arguments to create a FinanceTransaction.
+     * @example
+     * // Create one FinanceTransaction
+     * const FinanceTransaction = await prisma.financeTransaction.create({
+     *   data: {
+     *     // ... data to create a FinanceTransaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends FinanceTransactionCreateArgs>(args: SelectSubset<T, FinanceTransactionCreateArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FinanceTransactions.
+     * @param {FinanceTransactionCreateManyArgs} args - Arguments to create many FinanceTransactions.
+     * @example
+     * // Create many FinanceTransactions
+     * const financeTransaction = await prisma.financeTransaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FinanceTransactionCreateManyArgs>(args?: SelectSubset<T, FinanceTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FinanceTransaction.
+     * @param {FinanceTransactionDeleteArgs} args - Arguments to delete one FinanceTransaction.
+     * @example
+     * // Delete one FinanceTransaction
+     * const FinanceTransaction = await prisma.financeTransaction.delete({
+     *   where: {
+     *     // ... filter to delete one FinanceTransaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FinanceTransactionDeleteArgs>(args: SelectSubset<T, FinanceTransactionDeleteArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FinanceTransaction.
+     * @param {FinanceTransactionUpdateArgs} args - Arguments to update one FinanceTransaction.
+     * @example
+     * // Update one FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FinanceTransactionUpdateArgs>(args: SelectSubset<T, FinanceTransactionUpdateArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FinanceTransactions.
+     * @param {FinanceTransactionDeleteManyArgs} args - Arguments to filter FinanceTransactions to delete.
+     * @example
+     * // Delete a few FinanceTransactions
+     * const { count } = await prisma.financeTransaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FinanceTransactionDeleteManyArgs>(args?: SelectSubset<T, FinanceTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FinanceTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FinanceTransactions
+     * const financeTransaction = await prisma.financeTransaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FinanceTransactionUpdateManyArgs>(args: SelectSubset<T, FinanceTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FinanceTransaction.
+     * @param {FinanceTransactionUpsertArgs} args - Arguments to update or create a FinanceTransaction.
+     * @example
+     * // Update or create a FinanceTransaction
+     * const financeTransaction = await prisma.financeTransaction.upsert({
+     *   create: {
+     *     // ... data to create a FinanceTransaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FinanceTransaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FinanceTransactionUpsertArgs>(args: SelectSubset<T, FinanceTransactionUpsertArgs<ExtArgs>>): Prisma__FinanceTransactionClient<$Result.GetResult<Prisma.$FinanceTransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FinanceTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionCountArgs} args - Arguments to filter FinanceTransactions to count.
+     * @example
+     * // Count the number of FinanceTransactions
+     * const count = await prisma.financeTransaction.count({
+     *   where: {
+     *     // ... the filter for the FinanceTransactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends FinanceTransactionCountArgs>(
+      args?: Subset<T, FinanceTransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FinanceTransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FinanceTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FinanceTransactionAggregateArgs>(args: Subset<T, FinanceTransactionAggregateArgs>): Prisma.PrismaPromise<GetFinanceTransactionAggregateType<T>>
+
+    /**
+     * Group by FinanceTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinanceTransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FinanceTransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FinanceTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: FinanceTransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FinanceTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFinanceTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FinanceTransaction model
+   */
+  readonly fields: FinanceTransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FinanceTransaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FinanceTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    financeHead<T extends FinanceHeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FinanceHeadDefaultArgs<ExtArgs>>): Prisma__FinanceHeadClient<$Result.GetResult<Prisma.$FinanceHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FinanceTransaction model
+   */
+  interface FinanceTransactionFieldRefs {
+    readonly id: FieldRef<"FinanceTransaction", 'Int'>
+    readonly financeHeadId: FieldRef<"FinanceTransaction", 'Int'>
+    readonly type: FieldRef<"FinanceTransaction", 'String'>
+    readonly amount: FieldRef<"FinanceTransaction", 'Decimal'>
+    readonly transactionDate: FieldRef<"FinanceTransaction", 'DateTime'>
+    readonly paymentMode: FieldRef<"FinanceTransaction", 'String'>
+    readonly paymentStatus: FieldRef<"FinanceTransaction", 'String'>
+    readonly slipNo: FieldRef<"FinanceTransaction", 'String'>
+    readonly details: FieldRef<"FinanceTransaction", 'String'>
+    readonly status: FieldRef<"FinanceTransaction", 'String'>
+    readonly createdAt: FieldRef<"FinanceTransaction", 'DateTime'>
+    readonly updatedAt: FieldRef<"FinanceTransaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FinanceTransaction findUnique
+   */
+  export type FinanceTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which FinanceTransaction to fetch.
+     */
+    where: FinanceTransactionWhereUniqueInput
+  }
+
+  /**
+   * FinanceTransaction findUniqueOrThrow
+   */
+  export type FinanceTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which FinanceTransaction to fetch.
+     */
+    where: FinanceTransactionWhereUniqueInput
+  }
+
+  /**
+   * FinanceTransaction findFirst
+   */
+  export type FinanceTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which FinanceTransaction to fetch.
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinanceTransactions to fetch.
+     */
+    orderBy?: FinanceTransactionOrderByWithRelationInput | FinanceTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FinanceTransactions.
+     */
+    cursor?: FinanceTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinanceTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinanceTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FinanceTransactions.
+     */
+    distinct?: FinanceTransactionScalarFieldEnum | FinanceTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * FinanceTransaction findFirstOrThrow
+   */
+  export type FinanceTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which FinanceTransaction to fetch.
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinanceTransactions to fetch.
+     */
+    orderBy?: FinanceTransactionOrderByWithRelationInput | FinanceTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FinanceTransactions.
+     */
+    cursor?: FinanceTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinanceTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinanceTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FinanceTransactions.
+     */
+    distinct?: FinanceTransactionScalarFieldEnum | FinanceTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * FinanceTransaction findMany
+   */
+  export type FinanceTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which FinanceTransactions to fetch.
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinanceTransactions to fetch.
+     */
+    orderBy?: FinanceTransactionOrderByWithRelationInput | FinanceTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FinanceTransactions.
+     */
+    cursor?: FinanceTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinanceTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinanceTransactions.
+     */
+    skip?: number
+    distinct?: FinanceTransactionScalarFieldEnum | FinanceTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * FinanceTransaction create
+   */
+  export type FinanceTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FinanceTransaction.
+     */
+    data: XOR<FinanceTransactionCreateInput, FinanceTransactionUncheckedCreateInput>
+  }
+
+  /**
+   * FinanceTransaction createMany
+   */
+  export type FinanceTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FinanceTransactions.
+     */
+    data: FinanceTransactionCreateManyInput | FinanceTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FinanceTransaction update
+   */
+  export type FinanceTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FinanceTransaction.
+     */
+    data: XOR<FinanceTransactionUpdateInput, FinanceTransactionUncheckedUpdateInput>
+    /**
+     * Choose, which FinanceTransaction to update.
+     */
+    where: FinanceTransactionWhereUniqueInput
+  }
+
+  /**
+   * FinanceTransaction updateMany
+   */
+  export type FinanceTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FinanceTransactions.
+     */
+    data: XOR<FinanceTransactionUpdateManyMutationInput, FinanceTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which FinanceTransactions to update
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * Limit how many FinanceTransactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FinanceTransaction upsert
+   */
+  export type FinanceTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FinanceTransaction to update in case it exists.
+     */
+    where: FinanceTransactionWhereUniqueInput
+    /**
+     * In case the FinanceTransaction found by the `where` argument doesn't exist, create a new FinanceTransaction with this data.
+     */
+    create: XOR<FinanceTransactionCreateInput, FinanceTransactionUncheckedCreateInput>
+    /**
+     * In case the FinanceTransaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FinanceTransactionUpdateInput, FinanceTransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * FinanceTransaction delete
+   */
+  export type FinanceTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+    /**
+     * Filter which FinanceTransaction to delete.
+     */
+    where: FinanceTransactionWhereUniqueInput
+  }
+
+  /**
+   * FinanceTransaction deleteMany
+   */
+  export type FinanceTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FinanceTransactions to delete
+     */
+    where?: FinanceTransactionWhereInput
+    /**
+     * Limit how many FinanceTransactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FinanceTransaction without action
+   */
+  export type FinanceTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinanceTransaction
+     */
+    select?: FinanceTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinanceTransaction
+     */
+    omit?: FinanceTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinanceTransactionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FinancialRecord
+   */
+
+  export type AggregateFinancialRecord = {
+    _count: FinancialRecordCountAggregateOutputType | null
+    _avg: FinancialRecordAvgAggregateOutputType | null
+    _sum: FinancialRecordSumAggregateOutputType | null
+    _min: FinancialRecordMinAggregateOutputType | null
+    _max: FinancialRecordMaxAggregateOutputType | null
+  }
+
+  export type FinancialRecordAvgAggregateOutputType = {
+    id: number | null
+    amount: Decimal | null
+    createdById: number | null
+  }
+
+  export type FinancialRecordSumAggregateOutputType = {
+    id: number | null
+    amount: Decimal | null
+    createdById: number | null
+  }
+
+  export type FinancialRecordMinAggregateOutputType = {
+    id: number | null
+    type: string | null
+    category: string | null
+    description: string | null
+    amount: Decimal | null
+    date: Date | null
+    status: string | null
+    createdById: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FinancialRecordMaxAggregateOutputType = {
+    id: number | null
+    type: string | null
+    category: string | null
+    description: string | null
+    amount: Decimal | null
+    date: Date | null
+    status: string | null
+    createdById: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FinancialRecordCountAggregateOutputType = {
+    id: number
+    type: number
+    category: number
+    description: number
+    amount: number
+    date: number
+    status: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FinancialRecordAvgAggregateInputType = {
+    id?: true
+    amount?: true
+    createdById?: true
+  }
+
+  export type FinancialRecordSumAggregateInputType = {
+    id?: true
+    amount?: true
+    createdById?: true
+  }
+
+  export type FinancialRecordMinAggregateInputType = {
+    id?: true
+    type?: true
+    category?: true
+    description?: true
+    amount?: true
+    date?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FinancialRecordMaxAggregateInputType = {
+    id?: true
+    type?: true
+    category?: true
+    description?: true
+    amount?: true
+    date?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FinancialRecordCountAggregateInputType = {
+    id?: true
+    type?: true
+    category?: true
+    description?: true
+    amount?: true
+    date?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FinancialRecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FinancialRecord to aggregate.
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinancialRecords to fetch.
+     */
+    orderBy?: FinancialRecordOrderByWithRelationInput | FinancialRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FinancialRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinancialRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinancialRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FinancialRecords
+    **/
+    _count?: true | FinancialRecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FinancialRecordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FinancialRecordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FinancialRecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FinancialRecordMaxAggregateInputType
+  }
+
+  export type GetFinancialRecordAggregateType<T extends FinancialRecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateFinancialRecord]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFinancialRecord[P]>
+      : GetScalarType<T[P], AggregateFinancialRecord[P]>
+  }
+
+
+
+
+  export type FinancialRecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FinancialRecordWhereInput
+    orderBy?: FinancialRecordOrderByWithAggregationInput | FinancialRecordOrderByWithAggregationInput[]
+    by: FinancialRecordScalarFieldEnum[] | FinancialRecordScalarFieldEnum
+    having?: FinancialRecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FinancialRecordCountAggregateInputType | true
+    _avg?: FinancialRecordAvgAggregateInputType
+    _sum?: FinancialRecordSumAggregateInputType
+    _min?: FinancialRecordMinAggregateInputType
+    _max?: FinancialRecordMaxAggregateInputType
+  }
+
+  export type FinancialRecordGroupByOutputType = {
+    id: number
+    type: string
+    category: string
+    description: string | null
+    amount: Decimal
+    date: Date
+    status: string
+    createdById: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FinancialRecordCountAggregateOutputType | null
+    _avg: FinancialRecordAvgAggregateOutputType | null
+    _sum: FinancialRecordSumAggregateOutputType | null
+    _min: FinancialRecordMinAggregateOutputType | null
+    _max: FinancialRecordMaxAggregateOutputType | null
+  }
+
+  type GetFinancialRecordGroupByPayload<T extends FinancialRecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FinancialRecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FinancialRecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FinancialRecordGroupByOutputType[P]>
+            : GetScalarType<T[P], FinancialRecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FinancialRecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    category?: boolean
+    description?: boolean
+    amount?: boolean
+    date?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | FinancialRecord$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["financialRecord"]>
+
+
+
+  export type FinancialRecordSelectScalar = {
+    id?: boolean
+    type?: boolean
+    category?: boolean
+    description?: boolean
+    amount?: boolean
+    date?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FinancialRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "category" | "description" | "amount" | "date" | "status" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["financialRecord"]>
+  export type FinancialRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | FinancialRecord$createdByArgs<ExtArgs>
+  }
+
+  export type $FinancialRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FinancialRecord"
+    objects: {
+      createdBy: Prisma.$AdminPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      type: string
+      category: string
+      description: string | null
+      amount: Prisma.Decimal
+      date: Date
+      status: string
+      createdById: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["financialRecord"]>
+    composites: {}
+  }
+
+  type FinancialRecordGetPayload<S extends boolean | null | undefined | FinancialRecordDefaultArgs> = $Result.GetResult<Prisma.$FinancialRecordPayload, S>
+
+  type FinancialRecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FinancialRecordFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FinancialRecordCountAggregateInputType | true
+    }
+
+  export interface FinancialRecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FinancialRecord'], meta: { name: 'FinancialRecord' } }
+    /**
+     * Find zero or one FinancialRecord that matches the filter.
+     * @param {FinancialRecordFindUniqueArgs} args - Arguments to find a FinancialRecord
+     * @example
+     * // Get one FinancialRecord
+     * const financialRecord = await prisma.financialRecord.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FinancialRecordFindUniqueArgs>(args: SelectSubset<T, FinancialRecordFindUniqueArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FinancialRecord that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FinancialRecordFindUniqueOrThrowArgs} args - Arguments to find a FinancialRecord
+     * @example
+     * // Get one FinancialRecord
+     * const financialRecord = await prisma.financialRecord.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FinancialRecordFindUniqueOrThrowArgs>(args: SelectSubset<T, FinancialRecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FinancialRecord that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordFindFirstArgs} args - Arguments to find a FinancialRecord
+     * @example
+     * // Get one FinancialRecord
+     * const financialRecord = await prisma.financialRecord.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FinancialRecordFindFirstArgs>(args?: SelectSubset<T, FinancialRecordFindFirstArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FinancialRecord that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordFindFirstOrThrowArgs} args - Arguments to find a FinancialRecord
+     * @example
+     * // Get one FinancialRecord
+     * const financialRecord = await prisma.financialRecord.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FinancialRecordFindFirstOrThrowArgs>(args?: SelectSubset<T, FinancialRecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FinancialRecords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FinancialRecords
+     * const financialRecords = await prisma.financialRecord.findMany()
+     * 
+     * // Get first 10 FinancialRecords
+     * const financialRecords = await prisma.financialRecord.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const financialRecordWithIdOnly = await prisma.financialRecord.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FinancialRecordFindManyArgs>(args?: SelectSubset<T, FinancialRecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FinancialRecord.
+     * @param {FinancialRecordCreateArgs} args - Arguments to create a FinancialRecord.
+     * @example
+     * // Create one FinancialRecord
+     * const FinancialRecord = await prisma.financialRecord.create({
+     *   data: {
+     *     // ... data to create a FinancialRecord
+     *   }
+     * })
+     * 
+     */
+    create<T extends FinancialRecordCreateArgs>(args: SelectSubset<T, FinancialRecordCreateArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FinancialRecords.
+     * @param {FinancialRecordCreateManyArgs} args - Arguments to create many FinancialRecords.
+     * @example
+     * // Create many FinancialRecords
+     * const financialRecord = await prisma.financialRecord.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FinancialRecordCreateManyArgs>(args?: SelectSubset<T, FinancialRecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FinancialRecord.
+     * @param {FinancialRecordDeleteArgs} args - Arguments to delete one FinancialRecord.
+     * @example
+     * // Delete one FinancialRecord
+     * const FinancialRecord = await prisma.financialRecord.delete({
+     *   where: {
+     *     // ... filter to delete one FinancialRecord
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FinancialRecordDeleteArgs>(args: SelectSubset<T, FinancialRecordDeleteArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FinancialRecord.
+     * @param {FinancialRecordUpdateArgs} args - Arguments to update one FinancialRecord.
+     * @example
+     * // Update one FinancialRecord
+     * const financialRecord = await prisma.financialRecord.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FinancialRecordUpdateArgs>(args: SelectSubset<T, FinancialRecordUpdateArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FinancialRecords.
+     * @param {FinancialRecordDeleteManyArgs} args - Arguments to filter FinancialRecords to delete.
+     * @example
+     * // Delete a few FinancialRecords
+     * const { count } = await prisma.financialRecord.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FinancialRecordDeleteManyArgs>(args?: SelectSubset<T, FinancialRecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FinancialRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FinancialRecords
+     * const financialRecord = await prisma.financialRecord.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FinancialRecordUpdateManyArgs>(args: SelectSubset<T, FinancialRecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FinancialRecord.
+     * @param {FinancialRecordUpsertArgs} args - Arguments to update or create a FinancialRecord.
+     * @example
+     * // Update or create a FinancialRecord
+     * const financialRecord = await prisma.financialRecord.upsert({
+     *   create: {
+     *     // ... data to create a FinancialRecord
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FinancialRecord we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FinancialRecordUpsertArgs>(args: SelectSubset<T, FinancialRecordUpsertArgs<ExtArgs>>): Prisma__FinancialRecordClient<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FinancialRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordCountArgs} args - Arguments to filter FinancialRecords to count.
+     * @example
+     * // Count the number of FinancialRecords
+     * const count = await prisma.financialRecord.count({
+     *   where: {
+     *     // ... the filter for the FinancialRecords we want to count
+     *   }
+     * })
+    **/
+    count<T extends FinancialRecordCountArgs>(
+      args?: Subset<T, FinancialRecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FinancialRecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FinancialRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FinancialRecordAggregateArgs>(args: Subset<T, FinancialRecordAggregateArgs>): Prisma.PrismaPromise<GetFinancialRecordAggregateType<T>>
+
+    /**
+     * Group by FinancialRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FinancialRecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FinancialRecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FinancialRecordGroupByArgs['orderBy'] }
+        : { orderBy?: FinancialRecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FinancialRecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFinancialRecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FinancialRecord model
+   */
+  readonly fields: FinancialRecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FinancialRecord.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FinancialRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends FinancialRecord$createdByArgs<ExtArgs> = {}>(args?: Subset<T, FinancialRecord$createdByArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FinancialRecord model
+   */
+  interface FinancialRecordFieldRefs {
+    readonly id: FieldRef<"FinancialRecord", 'Int'>
+    readonly type: FieldRef<"FinancialRecord", 'String'>
+    readonly category: FieldRef<"FinancialRecord", 'String'>
+    readonly description: FieldRef<"FinancialRecord", 'String'>
+    readonly amount: FieldRef<"FinancialRecord", 'Decimal'>
+    readonly date: FieldRef<"FinancialRecord", 'DateTime'>
+    readonly status: FieldRef<"FinancialRecord", 'String'>
+    readonly createdById: FieldRef<"FinancialRecord", 'Int'>
+    readonly createdAt: FieldRef<"FinancialRecord", 'DateTime'>
+    readonly updatedAt: FieldRef<"FinancialRecord", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FinancialRecord findUnique
+   */
+  export type FinancialRecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FinancialRecord to fetch.
+     */
+    where: FinancialRecordWhereUniqueInput
+  }
+
+  /**
+   * FinancialRecord findUniqueOrThrow
+   */
+  export type FinancialRecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FinancialRecord to fetch.
+     */
+    where: FinancialRecordWhereUniqueInput
+  }
+
+  /**
+   * FinancialRecord findFirst
+   */
+  export type FinancialRecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FinancialRecord to fetch.
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinancialRecords to fetch.
+     */
+    orderBy?: FinancialRecordOrderByWithRelationInput | FinancialRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FinancialRecords.
+     */
+    cursor?: FinancialRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinancialRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinancialRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FinancialRecords.
+     */
+    distinct?: FinancialRecordScalarFieldEnum | FinancialRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FinancialRecord findFirstOrThrow
+   */
+  export type FinancialRecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FinancialRecord to fetch.
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinancialRecords to fetch.
+     */
+    orderBy?: FinancialRecordOrderByWithRelationInput | FinancialRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FinancialRecords.
+     */
+    cursor?: FinancialRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinancialRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinancialRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FinancialRecords.
+     */
+    distinct?: FinancialRecordScalarFieldEnum | FinancialRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FinancialRecord findMany
+   */
+  export type FinancialRecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which FinancialRecords to fetch.
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FinancialRecords to fetch.
+     */
+    orderBy?: FinancialRecordOrderByWithRelationInput | FinancialRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FinancialRecords.
+     */
+    cursor?: FinancialRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FinancialRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FinancialRecords.
+     */
+    skip?: number
+    distinct?: FinancialRecordScalarFieldEnum | FinancialRecordScalarFieldEnum[]
+  }
+
+  /**
+   * FinancialRecord create
+   */
+  export type FinancialRecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FinancialRecord.
+     */
+    data: XOR<FinancialRecordCreateInput, FinancialRecordUncheckedCreateInput>
+  }
+
+  /**
+   * FinancialRecord createMany
+   */
+  export type FinancialRecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FinancialRecords.
+     */
+    data: FinancialRecordCreateManyInput | FinancialRecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FinancialRecord update
+   */
+  export type FinancialRecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FinancialRecord.
+     */
+    data: XOR<FinancialRecordUpdateInput, FinancialRecordUncheckedUpdateInput>
+    /**
+     * Choose, which FinancialRecord to update.
+     */
+    where: FinancialRecordWhereUniqueInput
+  }
+
+  /**
+   * FinancialRecord updateMany
+   */
+  export type FinancialRecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FinancialRecords.
+     */
+    data: XOR<FinancialRecordUpdateManyMutationInput, FinancialRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which FinancialRecords to update
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * Limit how many FinancialRecords to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FinancialRecord upsert
+   */
+  export type FinancialRecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FinancialRecord to update in case it exists.
+     */
+    where: FinancialRecordWhereUniqueInput
+    /**
+     * In case the FinancialRecord found by the `where` argument doesn't exist, create a new FinancialRecord with this data.
+     */
+    create: XOR<FinancialRecordCreateInput, FinancialRecordUncheckedCreateInput>
+    /**
+     * In case the FinancialRecord was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FinancialRecordUpdateInput, FinancialRecordUncheckedUpdateInput>
+  }
+
+  /**
+   * FinancialRecord delete
+   */
+  export type FinancialRecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+    /**
+     * Filter which FinancialRecord to delete.
+     */
+    where: FinancialRecordWhereUniqueInput
+  }
+
+  /**
+   * FinancialRecord deleteMany
+   */
+  export type FinancialRecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FinancialRecords to delete
+     */
+    where?: FinancialRecordWhereInput
+    /**
+     * Limit how many FinancialRecords to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FinancialRecord.createdBy
+   */
+  export type FinancialRecord$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * FinancialRecord without action
+   */
+  export type FinancialRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FinancialRecord
+     */
+    select?: FinancialRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FinancialRecord
+     */
+    omit?: FinancialRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FinancialRecordInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -33579,6 +37294,27 @@ export namespace Prisma {
   };
 
   export type TeacherScheduleScalarFieldEnum = (typeof TeacherScheduleScalarFieldEnum)[keyof typeof TeacherScheduleScalarFieldEnum]
+
+
+  export const ExamScheduleScalarFieldEnum: {
+    id: 'id',
+    examName: 'examName',
+    sessionId: 'sessionId',
+    classId: 'classId',
+    subjectId: 'subjectId',
+    examDate: 'examDate',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    totalMarks: 'totalMarks',
+    room: 'room',
+    invigilator: 'invigilator',
+    notes: 'notes',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ExamScheduleScalarFieldEnum = (typeof ExamScheduleScalarFieldEnum)[keyof typeof ExamScheduleScalarFieldEnum]
 
 
   export const StudentScalarFieldEnum: {
@@ -33889,6 +37625,40 @@ export namespace Prisma {
   export type SalaryEntryScalarFieldEnum = (typeof SalaryEntryScalarFieldEnum)[keyof typeof SalaryEntryScalarFieldEnum]
 
 
+  export const FinanceTransactionScalarFieldEnum: {
+    id: 'id',
+    financeHeadId: 'financeHeadId',
+    type: 'type',
+    amount: 'amount',
+    transactionDate: 'transactionDate',
+    paymentMode: 'paymentMode',
+    paymentStatus: 'paymentStatus',
+    slipNo: 'slipNo',
+    details: 'details',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FinanceTransactionScalarFieldEnum = (typeof FinanceTransactionScalarFieldEnum)[keyof typeof FinanceTransactionScalarFieldEnum]
+
+
+  export const FinancialRecordScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    category: 'category',
+    description: 'description',
+    amount: 'amount',
+    date: 'date',
+    status: 'status',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FinancialRecordScalarFieldEnum = (typeof FinancialRecordScalarFieldEnum)[keyof typeof FinancialRecordScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -34056,6 +37826,19 @@ export namespace Prisma {
   };
 
   export type TeacherScheduleOrderByRelevanceFieldEnum = (typeof TeacherScheduleOrderByRelevanceFieldEnum)[keyof typeof TeacherScheduleOrderByRelevanceFieldEnum]
+
+
+  export const ExamScheduleOrderByRelevanceFieldEnum: {
+    examName: 'examName',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    room: 'room',
+    invigilator: 'invigilator',
+    notes: 'notes',
+    status: 'status'
+  };
+
+  export type ExamScheduleOrderByRelevanceFieldEnum = (typeof ExamScheduleOrderByRelevanceFieldEnum)[keyof typeof ExamScheduleOrderByRelevanceFieldEnum]
 
 
   export const StudentOrderByRelevanceFieldEnum: {
@@ -34250,6 +38033,28 @@ export namespace Prisma {
   export type SalaryEntryOrderByRelevanceFieldEnum = (typeof SalaryEntryOrderByRelevanceFieldEnum)[keyof typeof SalaryEntryOrderByRelevanceFieldEnum]
 
 
+  export const FinanceTransactionOrderByRelevanceFieldEnum: {
+    type: 'type',
+    paymentMode: 'paymentMode',
+    paymentStatus: 'paymentStatus',
+    slipNo: 'slipNo',
+    details: 'details',
+    status: 'status'
+  };
+
+  export type FinanceTransactionOrderByRelevanceFieldEnum = (typeof FinanceTransactionOrderByRelevanceFieldEnum)[keyof typeof FinanceTransactionOrderByRelevanceFieldEnum]
+
+
+  export const FinancialRecordOrderByRelevanceFieldEnum: {
+    type: 'type',
+    category: 'category',
+    description: 'description',
+    status: 'status'
+  };
+
+  export type FinancialRecordOrderByRelevanceFieldEnum = (typeof FinancialRecordOrderByRelevanceFieldEnum)[keyof typeof FinancialRecordOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -34328,6 +38133,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     madrassaProfile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
+    financialRecords?: FinancialRecordListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -34341,6 +38147,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     madrassaProfile?: MadrassaProfileOrderByWithRelationInput
+    financialRecords?: FinancialRecordOrderByRelationAggregateInput
     _relevance?: AdminOrderByRelevanceInput
   }
 
@@ -34358,6 +38165,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     madrassaProfile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
+    financialRecords?: FinancialRecordListRelationFilter
   }, "id" | "email" | "username">
 
   export type AdminOrderByWithAggregationInput = {
@@ -34770,6 +38578,7 @@ export namespace Prisma {
     status?: StringFilter<"Subject"> | string
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
+    examSchedules?: ExamScheduleListRelationFilter
   }
 
   export type SubjectOrderByWithRelationInput = {
@@ -34779,6 +38588,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    examSchedules?: ExamScheduleOrderByRelationAggregateInput
     _relevance?: SubjectOrderByRelevanceInput
   }
 
@@ -34792,6 +38602,7 @@ export namespace Prisma {
     status?: StringFilter<"Subject"> | string
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
+    examSchedules?: ExamScheduleListRelationFilter
   }, "id" | "name">
 
   export type SubjectOrderByWithAggregationInput = {
@@ -34913,6 +38724,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceListRelationFilter
     studentSchedules?: StudentScheduleListRelationFilter
     teacherSchedules?: TeacherScheduleListRelationFilter
+    examSchedules?: ExamScheduleListRelationFilter
   }
 
   export type AcademicClassOrderByWithRelationInput = {
@@ -34928,6 +38740,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceOrderByRelationAggregateInput
     studentSchedules?: StudentScheduleOrderByRelationAggregateInput
     teacherSchedules?: TeacherScheduleOrderByRelationAggregateInput
+    examSchedules?: ExamScheduleOrderByRelationAggregateInput
     _relevance?: AcademicClassOrderByRelevanceInput
   }
 
@@ -34948,6 +38761,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceListRelationFilter
     studentSchedules?: StudentScheduleListRelationFilter
     teacherSchedules?: TeacherScheduleListRelationFilter
+    examSchedules?: ExamScheduleListRelationFilter
   }, "id" | "branchId_name">
 
   export type AcademicClassOrderByWithAggregationInput = {
@@ -35066,6 +38880,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentListRelationFilter
     studentSchedules?: StudentScheduleListRelationFilter
     teacherSchedules?: TeacherScheduleListRelationFilter
+    examSchedules?: ExamScheduleListRelationFilter
   }
 
   export type AcademicSessionOrderByWithRelationInput = {
@@ -35079,6 +38894,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentOrderByRelationAggregateInput
     studentSchedules?: StudentScheduleOrderByRelationAggregateInput
     teacherSchedules?: TeacherScheduleOrderByRelationAggregateInput
+    examSchedules?: ExamScheduleOrderByRelationAggregateInput
     _relevance?: AcademicSessionOrderByRelevanceInput
   }
 
@@ -35096,6 +38912,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentListRelationFilter
     studentSchedules?: StudentScheduleListRelationFilter
     teacherSchedules?: TeacherScheduleListRelationFilter
+    examSchedules?: ExamScheduleListRelationFilter
   }, "id" | "name">
 
   export type AcademicSessionOrderByWithAggregationInput = {
@@ -35320,6 +39137,120 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"TeacherSchedule"> | string
     createdAt?: DateTimeWithAggregatesFilter<"TeacherSchedule"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TeacherSchedule"> | Date | string
+  }
+
+  export type ExamScheduleWhereInput = {
+    AND?: ExamScheduleWhereInput | ExamScheduleWhereInput[]
+    OR?: ExamScheduleWhereInput[]
+    NOT?: ExamScheduleWhereInput | ExamScheduleWhereInput[]
+    id?: IntFilter<"ExamSchedule"> | number
+    examName?: StringFilter<"ExamSchedule"> | string
+    sessionId?: IntFilter<"ExamSchedule"> | number
+    classId?: IntFilter<"ExamSchedule"> | number
+    subjectId?: IntFilter<"ExamSchedule"> | number
+    examDate?: DateTimeFilter<"ExamSchedule"> | Date | string
+    startTime?: StringFilter<"ExamSchedule"> | string
+    endTime?: StringFilter<"ExamSchedule"> | string
+    totalMarks?: IntNullableFilter<"ExamSchedule"> | number | null
+    room?: StringNullableFilter<"ExamSchedule"> | string | null
+    invigilator?: StringNullableFilter<"ExamSchedule"> | string | null
+    notes?: StringNullableFilter<"ExamSchedule"> | string | null
+    status?: StringFilter<"ExamSchedule"> | string
+    createdAt?: DateTimeFilter<"ExamSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSchedule"> | Date | string
+    session?: XOR<AcademicSessionScalarRelationFilter, AcademicSessionWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+  }
+
+  export type ExamScheduleOrderByWithRelationInput = {
+    id?: SortOrder
+    examName?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    examDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    totalMarks?: SortOrderInput | SortOrder
+    room?: SortOrderInput | SortOrder
+    invigilator?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    session?: AcademicSessionOrderByWithRelationInput
+    class?: AcademicClassOrderByWithRelationInput
+    subject?: SubjectOrderByWithRelationInput
+    _relevance?: ExamScheduleOrderByRelevanceInput
+  }
+
+  export type ExamScheduleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ExamScheduleWhereInput | ExamScheduleWhereInput[]
+    OR?: ExamScheduleWhereInput[]
+    NOT?: ExamScheduleWhereInput | ExamScheduleWhereInput[]
+    examName?: StringFilter<"ExamSchedule"> | string
+    sessionId?: IntFilter<"ExamSchedule"> | number
+    classId?: IntFilter<"ExamSchedule"> | number
+    subjectId?: IntFilter<"ExamSchedule"> | number
+    examDate?: DateTimeFilter<"ExamSchedule"> | Date | string
+    startTime?: StringFilter<"ExamSchedule"> | string
+    endTime?: StringFilter<"ExamSchedule"> | string
+    totalMarks?: IntNullableFilter<"ExamSchedule"> | number | null
+    room?: StringNullableFilter<"ExamSchedule"> | string | null
+    invigilator?: StringNullableFilter<"ExamSchedule"> | string | null
+    notes?: StringNullableFilter<"ExamSchedule"> | string | null
+    status?: StringFilter<"ExamSchedule"> | string
+    createdAt?: DateTimeFilter<"ExamSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSchedule"> | Date | string
+    session?: XOR<AcademicSessionScalarRelationFilter, AcademicSessionWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+  }, "id">
+
+  export type ExamScheduleOrderByWithAggregationInput = {
+    id?: SortOrder
+    examName?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    examDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    totalMarks?: SortOrderInput | SortOrder
+    room?: SortOrderInput | SortOrder
+    invigilator?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ExamScheduleCountOrderByAggregateInput
+    _avg?: ExamScheduleAvgOrderByAggregateInput
+    _max?: ExamScheduleMaxOrderByAggregateInput
+    _min?: ExamScheduleMinOrderByAggregateInput
+    _sum?: ExamScheduleSumOrderByAggregateInput
+  }
+
+  export type ExamScheduleScalarWhereWithAggregatesInput = {
+    AND?: ExamScheduleScalarWhereWithAggregatesInput | ExamScheduleScalarWhereWithAggregatesInput[]
+    OR?: ExamScheduleScalarWhereWithAggregatesInput[]
+    NOT?: ExamScheduleScalarWhereWithAggregatesInput | ExamScheduleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ExamSchedule"> | number
+    examName?: StringWithAggregatesFilter<"ExamSchedule"> | string
+    sessionId?: IntWithAggregatesFilter<"ExamSchedule"> | number
+    classId?: IntWithAggregatesFilter<"ExamSchedule"> | number
+    subjectId?: IntWithAggregatesFilter<"ExamSchedule"> | number
+    examDate?: DateTimeWithAggregatesFilter<"ExamSchedule"> | Date | string
+    startTime?: StringWithAggregatesFilter<"ExamSchedule"> | string
+    endTime?: StringWithAggregatesFilter<"ExamSchedule"> | string
+    totalMarks?: IntNullableWithAggregatesFilter<"ExamSchedule"> | number | null
+    room?: StringNullableWithAggregatesFilter<"ExamSchedule"> | string | null
+    invigilator?: StringNullableWithAggregatesFilter<"ExamSchedule"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"ExamSchedule"> | string | null
+    status?: StringWithAggregatesFilter<"ExamSchedule"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ExamSchedule"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ExamSchedule"> | Date | string
   }
 
   export type StudentWhereInput = {
@@ -36573,6 +40504,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FinanceHead"> | Date | string
     updatedAt?: DateTimeFilter<"FinanceHead"> | Date | string
     salaryEntries?: SalaryEntryListRelationFilter
+    transactions?: FinanceTransactionListRelationFilter
   }
 
   export type FinanceHeadOrderByWithRelationInput = {
@@ -36584,6 +40516,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     salaryEntries?: SalaryEntryOrderByRelationAggregateInput
+    transactions?: FinanceTransactionOrderByRelationAggregateInput
     _relevance?: FinanceHeadOrderByRelevanceInput
   }
 
@@ -36599,6 +40532,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FinanceHead"> | Date | string
     updatedAt?: DateTimeFilter<"FinanceHead"> | Date | string
     salaryEntries?: SalaryEntryListRelationFilter
+    transactions?: FinanceTransactionListRelationFilter
   }, "id" | "name">
 
   export type FinanceHeadOrderByWithAggregationInput = {
@@ -36970,6 +40904,182 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SalaryEntry"> | Date | string
   }
 
+  export type FinanceTransactionWhereInput = {
+    AND?: FinanceTransactionWhereInput | FinanceTransactionWhereInput[]
+    OR?: FinanceTransactionWhereInput[]
+    NOT?: FinanceTransactionWhereInput | FinanceTransactionWhereInput[]
+    id?: IntFilter<"FinanceTransaction"> | number
+    financeHeadId?: IntFilter<"FinanceTransaction"> | number
+    type?: StringFilter<"FinanceTransaction"> | string
+    amount?: DecimalFilter<"FinanceTransaction"> | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
+    slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    details?: StringNullableFilter<"FinanceTransaction"> | string | null
+    status?: StringFilter<"FinanceTransaction"> | string
+    createdAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    financeHead?: XOR<FinanceHeadScalarRelationFilter, FinanceHeadWhereInput>
+  }
+
+  export type FinanceTransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    paymentMode?: SortOrderInput | SortOrder
+    paymentStatus?: SortOrderInput | SortOrder
+    slipNo?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    financeHead?: FinanceHeadOrderByWithRelationInput
+    _relevance?: FinanceTransactionOrderByRelevanceInput
+  }
+
+  export type FinanceTransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: FinanceTransactionWhereInput | FinanceTransactionWhereInput[]
+    OR?: FinanceTransactionWhereInput[]
+    NOT?: FinanceTransactionWhereInput | FinanceTransactionWhereInput[]
+    financeHeadId?: IntFilter<"FinanceTransaction"> | number
+    type?: StringFilter<"FinanceTransaction"> | string
+    amount?: DecimalFilter<"FinanceTransaction"> | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
+    slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    details?: StringNullableFilter<"FinanceTransaction"> | string | null
+    status?: StringFilter<"FinanceTransaction"> | string
+    createdAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    financeHead?: XOR<FinanceHeadScalarRelationFilter, FinanceHeadWhereInput>
+  }, "id">
+
+  export type FinanceTransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    paymentMode?: SortOrderInput | SortOrder
+    paymentStatus?: SortOrderInput | SortOrder
+    slipNo?: SortOrderInput | SortOrder
+    details?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FinanceTransactionCountOrderByAggregateInput
+    _avg?: FinanceTransactionAvgOrderByAggregateInput
+    _max?: FinanceTransactionMaxOrderByAggregateInput
+    _min?: FinanceTransactionMinOrderByAggregateInput
+    _sum?: FinanceTransactionSumOrderByAggregateInput
+  }
+
+  export type FinanceTransactionScalarWhereWithAggregatesInput = {
+    AND?: FinanceTransactionScalarWhereWithAggregatesInput | FinanceTransactionScalarWhereWithAggregatesInput[]
+    OR?: FinanceTransactionScalarWhereWithAggregatesInput[]
+    NOT?: FinanceTransactionScalarWhereWithAggregatesInput | FinanceTransactionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FinanceTransaction"> | number
+    financeHeadId?: IntWithAggregatesFilter<"FinanceTransaction"> | number
+    type?: StringWithAggregatesFilter<"FinanceTransaction"> | string
+    amount?: DecimalWithAggregatesFilter<"FinanceTransaction"> | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeWithAggregatesFilter<"FinanceTransaction"> | Date | string
+    paymentMode?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    paymentStatus?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    slipNo?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    details?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    status?: StringWithAggregatesFilter<"FinanceTransaction"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FinanceTransaction"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FinanceTransaction"> | Date | string
+  }
+
+  export type FinancialRecordWhereInput = {
+    AND?: FinancialRecordWhereInput | FinancialRecordWhereInput[]
+    OR?: FinancialRecordWhereInput[]
+    NOT?: FinancialRecordWhereInput | FinancialRecordWhereInput[]
+    id?: IntFilter<"FinancialRecord"> | number
+    type?: StringFilter<"FinancialRecord"> | string
+    category?: StringFilter<"FinancialRecord"> | string
+    description?: StringNullableFilter<"FinancialRecord"> | string | null
+    amount?: DecimalFilter<"FinancialRecord"> | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFilter<"FinancialRecord"> | Date | string
+    status?: StringFilter<"FinancialRecord"> | string
+    createdById?: IntNullableFilter<"FinancialRecord"> | number | null
+    createdAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+    createdBy?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }
+
+  export type FinancialRecordOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    category?: SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: AdminOrderByWithRelationInput
+    _relevance?: FinancialRecordOrderByRelevanceInput
+  }
+
+  export type FinancialRecordWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: FinancialRecordWhereInput | FinancialRecordWhereInput[]
+    OR?: FinancialRecordWhereInput[]
+    NOT?: FinancialRecordWhereInput | FinancialRecordWhereInput[]
+    type?: StringFilter<"FinancialRecord"> | string
+    category?: StringFilter<"FinancialRecord"> | string
+    description?: StringNullableFilter<"FinancialRecord"> | string | null
+    amount?: DecimalFilter<"FinancialRecord"> | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFilter<"FinancialRecord"> | Date | string
+    status?: StringFilter<"FinancialRecord"> | string
+    createdById?: IntNullableFilter<"FinancialRecord"> | number | null
+    createdAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+    createdBy?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }, "id">
+
+  export type FinancialRecordOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    category?: SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FinancialRecordCountOrderByAggregateInput
+    _avg?: FinancialRecordAvgOrderByAggregateInput
+    _max?: FinancialRecordMaxOrderByAggregateInput
+    _min?: FinancialRecordMinOrderByAggregateInput
+    _sum?: FinancialRecordSumOrderByAggregateInput
+  }
+
+  export type FinancialRecordScalarWhereWithAggregatesInput = {
+    AND?: FinancialRecordScalarWhereWithAggregatesInput | FinancialRecordScalarWhereWithAggregatesInput[]
+    OR?: FinancialRecordScalarWhereWithAggregatesInput[]
+    NOT?: FinancialRecordScalarWhereWithAggregatesInput | FinancialRecordScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FinancialRecord"> | number
+    type?: StringWithAggregatesFilter<"FinancialRecord"> | string
+    category?: StringWithAggregatesFilter<"FinancialRecord"> | string
+    description?: StringNullableWithAggregatesFilter<"FinancialRecord"> | string | null
+    amount?: DecimalWithAggregatesFilter<"FinancialRecord"> | Decimal | DecimalJsLike | number | string
+    date?: DateTimeWithAggregatesFilter<"FinancialRecord"> | Date | string
+    status?: StringWithAggregatesFilter<"FinancialRecord"> | string
+    createdById?: IntNullableWithAggregatesFilter<"FinancialRecord"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"FinancialRecord"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FinancialRecord"> | Date | string
+  }
+
   export type AdminCreateInput = {
     name: string
     email: string
@@ -36980,6 +41090,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -36993,6 +41104,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUpdateInput = {
@@ -37005,6 +41117,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -37018,6 +41131,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -37451,6 +41565,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    examSchedules?: ExamScheduleCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateInput = {
@@ -37460,6 +41575,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUpdateInput = {
@@ -37468,6 +41584,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examSchedules?: ExamScheduleUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateInput = {
@@ -37477,6 +41594,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectCreateManyInput = {
@@ -37599,6 +41717,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateInput = {
@@ -37613,6 +41732,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUpdateInput = {
@@ -37626,6 +41746,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateInput = {
@@ -37640,6 +41761,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassCreateManyInput = {
@@ -37752,6 +41874,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateInput = {
@@ -37765,6 +41888,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUpdateInput = {
@@ -37777,6 +41901,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateInput = {
@@ -37790,6 +41915,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionCreateManyInput = {
@@ -38006,6 +42132,126 @@ export namespace Prisma {
     days?: JsonNullValueInput | InputJsonValue
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleCreateInput = {
+    examName: string
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutExamSchedulesInput
+    class: AcademicClassCreateNestedOneWithoutExamSchedulesInput
+    subject: SubjectCreateNestedOneWithoutExamSchedulesInput
+  }
+
+  export type ExamScheduleUncheckedCreateInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    classId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleUpdateInput = {
+    examName?: StringFieldUpdateOperationsInput | string
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutExamSchedulesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutExamSchedulesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutExamSchedulesNestedInput
+  }
+
+  export type ExamScheduleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleCreateManyInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    classId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleUpdateManyMutationInput = {
+    examName?: StringFieldUpdateOperationsInput | string
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39389,6 +43635,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     salaryEntries?: SalaryEntryCreateNestedManyWithoutFinanceHeadInput
+    transactions?: FinanceTransactionCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadUncheckedCreateInput = {
@@ -39400,6 +43647,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput
+    transactions?: FinanceTransactionUncheckedCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadUpdateInput = {
@@ -39410,6 +43658,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     salaryEntries?: SalaryEntryUpdateManyWithoutFinanceHeadNestedInput
+    transactions?: FinanceTransactionUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type FinanceHeadUncheckedUpdateInput = {
@@ -39421,6 +43670,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput
+    transactions?: FinanceTransactionUncheckedUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type FinanceHeadCreateManyInput = {
@@ -39839,6 +44089,194 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FinanceTransactionCreateInput = {
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    financeHead: FinanceHeadCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type FinanceTransactionUncheckedCreateInput = {
+    id?: number
+    financeHeadId: number
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinanceTransactionUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    financeHead?: FinanceHeadUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type FinanceTransactionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    financeHeadId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinanceTransactionCreateManyInput = {
+    id?: number
+    financeHeadId: number
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinanceTransactionUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinanceTransactionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    financeHeadId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinancialRecordCreateInput = {
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: AdminCreateNestedOneWithoutFinancialRecordsInput
+  }
+
+  export type FinancialRecordUncheckedCreateInput = {
+    id?: number
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinancialRecordUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: AdminUpdateOneWithoutFinancialRecordsNestedInput
+  }
+
+  export type FinancialRecordUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinancialRecordCreateManyInput = {
+    id?: number
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinancialRecordUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinancialRecordUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -39879,6 +44317,16 @@ export namespace Prisma {
   export type MadrassaProfileNullableScalarRelationFilter = {
     is?: MadrassaProfileWhereInput | null
     isNot?: MadrassaProfileWhereInput | null
+  }
+
+  export type FinancialRecordListRelationFilter = {
+    every?: FinancialRecordWhereInput
+    some?: FinancialRecordWhereInput
+    none?: FinancialRecordWhereInput
+  }
+
+  export type FinancialRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type AdminOrderByRelevanceInput = {
@@ -40268,6 +44716,16 @@ export namespace Prisma {
 
   export type QualificationSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type ExamScheduleListRelationFilter = {
+    every?: ExamScheduleWhereInput
+    some?: ExamScheduleWhereInput
+    none?: ExamScheduleWhereInput
+  }
+
+  export type ExamScheduleOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type SubjectOrderByRelevanceInput = {
@@ -40758,6 +45216,114 @@ export namespace Prisma {
     sessionId?: SortOrder
     classId?: SortOrder
     sectionId?: SortOrder
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SubjectScalarRelationFilter = {
+    is?: SubjectWhereInput
+    isNot?: SubjectWhereInput
+  }
+
+  export type ExamScheduleOrderByRelevanceInput = {
+    fields: ExamScheduleOrderByRelevanceFieldEnum | ExamScheduleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ExamScheduleCountOrderByAggregateInput = {
+    id?: SortOrder
+    examName?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    examDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    totalMarks?: SortOrder
+    room?: SortOrder
+    invigilator?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamScheduleAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    totalMarks?: SortOrder
+  }
+
+  export type ExamScheduleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    examName?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    examDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    totalMarks?: SortOrder
+    room?: SortOrder
+    invigilator?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamScheduleMinOrderByAggregateInput = {
+    id?: SortOrder
+    examName?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    examDate?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    totalMarks?: SortOrder
+    room?: SortOrder
+    invigilator?: SortOrder
+    notes?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamScheduleSumOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    classId?: SortOrder
+    subjectId?: SortOrder
+    totalMarks?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -41414,17 +45980,6 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type HifzDailyEntryOrderByRelevanceInput = {
     fields: HifzDailyEntryOrderByRelevanceFieldEnum | HifzDailyEntryOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -41543,22 +46098,6 @@ export namespace Prisma {
     manzilAfterMistake?: SortOrder
     manzilAfterAtkann?: SortOrder
     count?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type HifzWeeklyEntryOrderByRelevanceInput = {
@@ -41815,6 +46354,16 @@ export namespace Prisma {
     studentId?: SortOrder
     siparaNumber?: SortOrder
     totalDays?: SortOrder
+  }
+
+  export type FinanceTransactionListRelationFilter = {
+    every?: FinanceTransactionWhereInput
+    some?: FinanceTransactionWhereInput
+    none?: FinanceTransactionWhereInput
+  }
+
+  export type FinanceTransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type FinanceHeadOrderByRelevanceInput = {
@@ -42125,16 +46674,155 @@ export namespace Prisma {
     salaryYear?: SortOrder
   }
 
+  export type FinanceTransactionOrderByRelevanceInput = {
+    fields: FinanceTransactionOrderByRelevanceFieldEnum | FinanceTransactionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type FinanceTransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    paymentMode?: SortOrder
+    paymentStatus?: SortOrder
+    slipNo?: SortOrder
+    details?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinanceTransactionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type FinanceTransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    paymentMode?: SortOrder
+    paymentStatus?: SortOrder
+    slipNo?: SortOrder
+    details?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinanceTransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    transactionDate?: SortOrder
+    paymentMode?: SortOrder
+    paymentStatus?: SortOrder
+    slipNo?: SortOrder
+    details?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinanceTransactionSumOrderByAggregateInput = {
+    id?: SortOrder
+    financeHeadId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type AdminNullableScalarRelationFilter = {
+    is?: AdminWhereInput | null
+    isNot?: AdminWhereInput | null
+  }
+
+  export type FinancialRecordOrderByRelevanceInput = {
+    fields: FinancialRecordOrderByRelevanceFieldEnum | FinancialRecordOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type FinancialRecordCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinancialRecordAvgOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type FinancialRecordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinancialRecordMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    category?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FinancialRecordSumOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    createdById?: SortOrder
+  }
+
   export type MadrassaProfileCreateNestedOneWithoutAdminInput = {
     create?: XOR<MadrassaProfileCreateWithoutAdminInput, MadrassaProfileUncheckedCreateWithoutAdminInput>
     connectOrCreate?: MadrassaProfileCreateOrConnectWithoutAdminInput
     connect?: MadrassaProfileWhereUniqueInput
   }
 
+  export type FinancialRecordCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput> | FinancialRecordCreateWithoutCreatedByInput[] | FinancialRecordUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FinancialRecordCreateOrConnectWithoutCreatedByInput | FinancialRecordCreateOrConnectWithoutCreatedByInput[]
+    createMany?: FinancialRecordCreateManyCreatedByInputEnvelope
+    connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+  }
+
   export type MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput = {
     create?: XOR<MadrassaProfileCreateWithoutAdminInput, MadrassaProfileUncheckedCreateWithoutAdminInput>
     connectOrCreate?: MadrassaProfileCreateOrConnectWithoutAdminInput
     connect?: MadrassaProfileWhereUniqueInput
+  }
+
+  export type FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput> | FinancialRecordCreateWithoutCreatedByInput[] | FinancialRecordUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FinancialRecordCreateOrConnectWithoutCreatedByInput | FinancialRecordCreateOrConnectWithoutCreatedByInput[]
+    createMany?: FinancialRecordCreateManyCreatedByInputEnvelope
+    connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -42155,6 +46843,20 @@ export namespace Prisma {
     update?: XOR<XOR<MadrassaProfileUpdateToOneWithWhereWithoutAdminInput, MadrassaProfileUpdateWithoutAdminInput>, MadrassaProfileUncheckedUpdateWithoutAdminInput>
   }
 
+  export type FinancialRecordUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput> | FinancialRecordCreateWithoutCreatedByInput[] | FinancialRecordUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FinancialRecordCreateOrConnectWithoutCreatedByInput | FinancialRecordCreateOrConnectWithoutCreatedByInput[]
+    upsert?: FinancialRecordUpsertWithWhereUniqueWithoutCreatedByInput | FinancialRecordUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: FinancialRecordCreateManyCreatedByInputEnvelope
+    set?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    disconnect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    delete?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    update?: FinancialRecordUpdateWithWhereUniqueWithoutCreatedByInput | FinancialRecordUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: FinancialRecordUpdateManyWithWhereWithoutCreatedByInput | FinancialRecordUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -42173,6 +46875,20 @@ export namespace Prisma {
     update?: XOR<XOR<MadrassaProfileUpdateToOneWithWhereWithoutAdminInput, MadrassaProfileUpdateWithoutAdminInput>, MadrassaProfileUncheckedUpdateWithoutAdminInput>
   }
 
+  export type FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput> | FinancialRecordCreateWithoutCreatedByInput[] | FinancialRecordUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FinancialRecordCreateOrConnectWithoutCreatedByInput | FinancialRecordCreateOrConnectWithoutCreatedByInput[]
+    upsert?: FinancialRecordUpsertWithWhereUniqueWithoutCreatedByInput | FinancialRecordUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: FinancialRecordCreateManyCreatedByInputEnvelope
+    set?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    disconnect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    delete?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+    update?: FinancialRecordUpdateWithWhereUniqueWithoutCreatedByInput | FinancialRecordUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: FinancialRecordUpdateManyWithWhereWithoutCreatedByInput | FinancialRecordUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
+  }
+
   export type AdminCreateNestedOneWithoutMadrassaProfileInput = {
     create?: XOR<AdminCreateWithoutMadrassaProfileInput, AdminUncheckedCreateWithoutMadrassaProfileInput>
     connectOrCreate?: AdminCreateOrConnectWithoutMadrassaProfileInput
@@ -42189,6 +46905,48 @@ export namespace Prisma {
     upsert?: AdminUpsertWithoutMadrassaProfileInput
     connect?: AdminWhereUniqueInput
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutMadrassaProfileInput, AdminUpdateWithoutMadrassaProfileInput>, AdminUncheckedUpdateWithoutMadrassaProfileInput>
+  }
+
+  export type ExamScheduleCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput> | ExamScheduleCreateWithoutSubjectInput[] | ExamScheduleUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSubjectInput | ExamScheduleCreateOrConnectWithoutSubjectInput[]
+    createMany?: ExamScheduleCreateManySubjectInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+  }
+
+  export type ExamScheduleUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput> | ExamScheduleCreateWithoutSubjectInput[] | ExamScheduleUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSubjectInput | ExamScheduleCreateOrConnectWithoutSubjectInput[]
+    createMany?: ExamScheduleCreateManySubjectInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+  }
+
+  export type ExamScheduleUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput> | ExamScheduleCreateWithoutSubjectInput[] | ExamScheduleUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSubjectInput | ExamScheduleCreateOrConnectWithoutSubjectInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutSubjectInput | ExamScheduleUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: ExamScheduleCreateManySubjectInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutSubjectInput | ExamScheduleUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutSubjectInput | ExamScheduleUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput> | ExamScheduleCreateWithoutSubjectInput[] | ExamScheduleUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSubjectInput | ExamScheduleCreateOrConnectWithoutSubjectInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutSubjectInput | ExamScheduleUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: ExamScheduleCreateManySubjectInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutSubjectInput | ExamScheduleUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutSubjectInput | ExamScheduleUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
   }
 
   export type AcademicClassCreateNestedManyWithoutBranchInput = {
@@ -42400,6 +47158,13 @@ export namespace Prisma {
     connect?: TeacherScheduleWhereUniqueInput | TeacherScheduleWhereUniqueInput[]
   }
 
+  export type ExamScheduleCreateNestedManyWithoutClassInput = {
+    create?: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput> | ExamScheduleCreateWithoutClassInput[] | ExamScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutClassInput | ExamScheduleCreateOrConnectWithoutClassInput[]
+    createMany?: ExamScheduleCreateManyClassInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+  }
+
   export type SectionUncheckedCreateNestedManyWithoutClassInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -42433,6 +47198,13 @@ export namespace Prisma {
     connectOrCreate?: TeacherScheduleCreateOrConnectWithoutClassInput | TeacherScheduleCreateOrConnectWithoutClassInput[]
     createMany?: TeacherScheduleCreateManyClassInputEnvelope
     connect?: TeacherScheduleWhereUniqueInput | TeacherScheduleWhereUniqueInput[]
+  }
+
+  export type ExamScheduleUncheckedCreateNestedManyWithoutClassInput = {
+    create?: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput> | ExamScheduleCreateWithoutClassInput[] | ExamScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutClassInput | ExamScheduleCreateOrConnectWithoutClassInput[]
+    createMany?: ExamScheduleCreateManyClassInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
   }
 
   export type BranchUpdateOneRequiredWithoutClassesNestedInput = {
@@ -42513,6 +47285,20 @@ export namespace Prisma {
     deleteMany?: TeacherScheduleScalarWhereInput | TeacherScheduleScalarWhereInput[]
   }
 
+  export type ExamScheduleUpdateManyWithoutClassNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput> | ExamScheduleCreateWithoutClassInput[] | ExamScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutClassInput | ExamScheduleCreateOrConnectWithoutClassInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutClassInput | ExamScheduleUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: ExamScheduleCreateManyClassInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutClassInput | ExamScheduleUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutClassInput | ExamScheduleUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+  }
+
   export type SectionUncheckedUpdateManyWithoutClassNestedInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -42581,6 +47367,20 @@ export namespace Prisma {
     update?: TeacherScheduleUpdateWithWhereUniqueWithoutClassInput | TeacherScheduleUpdateWithWhereUniqueWithoutClassInput[]
     updateMany?: TeacherScheduleUpdateManyWithWhereWithoutClassInput | TeacherScheduleUpdateManyWithWhereWithoutClassInput[]
     deleteMany?: TeacherScheduleScalarWhereInput | TeacherScheduleScalarWhereInput[]
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutClassNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput> | ExamScheduleCreateWithoutClassInput[] | ExamScheduleUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutClassInput | ExamScheduleCreateOrConnectWithoutClassInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutClassInput | ExamScheduleUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: ExamScheduleCreateManyClassInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutClassInput | ExamScheduleUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutClassInput | ExamScheduleUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
   }
 
   export type AcademicClassCreateNestedOneWithoutSectionsInput = {
@@ -42786,6 +47586,13 @@ export namespace Prisma {
     connect?: TeacherScheduleWhereUniqueInput | TeacherScheduleWhereUniqueInput[]
   }
 
+  export type ExamScheduleCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput> | ExamScheduleCreateWithoutSessionInput[] | ExamScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSessionInput | ExamScheduleCreateOrConnectWithoutSessionInput[]
+    createMany?: ExamScheduleCreateManySessionInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+  }
+
   export type StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSessionInput, StudentClassAssignmentUncheckedCreateWithoutSessionInput> | StudentClassAssignmentCreateWithoutSessionInput[] | StudentClassAssignmentUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSessionInput | StudentClassAssignmentCreateOrConnectWithoutSessionInput[]
@@ -42805,6 +47612,13 @@ export namespace Prisma {
     connectOrCreate?: TeacherScheduleCreateOrConnectWithoutSessionInput | TeacherScheduleCreateOrConnectWithoutSessionInput[]
     createMany?: TeacherScheduleCreateManySessionInputEnvelope
     connect?: TeacherScheduleWhereUniqueInput | TeacherScheduleWhereUniqueInput[]
+  }
+
+  export type ExamScheduleUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput> | ExamScheduleCreateWithoutSessionInput[] | ExamScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSessionInput | ExamScheduleCreateOrConnectWithoutSessionInput[]
+    createMany?: ExamScheduleCreateManySessionInputEnvelope
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
   }
 
   export type StudentClassAssignmentUpdateManyWithoutSessionNestedInput = {
@@ -42849,6 +47663,20 @@ export namespace Prisma {
     deleteMany?: TeacherScheduleScalarWhereInput | TeacherScheduleScalarWhereInput[]
   }
 
+  export type ExamScheduleUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput> | ExamScheduleCreateWithoutSessionInput[] | ExamScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSessionInput | ExamScheduleCreateOrConnectWithoutSessionInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutSessionInput | ExamScheduleUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ExamScheduleCreateManySessionInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutSessionInput | ExamScheduleUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutSessionInput | ExamScheduleUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+  }
+
   export type StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<StudentClassAssignmentCreateWithoutSessionInput, StudentClassAssignmentUncheckedCreateWithoutSessionInput> | StudentClassAssignmentCreateWithoutSessionInput[] | StudentClassAssignmentUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: StudentClassAssignmentCreateOrConnectWithoutSessionInput | StudentClassAssignmentCreateOrConnectWithoutSessionInput[]
@@ -42889,6 +47717,20 @@ export namespace Prisma {
     update?: TeacherScheduleUpdateWithWhereUniqueWithoutSessionInput | TeacherScheduleUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: TeacherScheduleUpdateManyWithWhereWithoutSessionInput | TeacherScheduleUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: TeacherScheduleScalarWhereInput | TeacherScheduleScalarWhereInput[]
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput> | ExamScheduleCreateWithoutSessionInput[] | ExamScheduleUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ExamScheduleCreateOrConnectWithoutSessionInput | ExamScheduleCreateOrConnectWithoutSessionInput[]
+    upsert?: ExamScheduleUpsertWithWhereUniqueWithoutSessionInput | ExamScheduleUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ExamScheduleCreateManySessionInputEnvelope
+    set?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    disconnect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    delete?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+    update?: ExamScheduleUpdateWithWhereUniqueWithoutSessionInput | ExamScheduleUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ExamScheduleUpdateManyWithWhereWithoutSessionInput | ExamScheduleUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
   }
 
   export type AcademicSessionCreateNestedOneWithoutStudentSchedulesInput = {
@@ -42987,6 +47829,56 @@ export namespace Prisma {
     upsert?: SectionUpsertWithoutTeacherSchedulesInput
     connect?: SectionWhereUniqueInput
     update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutTeacherSchedulesInput, SectionUpdateWithoutTeacherSchedulesInput>, SectionUncheckedUpdateWithoutTeacherSchedulesInput>
+  }
+
+  export type AcademicSessionCreateNestedOneWithoutExamSchedulesInput = {
+    create?: XOR<AcademicSessionCreateWithoutExamSchedulesInput, AcademicSessionUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: AcademicSessionCreateOrConnectWithoutExamSchedulesInput
+    connect?: AcademicSessionWhereUniqueInput
+  }
+
+  export type AcademicClassCreateNestedOneWithoutExamSchedulesInput = {
+    create?: XOR<AcademicClassCreateWithoutExamSchedulesInput, AcademicClassUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutExamSchedulesInput
+    connect?: AcademicClassWhereUniqueInput
+  }
+
+  export type SubjectCreateNestedOneWithoutExamSchedulesInput = {
+    create?: XOR<SubjectCreateWithoutExamSchedulesInput, SubjectUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutExamSchedulesInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AcademicSessionUpdateOneRequiredWithoutExamSchedulesNestedInput = {
+    create?: XOR<AcademicSessionCreateWithoutExamSchedulesInput, AcademicSessionUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: AcademicSessionCreateOrConnectWithoutExamSchedulesInput
+    upsert?: AcademicSessionUpsertWithoutExamSchedulesInput
+    connect?: AcademicSessionWhereUniqueInput
+    update?: XOR<XOR<AcademicSessionUpdateToOneWithWhereWithoutExamSchedulesInput, AcademicSessionUpdateWithoutExamSchedulesInput>, AcademicSessionUncheckedUpdateWithoutExamSchedulesInput>
+  }
+
+  export type AcademicClassUpdateOneRequiredWithoutExamSchedulesNestedInput = {
+    create?: XOR<AcademicClassCreateWithoutExamSchedulesInput, AcademicClassUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutExamSchedulesInput
+    upsert?: AcademicClassUpsertWithoutExamSchedulesInput
+    connect?: AcademicClassWhereUniqueInput
+    update?: XOR<XOR<AcademicClassUpdateToOneWithWhereWithoutExamSchedulesInput, AcademicClassUpdateWithoutExamSchedulesInput>, AcademicClassUncheckedUpdateWithoutExamSchedulesInput>
+  }
+
+  export type SubjectUpdateOneRequiredWithoutExamSchedulesNestedInput = {
+    create?: XOR<SubjectCreateWithoutExamSchedulesInput, SubjectUncheckedCreateWithoutExamSchedulesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutExamSchedulesInput
+    upsert?: SubjectUpsertWithoutExamSchedulesInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutExamSchedulesInput, SubjectUpdateWithoutExamSchedulesInput>, SubjectUncheckedUpdateWithoutExamSchedulesInput>
   }
 
   export type StudentParentCreateNestedManyWithoutStudentInput = {
@@ -43705,14 +48597,6 @@ export namespace Prisma {
     connect?: StudentWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type StudentUpdateOneRequiredWithoutHifzDailyEntriesNestedInput = {
     create?: XOR<StudentCreateWithoutHifzDailyEntriesInput, StudentUncheckedCreateWithoutHifzDailyEntriesInput>
     connectOrCreate?: StudentCreateOrConnectWithoutHifzDailyEntriesInput
@@ -43770,11 +48654,25 @@ export namespace Prisma {
     connect?: SalaryEntryWhereUniqueInput | SalaryEntryWhereUniqueInput[]
   }
 
+  export type FinanceTransactionCreateNestedManyWithoutFinanceHeadInput = {
+    create?: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput> | FinanceTransactionCreateWithoutFinanceHeadInput[] | FinanceTransactionUncheckedCreateWithoutFinanceHeadInput[]
+    connectOrCreate?: FinanceTransactionCreateOrConnectWithoutFinanceHeadInput | FinanceTransactionCreateOrConnectWithoutFinanceHeadInput[]
+    createMany?: FinanceTransactionCreateManyFinanceHeadInputEnvelope
+    connect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+  }
+
   export type SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput = {
     create?: XOR<SalaryEntryCreateWithoutFinanceHeadInput, SalaryEntryUncheckedCreateWithoutFinanceHeadInput> | SalaryEntryCreateWithoutFinanceHeadInput[] | SalaryEntryUncheckedCreateWithoutFinanceHeadInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutFinanceHeadInput | SalaryEntryCreateOrConnectWithoutFinanceHeadInput[]
     createMany?: SalaryEntryCreateManyFinanceHeadInputEnvelope
     connect?: SalaryEntryWhereUniqueInput | SalaryEntryWhereUniqueInput[]
+  }
+
+  export type FinanceTransactionUncheckedCreateNestedManyWithoutFinanceHeadInput = {
+    create?: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput> | FinanceTransactionCreateWithoutFinanceHeadInput[] | FinanceTransactionUncheckedCreateWithoutFinanceHeadInput[]
+    connectOrCreate?: FinanceTransactionCreateOrConnectWithoutFinanceHeadInput | FinanceTransactionCreateOrConnectWithoutFinanceHeadInput[]
+    createMany?: FinanceTransactionCreateManyFinanceHeadInputEnvelope
+    connect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
   }
 
   export type SalaryEntryUpdateManyWithoutFinanceHeadNestedInput = {
@@ -43791,6 +48689,20 @@ export namespace Prisma {
     deleteMany?: SalaryEntryScalarWhereInput | SalaryEntryScalarWhereInput[]
   }
 
+  export type FinanceTransactionUpdateManyWithoutFinanceHeadNestedInput = {
+    create?: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput> | FinanceTransactionCreateWithoutFinanceHeadInput[] | FinanceTransactionUncheckedCreateWithoutFinanceHeadInput[]
+    connectOrCreate?: FinanceTransactionCreateOrConnectWithoutFinanceHeadInput | FinanceTransactionCreateOrConnectWithoutFinanceHeadInput[]
+    upsert?: FinanceTransactionUpsertWithWhereUniqueWithoutFinanceHeadInput | FinanceTransactionUpsertWithWhereUniqueWithoutFinanceHeadInput[]
+    createMany?: FinanceTransactionCreateManyFinanceHeadInputEnvelope
+    set?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    disconnect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    delete?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    connect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    update?: FinanceTransactionUpdateWithWhereUniqueWithoutFinanceHeadInput | FinanceTransactionUpdateWithWhereUniqueWithoutFinanceHeadInput[]
+    updateMany?: FinanceTransactionUpdateManyWithWhereWithoutFinanceHeadInput | FinanceTransactionUpdateManyWithWhereWithoutFinanceHeadInput[]
+    deleteMany?: FinanceTransactionScalarWhereInput | FinanceTransactionScalarWhereInput[]
+  }
+
   export type SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput = {
     create?: XOR<SalaryEntryCreateWithoutFinanceHeadInput, SalaryEntryUncheckedCreateWithoutFinanceHeadInput> | SalaryEntryCreateWithoutFinanceHeadInput[] | SalaryEntryUncheckedCreateWithoutFinanceHeadInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutFinanceHeadInput | SalaryEntryCreateOrConnectWithoutFinanceHeadInput[]
@@ -43803,6 +48715,20 @@ export namespace Prisma {
     update?: SalaryEntryUpdateWithWhereUniqueWithoutFinanceHeadInput | SalaryEntryUpdateWithWhereUniqueWithoutFinanceHeadInput[]
     updateMany?: SalaryEntryUpdateManyWithWhereWithoutFinanceHeadInput | SalaryEntryUpdateManyWithWhereWithoutFinanceHeadInput[]
     deleteMany?: SalaryEntryScalarWhereInput | SalaryEntryScalarWhereInput[]
+  }
+
+  export type FinanceTransactionUncheckedUpdateManyWithoutFinanceHeadNestedInput = {
+    create?: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput> | FinanceTransactionCreateWithoutFinanceHeadInput[] | FinanceTransactionUncheckedCreateWithoutFinanceHeadInput[]
+    connectOrCreate?: FinanceTransactionCreateOrConnectWithoutFinanceHeadInput | FinanceTransactionCreateOrConnectWithoutFinanceHeadInput[]
+    upsert?: FinanceTransactionUpsertWithWhereUniqueWithoutFinanceHeadInput | FinanceTransactionUpsertWithWhereUniqueWithoutFinanceHeadInput[]
+    createMany?: FinanceTransactionCreateManyFinanceHeadInputEnvelope
+    set?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    disconnect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    delete?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    connect?: FinanceTransactionWhereUniqueInput | FinanceTransactionWhereUniqueInput[]
+    update?: FinanceTransactionUpdateWithWhereUniqueWithoutFinanceHeadInput | FinanceTransactionUpdateWithWhereUniqueWithoutFinanceHeadInput[]
+    updateMany?: FinanceTransactionUpdateManyWithWhereWithoutFinanceHeadInput | FinanceTransactionUpdateManyWithWhereWithoutFinanceHeadInput[]
+    deleteMany?: FinanceTransactionScalarWhereInput | FinanceTransactionScalarWhereInput[]
   }
 
   export type StudentCreateNestedOneWithoutFeeVouchersInput = {
@@ -43845,6 +48771,36 @@ export namespace Prisma {
     upsert?: FinanceHeadUpsertWithoutSalaryEntriesInput
     connect?: FinanceHeadWhereUniqueInput
     update?: XOR<XOR<FinanceHeadUpdateToOneWithWhereWithoutSalaryEntriesInput, FinanceHeadUpdateWithoutSalaryEntriesInput>, FinanceHeadUncheckedUpdateWithoutSalaryEntriesInput>
+  }
+
+  export type FinanceHeadCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<FinanceHeadCreateWithoutTransactionsInput, FinanceHeadUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: FinanceHeadCreateOrConnectWithoutTransactionsInput
+    connect?: FinanceHeadWhereUniqueInput
+  }
+
+  export type FinanceHeadUpdateOneRequiredWithoutTransactionsNestedInput = {
+    create?: XOR<FinanceHeadCreateWithoutTransactionsInput, FinanceHeadUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: FinanceHeadCreateOrConnectWithoutTransactionsInput
+    upsert?: FinanceHeadUpsertWithoutTransactionsInput
+    connect?: FinanceHeadWhereUniqueInput
+    update?: XOR<XOR<FinanceHeadUpdateToOneWithWhereWithoutTransactionsInput, FinanceHeadUpdateWithoutTransactionsInput>, FinanceHeadUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type AdminCreateNestedOneWithoutFinancialRecordsInput = {
+    create?: XOR<AdminCreateWithoutFinancialRecordsInput, AdminUncheckedCreateWithoutFinancialRecordsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutFinancialRecordsInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type AdminUpdateOneWithoutFinancialRecordsNestedInput = {
+    create?: XOR<AdminCreateWithoutFinancialRecordsInput, AdminUncheckedCreateWithoutFinancialRecordsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutFinancialRecordsInput
+    upsert?: AdminUpsertWithoutFinancialRecordsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutFinancialRecordsInput, AdminUpdateWithoutFinancialRecordsInput>, AdminUncheckedUpdateWithoutFinancialRecordsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -44010,6 +48966,33 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -44102,33 +49085,6 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type MadrassaProfileCreateWithoutAdminInput = {
     name: string
     email: string
@@ -44165,6 +49121,39 @@ export namespace Prisma {
   export type MadrassaProfileCreateOrConnectWithoutAdminInput = {
     where: MadrassaProfileWhereUniqueInput
     create: XOR<MadrassaProfileCreateWithoutAdminInput, MadrassaProfileUncheckedCreateWithoutAdminInput>
+  }
+
+  export type FinancialRecordCreateWithoutCreatedByInput = {
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinancialRecordUncheckedCreateWithoutCreatedByInput = {
+    id?: number
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinancialRecordCreateOrConnectWithoutCreatedByInput = {
+    where: FinancialRecordWhereUniqueInput
+    create: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type FinancialRecordCreateManyCreatedByInputEnvelope = {
+    data: FinancialRecordCreateManyCreatedByInput | FinancialRecordCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
   }
 
   export type MadrassaProfileUpsertWithoutAdminInput = {
@@ -44211,6 +49200,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FinancialRecordUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: FinancialRecordWhereUniqueInput
+    update: XOR<FinancialRecordUpdateWithoutCreatedByInput, FinancialRecordUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<FinancialRecordCreateWithoutCreatedByInput, FinancialRecordUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type FinancialRecordUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: FinancialRecordWhereUniqueInput
+    data: XOR<FinancialRecordUpdateWithoutCreatedByInput, FinancialRecordUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type FinancialRecordUpdateManyWithWhereWithoutCreatedByInput = {
+    where: FinancialRecordScalarWhereInput
+    data: XOR<FinancialRecordUpdateManyMutationInput, FinancialRecordUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type FinancialRecordScalarWhereInput = {
+    AND?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
+    OR?: FinancialRecordScalarWhereInput[]
+    NOT?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
+    id?: IntFilter<"FinancialRecord"> | number
+    type?: StringFilter<"FinancialRecord"> | string
+    category?: StringFilter<"FinancialRecord"> | string
+    description?: StringNullableFilter<"FinancialRecord"> | string | null
+    amount?: DecimalFilter<"FinancialRecord"> | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFilter<"FinancialRecord"> | Date | string
+    status?: StringFilter<"FinancialRecord"> | string
+    createdById?: IntNullableFilter<"FinancialRecord"> | number | null
+    createdAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"FinancialRecord"> | Date | string
+  }
+
   export type AdminCreateWithoutMadrassaProfileInput = {
     name: string
     email: string
@@ -44220,6 +49241,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUncheckedCreateWithoutMadrassaProfileInput = {
@@ -44232,6 +49254,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminCreateOrConnectWithoutMadrassaProfileInput = {
@@ -44259,6 +49282,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutMadrassaProfileInput = {
@@ -44271,6 +49295,87 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type ExamScheduleCreateWithoutSubjectInput = {
+    examName: string
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutExamSchedulesInput
+    class: AcademicClassCreateNestedOneWithoutExamSchedulesInput
+  }
+
+  export type ExamScheduleUncheckedCreateWithoutSubjectInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    classId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleCreateOrConnectWithoutSubjectInput = {
+    where: ExamScheduleWhereUniqueInput
+    create: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type ExamScheduleCreateManySubjectInputEnvelope = {
+    data: ExamScheduleCreateManySubjectInput | ExamScheduleCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ExamScheduleUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: ExamScheduleWhereUniqueInput
+    update: XOR<ExamScheduleUpdateWithoutSubjectInput, ExamScheduleUncheckedUpdateWithoutSubjectInput>
+    create: XOR<ExamScheduleCreateWithoutSubjectInput, ExamScheduleUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type ExamScheduleUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: ExamScheduleWhereUniqueInput
+    data: XOR<ExamScheduleUpdateWithoutSubjectInput, ExamScheduleUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type ExamScheduleUpdateManyWithWhereWithoutSubjectInput = {
+    where: ExamScheduleScalarWhereInput
+    data: XOR<ExamScheduleUpdateManyMutationInput, ExamScheduleUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type ExamScheduleScalarWhereInput = {
+    AND?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+    OR?: ExamScheduleScalarWhereInput[]
+    NOT?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+    id?: IntFilter<"ExamSchedule"> | number
+    examName?: StringFilter<"ExamSchedule"> | string
+    sessionId?: IntFilter<"ExamSchedule"> | number
+    classId?: IntFilter<"ExamSchedule"> | number
+    subjectId?: IntFilter<"ExamSchedule"> | number
+    examDate?: DateTimeFilter<"ExamSchedule"> | Date | string
+    startTime?: StringFilter<"ExamSchedule"> | string
+    endTime?: StringFilter<"ExamSchedule"> | string
+    totalMarks?: IntNullableFilter<"ExamSchedule"> | number | null
+    room?: StringNullableFilter<"ExamSchedule"> | string | null
+    invigilator?: StringNullableFilter<"ExamSchedule"> | string | null
+    notes?: StringNullableFilter<"ExamSchedule"> | string | null
+    status?: StringFilter<"ExamSchedule"> | string
+    createdAt?: DateTimeFilter<"ExamSchedule"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamSchedule"> | Date | string
   }
 
   export type AcademicClassCreateWithoutBranchInput = {
@@ -44283,6 +49388,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutBranchInput = {
@@ -44296,6 +49402,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutBranchInput = {
@@ -44726,6 +49833,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExamScheduleCreateWithoutClassInput = {
+    examName: string
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: AcademicSessionCreateNestedOneWithoutExamSchedulesInput
+    subject: SubjectCreateNestedOneWithoutExamSchedulesInput
+  }
+
+  export type ExamScheduleUncheckedCreateWithoutClassInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleCreateOrConnectWithoutClassInput = {
+    where: ExamScheduleWhereUniqueInput
+    create: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput>
+  }
+
+  export type ExamScheduleCreateManyClassInputEnvelope = {
+    data: ExamScheduleCreateManyClassInput | ExamScheduleCreateManyClassInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BranchUpsertWithoutClassesInput = {
     update: XOR<BranchUpdateWithoutClassesInput, BranchUncheckedUpdateWithoutClassesInput>
     create: XOR<BranchCreateWithoutClassesInput, BranchUncheckedCreateWithoutClassesInput>
@@ -44889,6 +50039,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"TeacherSchedule"> | Date | string
   }
 
+  export type ExamScheduleUpsertWithWhereUniqueWithoutClassInput = {
+    where: ExamScheduleWhereUniqueInput
+    update: XOR<ExamScheduleUpdateWithoutClassInput, ExamScheduleUncheckedUpdateWithoutClassInput>
+    create: XOR<ExamScheduleCreateWithoutClassInput, ExamScheduleUncheckedCreateWithoutClassInput>
+  }
+
+  export type ExamScheduleUpdateWithWhereUniqueWithoutClassInput = {
+    where: ExamScheduleWhereUniqueInput
+    data: XOR<ExamScheduleUpdateWithoutClassInput, ExamScheduleUncheckedUpdateWithoutClassInput>
+  }
+
+  export type ExamScheduleUpdateManyWithWhereWithoutClassInput = {
+    where: ExamScheduleScalarWhereInput
+    data: XOR<ExamScheduleUpdateManyMutationInput, ExamScheduleUncheckedUpdateManyWithoutClassInput>
+  }
+
   export type AcademicClassCreateWithoutSectionsInput = {
     name: string
     status?: string
@@ -44899,6 +50065,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutSectionsInput = {
@@ -44912,6 +50079,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutSectionsInput = {
@@ -45078,6 +50246,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutSectionsInput = {
@@ -45091,6 +50260,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type StudentClassAssignmentUpsertWithWhereUniqueWithoutSectionInput = {
@@ -45262,6 +50432,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExamScheduleCreateWithoutSessionInput = {
+    examName: string
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    class: AcademicClassCreateNestedOneWithoutExamSchedulesInput
+    subject: SubjectCreateNestedOneWithoutExamSchedulesInput
+  }
+
+  export type ExamScheduleUncheckedCreateWithoutSessionInput = {
+    id?: number
+    examName: string
+    classId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleCreateOrConnectWithoutSessionInput = {
+    where: ExamScheduleWhereUniqueInput
+    create: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ExamScheduleCreateManySessionInputEnvelope = {
+    data: ExamScheduleCreateManySessionInput | ExamScheduleCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StudentClassAssignmentUpsertWithWhereUniqueWithoutSessionInput = {
     where: StudentClassAssignmentWhereUniqueInput
     update: XOR<StudentClassAssignmentUpdateWithoutSessionInput, StudentClassAssignmentUncheckedUpdateWithoutSessionInput>
@@ -45310,6 +50523,22 @@ export namespace Prisma {
     data: XOR<TeacherScheduleUpdateManyMutationInput, TeacherScheduleUncheckedUpdateManyWithoutSessionInput>
   }
 
+  export type ExamScheduleUpsertWithWhereUniqueWithoutSessionInput = {
+    where: ExamScheduleWhereUniqueInput
+    update: XOR<ExamScheduleUpdateWithoutSessionInput, ExamScheduleUncheckedUpdateWithoutSessionInput>
+    create: XOR<ExamScheduleCreateWithoutSessionInput, ExamScheduleUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ExamScheduleUpdateWithWhereUniqueWithoutSessionInput = {
+    where: ExamScheduleWhereUniqueInput
+    data: XOR<ExamScheduleUpdateWithoutSessionInput, ExamScheduleUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type ExamScheduleUpdateManyWithWhereWithoutSessionInput = {
+    where: ExamScheduleScalarWhereInput
+    data: XOR<ExamScheduleUpdateManyMutationInput, ExamScheduleUncheckedUpdateManyWithoutSessionInput>
+  }
+
   export type AcademicSessionCreateWithoutStudentSchedulesInput = {
     name: string
     startDate: Date | string
@@ -45319,6 +50548,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateWithoutStudentSchedulesInput = {
@@ -45331,6 +50561,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionCreateOrConnectWithoutStudentSchedulesInput = {
@@ -45348,6 +50579,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutStudentSchedulesInput = {
@@ -45361,6 +50593,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutStudentSchedulesInput = {
@@ -45416,6 +50649,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateWithoutStudentSchedulesInput = {
@@ -45428,6 +50662,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicClassUpsertWithoutStudentSchedulesInput = {
@@ -45451,6 +50686,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutStudentSchedulesInput = {
@@ -45464,6 +50700,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutStudentSchedulesInput = {
@@ -45549,6 +50786,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateWithoutTeacherSchedulesInput = {
@@ -45561,6 +50799,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionCreateOrConnectWithoutTeacherSchedulesInput = {
@@ -45578,6 +50817,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutTeacherSchedulesInput = {
@@ -45591,6 +50831,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutTeacherSchedulesInput = {
@@ -45692,6 +50933,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateWithoutTeacherSchedulesInput = {
@@ -45704,6 +50946,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicClassUpsertWithoutTeacherSchedulesInput = {
@@ -45727,6 +50970,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutTeacherSchedulesInput = {
@@ -45740,6 +50984,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutTeacherSchedulesInput = {
@@ -45774,6 +51019,192 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSectionNestedInput
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSectionNestedInput
+  }
+
+  export type AcademicSessionCreateWithoutExamSchedulesInput = {
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutSessionInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutSessionInput
+  }
+
+  export type AcademicSessionUncheckedCreateWithoutExamSchedulesInput = {
+    id?: number
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutSessionInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type AcademicSessionCreateOrConnectWithoutExamSchedulesInput = {
+    where: AcademicSessionWhereUniqueInput
+    create: XOR<AcademicSessionCreateWithoutExamSchedulesInput, AcademicSessionUncheckedCreateWithoutExamSchedulesInput>
+  }
+
+  export type AcademicClassCreateWithoutExamSchedulesInput = {
+    name: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch: BranchCreateNestedOneWithoutClassesInput
+    sections?: SectionCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassUncheckedCreateWithoutExamSchedulesInput = {
+    id?: number
+    name: string
+    branchId: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sections?: SectionUncheckedCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassCreateOrConnectWithoutExamSchedulesInput = {
+    where: AcademicClassWhereUniqueInput
+    create: XOR<AcademicClassCreateWithoutExamSchedulesInput, AcademicClassUncheckedCreateWithoutExamSchedulesInput>
+  }
+
+  export type SubjectCreateWithoutExamSchedulesInput = {
+    name: string
+    detail?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SubjectUncheckedCreateWithoutExamSchedulesInput = {
+    id?: number
+    name: string
+    detail?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SubjectCreateOrConnectWithoutExamSchedulesInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutExamSchedulesInput, SubjectUncheckedCreateWithoutExamSchedulesInput>
+  }
+
+  export type AcademicSessionUpsertWithoutExamSchedulesInput = {
+    update: XOR<AcademicSessionUpdateWithoutExamSchedulesInput, AcademicSessionUncheckedUpdateWithoutExamSchedulesInput>
+    create: XOR<AcademicSessionCreateWithoutExamSchedulesInput, AcademicSessionUncheckedCreateWithoutExamSchedulesInput>
+    where?: AcademicSessionWhereInput
+  }
+
+  export type AcademicSessionUpdateToOneWithWhereWithoutExamSchedulesInput = {
+    where?: AcademicSessionWhereInput
+    data: XOR<AcademicSessionUpdateWithoutExamSchedulesInput, AcademicSessionUncheckedUpdateWithoutExamSchedulesInput>
+  }
+
+  export type AcademicSessionUpdateWithoutExamSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: StudentClassAssignmentUpdateManyWithoutSessionNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AcademicSessionUncheckedUpdateWithoutExamSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutSessionNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AcademicClassUpsertWithoutExamSchedulesInput = {
+    update: XOR<AcademicClassUpdateWithoutExamSchedulesInput, AcademicClassUncheckedUpdateWithoutExamSchedulesInput>
+    create: XOR<AcademicClassCreateWithoutExamSchedulesInput, AcademicClassUncheckedCreateWithoutExamSchedulesInput>
+    where?: AcademicClassWhereInput
+  }
+
+  export type AcademicClassUpdateToOneWithWhereWithoutExamSchedulesInput = {
+    where?: AcademicClassWhereInput
+    data: XOR<AcademicClassUpdateWithoutExamSchedulesInput, AcademicClassUncheckedUpdateWithoutExamSchedulesInput>
+  }
+
+  export type AcademicClassUpdateWithoutExamSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    sections?: SectionUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+  }
+
+  export type AcademicClassUncheckedUpdateWithoutExamSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+  }
+
+  export type SubjectUpsertWithoutExamSchedulesInput = {
+    update: XOR<SubjectUpdateWithoutExamSchedulesInput, SubjectUncheckedUpdateWithoutExamSchedulesInput>
+    create: XOR<SubjectCreateWithoutExamSchedulesInput, SubjectUncheckedCreateWithoutExamSchedulesInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutExamSchedulesInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutExamSchedulesInput, SubjectUncheckedUpdateWithoutExamSchedulesInput>
+  }
+
+  export type SubjectUpdateWithoutExamSchedulesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SubjectUncheckedUpdateWithoutExamSchedulesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StudentParentCreateWithoutStudentInput = {
@@ -46804,6 +52235,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutAssignmentsInput = {
@@ -46817,6 +52249,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutAssignmentsInput = {
@@ -46861,6 +52294,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     studentSchedules?: StudentScheduleCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionUncheckedCreateWithoutAssignmentsInput = {
@@ -46873,6 +52307,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutSessionInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutSessionInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type AcademicSessionCreateOrConnectWithoutAssignmentsInput = {
@@ -47031,6 +52466,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutAssignmentsInput = {
@@ -47044,6 +52480,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutAssignmentsInput = {
@@ -47100,6 +52537,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     studentSchedules?: StudentScheduleUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutSessionNestedInput
   }
 
   export type AcademicSessionUncheckedUpdateWithoutAssignmentsInput = {
@@ -47112,6 +52550,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutSessionNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutSessionNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type TeacherAttendanceCreateWithoutTeacherInput = {
@@ -47408,6 +52847,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutStudentAttendancesInput = {
@@ -47421,6 +52861,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutStudentAttendancesInput = {
@@ -47607,6 +53048,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutStudentAttendancesInput = {
@@ -47620,6 +53062,7 @@ export namespace Prisma {
     assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutStudentAttendancesInput = {
@@ -48571,6 +54014,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FinanceTransactionCreateWithoutFinanceHeadInput = {
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinanceTransactionUncheckedCreateWithoutFinanceHeadInput = {
+    id?: number
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinanceTransactionCreateOrConnectWithoutFinanceHeadInput = {
+    where: FinanceTransactionWhereUniqueInput
+    create: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput>
+  }
+
+  export type FinanceTransactionCreateManyFinanceHeadInputEnvelope = {
+    data: FinanceTransactionCreateManyFinanceHeadInput | FinanceTransactionCreateManyFinanceHeadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SalaryEntryUpsertWithWhereUniqueWithoutFinanceHeadInput = {
     where: SalaryEntryWhereUniqueInput
     update: XOR<SalaryEntryUpdateWithoutFinanceHeadInput, SalaryEntryUncheckedUpdateWithoutFinanceHeadInput>
@@ -48585,6 +54065,40 @@ export namespace Prisma {
   export type SalaryEntryUpdateManyWithWhereWithoutFinanceHeadInput = {
     where: SalaryEntryScalarWhereInput
     data: XOR<SalaryEntryUpdateManyMutationInput, SalaryEntryUncheckedUpdateManyWithoutFinanceHeadInput>
+  }
+
+  export type FinanceTransactionUpsertWithWhereUniqueWithoutFinanceHeadInput = {
+    where: FinanceTransactionWhereUniqueInput
+    update: XOR<FinanceTransactionUpdateWithoutFinanceHeadInput, FinanceTransactionUncheckedUpdateWithoutFinanceHeadInput>
+    create: XOR<FinanceTransactionCreateWithoutFinanceHeadInput, FinanceTransactionUncheckedCreateWithoutFinanceHeadInput>
+  }
+
+  export type FinanceTransactionUpdateWithWhereUniqueWithoutFinanceHeadInput = {
+    where: FinanceTransactionWhereUniqueInput
+    data: XOR<FinanceTransactionUpdateWithoutFinanceHeadInput, FinanceTransactionUncheckedUpdateWithoutFinanceHeadInput>
+  }
+
+  export type FinanceTransactionUpdateManyWithWhereWithoutFinanceHeadInput = {
+    where: FinanceTransactionScalarWhereInput
+    data: XOR<FinanceTransactionUpdateManyMutationInput, FinanceTransactionUncheckedUpdateManyWithoutFinanceHeadInput>
+  }
+
+  export type FinanceTransactionScalarWhereInput = {
+    AND?: FinanceTransactionScalarWhereInput | FinanceTransactionScalarWhereInput[]
+    OR?: FinanceTransactionScalarWhereInput[]
+    NOT?: FinanceTransactionScalarWhereInput | FinanceTransactionScalarWhereInput[]
+    id?: IntFilter<"FinanceTransaction"> | number
+    financeHeadId?: IntFilter<"FinanceTransaction"> | number
+    type?: StringFilter<"FinanceTransaction"> | string
+    amount?: DecimalFilter<"FinanceTransaction"> | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
+    slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    details?: StringNullableFilter<"FinanceTransaction"> | string | null
+    status?: StringFilter<"FinanceTransaction"> | string
+    createdAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"FinanceTransaction"> | Date | string
   }
 
   export type StudentCreateWithoutFeeVouchersInput = {
@@ -48816,6 +54330,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    transactions?: FinanceTransactionCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadUncheckedCreateWithoutSalaryEntriesInput = {
@@ -48826,6 +54341,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    transactions?: FinanceTransactionUncheckedCreateNestedManyWithoutFinanceHeadInput
   }
 
   export type FinanceHeadCreateOrConnectWithoutSalaryEntriesInput = {
@@ -48897,6 +54413,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: FinanceTransactionUpdateManyWithoutFinanceHeadNestedInput
   }
 
   export type FinanceHeadUncheckedUpdateWithoutSalaryEntriesInput = {
@@ -48904,6 +54421,245 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: FinanceTransactionUncheckedUpdateManyWithoutFinanceHeadNestedInput
+  }
+
+  export type FinanceHeadCreateWithoutTransactionsInput = {
+    name: string
+    type: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutFinanceHeadInput
+  }
+
+  export type FinanceHeadUncheckedCreateWithoutTransactionsInput = {
+    id?: number
+    name: string
+    type: string
+    description?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutFinanceHeadInput
+  }
+
+  export type FinanceHeadCreateOrConnectWithoutTransactionsInput = {
+    where: FinanceHeadWhereUniqueInput
+    create: XOR<FinanceHeadCreateWithoutTransactionsInput, FinanceHeadUncheckedCreateWithoutTransactionsInput>
+  }
+
+  export type FinanceHeadUpsertWithoutTransactionsInput = {
+    update: XOR<FinanceHeadUpdateWithoutTransactionsInput, FinanceHeadUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<FinanceHeadCreateWithoutTransactionsInput, FinanceHeadUncheckedCreateWithoutTransactionsInput>
+    where?: FinanceHeadWhereInput
+  }
+
+  export type FinanceHeadUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: FinanceHeadWhereInput
+    data: XOR<FinanceHeadUpdateWithoutTransactionsInput, FinanceHeadUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type FinanceHeadUpdateWithoutTransactionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    salaryEntries?: SalaryEntryUpdateManyWithoutFinanceHeadNestedInput
+  }
+
+  export type FinanceHeadUncheckedUpdateWithoutTransactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutFinanceHeadNestedInput
+  }
+
+  export type AdminCreateWithoutFinancialRecordsInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutFinancialRecordsInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutFinancialRecordsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutFinancialRecordsInput, AdminUncheckedCreateWithoutFinancialRecordsInput>
+  }
+
+  export type AdminUpsertWithoutFinancialRecordsInput = {
+    update: XOR<AdminUpdateWithoutFinancialRecordsInput, AdminUncheckedUpdateWithoutFinancialRecordsInput>
+    create: XOR<AdminCreateWithoutFinancialRecordsInput, AdminUncheckedCreateWithoutFinancialRecordsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutFinancialRecordsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutFinancialRecordsInput, AdminUncheckedUpdateWithoutFinancialRecordsInput>
+  }
+
+  export type AdminUpdateWithoutFinancialRecordsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutFinancialRecordsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+  }
+
+  export type FinancialRecordCreateManyCreatedByInput = {
+    id?: number
+    type: string
+    category: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    date: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FinancialRecordUpdateWithoutCreatedByInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinancialRecordUncheckedUpdateWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinancialRecordUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleCreateManySubjectInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    classId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleUpdateWithoutSubjectInput = {
+    examName?: StringFieldUpdateOperationsInput | string
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutExamSchedulesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutExamSchedulesNestedInput
+  }
+
+  export type ExamScheduleUncheckedUpdateWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48961,6 +54717,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutBranchInput = {
@@ -48974,6 +54731,7 @@ export namespace Prisma {
     studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateManyWithoutBranchInput = {
@@ -49137,6 +54895,23 @@ export namespace Prisma {
     days: JsonNullValueInput | InputJsonValue
     startTime: string
     endTime: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamScheduleCreateManyClassInput = {
+    id?: number
+    examName: string
+    sessionId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49317,6 +55092,56 @@ export namespace Prisma {
     days?: JsonNullValueInput | InputJsonValue
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUpdateWithoutClassInput = {
+    examName?: StringFieldUpdateOperationsInput | string
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AcademicSessionUpdateOneRequiredWithoutExamSchedulesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutExamSchedulesNestedInput
+  }
+
+  export type ExamScheduleUncheckedUpdateWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    sessionId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49561,6 +55386,23 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ExamScheduleCreateManySessionInput = {
+    id?: number
+    examName: string
+    classId: number
+    subjectId: number
+    examDate: Date | string
+    startTime: string
+    endTime: string
+    totalMarks?: number | null
+    room?: string | null
+    invigilator?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type StudentClassAssignmentUpdateWithoutSessionInput = {
     status?: StringFieldUpdateOperationsInput | string
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49670,6 +55512,56 @@ export namespace Prisma {
     days?: JsonNullValueInput | InputJsonValue
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUpdateWithoutSessionInput = {
+    examName?: StringFieldUpdateOperationsInput | string
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    class?: AcademicClassUpdateOneRequiredWithoutExamSchedulesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutExamSchedulesNestedInput
+  }
+
+  export type ExamScheduleUncheckedUpdateWithoutSessionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    classId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamScheduleUncheckedUpdateManyWithoutSessionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    examName?: StringFieldUpdateOperationsInput | string
+    classId?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    totalMarks?: NullableIntFieldUpdateOperationsInput | number | null
+    room?: NullableStringFieldUpdateOperationsInput | string | null
+    invigilator?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50400,6 +56292,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FinanceTransactionCreateManyFinanceHeadInput = {
+    id?: number
+    type: string
+    amount: Decimal | DecimalJsLike | number | string
+    transactionDate: Date | string
+    paymentMode?: string | null
+    paymentStatus?: string | null
+    slipNo?: string | null
+    details?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SalaryEntryUpdateWithoutFinanceHeadInput = {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     salaryMonth?: IntFieldUpdateOperationsInput | number
@@ -50433,6 +56339,47 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinanceTransactionUpdateWithoutFinanceHeadInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinanceTransactionUncheckedUpdateWithoutFinanceHeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FinanceTransactionUncheckedUpdateManyWithoutFinanceHeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

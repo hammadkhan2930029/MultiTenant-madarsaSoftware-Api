@@ -9,16 +9,17 @@ datasource db {
 }
 
 model Admin {
-  id              Int              @id @default(autoincrement())
-  name            String           @db.VarChar(150)
-  email           String           @unique @db.VarChar(150)
-  username        String           @unique @db.VarChar(100)
-  password        String           @db.VarChar(255)
-  role            String           @default("admin") @db.VarChar(50)
-  status          String           @default("active") @db.VarChar(50)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  madrassaProfile MadrassaProfile?
+  id               Int               @id @default(autoincrement())
+  name             String            @db.VarChar(150)
+  email            String            @unique @db.VarChar(150)
+  username         String            @unique @db.VarChar(100)
+  password         String            @db.VarChar(255)
+  role             String            @default("admin") @db.VarChar(50)
+  status           String            @default("active") @db.VarChar(50)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  madrassaProfile  MadrassaProfile?
+  financialRecords FinancialRecord[]
 
   @@map("admins")
 }
@@ -93,12 +94,13 @@ model Qualification {
 }
 
 model Subject {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
-  detail    String?  @db.VarChar(255)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  name          String         @unique @db.VarChar(150)
+  detail        String?        @db.VarChar(255)
+  status        String         @default("active") @db.VarChar(50)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  examSchedules ExamSchedule[]
 
   @@map("subjects")
 }
@@ -132,6 +134,7 @@ model AcademicClass {
   studentAttendances StudentAttendance[]
   studentSchedules   StudentSchedule[]
   teacherSchedules   TeacherSchedule[]
+  examSchedules      ExamSchedule[]
 
   @@unique([branchId, name])
   @@map("classes")
@@ -165,6 +168,7 @@ model AcademicSession {
   assignments      StudentClassAssignment[]
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
+  examSchedules    ExamSchedule[]
 
   @@map("sessions")
 }
@@ -210,6 +214,31 @@ model TeacherSchedule {
   @@index([teacherId])
   @@index([sessionId, classId, sectionId])
   @@map("teacher_schedules")
+}
+
+model ExamSchedule {
+  id          Int             @id @default(autoincrement())
+  examName    String          @db.VarChar(150)
+  sessionId   Int
+  classId     Int
+  subjectId   Int
+  examDate    DateTime
+  startTime   String          @db.VarChar(10)
+  endTime     String          @db.VarChar(10)
+  totalMarks  Int?
+  room        String?         @db.VarChar(100)
+  invigilator String?         @db.VarChar(150)
+  notes       String?         @db.VarChar(255)
+  status      String          @default("active") @db.VarChar(50)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  session     AcademicSession @relation(fields: [sessionId], references: [id])
+  class       AcademicClass   @relation(fields: [classId], references: [id])
+  subject     Subject         @relation(fields: [subjectId], references: [id])
+
+  @@index([sessionId, classId, subjectId])
+  @@index([examDate, status])
+  @@map("exam_schedules")
 }
 
 model Student {
@@ -467,14 +496,15 @@ model HifzSiparaEntry {
 }
 
 model FinanceHead {
-  id            Int           @id @default(autoincrement())
-  name          String        @unique @db.VarChar(150)
-  type          String        @db.VarChar(20)
-  description   String?       @db.VarChar(255)
-  status        String        @default("active") @db.VarChar(50)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id            Int                  @id @default(autoincrement())
+  name          String               @unique @db.VarChar(150)
+  type          String               @db.VarChar(20)
+  description   String?              @db.VarChar(255)
+  status        String               @default("active") @db.VarChar(50)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
   salaryEntries SalaryEntry[]
+  transactions  FinanceTransaction[]
 
   @@map("finance_heads")
 }
@@ -547,4 +577,42 @@ model SalaryEntry {
 
   @@unique([teacherId, salaryMonth, salaryYear])
   @@map("salary_entries")
+}
+
+model FinanceTransaction {
+  id              Int         @id @default(autoincrement())
+  financeHeadId   Int
+  type            String      @db.VarChar(20)
+  amount          Decimal     @db.Decimal(10, 2)
+  transactionDate DateTime
+  paymentMode     String?     @db.VarChar(50)
+  paymentStatus   String?     @db.VarChar(50)
+  slipNo          String?     @db.VarChar(100)
+  details         String?     @db.VarChar(255)
+  status          String      @default("active") @db.VarChar(50)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  financeHead     FinanceHead @relation(fields: [financeHeadId], references: [id])
+
+  @@index([type, transactionDate])
+  @@index([financeHeadId])
+  @@map("finance_transactions")
+}
+
+model FinancialRecord {
+  id          Int      @id @default(autoincrement())
+  type        String   @db.VarChar(20)
+  category    String   @db.VarChar(150)
+  description String?  @db.VarChar(255)
+  amount      Decimal  @db.Decimal(10, 2)
+  date        DateTime
+  status      String   @default("active") @db.VarChar(50)
+  createdById Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   Admin?   @relation(fields: [createdById], references: [id])
+
+  @@index([type, date, status])
+  @@index([createdById])
+  @@map("financial_records")
 }

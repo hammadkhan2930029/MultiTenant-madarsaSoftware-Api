@@ -267,6 +267,24 @@ exports.Prisma.TeacherScheduleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ExamScheduleScalarFieldEnum = {
+  id: 'id',
+  examName: 'examName',
+  sessionId: 'sessionId',
+  classId: 'classId',
+  subjectId: 'subjectId',
+  examDate: 'examDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  totalMarks: 'totalMarks',
+  room: 'room',
+  invigilator: 'invigilator',
+  notes: 'notes',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudentScalarFieldEnum = {
   id: 'id',
   admissionNumber: 'admissionNumber',
@@ -530,6 +548,34 @@ exports.Prisma.SalaryEntryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FinanceTransactionScalarFieldEnum = {
+  id: 'id',
+  financeHeadId: 'financeHeadId',
+  type: 'type',
+  amount: 'amount',
+  transactionDate: 'transactionDate',
+  paymentMode: 'paymentMode',
+  paymentStatus: 'paymentStatus',
+  slipNo: 'slipNo',
+  details: 'details',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FinancialRecordScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  category: 'category',
+  description: 'description',
+  amount: 'amount',
+  date: 'date',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -642,6 +688,16 @@ exports.Prisma.StudentScheduleOrderByRelevanceFieldEnum = {
 exports.Prisma.TeacherScheduleOrderByRelevanceFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
+  status: 'status'
+};
+
+exports.Prisma.ExamScheduleOrderByRelevanceFieldEnum = {
+  examName: 'examName',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  room: 'room',
+  invigilator: 'invigilator',
+  notes: 'notes',
   status: 'status'
 };
 
@@ -792,6 +848,22 @@ exports.Prisma.SalaryEntryOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.FinanceTransactionOrderByRelevanceFieldEnum = {
+  type: 'type',
+  paymentMode: 'paymentMode',
+  paymentStatus: 'paymentStatus',
+  slipNo: 'slipNo',
+  details: 'details',
+  status: 'status'
+};
+
+exports.Prisma.FinancialRecordOrderByRelevanceFieldEnum = {
+  type: 'type',
+  category: 'category',
+  description: 'description',
+  status: 'status'
+};
+
 
 exports.Prisma.ModelName = {
   Admin: 'Admin',
@@ -807,6 +879,7 @@ exports.Prisma.ModelName = {
   AcademicSession: 'AcademicSession',
   StudentSchedule: 'StudentSchedule',
   TeacherSchedule: 'TeacherSchedule',
+  ExamSchedule: 'ExamSchedule',
   Student: 'Student',
   Parent: 'Parent',
   StudentParent: 'StudentParent',
@@ -821,7 +894,9 @@ exports.Prisma.ModelName = {
   FinanceHead: 'FinanceHead',
   StudentFeeVoucher: 'StudentFeeVoucher',
   FundCollection: 'FundCollection',
-  SalaryEntry: 'SalaryEntry'
+  SalaryEntry: 'SalaryEntry',
+  FinanceTransaction: 'FinanceTransaction',
+  FinancialRecord: 'FinancialRecord'
 };
 
 /**

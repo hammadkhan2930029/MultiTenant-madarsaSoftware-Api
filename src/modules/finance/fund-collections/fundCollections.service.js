@@ -28,6 +28,12 @@ const normalizeDate = (value) => {
   return date;
 };
 
+const normalizeEndDate = (value) => {
+  const date = new Date(value);
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
+
 export const fundCollectionsService = {
   async createEntry(payload) {
     return prisma.fundCollection.create({
@@ -49,9 +55,13 @@ export const fundCollectionsService = {
               { donorName: { contains: query.search } },
               { careOf: { contains: query.search } },
               { phone: { contains: query.search } },
+              { donationType: { contains: query.search } },
+              { donationSubType: { contains: query.search } },
               { purpose: { contains: query.search } },
               { receiptNo: { contains: query.search } },
               { collectionGroupId: { contains: query.search } },
+              { details: { contains: query.search } },
+              { remarks: { contains: query.search } },
             ],
           }
         : {}),
@@ -59,7 +69,7 @@ export const fundCollectionsService = {
         ? {
             paymentDate: {
               ...(query.fromDate ? { gte: normalizeDate(query.fromDate) } : {}),
-              ...(query.toDate ? { lte: normalizeDate(query.toDate) } : {}),
+              ...(query.toDate ? { lte: normalizeEndDate(query.toDate) } : {}),
             },
           }
         : {}),
