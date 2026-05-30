@@ -28,6 +28,8 @@ import { subjectsRoutes } from './modules/subjects/subjects.routes.js';
 import { schedulesRoutes } from './modules/schedules/schedules.routes.js';
 import { teacherSchedulesRoutes } from './modules/teacher-schedules/teacher-schedules.routes.js';
 import { examSchedulesRoutes } from './modules/exam-schedules/exam-schedules.routes.js';
+import { resultGradesRoutes } from './modules/result-grades/result-grades.routes.js';
+import { examResultsRoutes } from './modules/exam-results/exam-results.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -88,6 +90,8 @@ app.use('/api/subjects', subjectsRoutes);
 app.use('/api/schedules', schedulesRoutes);
 app.use('/api/teacher-schedules', teacherSchedulesRoutes);
 app.use('/api/exam-schedules', examSchedulesRoutes);
+app.use('/api/result-grades', resultGradesRoutes);
+app.use('/api/exam-results', examResultsRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

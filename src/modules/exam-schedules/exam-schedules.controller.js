@@ -21,6 +21,15 @@ export const getExamSchedules = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateExamSchedule = asyncHandler(async (req, res) => {
+  const schedule = await examSchedulesService.updateExamSchedule(Number(req.params.id), req.body);
+
+  return apiResponse(res, {
+    message: 'Exam schedule updated successfully.',
+    data: schedule,
+  });
+});
+
 export const deleteExamSchedule = asyncHandler(async (req, res) => {
   const schedule = await examSchedulesService.deleteExamSchedule(Number(req.params.id));
 

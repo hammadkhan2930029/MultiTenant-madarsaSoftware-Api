@@ -23,6 +23,14 @@ export const createExamScheduleValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const updateExamScheduleValidationSchema = z.object({
+  body: examScheduleBodySchema,
+  params: z.object({
+    id: z.coerce.number().int().positive('Exam schedule id must be a valid number.'),
+  }),
+  query: z.object({}).default({}),
+});
+
 export const listExamSchedulesValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

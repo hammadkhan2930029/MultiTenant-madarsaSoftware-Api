@@ -101,6 +101,7 @@ model Subject {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   examSchedules ExamSchedule[]
+  examResultSubjects ExamResultSubject[]
 
   @@map("subjects")
 }
@@ -135,6 +136,7 @@ model AcademicClass {
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
   examSchedules ExamSchedule[]
+  examResults ExamResult[]
 
   @@unique([branchId, name])
   @@map("classes")
@@ -152,6 +154,7 @@ model Section {
   studentAttendances StudentAttendance[]
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
+  examResults ExamResult[]
 
   @@unique([classId, name])
   @@map("sections")
@@ -169,6 +172,7 @@ model AcademicSession {
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
   examSchedules ExamSchedule[]
+  examResults ExamResult[]
 
   @@map("sessions")
 }
@@ -241,6 +245,68 @@ model ExamSchedule {
   @@map("exam_schedules")
 }
 
+model ResultGrade {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(150)
+  code        String?  @db.VarChar(20)
+  fromPercent Int
+  toPercent   Int
+  status      String   @default("active") @db.VarChar(50)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, fromPercent, toPercent])
+  @@map("result_grades")
+}
+
+model ExamResult {
+  id            Int                 @id @default(autoincrement())
+  studentId     Int
+  sessionId     Int
+  classId       Int
+  sectionId     Int?
+  examName      String              @default("امتحانی رزلٹ") @db.VarChar(150)
+  totalMarks    Int
+  obtainedMarks Int
+  percentage    Decimal             @db.Decimal(5, 2)
+  gradeTitle    String?             @db.VarChar(150)
+  gradeCode     String?             @db.VarChar(20)
+  remarks       String?             @db.VarChar(255)
+  status        String              @default("active") @db.VarChar(50)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  student       Student             @relation(fields: [studentId], references: [id])
+  session       AcademicSession     @relation(fields: [sessionId], references: [id])
+  class         AcademicClass       @relation(fields: [classId], references: [id])
+  section       Section?            @relation(fields: [sectionId], references: [id])
+  subjects      ExamResultSubject[]
+
+  @@unique([studentId, sessionId, classId, sectionId, examName])
+  @@index([sessionId, classId, sectionId])
+  @@index([status, percentage])
+  @@map("exam_results")
+}
+
+model ExamResultSubject {
+  id            Int        @id @default(autoincrement())
+  examResultId  Int
+  subjectId     Int
+  totalMarks    Int
+  obtainedMarks Int
+  percentage    Decimal    @db.Decimal(5, 2)
+  gradeTitle    String?    @db.VarChar(150)
+  gradeCode     String?    @db.VarChar(20)
+  status        String     @default("active") @db.VarChar(50)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  examResult    ExamResult @relation(fields: [examResultId], references: [id])
+  subject       Subject    @relation(fields: [subjectId], references: [id])
+
+  @@unique([examResultId, subjectId])
+  @@index([subjectId])
+  @@map("exam_result_subjects")
+}
+
 model Student {
   id              Int                      @id @default(autoincrement())
   admissionNumber String                   @unique @db.VarChar(100)
@@ -282,6 +348,7 @@ model Student {
   hifzMonthlyEntries HifzMonthlyEntry[]
   hifzSiparaEntries HifzSiparaEntry[]
   feeVouchers      StudentFeeVoucher[]
+  examResults      ExamResult[]
 
   @@map("students")
 }

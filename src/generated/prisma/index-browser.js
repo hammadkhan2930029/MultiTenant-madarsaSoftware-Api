@@ -285,6 +285,49 @@ exports.Prisma.ExamScheduleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ResultGradeScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  code: 'code',
+  fromPercent: 'fromPercent',
+  toPercent: 'toPercent',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExamResultScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  sessionId: 'sessionId',
+  classId: 'classId',
+  sectionId: 'sectionId',
+  examName: 'examName',
+  totalMarks: 'totalMarks',
+  obtainedMarks: 'obtainedMarks',
+  percentage: 'percentage',
+  gradeTitle: 'gradeTitle',
+  gradeCode: 'gradeCode',
+  remarks: 'remarks',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExamResultSubjectScalarFieldEnum = {
+  id: 'id',
+  examResultId: 'examResultId',
+  subjectId: 'subjectId',
+  totalMarks: 'totalMarks',
+  obtainedMarks: 'obtainedMarks',
+  percentage: 'percentage',
+  gradeTitle: 'gradeTitle',
+  gradeCode: 'gradeCode',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudentScalarFieldEnum = {
   id: 'id',
   admissionNumber: 'admissionNumber',
@@ -701,6 +744,26 @@ exports.Prisma.ExamScheduleOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.ResultGradeOrderByRelevanceFieldEnum = {
+  title: 'title',
+  code: 'code',
+  status: 'status'
+};
+
+exports.Prisma.ExamResultOrderByRelevanceFieldEnum = {
+  examName: 'examName',
+  gradeTitle: 'gradeTitle',
+  gradeCode: 'gradeCode',
+  remarks: 'remarks',
+  status: 'status'
+};
+
+exports.Prisma.ExamResultSubjectOrderByRelevanceFieldEnum = {
+  gradeTitle: 'gradeTitle',
+  gradeCode: 'gradeCode',
+  status: 'status'
+};
+
 exports.Prisma.StudentOrderByRelevanceFieldEnum = {
   admissionNumber: 'admissionNumber',
   fullName: 'fullName',
@@ -880,6 +943,9 @@ exports.Prisma.ModelName = {
   StudentSchedule: 'StudentSchedule',
   TeacherSchedule: 'TeacherSchedule',
   ExamSchedule: 'ExamSchedule',
+  ResultGrade: 'ResultGrade',
+  ExamResult: 'ExamResult',
+  ExamResultSubject: 'ExamResultSubject',
   Student: 'Student',
   Parent: 'Parent',
   StudentParent: 'StudentParent',

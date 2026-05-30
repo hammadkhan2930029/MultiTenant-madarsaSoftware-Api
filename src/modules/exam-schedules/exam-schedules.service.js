@@ -121,6 +121,35 @@ export const examSchedulesService = {
     };
   },
 
+  async updateExamSchedule(id, payload) {
+    const schedule = await prisma.examSchedule.findUnique({ where: { id } });
+
+    if (!schedule) {
+      throw new AppError('Exam schedule not found.', 404);
+    }
+
+    await ensureExamScheduleReferences(payload);
+
+    return prisma.examSchedule.update({
+      where: { id },
+      data: {
+        examName: payload.examName,
+        sessionId: payload.sessionId,
+        classId: payload.classId,
+        subjectId: payload.subjectId,
+        examDate: normalizeStartDate(payload.examDate),
+        startTime: payload.startTime,
+        endTime: payload.endTime,
+        totalMarks: payload.totalMarks,
+        room: payload.room,
+        invigilator: payload.invigilator,
+        notes: payload.notes,
+        status: payload.status || 'active',
+      },
+      select: examScheduleSelect,
+    });
+  },
+
   async deleteExamSchedule(id) {
     const schedule = await prisma.examSchedule.findUnique({ where: { id } });
 
