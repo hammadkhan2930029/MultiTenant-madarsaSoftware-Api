@@ -1,0 +1,16 @@
+ALTER TABLE `teachers`
+  ADD COLUMN `staffType` VARCHAR(50) NOT NULL DEFAULT 'teacher',
+  ADD COLUMN `educationInstitute` VARCHAR(150) NULL,
+  ADD COLUMN `educationYear` VARCHAR(20) NULL,
+  ADD COLUMN `specialization` VARCHAR(150) NULL,
+  ADD COLUMN `bankName` VARCHAR(150) NULL,
+  ADD COLUMN `accountTitle` VARCHAR(150) NULL,
+  ADD COLUMN `accountNumber` VARCHAR(100) NULL,
+  ADD COLUMN `iban` VARCHAR(100) NULL,
+  ADD COLUMN `jobTitle` VARCHAR(150) NULL,
+  ADD COLUMN `department` VARCHAR(150) NULL,
+  ADD COLUMN `employmentType` VARCHAR(100) NULL,
+  ADD COLUMN `appointmentDate` VARCHAR(20) NULL,
+  ADD COLUMN `joiningDate` VARCHAR(20) NULL,
+  ADD COLUMN `experienceSummary` VARCHAR(500) NULL,
+  ADD COLUMN `notes` VARCHAR(500) NULL;

@@ -1,0 +1,2 @@
+ALTER TABLE `teachers`
+  MODIFY COLUMN `subject` VARCHAR(150) NULL;

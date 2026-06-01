@@ -26642,15 +26642,30 @@ export namespace Prisma {
 
   export type TeacherMinAggregateOutputType = {
     id: number | null
+    staffType: string | null
     fullName: string | null
     email: string | null
     phone: string | null
     cnic: string | null
     subject: string | null
     qualification: string | null
+    educationInstitute: string | null
+    educationYear: string | null
+    specialization: string | null
     address: string | null
     imageUrl: string | null
     basicSalary: Decimal | null
+    bankName: string | null
+    accountTitle: string | null
+    accountNumber: string | null
+    iban: string | null
+    jobTitle: string | null
+    department: string | null
+    employmentType: string | null
+    appointmentDate: string | null
+    joiningDate: string | null
+    experienceSummary: string | null
+    notes: string | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -26658,15 +26673,30 @@ export namespace Prisma {
 
   export type TeacherMaxAggregateOutputType = {
     id: number | null
+    staffType: string | null
     fullName: string | null
     email: string | null
     phone: string | null
     cnic: string | null
     subject: string | null
     qualification: string | null
+    educationInstitute: string | null
+    educationYear: string | null
+    specialization: string | null
     address: string | null
     imageUrl: string | null
     basicSalary: Decimal | null
+    bankName: string | null
+    accountTitle: string | null
+    accountNumber: string | null
+    iban: string | null
+    jobTitle: string | null
+    department: string | null
+    employmentType: string | null
+    appointmentDate: string | null
+    joiningDate: string | null
+    experienceSummary: string | null
+    notes: string | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -26674,15 +26704,30 @@ export namespace Prisma {
 
   export type TeacherCountAggregateOutputType = {
     id: number
+    staffType: number
     fullName: number
     email: number
     phone: number
     cnic: number
     subject: number
     qualification: number
+    educationInstitute: number
+    educationYear: number
+    specialization: number
     address: number
     imageUrl: number
     basicSalary: number
+    bankName: number
+    accountTitle: number
+    accountNumber: number
+    iban: number
+    jobTitle: number
+    department: number
+    employmentType: number
+    appointmentDate: number
+    joiningDate: number
+    experienceSummary: number
+    notes: number
     status: number
     createdAt: number
     updatedAt: number
@@ -26702,15 +26747,30 @@ export namespace Prisma {
 
   export type TeacherMinAggregateInputType = {
     id?: true
+    staffType?: true
     fullName?: true
     email?: true
     phone?: true
     cnic?: true
     subject?: true
     qualification?: true
+    educationInstitute?: true
+    educationYear?: true
+    specialization?: true
     address?: true
     imageUrl?: true
     basicSalary?: true
+    bankName?: true
+    accountTitle?: true
+    accountNumber?: true
+    iban?: true
+    jobTitle?: true
+    department?: true
+    employmentType?: true
+    appointmentDate?: true
+    joiningDate?: true
+    experienceSummary?: true
+    notes?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -26718,15 +26778,30 @@ export namespace Prisma {
 
   export type TeacherMaxAggregateInputType = {
     id?: true
+    staffType?: true
     fullName?: true
     email?: true
     phone?: true
     cnic?: true
     subject?: true
     qualification?: true
+    educationInstitute?: true
+    educationYear?: true
+    specialization?: true
     address?: true
     imageUrl?: true
     basicSalary?: true
+    bankName?: true
+    accountTitle?: true
+    accountNumber?: true
+    iban?: true
+    jobTitle?: true
+    department?: true
+    employmentType?: true
+    appointmentDate?: true
+    joiningDate?: true
+    experienceSummary?: true
+    notes?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -26734,15 +26809,30 @@ export namespace Prisma {
 
   export type TeacherCountAggregateInputType = {
     id?: true
+    staffType?: true
     fullName?: true
     email?: true
     phone?: true
     cnic?: true
     subject?: true
     qualification?: true
+    educationInstitute?: true
+    educationYear?: true
+    specialization?: true
     address?: true
     imageUrl?: true
     basicSalary?: true
+    bankName?: true
+    accountTitle?: true
+    accountNumber?: true
+    iban?: true
+    jobTitle?: true
+    department?: true
+    employmentType?: true
+    appointmentDate?: true
+    joiningDate?: true
+    experienceSummary?: true
+    notes?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -26837,15 +26927,30 @@ export namespace Prisma {
 
   export type TeacherGroupByOutputType = {
     id: number
+    staffType: string
     fullName: string
     email: string | null
     phone: string | null
     cnic: string | null
-    subject: string
+    subject: string | null
     qualification: string | null
+    educationInstitute: string | null
+    educationYear: string | null
+    specialization: string | null
     address: string | null
     imageUrl: string | null
     basicSalary: Decimal
+    bankName: string | null
+    accountTitle: string | null
+    accountNumber: string | null
+    iban: string | null
+    jobTitle: string | null
+    department: string | null
+    employmentType: string | null
+    appointmentDate: string | null
+    joiningDate: string | null
+    experienceSummary: string | null
+    notes: string | null
     status: string
     createdAt: Date
     updatedAt: Date
@@ -26872,15 +26977,30 @@ export namespace Prisma {
 
   export type TeacherSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    staffType?: boolean
     fullName?: boolean
     email?: boolean
     phone?: boolean
     cnic?: boolean
     subject?: boolean
     qualification?: boolean
+    educationInstitute?: boolean
+    educationYear?: boolean
+    specialization?: boolean
     address?: boolean
     imageUrl?: boolean
     basicSalary?: boolean
+    bankName?: boolean
+    accountTitle?: boolean
+    accountNumber?: boolean
+    iban?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    employmentType?: boolean
+    appointmentDate?: boolean
+    joiningDate?: boolean
+    experienceSummary?: boolean
+    notes?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -26894,21 +27014,36 @@ export namespace Prisma {
 
   export type TeacherSelectScalar = {
     id?: boolean
+    staffType?: boolean
     fullName?: boolean
     email?: boolean
     phone?: boolean
     cnic?: boolean
     subject?: boolean
     qualification?: boolean
+    educationInstitute?: boolean
+    educationYear?: boolean
+    specialization?: boolean
     address?: boolean
     imageUrl?: boolean
     basicSalary?: boolean
+    bankName?: boolean
+    accountTitle?: boolean
+    accountNumber?: boolean
+    iban?: boolean
+    jobTitle?: boolean
+    department?: boolean
+    employmentType?: boolean
+    appointmentDate?: boolean
+    joiningDate?: boolean
+    experienceSummary?: boolean
+    notes?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TeacherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "email" | "phone" | "cnic" | "subject" | "qualification" | "address" | "imageUrl" | "basicSalary" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["teacher"]>
+  export type TeacherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "staffType" | "fullName" | "email" | "phone" | "cnic" | "subject" | "qualification" | "educationInstitute" | "educationYear" | "specialization" | "address" | "imageUrl" | "basicSalary" | "bankName" | "accountTitle" | "accountNumber" | "iban" | "jobTitle" | "department" | "employmentType" | "appointmentDate" | "joiningDate" | "experienceSummary" | "notes" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["teacher"]>
   export type TeacherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendances?: boolean | Teacher$attendancesArgs<ExtArgs>
     salaryEntries?: boolean | Teacher$salaryEntriesArgs<ExtArgs>
@@ -26925,15 +27060,30 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      staffType: string
       fullName: string
       email: string | null
       phone: string | null
       cnic: string | null
-      subject: string
+      subject: string | null
       qualification: string | null
+      educationInstitute: string | null
+      educationYear: string | null
+      specialization: string | null
       address: string | null
       imageUrl: string | null
       basicSalary: Prisma.Decimal
+      bankName: string | null
+      accountTitle: string | null
+      accountNumber: string | null
+      iban: string | null
+      jobTitle: string | null
+      department: string | null
+      employmentType: string | null
+      appointmentDate: string | null
+      joiningDate: string | null
+      experienceSummary: string | null
+      notes: string | null
       status: string
       createdAt: Date
       updatedAt: Date
@@ -27310,15 +27460,30 @@ export namespace Prisma {
    */
   interface TeacherFieldRefs {
     readonly id: FieldRef<"Teacher", 'Int'>
+    readonly staffType: FieldRef<"Teacher", 'String'>
     readonly fullName: FieldRef<"Teacher", 'String'>
     readonly email: FieldRef<"Teacher", 'String'>
     readonly phone: FieldRef<"Teacher", 'String'>
     readonly cnic: FieldRef<"Teacher", 'String'>
     readonly subject: FieldRef<"Teacher", 'String'>
     readonly qualification: FieldRef<"Teacher", 'String'>
+    readonly educationInstitute: FieldRef<"Teacher", 'String'>
+    readonly educationYear: FieldRef<"Teacher", 'String'>
+    readonly specialization: FieldRef<"Teacher", 'String'>
     readonly address: FieldRef<"Teacher", 'String'>
     readonly imageUrl: FieldRef<"Teacher", 'String'>
     readonly basicSalary: FieldRef<"Teacher", 'Decimal'>
+    readonly bankName: FieldRef<"Teacher", 'String'>
+    readonly accountTitle: FieldRef<"Teacher", 'String'>
+    readonly accountNumber: FieldRef<"Teacher", 'String'>
+    readonly iban: FieldRef<"Teacher", 'String'>
+    readonly jobTitle: FieldRef<"Teacher", 'String'>
+    readonly department: FieldRef<"Teacher", 'String'>
+    readonly employmentType: FieldRef<"Teacher", 'String'>
+    readonly appointmentDate: FieldRef<"Teacher", 'String'>
+    readonly joiningDate: FieldRef<"Teacher", 'String'>
+    readonly experienceSummary: FieldRef<"Teacher", 'String'>
+    readonly notes: FieldRef<"Teacher", 'String'>
     readonly status: FieldRef<"Teacher", 'String'>
     readonly createdAt: FieldRef<"Teacher", 'DateTime'>
     readonly updatedAt: FieldRef<"Teacher", 'DateTime'>
@@ -41092,15 +41257,30 @@ export namespace Prisma {
 
   export const TeacherScalarFieldEnum: {
     id: 'id',
+    staffType: 'staffType',
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
     cnic: 'cnic',
     subject: 'subject',
     qualification: 'qualification',
+    educationInstitute: 'educationInstitute',
+    educationYear: 'educationYear',
+    specialization: 'specialization',
     address: 'address',
     imageUrl: 'imageUrl',
     basicSalary: 'basicSalary',
+    bankName: 'bankName',
+    accountTitle: 'accountTitle',
+    accountNumber: 'accountNumber',
+    iban: 'iban',
+    jobTitle: 'jobTitle',
+    department: 'department',
+    employmentType: 'employmentType',
+    appointmentDate: 'appointmentDate',
+    joiningDate: 'joiningDate',
+    experienceSummary: 'experienceSummary',
+    notes: 'notes',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -41619,14 +41799,29 @@ export namespace Prisma {
 
 
   export const TeacherOrderByRelevanceFieldEnum: {
+    staffType: 'staffType',
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
     cnic: 'cnic',
     subject: 'subject',
     qualification: 'qualification',
+    educationInstitute: 'educationInstitute',
+    educationYear: 'educationYear',
+    specialization: 'specialization',
     address: 'address',
     imageUrl: 'imageUrl',
+    bankName: 'bankName',
+    accountTitle: 'accountTitle',
+    accountNumber: 'accountNumber',
+    iban: 'iban',
+    jobTitle: 'jobTitle',
+    department: 'department',
+    employmentType: 'employmentType',
+    appointmentDate: 'appointmentDate',
+    joiningDate: 'joiningDate',
+    experienceSummary: 'experienceSummary',
+    notes: 'notes',
     status: 'status'
   };
 
@@ -43743,15 +43938,30 @@ export namespace Prisma {
     OR?: TeacherWhereInput[]
     NOT?: TeacherWhereInput | TeacherWhereInput[]
     id?: IntFilter<"Teacher"> | number
+    staffType?: StringFilter<"Teacher"> | string
     fullName?: StringFilter<"Teacher"> | string
     email?: StringNullableFilter<"Teacher"> | string | null
     phone?: StringNullableFilter<"Teacher"> | string | null
     cnic?: StringNullableFilter<"Teacher"> | string | null
-    subject?: StringFilter<"Teacher"> | string
+    subject?: StringNullableFilter<"Teacher"> | string | null
     qualification?: StringNullableFilter<"Teacher"> | string | null
+    educationInstitute?: StringNullableFilter<"Teacher"> | string | null
+    educationYear?: StringNullableFilter<"Teacher"> | string | null
+    specialization?: StringNullableFilter<"Teacher"> | string | null
     address?: StringNullableFilter<"Teacher"> | string | null
     imageUrl?: StringNullableFilter<"Teacher"> | string | null
     basicSalary?: DecimalFilter<"Teacher"> | Decimal | DecimalJsLike | number | string
+    bankName?: StringNullableFilter<"Teacher"> | string | null
+    accountTitle?: StringNullableFilter<"Teacher"> | string | null
+    accountNumber?: StringNullableFilter<"Teacher"> | string | null
+    iban?: StringNullableFilter<"Teacher"> | string | null
+    jobTitle?: StringNullableFilter<"Teacher"> | string | null
+    department?: StringNullableFilter<"Teacher"> | string | null
+    employmentType?: StringNullableFilter<"Teacher"> | string | null
+    appointmentDate?: StringNullableFilter<"Teacher"> | string | null
+    joiningDate?: StringNullableFilter<"Teacher"> | string | null
+    experienceSummary?: StringNullableFilter<"Teacher"> | string | null
+    notes?: StringNullableFilter<"Teacher"> | string | null
     status?: StringFilter<"Teacher"> | string
     createdAt?: DateTimeFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeFilter<"Teacher"> | Date | string
@@ -43762,15 +43972,30 @@ export namespace Prisma {
 
   export type TeacherOrderByWithRelationInput = {
     id?: SortOrder
+    staffType?: SortOrder
     fullName?: SortOrder
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     cnic?: SortOrderInput | SortOrder
-    subject?: SortOrder
+    subject?: SortOrderInput | SortOrder
     qualification?: SortOrderInput | SortOrder
+    educationInstitute?: SortOrderInput | SortOrder
+    educationYear?: SortOrderInput | SortOrder
+    specialization?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
     basicSalary?: SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountTitle?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    iban?: SortOrderInput | SortOrder
+    jobTitle?: SortOrderInput | SortOrder
+    department?: SortOrderInput | SortOrder
+    employmentType?: SortOrderInput | SortOrder
+    appointmentDate?: SortOrderInput | SortOrder
+    joiningDate?: SortOrderInput | SortOrder
+    experienceSummary?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -43787,13 +44012,28 @@ export namespace Prisma {
     AND?: TeacherWhereInput | TeacherWhereInput[]
     OR?: TeacherWhereInput[]
     NOT?: TeacherWhereInput | TeacherWhereInput[]
+    staffType?: StringFilter<"Teacher"> | string
     fullName?: StringFilter<"Teacher"> | string
     email?: StringNullableFilter<"Teacher"> | string | null
-    subject?: StringFilter<"Teacher"> | string
+    subject?: StringNullableFilter<"Teacher"> | string | null
     qualification?: StringNullableFilter<"Teacher"> | string | null
+    educationInstitute?: StringNullableFilter<"Teacher"> | string | null
+    educationYear?: StringNullableFilter<"Teacher"> | string | null
+    specialization?: StringNullableFilter<"Teacher"> | string | null
     address?: StringNullableFilter<"Teacher"> | string | null
     imageUrl?: StringNullableFilter<"Teacher"> | string | null
     basicSalary?: DecimalFilter<"Teacher"> | Decimal | DecimalJsLike | number | string
+    bankName?: StringNullableFilter<"Teacher"> | string | null
+    accountTitle?: StringNullableFilter<"Teacher"> | string | null
+    accountNumber?: StringNullableFilter<"Teacher"> | string | null
+    iban?: StringNullableFilter<"Teacher"> | string | null
+    jobTitle?: StringNullableFilter<"Teacher"> | string | null
+    department?: StringNullableFilter<"Teacher"> | string | null
+    employmentType?: StringNullableFilter<"Teacher"> | string | null
+    appointmentDate?: StringNullableFilter<"Teacher"> | string | null
+    joiningDate?: StringNullableFilter<"Teacher"> | string | null
+    experienceSummary?: StringNullableFilter<"Teacher"> | string | null
+    notes?: StringNullableFilter<"Teacher"> | string | null
     status?: StringFilter<"Teacher"> | string
     createdAt?: DateTimeFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeFilter<"Teacher"> | Date | string
@@ -43804,15 +44044,30 @@ export namespace Prisma {
 
   export type TeacherOrderByWithAggregationInput = {
     id?: SortOrder
+    staffType?: SortOrder
     fullName?: SortOrder
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     cnic?: SortOrderInput | SortOrder
-    subject?: SortOrder
+    subject?: SortOrderInput | SortOrder
     qualification?: SortOrderInput | SortOrder
+    educationInstitute?: SortOrderInput | SortOrder
+    educationYear?: SortOrderInput | SortOrder
+    specialization?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
     basicSalary?: SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountTitle?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    iban?: SortOrderInput | SortOrder
+    jobTitle?: SortOrderInput | SortOrder
+    department?: SortOrderInput | SortOrder
+    employmentType?: SortOrderInput | SortOrder
+    appointmentDate?: SortOrderInput | SortOrder
+    joiningDate?: SortOrderInput | SortOrder
+    experienceSummary?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -43828,15 +44083,30 @@ export namespace Prisma {
     OR?: TeacherScalarWhereWithAggregatesInput[]
     NOT?: TeacherScalarWhereWithAggregatesInput | TeacherScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Teacher"> | number
+    staffType?: StringWithAggregatesFilter<"Teacher"> | string
     fullName?: StringWithAggregatesFilter<"Teacher"> | string
     email?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     cnic?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
-    subject?: StringWithAggregatesFilter<"Teacher"> | string
+    subject?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     qualification?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    educationInstitute?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    educationYear?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    specialization?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     address?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     imageUrl?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     basicSalary?: DecimalWithAggregatesFilter<"Teacher"> | Decimal | DecimalJsLike | number | string
+    bankName?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    accountTitle?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    accountNumber?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    iban?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    jobTitle?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    department?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    employmentType?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    appointmentDate?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    joiningDate?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    experienceSummary?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Teacher"> | string | null
     status?: StringWithAggregatesFilter<"Teacher"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Teacher"> | Date | string
@@ -47105,15 +47375,30 @@ export namespace Prisma {
   }
 
   export type TeacherCreateInput = {
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47124,15 +47409,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedCreateInput = {
     id?: number
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47142,15 +47442,30 @@ export namespace Prisma {
   }
 
   export type TeacherUpdateInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47161,15 +47476,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47180,30 +47510,60 @@ export namespace Prisma {
 
   export type TeacherCreateManyInput = {
     id?: number
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TeacherUpdateManyMutationInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47211,15 +47571,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50370,15 +50745,30 @@ export namespace Prisma {
 
   export type TeacherCountOrderByAggregateInput = {
     id?: SortOrder
+    staffType?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
     cnic?: SortOrder
     subject?: SortOrder
     qualification?: SortOrder
+    educationInstitute?: SortOrder
+    educationYear?: SortOrder
+    specialization?: SortOrder
     address?: SortOrder
     imageUrl?: SortOrder
     basicSalary?: SortOrder
+    bankName?: SortOrder
+    accountTitle?: SortOrder
+    accountNumber?: SortOrder
+    iban?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    employmentType?: SortOrder
+    appointmentDate?: SortOrder
+    joiningDate?: SortOrder
+    experienceSummary?: SortOrder
+    notes?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -50391,15 +50781,30 @@ export namespace Prisma {
 
   export type TeacherMaxOrderByAggregateInput = {
     id?: SortOrder
+    staffType?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
     cnic?: SortOrder
     subject?: SortOrder
     qualification?: SortOrder
+    educationInstitute?: SortOrder
+    educationYear?: SortOrder
+    specialization?: SortOrder
     address?: SortOrder
     imageUrl?: SortOrder
     basicSalary?: SortOrder
+    bankName?: SortOrder
+    accountTitle?: SortOrder
+    accountNumber?: SortOrder
+    iban?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    employmentType?: SortOrder
+    appointmentDate?: SortOrder
+    joiningDate?: SortOrder
+    experienceSummary?: SortOrder
+    notes?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -50407,15 +50812,30 @@ export namespace Prisma {
 
   export type TeacherMinOrderByAggregateInput = {
     id?: SortOrder
+    staffType?: SortOrder
     fullName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
     cnic?: SortOrder
     subject?: SortOrder
     qualification?: SortOrder
+    educationInstitute?: SortOrder
+    educationYear?: SortOrder
+    specialization?: SortOrder
     address?: SortOrder
     imageUrl?: SortOrder
     basicSalary?: SortOrder
+    bankName?: SortOrder
+    accountTitle?: SortOrder
+    accountNumber?: SortOrder
+    iban?: SortOrder
+    jobTitle?: SortOrder
+    department?: SortOrder
+    employmentType?: SortOrder
+    appointmentDate?: SortOrder
+    joiningDate?: SortOrder
+    experienceSummary?: SortOrder
+    notes?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55936,15 +56356,30 @@ export namespace Prisma {
   }
 
   export type TeacherCreateWithoutSchedulesInput = {
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55954,15 +56389,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedCreateWithoutSchedulesInput = {
     id?: number
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -56083,15 +56533,30 @@ export namespace Prisma {
   }
 
   export type TeacherUpdateWithoutSchedulesInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -56101,15 +56566,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedUpdateWithoutSchedulesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59002,15 +59482,30 @@ export namespace Prisma {
   }
 
   export type TeacherCreateWithoutAttendancesInput = {
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59020,15 +59515,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedCreateWithoutAttendancesInput = {
     id?: number
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59083,15 +59593,30 @@ export namespace Prisma {
   }
 
   export type TeacherUpdateWithoutAttendancesInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59101,15 +59626,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedUpdateWithoutAttendancesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60206,15 +60746,30 @@ export namespace Prisma {
   }
 
   export type TeacherCreateWithoutSalaryEntriesInput = {
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60224,15 +60779,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedCreateWithoutSalaryEntriesInput = {
     id?: number
+    staffType?: string
     fullName: string
     email?: string | null
     phone?: string | null
     cnic?: string | null
-    subject: string
+    subject?: string | null
     qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
     address?: string | null
     imageUrl?: string | null
     basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60283,15 +60853,30 @@ export namespace Prisma {
   }
 
   export type TeacherUpdateWithoutSalaryEntriesInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60301,15 +60886,30 @@ export namespace Prisma {
 
   export type TeacherUncheckedUpdateWithoutSalaryEntriesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     cnic?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

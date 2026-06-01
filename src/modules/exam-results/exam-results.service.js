@@ -2,7 +2,9 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
-const DEFAULT_EXAM_NAME = 'امتحانی رزلٹ';
+const DEFAULT_EXAM_NAME = '\u0627\u0645\u062a\u062d\u0627\u0646\u06cc \u0631\u0632\u0644\u0679';
+const LEGACY_DEFAULT_EXAM_NAME = '\u00d8\u00a7\u00d9\u2026\u00d8\u00aa\u00d8\u00ad\u00d8\u00a7\u00d9\u2020\u00db\u2019 \u00d8\u00b1\u00d8\u00b2\u00d9\u201e\u00d9\u00b9';
+const UNKNOWN_DEFAULT_EXAM_NAME = '??????? ????';
 
 const examResultSelect = {
   id: true,
@@ -247,7 +249,9 @@ export const examResultsService = {
         ...(query.sessionId ? { sessionId: query.sessionId } : {}),
         ...(query.classId ? { classId: query.classId } : {}),
         ...(query.sectionId ? { sectionId: query.sectionId } : {}),
-        examName: query.examName || DEFAULT_EXAM_NAME,
+        ...(query.examName
+          ? { examName: query.examName }
+          : { examName: { in: [DEFAULT_EXAM_NAME, LEGACY_DEFAULT_EXAM_NAME, UNKNOWN_DEFAULT_EXAM_NAME] } }),
         status: 'active',
       },
       orderBy: { updatedAt: 'desc' },

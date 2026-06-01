@@ -9,16 +9,16 @@ datasource db {
 }
 
 model Admin {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(150)
-  email     String   @unique @db.VarChar(150)
-  username  String   @unique @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  role      String   @default("admin") @db.VarChar(50)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  madrassaProfile MadrassaProfile?
+  id               Int               @id @default(autoincrement())
+  name             String            @db.VarChar(150)
+  email            String            @unique @db.VarChar(150)
+  username         String            @unique @db.VarChar(100)
+  password         String            @db.VarChar(255)
+  role             String            @default("admin") @db.VarChar(50)
+  status           String            @default("active") @db.VarChar(50)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  madrassaProfile  MadrassaProfile?
   financialRecords FinancialRecord[]
 
   @@map("admins")
@@ -94,28 +94,28 @@ model Qualification {
 }
 
 model Subject {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
-  detail    String?  @db.VarChar(255)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  examSchedules ExamSchedule[]
+  id                 Int                 @id @default(autoincrement())
+  name               String              @unique @db.VarChar(150)
+  detail             String?             @db.VarChar(255)
+  status             String              @default("active") @db.VarChar(50)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  examSchedules      ExamSchedule[]
   examResultSubjects ExamResultSubject[]
 
   @@map("subjects")
 }
 
 model Branch {
-  id        Int             @id @default(autoincrement())
-  name      String          @unique @db.VarChar(150)
-  code      String?         @unique @db.VarChar(50)
-  address   String?         @db.VarChar(255)
-  status    String          @default("active") @db.VarChar(50)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  classes   AcademicClass[]
-  assignments StudentClassAssignment[]
+  id                 Int                      @id @default(autoincrement())
+  name               String                   @unique @db.VarChar(150)
+  code               String?                  @unique @db.VarChar(50)
+  address            String?                  @db.VarChar(255)
+  status             String                   @default("active") @db.VarChar(50)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  classes            AcademicClass[]
+  assignments        StudentClassAssignment[]
   studentAttendances StudentAttendance[]
   teacherAttendances TeacherAttendance[]
 
@@ -123,56 +123,56 @@ model Branch {
 }
 
 model AcademicClass {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(150)
-  branchId  Int
-  status    String    @default("active") @db.VarChar(50)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  branch    Branch    @relation(fields: [branchId], references: [id])
-  sections  Section[]
-  assignments StudentClassAssignment[]
+  id                 Int                      @id @default(autoincrement())
+  name               String                   @db.VarChar(150)
+  branchId           Int
+  status             String                   @default("active") @db.VarChar(50)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  branch             Branch                   @relation(fields: [branchId], references: [id])
+  sections           Section[]
+  assignments        StudentClassAssignment[]
   studentAttendances StudentAttendance[]
-  studentSchedules StudentSchedule[]
-  teacherSchedules TeacherSchedule[]
-  examSchedules ExamSchedule[]
-  examResults ExamResult[]
+  studentSchedules   StudentSchedule[]
+  teacherSchedules   TeacherSchedule[]
+  examSchedules      ExamSchedule[]
+  examResults        ExamResult[]
 
   @@unique([branchId, name])
   @@map("classes")
 }
 
 model Section {
-  id        Int           @id @default(autoincrement())
-  name      String        @db.VarChar(150)
-  classId   Int
-  status    String        @default("active") @db.VarChar(50)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  class     AcademicClass @relation(fields: [classId], references: [id])
-  assignments StudentClassAssignment[]
+  id                 Int                      @id @default(autoincrement())
+  name               String                   @db.VarChar(150)
+  classId            Int
+  status             String                   @default("active") @db.VarChar(50)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  class              AcademicClass            @relation(fields: [classId], references: [id])
+  assignments        StudentClassAssignment[]
   studentAttendances StudentAttendance[]
-  studentSchedules StudentSchedule[]
-  teacherSchedules TeacherSchedule[]
-  examResults ExamResult[]
+  studentSchedules   StudentSchedule[]
+  teacherSchedules   TeacherSchedule[]
+  examResults        ExamResult[]
 
   @@unique([classId, name])
   @@map("sections")
 }
 
 model AcademicSession {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
-  startDate DateTime
-  endDate   DateTime
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  assignments StudentClassAssignment[]
+  id               Int                      @id @default(autoincrement())
+  name             String                   @unique @db.VarChar(150)
+  startDate        DateTime
+  endDate          DateTime
+  status           String                   @default("active") @db.VarChar(50)
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  assignments      StudentClassAssignment[]
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
-  examSchedules ExamSchedule[]
-  examResults ExamResult[]
+  examSchedules    ExamSchedule[]
+  examResults      ExamResult[]
 
   @@map("sessions")
 }
@@ -308,64 +308,64 @@ model ExamResultSubject {
 }
 
 model Student {
-  id              Int                      @id @default(autoincrement())
-  admissionNumber String                   @unique @db.VarChar(100)
-  admissionDate   DateTime?
-  admissionFee    Decimal?                 @db.Decimal(10, 2)
-  fullName        String                   @db.VarChar(150)
-  fatherName      String                   @db.VarChar(150)
-  gender          String                   @db.VarChar(20)
-  caste           String?                  @db.VarChar(100)
-  cnic            String?                  @db.VarChar(50)
-  dob             DateTime?
-  bForm           String?                  @db.VarChar(50)
-  phone           String?                  @db.VarChar(50)
-  whatsapp        String?                  @db.VarChar(50)
-  email           String?                  @db.VarChar(150)
-  address         String?                  @db.VarChar(255)
-  currentAddress  String?                  @db.VarChar(255)
-  permanentAddress String?                 @db.VarChar(255)
-  district        String?                  @db.VarChar(150)
-  prevMadrassa    String?                  @db.VarChar(150)
-  prevSchool      String?                  @db.VarChar(150)
-  secularEdu      String?                  @db.VarChar(150)
-  religiousEdu    String?                  @db.VarChar(150)
-  requiredClass   String?                  @db.VarChar(150)
-  requiredJamaat  String?                  @db.VarChar(150)
-  teacherName     String?                  @db.VarChar(150)
-  medicalCondition String?                 @db.VarChar(255)
-  monthlyFee      Decimal?                 @db.Decimal(10, 2)
-  reside          String?                  @db.VarChar(20)
-  imageUrl        String?                  @db.VarChar(255)
-  status          String                   @default("active") @db.VarChar(50)
-  createdAt       DateTime                 @default(now())
-  updatedAt       DateTime                 @updatedAt
-  parents         StudentParent[]
-  assignments     StudentClassAssignment[]
-  attendances     StudentAttendance[]
-  hifzDailyEntries HifzDailyEntry[]
-  hifzWeeklyEntries HifzWeeklyEntry[]
+  id                 Int                      @id @default(autoincrement())
+  admissionNumber    String                   @unique @db.VarChar(100)
+  admissionDate      DateTime?
+  admissionFee       Decimal?                 @db.Decimal(10, 2)
+  fullName           String                   @db.VarChar(150)
+  fatherName         String                   @db.VarChar(150)
+  gender             String                   @db.VarChar(20)
+  caste              String?                  @db.VarChar(100)
+  cnic               String?                  @db.VarChar(50)
+  dob                DateTime?
+  bForm              String?                  @db.VarChar(50)
+  phone              String?                  @db.VarChar(50)
+  whatsapp           String?                  @db.VarChar(50)
+  email              String?                  @db.VarChar(150)
+  address            String?                  @db.VarChar(255)
+  currentAddress     String?                  @db.VarChar(255)
+  permanentAddress   String?                  @db.VarChar(255)
+  district           String?                  @db.VarChar(150)
+  prevMadrassa       String?                  @db.VarChar(150)
+  prevSchool         String?                  @db.VarChar(150)
+  secularEdu         String?                  @db.VarChar(150)
+  religiousEdu       String?                  @db.VarChar(150)
+  requiredClass      String?                  @db.VarChar(150)
+  requiredJamaat     String?                  @db.VarChar(150)
+  teacherName        String?                  @db.VarChar(150)
+  medicalCondition   String?                  @db.VarChar(255)
+  monthlyFee         Decimal?                 @db.Decimal(10, 2)
+  reside             String?                  @db.VarChar(20)
+  imageUrl           String?                  @db.VarChar(255)
+  status             String                   @default("active") @db.VarChar(50)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  parents            StudentParent[]
+  assignments        StudentClassAssignment[]
+  attendances        StudentAttendance[]
+  hifzDailyEntries   HifzDailyEntry[]
+  hifzWeeklyEntries  HifzWeeklyEntry[]
   hifzMonthlyEntries HifzMonthlyEntry[]
-  hifzSiparaEntries HifzSiparaEntry[]
-  feeVouchers      StudentFeeVoucher[]
-  examResults      ExamResult[]
+  hifzSiparaEntries  HifzSiparaEntry[]
+  feeVouchers        StudentFeeVoucher[]
+  examResults        ExamResult[]
 
   @@map("students")
 }
 
 model Parent {
-  id         Int             @id @default(autoincrement())
-  fullName   String          @db.VarChar(150)
-  familyNumber String?       @unique @db.VarChar(100)
-  phone      String?         @db.VarChar(50)
-  email      String?         @db.VarChar(150)
-  cnic       String?         @db.VarChar(50)
-  occupation String?         @db.VarChar(150)
-  address    String?         @db.VarChar(255)
-  status     String          @default("active") @db.VarChar(50)
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  students   StudentParent[]
+  id           Int             @id @default(autoincrement())
+  fullName     String          @db.VarChar(150)
+  familyNumber String?         @unique @db.VarChar(100)
+  phone        String?         @db.VarChar(50)
+  email        String?         @db.VarChar(150)
+  cnic         String?         @db.VarChar(50)
+  occupation   String?         @db.VarChar(150)
+  address      String?         @db.VarChar(255)
+  status       String          @default("active") @db.VarChar(50)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  students     StudentParent[]
 
   @@map("parents")
 }
@@ -406,22 +406,37 @@ model StudentClassAssignment {
 }
 
 model Teacher {
-  id           Int      @id @default(autoincrement())
-  fullName     String   @db.VarChar(150)
-  email        String?  @db.VarChar(150)
-  phone        String?  @unique @db.VarChar(50)
-  cnic         String?  @unique @db.VarChar(50)
-  subject      String   @db.VarChar(150)
-  qualification String? @db.VarChar(150)
-  address      String?  @db.VarChar(255)
-  imageUrl     String?  @db.VarChar(255)
-  basicSalary  Decimal  @db.Decimal(10, 2)
-  status       String   @default("active") @db.VarChar(50)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  attendances  TeacherAttendance[]
-  salaryEntries SalaryEntry[]
-  schedules    TeacherSchedule[]
+  id                 Int                 @id @default(autoincrement())
+  staffType          String              @default("teacher") @db.VarChar(50)
+  fullName           String              @db.VarChar(150)
+  email              String?             @db.VarChar(150)
+  phone              String?             @unique @db.VarChar(50)
+  cnic               String?             @unique @db.VarChar(50)
+  subject            String?             @db.VarChar(150)
+  qualification      String?             @db.VarChar(150)
+  educationInstitute String?             @db.VarChar(150)
+  educationYear      String?             @db.VarChar(20)
+  specialization     String?             @db.VarChar(150)
+  address            String?             @db.VarChar(255)
+  imageUrl           String?             @db.VarChar(255)
+  basicSalary        Decimal             @db.Decimal(10, 2)
+  bankName           String?             @db.VarChar(150)
+  accountTitle       String?             @db.VarChar(150)
+  accountNumber      String?             @db.VarChar(100)
+  iban               String?             @db.VarChar(100)
+  jobTitle           String?             @db.VarChar(150)
+  department         String?             @db.VarChar(150)
+  employmentType     String?             @db.VarChar(100)
+  appointmentDate    String?             @db.VarChar(20)
+  joiningDate        String?             @db.VarChar(20)
+  experienceSummary  String?             @db.VarChar(500)
+  notes              String?             @db.VarChar(500)
+  status             String              @default("active") @db.VarChar(50)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  attendances        TeacherAttendance[]
+  salaryEntries      SalaryEntry[]
+  schedules          TeacherSchedule[]
 
   @@map("teachers")
 }
@@ -463,31 +478,31 @@ model TeacherAttendance {
 }
 
 model HifzDailyEntry {
-  id                Int      @id @default(autoincrement())
-  studentId         Int
-  date              DateTime
-  sabq              String?  @db.VarChar(150)
-  sabqListener      String?  @db.VarChar(150)
-  sabqMistake       Int?
-  sabqAtkann        Int?
-  sabaqi            String?  @db.VarChar(150)
-  sabaqiMistake     Int?
-  sabaqiAtkann      Int?
-  manzil            String?  @db.VarChar(150)
-  manzilBeforeDetail String? @db.VarChar(150)
+  id                  Int      @id @default(autoincrement())
+  studentId           Int
+  date                DateTime
+  sabq                String?  @db.VarChar(150)
+  sabqListener        String?  @db.VarChar(150)
+  sabqMistake         Int?
+  sabqAtkann          Int?
+  sabaqi              String?  @db.VarChar(150)
+  sabaqiMistake       Int?
+  sabaqiAtkann        Int?
+  manzil              String?  @db.VarChar(150)
+  manzilBeforeDetail  String?  @db.VarChar(150)
   manzilBeforeMistake Int?
-  manzilBeforeAtkann Int?
-  manzilAfterDetail String? @db.VarChar(150)
-  manzilAfterMistake Int?
-  manzilAfterAtkann Int?
-  lessonDetail      String?  @db.VarChar(255)
-  count             Int?
-  performanceStatus String   @db.VarChar(50)
-  remarks           String?  @db.VarChar(255)
-  status            String   @default("active") @db.VarChar(50)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  student           Student  @relation(fields: [studentId], references: [id])
+  manzilBeforeAtkann  Int?
+  manzilAfterDetail   String?  @db.VarChar(150)
+  manzilAfterMistake  Int?
+  manzilAfterAtkann   Int?
+  lessonDetail        String?  @db.VarChar(255)
+  count               Int?
+  performanceStatus   String   @db.VarChar(50)
+  remarks             String?  @db.VarChar(255)
+  status              String   @default("active") @db.VarChar(50)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  student             Student  @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, date])
   @@map("hifz_daily_entries")
@@ -544,60 +559,60 @@ model HifzMonthlyEntry {
 }
 
 model HifzSiparaEntry {
-  id                Int      @id @default(autoincrement())
+  id                Int       @id @default(autoincrement())
   studentId         Int
   siparaNumber      Int
   startDate         DateTime?
   endDate           DateTime?
   totalDays         Int?
-  quality           String?  @db.VarChar(150)
-  performanceStatus String   @db.VarChar(50)
-  remarks           String?  @db.VarChar(255)
-  status            String   @default("active") @db.VarChar(50)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  student           Student  @relation(fields: [studentId], references: [id])
+  quality           String?   @db.VarChar(150)
+  performanceStatus String    @db.VarChar(50)
+  remarks           String?   @db.VarChar(255)
+  status            String    @default("active") @db.VarChar(50)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  student           Student   @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, siparaNumber])
   @@map("hifz_sipara_entries")
 }
 
 model FinanceHead {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique @db.VarChar(150)
-  type            String           @db.VarChar(20)
-  description     String?          @db.VarChar(255)
-  status          String           @default("active") @db.VarChar(50)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  salaryEntries   SalaryEntry[]
-  transactions    FinanceTransaction[]
+  id            Int                  @id @default(autoincrement())
+  name          String               @unique @db.VarChar(150)
+  type          String               @db.VarChar(20)
+  description   String?              @db.VarChar(255)
+  status        String               @default("active") @db.VarChar(50)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  salaryEntries SalaryEntry[]
+  transactions  FinanceTransaction[]
 
   @@map("finance_heads")
 }
 
 model StudentFeeVoucher {
-  id             Int      @id @default(autoincrement())
-  voucherNo      String   @unique @db.VarChar(100)
-  studentId      Int
-  feeMonth       Int
-  feeYear        Int
-  monthlyFee     Decimal  @db.Decimal(10, 2)
-  admissionFee   Decimal  @default(0) @db.Decimal(10, 2)
-  arrears        Decimal  @default(0) @db.Decimal(10, 2)
-  discount       Decimal  @default(0) @db.Decimal(10, 2)
-  fine           Decimal  @default(0) @db.Decimal(10, 2)
-  totalAmount    Decimal  @db.Decimal(10, 2)
-  paidAmount     Decimal  @default(0) @db.Decimal(10, 2)
-  dueAmount      Decimal  @db.Decimal(10, 2)
-  dueDate        DateTime?
-  paidDate       DateTime?
-  paymentMethod  String?  @db.VarChar(50)
-  remarks        String?  @db.VarChar(255)
-  status         String   @default("unpaid") @db.VarChar(50)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  student        Student  @relation(fields: [studentId], references: [id])
+  id            Int       @id @default(autoincrement())
+  voucherNo     String    @unique @db.VarChar(100)
+  studentId     Int
+  feeMonth      Int
+  feeYear       Int
+  monthlyFee    Decimal   @db.Decimal(10, 2)
+  admissionFee  Decimal   @default(0) @db.Decimal(10, 2)
+  arrears       Decimal   @default(0) @db.Decimal(10, 2)
+  discount      Decimal   @default(0) @db.Decimal(10, 2)
+  fine          Decimal   @default(0) @db.Decimal(10, 2)
+  totalAmount   Decimal   @db.Decimal(10, 2)
+  paidAmount    Decimal   @default(0) @db.Decimal(10, 2)
+  dueAmount     Decimal   @db.Decimal(10, 2)
+  dueDate       DateTime?
+  paidDate      DateTime?
+  paymentMethod String?   @db.VarChar(50)
+  remarks       String?   @db.VarChar(255)
+  status        String    @default("unpaid") @db.VarChar(50)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  student       Student   @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, feeMonth, feeYear])
   @@index([feeMonth, feeYear, status])
@@ -605,23 +620,23 @@ model StudentFeeVoucher {
 }
 
 model FundCollection {
-  id              Int      @id @default(autoincrement())
-  collectionGroupId String @db.VarChar(100)
-  donorName       String   @db.VarChar(150)
-  careOf          String?  @db.VarChar(150)
-  phone           String?  @db.VarChar(50)
-  paymentMode     String   @db.VarChar(50)
-  donationType    String   @db.VarChar(100)
-  donationSubType String   @db.VarChar(100)
-  purpose         String?  @db.VarChar(255)
-  amount          Decimal  @db.Decimal(10, 2)
-  receiptNo       String?  @db.VarChar(100)
-  details         String?  @db.VarChar(255)
-  paymentDate     DateTime
-  remarks         String?  @db.VarChar(255)
-  status          String   @default("active") @db.VarChar(50)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  collectionGroupId String   @db.VarChar(100)
+  donorName         String   @db.VarChar(150)
+  careOf            String?  @db.VarChar(150)
+  phone             String?  @db.VarChar(50)
+  paymentMode       String   @db.VarChar(50)
+  donationType      String   @db.VarChar(100)
+  donationSubType   String   @db.VarChar(100)
+  purpose           String?  @db.VarChar(255)
+  amount            Decimal  @db.Decimal(10, 2)
+  receiptNo         String?  @db.VarChar(100)
+  details           String?  @db.VarChar(255)
+  paymentDate       DateTime
+  remarks           String?  @db.VarChar(255)
+  status            String   @default("active") @db.VarChar(50)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@index([collectionGroupId])
   @@map("fund_collections")
@@ -629,18 +644,18 @@ model FundCollection {
 
 model SalaryEntry {
   id            Int         @id @default(autoincrement())
-  teacherId      Int
-  financeHeadId  Int
-  amount         Decimal    @db.Decimal(10, 2)
-  salaryMonth    Int
-  salaryYear     Int
-  paymentDate    DateTime
-  remarks        String?    @db.VarChar(255)
-  status         String     @default("active") @db.VarChar(50)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  teacher        Teacher    @relation(fields: [teacherId], references: [id])
-  financeHead    FinanceHead @relation(fields: [financeHeadId], references: [id])
+  teacherId     Int
+  financeHeadId Int
+  amount        Decimal     @db.Decimal(10, 2)
+  salaryMonth   Int
+  salaryYear    Int
+  paymentDate   DateTime
+  remarks       String?     @db.VarChar(255)
+  status        String      @default("active") @db.VarChar(50)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  teacher       Teacher     @relation(fields: [teacherId], references: [id])
+  financeHead   FinanceHead @relation(fields: [financeHeadId], references: [id])
 
   @@unique([teacherId, salaryMonth, salaryYear])
   @@map("salary_entries")
