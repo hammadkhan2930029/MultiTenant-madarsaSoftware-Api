@@ -3,3 +3,7 @@ node_modules
 coverage
 .DS_Store
 prisma/dev.db
+
+.git.zip
+*.zip.git.zip 
+*.zip 

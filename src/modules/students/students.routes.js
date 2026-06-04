@@ -6,8 +6,10 @@ import { parseJsonFields } from '../../middlewares/parseJsonFields.middleware.js
 import {
   createStudent,
   getStudents,
+  getNextAdmissionNumber,
   getStudentById,
   updateStudent,
+  deleteStudent,
   assignClassToStudent,
   removeClassAssignment,
 } from './students.controller.js';
@@ -32,6 +34,7 @@ router.post(
   createStudent
 );
 router.get('/', validate(listStudentsValidationSchema), getStudents);
+router.get('/next-admission-number', getNextAdmissionNumber);
 router.get('/:id', validate(studentIdValidationSchema), getStudentById);
 router.put(
   '/:id',
@@ -40,6 +43,7 @@ router.put(
   validate(updateStudentValidationSchema),
   updateStudent
 );
+router.delete('/:id', validate(studentIdValidationSchema), deleteStudent);
 router.post('/:id/assign-class', validate(assignStudentClassValidationSchema), assignClassToStudent);
 router.patch(
   '/class-assignments/:assignmentId/remove',

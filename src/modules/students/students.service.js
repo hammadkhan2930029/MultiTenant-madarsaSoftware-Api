@@ -4,6 +4,42 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
 const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
+const DEFAULT_ADMISSION_NUMBER = '0001';
+
+const parseAdmissionNumber = (value) => {
+  const text = String(value || '').trim();
+  const match = text.match(/^(.*?)(\d+)$/);
+
+  if (!match) return null;
+
+  return {
+    prefix: match[1],
+    number: Number(match[2]),
+    width: match[2].length,
+  };
+};
+
+const buildNextAdmissionNumber = (students = []) => {
+  const highest = students
+    .map((student) => parseAdmissionNumber(student?.admissionNumber))
+    .filter(Boolean)
+    .reduce((currentHighest, item) => {
+      if (!currentHighest || item.number > currentHighest.number) return item;
+      return currentHighest;
+    }, null);
+
+  if (!highest) return DEFAULT_ADMISSION_NUMBER;
+
+  return `${highest.prefix}${String(highest.number + 1).padStart(highest.width, '0')}`;
+};
+
+const getNextAdmissionNumber = async (tx = prisma) => {
+  const students = await tx.student.findMany({
+    select: { admissionNumber: true },
+  });
+
+  return buildNextAdmissionNumber(students);
+};
 
 const studentSelect = {
   id: true,
@@ -191,13 +227,17 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
 };
 
 export const studentsService = {
+  async getNextAdmissionNumber() {
+    return { admissionNumber: await getNextAdmissionNumber() };
+  },
+
   async createStudent({ body, file }) {
     const existingStudent = await prisma.student.findUnique({
       where: { admissionNumber: body.admissionNumber },
     });
 
     if (existingStudent) {
-      throw new AppError('Student with the same admission number already exists.', 409);
+      body.admissionNumber = await getNextAdmissionNumber();
     }
 
     const student = await prisma.$transaction(async (tx) => {
@@ -375,6 +415,34 @@ export const studentsService = {
     });
 
     return student;
+  },
+
+  async deleteStudent(id) {
+    const existingStudent = await prisma.student.findUnique({
+      where: { id },
+    });
+
+    if (!existingStudent) {
+      throw new AppError('Student not found.', 404);
+    }
+
+    return prisma.$transaction(async (tx) => {
+      await tx.studentClassAssignment.updateMany({
+        where: {
+          studentId: id,
+          status: 'active',
+        },
+        data: {
+          status: 'inactive',
+        },
+      });
+
+      return tx.student.update({
+        where: { id },
+        data: { status: 'inactive' },
+        select: studentSelect,
+      });
+    });
   },
 
   async assignClassToStudent(studentId, payload) {

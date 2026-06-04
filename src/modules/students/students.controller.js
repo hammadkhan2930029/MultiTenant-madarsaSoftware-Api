@@ -24,6 +24,15 @@ export const getStudents = asyncHandler(async (req, res) => {
   });
 });
 
+export const getNextAdmissionNumber = asyncHandler(async (req, res) => {
+  const nextAdmissionNumber = await studentsService.getNextAdmissionNumber();
+
+  return apiResponse(res, {
+    message: 'Next admission number fetched successfully.',
+    data: nextAdmissionNumber,
+  });
+});
+
 export const getStudentById = asyncHandler(async (req, res) => {
   const student = await studentsService.getStudentById(Number(req.params.id));
 
@@ -41,6 +50,15 @@ export const updateStudent = asyncHandler(async (req, res) => {
 
   return apiResponse(res, {
     message: 'Student updated successfully.',
+    data: student,
+  });
+});
+
+export const deleteStudent = asyncHandler(async (req, res) => {
+  const student = await studentsService.deleteStudent(Number(req.params.id));
+
+  return apiResponse(res, {
+    message: 'Student deleted successfully.',
     data: student,
   });
 });
