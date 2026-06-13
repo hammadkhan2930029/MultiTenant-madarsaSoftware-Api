@@ -178,7 +178,7 @@ export const parentsService = {
       where: { id },
       data: {
         fullName: payload.fullName,
-        familyNumber: payload.familyNumber || null,
+        familyNumber: payload.familyNumber || existingParent.familyNumber,
         phone: payload.phone || null,
         email: payload.email || null,
         cnic: payload.cnic || null,

@@ -17,6 +17,14 @@ export const citiesService = {
     });
 
     if (existingCity) {
+      if (existingCity.status === 'inactive') {
+        return prisma.city.update({
+          where: { id: existingCity.id },
+          data: { status: 'active' },
+          select: citySelect,
+        });
+      }
+
       throw new AppError('City with the same name already exists.', 409);
     }
 
@@ -42,7 +50,7 @@ export const citiesService = {
         where,
         skip,
         take: limit,
-        orderBy: [{ status: 'asc' }, { name: 'asc' }],
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         select: citySelect,
       }),
       prisma.city.count({ where }),

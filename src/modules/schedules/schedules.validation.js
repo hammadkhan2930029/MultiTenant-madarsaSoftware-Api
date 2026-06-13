@@ -19,6 +19,14 @@ export const createScheduleValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const updateScheduleValidationSchema = z.object({
+  body: scheduleBodySchema,
+  params: z.object({
+    id: z.coerce.number().int().positive('Schedule id must be a valid number.'),
+  }),
+  query: z.object({}).default({}),
+});
+
 export const listSchedulesValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

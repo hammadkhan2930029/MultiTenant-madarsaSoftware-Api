@@ -85,6 +85,31 @@ export const schedulesService = {
     };
   },
 
+  async updateSchedule(id, payload) {
+    const existingSchedule = await prisma.studentSchedule.findUnique({ where: { id } });
+
+    if (!existingSchedule) {
+      throw new AppError('Schedule not found.', 404);
+    }
+
+    await ensureScheduleReferences(payload);
+
+    return prisma.studentSchedule.update({
+      where: { id },
+      data: {
+        sessionId: payload.sessionId,
+        classId: payload.classId,
+        sectionId: payload.sectionId,
+        subjects: payload.subjects,
+        days: payload.days,
+        startTime: payload.startTime,
+        endTime: payload.endTime,
+        status: payload.status || existingSchedule.status,
+      },
+      select: scheduleSelect,
+    });
+  },
+
   async deleteSchedule(id) {
     const schedule = await prisma.studentSchedule.findUnique({ where: { id } });
 

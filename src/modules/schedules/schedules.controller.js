@@ -21,6 +21,15 @@ export const getSchedules = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateSchedule = asyncHandler(async (req, res) => {
+  const schedule = await schedulesService.updateSchedule(Number(req.params.id), req.body);
+
+  return apiResponse(res, {
+    message: 'Schedule updated successfully.',
+    data: schedule,
+  });
+});
+
 export const deleteSchedule = asyncHandler(async (req, res) => {
   const schedule = await schedulesService.deleteSchedule(Number(req.params.id));
 
