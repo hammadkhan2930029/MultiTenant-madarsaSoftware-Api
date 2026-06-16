@@ -478,31 +478,46 @@ model TeacherAttendance {
 }
 
 model HifzDailyEntry {
-  id                  Int      @id @default(autoincrement())
-  studentId           Int
-  date                DateTime
-  sabq                String?  @db.VarChar(150)
-  sabqListener        String?  @db.VarChar(150)
-  sabqMistake         Int?
-  sabqAtkann          Int?
-  sabaqi              String?  @db.VarChar(150)
-  sabaqiMistake       Int?
-  sabaqiAtkann        Int?
-  manzil              String?  @db.VarChar(150)
-  manzilBeforeDetail  String?  @db.VarChar(150)
-  manzilBeforeMistake Int?
-  manzilBeforeAtkann  Int?
-  manzilAfterDetail   String?  @db.VarChar(150)
-  manzilAfterMistake  Int?
-  manzilAfterAtkann   Int?
-  lessonDetail        String?  @db.VarChar(255)
-  count               Int?
-  performanceStatus   String   @db.VarChar(50)
-  remarks             String?  @db.VarChar(255)
-  status              String   @default("active") @db.VarChar(50)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  student             Student  @relation(fields: [studentId], references: [id])
+  id                   Int      @id @default(autoincrement())
+  studentId            Int
+  date                 DateTime
+  sabq                 String?  @db.VarChar(150)
+  sabqListener         String?  @db.VarChar(150)
+  sabqRuku             String?  @db.VarChar(100)
+  sabqAyatFrom         String?  @db.VarChar(100)
+  sabqAyatTo           String?  @db.VarChar(100)
+  sabqTeacherName      String?  @db.VarChar(150)
+  sabqMistake          Int?
+  sabqAtkann           Int?
+  sabaqi               String?  @db.VarChar(150)
+  sabaqiRuku           String?  @db.VarChar(100)
+  sabaqiAyatFrom       String?  @db.VarChar(100)
+  sabaqiAyatTo         String?  @db.VarChar(100)
+  sabaqiMistake        Int?
+  sabaqiAtkann         Int?
+  manzil               String?  @db.VarChar(150)
+  manzilBeforeDetail   String?  @db.VarChar(150)
+  manzilBeforePara     String?  @db.VarChar(100)
+  manzilBeforeRuku     String?  @db.VarChar(100)
+  manzilBeforeAyatFrom String?  @db.VarChar(100)
+  manzilBeforeAyatTo   String?  @db.VarChar(100)
+  manzilBeforeMistake  Int?
+  manzilBeforeAtkann   Int?
+  manzilAfterDetail    String?  @db.VarChar(150)
+  manzilAfterPara      String?  @db.VarChar(100)
+  manzilAfterRuku      String?  @db.VarChar(100)
+  manzilAfterAyatFrom  String?  @db.VarChar(100)
+  manzilAfterAyatTo    String?  @db.VarChar(100)
+  manzilAfterMistake   Int?
+  manzilAfterAtkann    Int?
+  lessonDetail         String?  @db.VarChar(255)
+  count                Int?
+  performanceStatus    String   @db.VarChar(50)
+  remarks              String?  @db.VarChar(255)
+  status               String   @default("active") @db.VarChar(50)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  student              Student  @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, date])
   @@map("hifz_daily_entries")

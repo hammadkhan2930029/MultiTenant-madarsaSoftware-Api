@@ -25,13 +25,15 @@ export const getStudentAttendanceValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     date: z.coerce.date().optional(),
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
     studentId: z.coerce.number().int().positive().optional(),
     branchId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),
     status: attendanceStatus.optional(),
     page: z.coerce.number().int().positive().optional(),
-    limit: z.coerce.number().int().positive().max(100).optional(),
+    limit: z.coerce.number().int().positive().max(400).optional(),
   }),
 });
 

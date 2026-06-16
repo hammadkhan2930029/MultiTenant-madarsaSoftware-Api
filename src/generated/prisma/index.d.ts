@@ -30020,16 +30020,31 @@ export namespace Prisma {
     date: Date | null
     sabq: string | null
     sabqListener: string | null
+    sabqRuku: string | null
+    sabqAyatFrom: string | null
+    sabqAyatTo: string | null
+    sabqTeacherName: string | null
     sabqMistake: number | null
     sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiRuku: string | null
+    sabaqiAyatFrom: string | null
+    sabaqiAyatTo: string | null
     sabaqiMistake: number | null
     sabaqiAtkann: number | null
     manzil: string | null
     manzilBeforeDetail: string | null
+    manzilBeforePara: string | null
+    manzilBeforeRuku: string | null
+    manzilBeforeAyatFrom: string | null
+    manzilBeforeAyatTo: string | null
     manzilBeforeMistake: number | null
     manzilBeforeAtkann: number | null
     manzilAfterDetail: string | null
+    manzilAfterPara: string | null
+    manzilAfterRuku: string | null
+    manzilAfterAyatFrom: string | null
+    manzilAfterAyatTo: string | null
     manzilAfterMistake: number | null
     manzilAfterAtkann: number | null
     lessonDetail: string | null
@@ -30047,16 +30062,31 @@ export namespace Prisma {
     date: Date | null
     sabq: string | null
     sabqListener: string | null
+    sabqRuku: string | null
+    sabqAyatFrom: string | null
+    sabqAyatTo: string | null
+    sabqTeacherName: string | null
     sabqMistake: number | null
     sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiRuku: string | null
+    sabaqiAyatFrom: string | null
+    sabaqiAyatTo: string | null
     sabaqiMistake: number | null
     sabaqiAtkann: number | null
     manzil: string | null
     manzilBeforeDetail: string | null
+    manzilBeforePara: string | null
+    manzilBeforeRuku: string | null
+    manzilBeforeAyatFrom: string | null
+    manzilBeforeAyatTo: string | null
     manzilBeforeMistake: number | null
     manzilBeforeAtkann: number | null
     manzilAfterDetail: string | null
+    manzilAfterPara: string | null
+    manzilAfterRuku: string | null
+    manzilAfterAyatFrom: string | null
+    manzilAfterAyatTo: string | null
     manzilAfterMistake: number | null
     manzilAfterAtkann: number | null
     lessonDetail: string | null
@@ -30074,16 +30104,31 @@ export namespace Prisma {
     date: number
     sabq: number
     sabqListener: number
+    sabqRuku: number
+    sabqAyatFrom: number
+    sabqAyatTo: number
+    sabqTeacherName: number
     sabqMistake: number
     sabqAtkann: number
     sabaqi: number
+    sabaqiRuku: number
+    sabaqiAyatFrom: number
+    sabaqiAyatTo: number
     sabaqiMistake: number
     sabaqiAtkann: number
     manzil: number
     manzilBeforeDetail: number
+    manzilBeforePara: number
+    manzilBeforeRuku: number
+    manzilBeforeAyatFrom: number
+    manzilBeforeAyatTo: number
     manzilBeforeMistake: number
     manzilBeforeAtkann: number
     manzilAfterDetail: number
+    manzilAfterPara: number
+    manzilAfterRuku: number
+    manzilAfterAyatFrom: number
+    manzilAfterAyatTo: number
     manzilAfterMistake: number
     manzilAfterAtkann: number
     lessonDetail: number
@@ -30131,16 +30176,31 @@ export namespace Prisma {
     date?: true
     sabq?: true
     sabqListener?: true
+    sabqRuku?: true
+    sabqAyatFrom?: true
+    sabqAyatTo?: true
+    sabqTeacherName?: true
     sabqMistake?: true
     sabqAtkann?: true
     sabaqi?: true
+    sabaqiRuku?: true
+    sabaqiAyatFrom?: true
+    sabaqiAyatTo?: true
     sabaqiMistake?: true
     sabaqiAtkann?: true
     manzil?: true
     manzilBeforeDetail?: true
+    manzilBeforePara?: true
+    manzilBeforeRuku?: true
+    manzilBeforeAyatFrom?: true
+    manzilBeforeAyatTo?: true
     manzilBeforeMistake?: true
     manzilBeforeAtkann?: true
     manzilAfterDetail?: true
+    manzilAfterPara?: true
+    manzilAfterRuku?: true
+    manzilAfterAyatFrom?: true
+    manzilAfterAyatTo?: true
     manzilAfterMistake?: true
     manzilAfterAtkann?: true
     lessonDetail?: true
@@ -30158,16 +30218,31 @@ export namespace Prisma {
     date?: true
     sabq?: true
     sabqListener?: true
+    sabqRuku?: true
+    sabqAyatFrom?: true
+    sabqAyatTo?: true
+    sabqTeacherName?: true
     sabqMistake?: true
     sabqAtkann?: true
     sabaqi?: true
+    sabaqiRuku?: true
+    sabaqiAyatFrom?: true
+    sabaqiAyatTo?: true
     sabaqiMistake?: true
     sabaqiAtkann?: true
     manzil?: true
     manzilBeforeDetail?: true
+    manzilBeforePara?: true
+    manzilBeforeRuku?: true
+    manzilBeforeAyatFrom?: true
+    manzilBeforeAyatTo?: true
     manzilBeforeMistake?: true
     manzilBeforeAtkann?: true
     manzilAfterDetail?: true
+    manzilAfterPara?: true
+    manzilAfterRuku?: true
+    manzilAfterAyatFrom?: true
+    manzilAfterAyatTo?: true
     manzilAfterMistake?: true
     manzilAfterAtkann?: true
     lessonDetail?: true
@@ -30185,16 +30260,31 @@ export namespace Prisma {
     date?: true
     sabq?: true
     sabqListener?: true
+    sabqRuku?: true
+    sabqAyatFrom?: true
+    sabqAyatTo?: true
+    sabqTeacherName?: true
     sabqMistake?: true
     sabqAtkann?: true
     sabaqi?: true
+    sabaqiRuku?: true
+    sabaqiAyatFrom?: true
+    sabaqiAyatTo?: true
     sabaqiMistake?: true
     sabaqiAtkann?: true
     manzil?: true
     manzilBeforeDetail?: true
+    manzilBeforePara?: true
+    manzilBeforeRuku?: true
+    manzilBeforeAyatFrom?: true
+    manzilBeforeAyatTo?: true
     manzilBeforeMistake?: true
     manzilBeforeAtkann?: true
     manzilAfterDetail?: true
+    manzilAfterPara?: true
+    manzilAfterRuku?: true
+    manzilAfterAyatFrom?: true
+    manzilAfterAyatTo?: true
     manzilAfterMistake?: true
     manzilAfterAtkann?: true
     lessonDetail?: true
@@ -30299,16 +30389,31 @@ export namespace Prisma {
     date: Date
     sabq: string | null
     sabqListener: string | null
+    sabqRuku: string | null
+    sabqAyatFrom: string | null
+    sabqAyatTo: string | null
+    sabqTeacherName: string | null
     sabqMistake: number | null
     sabqAtkann: number | null
     sabaqi: string | null
+    sabaqiRuku: string | null
+    sabaqiAyatFrom: string | null
+    sabaqiAyatTo: string | null
     sabaqiMistake: number | null
     sabaqiAtkann: number | null
     manzil: string | null
     manzilBeforeDetail: string | null
+    manzilBeforePara: string | null
+    manzilBeforeRuku: string | null
+    manzilBeforeAyatFrom: string | null
+    manzilBeforeAyatTo: string | null
     manzilBeforeMistake: number | null
     manzilBeforeAtkann: number | null
     manzilAfterDetail: string | null
+    manzilAfterPara: string | null
+    manzilAfterRuku: string | null
+    manzilAfterAyatFrom: string | null
+    manzilAfterAyatTo: string | null
     manzilAfterMistake: number | null
     manzilAfterAtkann: number | null
     lessonDetail: string | null
@@ -30345,16 +30450,31 @@ export namespace Prisma {
     date?: boolean
     sabq?: boolean
     sabqListener?: boolean
+    sabqRuku?: boolean
+    sabqAyatFrom?: boolean
+    sabqAyatTo?: boolean
+    sabqTeacherName?: boolean
     sabqMistake?: boolean
     sabqAtkann?: boolean
     sabaqi?: boolean
+    sabaqiRuku?: boolean
+    sabaqiAyatFrom?: boolean
+    sabaqiAyatTo?: boolean
     sabaqiMistake?: boolean
     sabaqiAtkann?: boolean
     manzil?: boolean
     manzilBeforeDetail?: boolean
+    manzilBeforePara?: boolean
+    manzilBeforeRuku?: boolean
+    manzilBeforeAyatFrom?: boolean
+    manzilBeforeAyatTo?: boolean
     manzilBeforeMistake?: boolean
     manzilBeforeAtkann?: boolean
     manzilAfterDetail?: boolean
+    manzilAfterPara?: boolean
+    manzilAfterRuku?: boolean
+    manzilAfterAyatFrom?: boolean
+    manzilAfterAyatTo?: boolean
     manzilAfterMistake?: boolean
     manzilAfterAtkann?: boolean
     lessonDetail?: boolean
@@ -30375,16 +30495,31 @@ export namespace Prisma {
     date?: boolean
     sabq?: boolean
     sabqListener?: boolean
+    sabqRuku?: boolean
+    sabqAyatFrom?: boolean
+    sabqAyatTo?: boolean
+    sabqTeacherName?: boolean
     sabqMistake?: boolean
     sabqAtkann?: boolean
     sabaqi?: boolean
+    sabaqiRuku?: boolean
+    sabaqiAyatFrom?: boolean
+    sabaqiAyatTo?: boolean
     sabaqiMistake?: boolean
     sabaqiAtkann?: boolean
     manzil?: boolean
     manzilBeforeDetail?: boolean
+    manzilBeforePara?: boolean
+    manzilBeforeRuku?: boolean
+    manzilBeforeAyatFrom?: boolean
+    manzilBeforeAyatTo?: boolean
     manzilBeforeMistake?: boolean
     manzilBeforeAtkann?: boolean
     manzilAfterDetail?: boolean
+    manzilAfterPara?: boolean
+    manzilAfterRuku?: boolean
+    manzilAfterAyatFrom?: boolean
+    manzilAfterAyatTo?: boolean
     manzilAfterMistake?: boolean
     manzilAfterAtkann?: boolean
     lessonDetail?: boolean
@@ -30396,7 +30531,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type HifzDailyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "date" | "sabq" | "sabqListener" | "sabqMistake" | "sabqAtkann" | "sabaqi" | "sabaqiMistake" | "sabaqiAtkann" | "manzil" | "manzilBeforeDetail" | "manzilBeforeMistake" | "manzilBeforeAtkann" | "manzilAfterDetail" | "manzilAfterMistake" | "manzilAfterAtkann" | "lessonDetail" | "count" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzDailyEntry"]>
+  export type HifzDailyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "date" | "sabq" | "sabqListener" | "sabqRuku" | "sabqAyatFrom" | "sabqAyatTo" | "sabqTeacherName" | "sabqMistake" | "sabqAtkann" | "sabaqi" | "sabaqiRuku" | "sabaqiAyatFrom" | "sabaqiAyatTo" | "sabaqiMistake" | "sabaqiAtkann" | "manzil" | "manzilBeforeDetail" | "manzilBeforePara" | "manzilBeforeRuku" | "manzilBeforeAyatFrom" | "manzilBeforeAyatTo" | "manzilBeforeMistake" | "manzilBeforeAtkann" | "manzilAfterDetail" | "manzilAfterPara" | "manzilAfterRuku" | "manzilAfterAyatFrom" | "manzilAfterAyatTo" | "manzilAfterMistake" | "manzilAfterAtkann" | "lessonDetail" | "count" | "performanceStatus" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hifzDailyEntry"]>
   export type HifzDailyEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -30412,16 +30547,31 @@ export namespace Prisma {
       date: Date
       sabq: string | null
       sabqListener: string | null
+      sabqRuku: string | null
+      sabqAyatFrom: string | null
+      sabqAyatTo: string | null
+      sabqTeacherName: string | null
       sabqMistake: number | null
       sabqAtkann: number | null
       sabaqi: string | null
+      sabaqiRuku: string | null
+      sabaqiAyatFrom: string | null
+      sabaqiAyatTo: string | null
       sabaqiMistake: number | null
       sabaqiAtkann: number | null
       manzil: string | null
       manzilBeforeDetail: string | null
+      manzilBeforePara: string | null
+      manzilBeforeRuku: string | null
+      manzilBeforeAyatFrom: string | null
+      manzilBeforeAyatTo: string | null
       manzilBeforeMistake: number | null
       manzilBeforeAtkann: number | null
       manzilAfterDetail: string | null
+      manzilAfterPara: string | null
+      manzilAfterRuku: string | null
+      manzilAfterAyatFrom: string | null
+      manzilAfterAyatTo: string | null
       manzilAfterMistake: number | null
       manzilAfterAtkann: number | null
       lessonDetail: string | null
@@ -30806,16 +30956,31 @@ export namespace Prisma {
     readonly date: FieldRef<"HifzDailyEntry", 'DateTime'>
     readonly sabq: FieldRef<"HifzDailyEntry", 'String'>
     readonly sabqListener: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqRuku: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqAyatFrom: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqAyatTo: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabqTeacherName: FieldRef<"HifzDailyEntry", 'String'>
     readonly sabqMistake: FieldRef<"HifzDailyEntry", 'Int'>
     readonly sabqAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly sabaqi: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabaqiRuku: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabaqiAyatFrom: FieldRef<"HifzDailyEntry", 'String'>
+    readonly sabaqiAyatTo: FieldRef<"HifzDailyEntry", 'String'>
     readonly sabaqiMistake: FieldRef<"HifzDailyEntry", 'Int'>
     readonly sabaqiAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly manzil: FieldRef<"HifzDailyEntry", 'String'>
     readonly manzilBeforeDetail: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforePara: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforeRuku: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforeAyatFrom: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilBeforeAyatTo: FieldRef<"HifzDailyEntry", 'String'>
     readonly manzilBeforeMistake: FieldRef<"HifzDailyEntry", 'Int'>
     readonly manzilBeforeAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly manzilAfterDetail: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilAfterPara: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilAfterRuku: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilAfterAyatFrom: FieldRef<"HifzDailyEntry", 'String'>
+    readonly manzilAfterAyatTo: FieldRef<"HifzDailyEntry", 'String'>
     readonly manzilAfterMistake: FieldRef<"HifzDailyEntry", 'Int'>
     readonly manzilAfterAtkann: FieldRef<"HifzDailyEntry", 'Int'>
     readonly lessonDetail: FieldRef<"HifzDailyEntry", 'String'>
@@ -41325,16 +41490,31 @@ export namespace Prisma {
     date: 'date',
     sabq: 'sabq',
     sabqListener: 'sabqListener',
+    sabqRuku: 'sabqRuku',
+    sabqAyatFrom: 'sabqAyatFrom',
+    sabqAyatTo: 'sabqAyatTo',
+    sabqTeacherName: 'sabqTeacherName',
     sabqMistake: 'sabqMistake',
     sabqAtkann: 'sabqAtkann',
     sabaqi: 'sabaqi',
+    sabaqiRuku: 'sabaqiRuku',
+    sabaqiAyatFrom: 'sabaqiAyatFrom',
+    sabaqiAyatTo: 'sabaqiAyatTo',
     sabaqiMistake: 'sabaqiMistake',
     sabaqiAtkann: 'sabaqiAtkann',
     manzil: 'manzil',
     manzilBeforeDetail: 'manzilBeforeDetail',
+    manzilBeforePara: 'manzilBeforePara',
+    manzilBeforeRuku: 'manzilBeforeRuku',
+    manzilBeforeAyatFrom: 'manzilBeforeAyatFrom',
+    manzilBeforeAyatTo: 'manzilBeforeAyatTo',
     manzilBeforeMistake: 'manzilBeforeMistake',
     manzilBeforeAtkann: 'manzilBeforeAtkann',
     manzilAfterDetail: 'manzilAfterDetail',
+    manzilAfterPara: 'manzilAfterPara',
+    manzilAfterRuku: 'manzilAfterRuku',
+    manzilAfterAyatFrom: 'manzilAfterAyatFrom',
+    manzilAfterAyatTo: 'manzilAfterAyatTo',
     manzilAfterMistake: 'manzilAfterMistake',
     manzilAfterAtkann: 'manzilAfterAtkann',
     lessonDetail: 'lessonDetail',
@@ -41847,10 +42027,25 @@ export namespace Prisma {
   export const HifzDailyEntryOrderByRelevanceFieldEnum: {
     sabq: 'sabq',
     sabqListener: 'sabqListener',
+    sabqRuku: 'sabqRuku',
+    sabqAyatFrom: 'sabqAyatFrom',
+    sabqAyatTo: 'sabqAyatTo',
+    sabqTeacherName: 'sabqTeacherName',
     sabaqi: 'sabaqi',
+    sabaqiRuku: 'sabaqiRuku',
+    sabaqiAyatFrom: 'sabaqiAyatFrom',
+    sabaqiAyatTo: 'sabaqiAyatTo',
     manzil: 'manzil',
     manzilBeforeDetail: 'manzilBeforeDetail',
+    manzilBeforePara: 'manzilBeforePara',
+    manzilBeforeRuku: 'manzilBeforeRuku',
+    manzilBeforeAyatFrom: 'manzilBeforeAyatFrom',
+    manzilBeforeAyatTo: 'manzilBeforeAyatTo',
     manzilAfterDetail: 'manzilAfterDetail',
+    manzilAfterPara: 'manzilAfterPara',
+    manzilAfterRuku: 'manzilAfterRuku',
+    manzilAfterAyatFrom: 'manzilAfterAyatFrom',
+    manzilAfterAyatTo: 'manzilAfterAyatTo',
     lessonDetail: 'lessonDetail',
     performanceStatus: 'performanceStatus',
     remarks: 'remarks',
@@ -44291,16 +44486,31 @@ export namespace Prisma {
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqTeacherName?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforePara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterPara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
@@ -44319,16 +44529,31 @@ export namespace Prisma {
     date?: SortOrder
     sabq?: SortOrderInput | SortOrder
     sabqListener?: SortOrderInput | SortOrder
+    sabqRuku?: SortOrderInput | SortOrder
+    sabqAyatFrom?: SortOrderInput | SortOrder
+    sabqAyatTo?: SortOrderInput | SortOrder
+    sabqTeacherName?: SortOrderInput | SortOrder
     sabqMistake?: SortOrderInput | SortOrder
     sabqAtkann?: SortOrderInput | SortOrder
     sabaqi?: SortOrderInput | SortOrder
+    sabaqiRuku?: SortOrderInput | SortOrder
+    sabaqiAyatFrom?: SortOrderInput | SortOrder
+    sabaqiAyatTo?: SortOrderInput | SortOrder
     sabaqiMistake?: SortOrderInput | SortOrder
     sabaqiAtkann?: SortOrderInput | SortOrder
     manzil?: SortOrderInput | SortOrder
     manzilBeforeDetail?: SortOrderInput | SortOrder
+    manzilBeforePara?: SortOrderInput | SortOrder
+    manzilBeforeRuku?: SortOrderInput | SortOrder
+    manzilBeforeAyatFrom?: SortOrderInput | SortOrder
+    manzilBeforeAyatTo?: SortOrderInput | SortOrder
     manzilBeforeMistake?: SortOrderInput | SortOrder
     manzilBeforeAtkann?: SortOrderInput | SortOrder
     manzilAfterDetail?: SortOrderInput | SortOrder
+    manzilAfterPara?: SortOrderInput | SortOrder
+    manzilAfterRuku?: SortOrderInput | SortOrder
+    manzilAfterAyatFrom?: SortOrderInput | SortOrder
+    manzilAfterAyatTo?: SortOrderInput | SortOrder
     manzilAfterMistake?: SortOrderInput | SortOrder
     manzilAfterAtkann?: SortOrderInput | SortOrder
     lessonDetail?: SortOrderInput | SortOrder
@@ -44352,16 +44577,31 @@ export namespace Prisma {
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqTeacherName?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforePara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterPara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
@@ -44380,16 +44620,31 @@ export namespace Prisma {
     date?: SortOrder
     sabq?: SortOrderInput | SortOrder
     sabqListener?: SortOrderInput | SortOrder
+    sabqRuku?: SortOrderInput | SortOrder
+    sabqAyatFrom?: SortOrderInput | SortOrder
+    sabqAyatTo?: SortOrderInput | SortOrder
+    sabqTeacherName?: SortOrderInput | SortOrder
     sabqMistake?: SortOrderInput | SortOrder
     sabqAtkann?: SortOrderInput | SortOrder
     sabaqi?: SortOrderInput | SortOrder
+    sabaqiRuku?: SortOrderInput | SortOrder
+    sabaqiAyatFrom?: SortOrderInput | SortOrder
+    sabaqiAyatTo?: SortOrderInput | SortOrder
     sabaqiMistake?: SortOrderInput | SortOrder
     sabaqiAtkann?: SortOrderInput | SortOrder
     manzil?: SortOrderInput | SortOrder
     manzilBeforeDetail?: SortOrderInput | SortOrder
+    manzilBeforePara?: SortOrderInput | SortOrder
+    manzilBeforeRuku?: SortOrderInput | SortOrder
+    manzilBeforeAyatFrom?: SortOrderInput | SortOrder
+    manzilBeforeAyatTo?: SortOrderInput | SortOrder
     manzilBeforeMistake?: SortOrderInput | SortOrder
     manzilBeforeAtkann?: SortOrderInput | SortOrder
     manzilAfterDetail?: SortOrderInput | SortOrder
+    manzilAfterPara?: SortOrderInput | SortOrder
+    manzilAfterRuku?: SortOrderInput | SortOrder
+    manzilAfterAyatFrom?: SortOrderInput | SortOrder
+    manzilAfterAyatTo?: SortOrderInput | SortOrder
     manzilAfterMistake?: SortOrderInput | SortOrder
     manzilAfterAtkann?: SortOrderInput | SortOrder
     lessonDetail?: SortOrderInput | SortOrder
@@ -44415,16 +44670,31 @@ export namespace Prisma {
     date?: DateTimeWithAggregatesFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     sabqListener?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqRuku?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqAyatFrom?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqAyatTo?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabqTeacherName?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     sabqMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     sabqAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabaqiRuku?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatFrom?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatTo?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     sabaqiMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     sabaqiAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     manzilBeforeDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforePara?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeRuku?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatFrom?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatTo?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     manzilBeforeMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     manzilBeforeAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     manzilAfterDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilAfterPara?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilAfterRuku?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatFrom?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatTo?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
     manzilAfterMistake?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     manzilAfterAtkann?: IntNullableWithAggregatesFilter<"HifzDailyEntry"> | number | null
     lessonDetail?: StringNullableWithAggregatesFilter<"HifzDailyEntry"> | string | null
@@ -47760,16 +48030,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -47788,16 +48073,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -47813,16 +48113,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47841,16 +48156,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47868,16 +48198,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -47893,16 +48238,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47920,16 +48280,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50985,16 +51360,31 @@ export namespace Prisma {
     date?: SortOrder
     sabq?: SortOrder
     sabqListener?: SortOrder
+    sabqRuku?: SortOrder
+    sabqAyatFrom?: SortOrder
+    sabqAyatTo?: SortOrder
+    sabqTeacherName?: SortOrder
     sabqMistake?: SortOrder
     sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiRuku?: SortOrder
+    sabaqiAyatFrom?: SortOrder
+    sabaqiAyatTo?: SortOrder
     sabaqiMistake?: SortOrder
     sabaqiAtkann?: SortOrder
     manzil?: SortOrder
     manzilBeforeDetail?: SortOrder
+    manzilBeforePara?: SortOrder
+    manzilBeforeRuku?: SortOrder
+    manzilBeforeAyatFrom?: SortOrder
+    manzilBeforeAyatTo?: SortOrder
     manzilBeforeMistake?: SortOrder
     manzilBeforeAtkann?: SortOrder
     manzilAfterDetail?: SortOrder
+    manzilAfterPara?: SortOrder
+    manzilAfterRuku?: SortOrder
+    manzilAfterAyatFrom?: SortOrder
+    manzilAfterAyatTo?: SortOrder
     manzilAfterMistake?: SortOrder
     manzilAfterAtkann?: SortOrder
     lessonDetail?: SortOrder
@@ -51026,16 +51416,31 @@ export namespace Prisma {
     date?: SortOrder
     sabq?: SortOrder
     sabqListener?: SortOrder
+    sabqRuku?: SortOrder
+    sabqAyatFrom?: SortOrder
+    sabqAyatTo?: SortOrder
+    sabqTeacherName?: SortOrder
     sabqMistake?: SortOrder
     sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiRuku?: SortOrder
+    sabaqiAyatFrom?: SortOrder
+    sabaqiAyatTo?: SortOrder
     sabaqiMistake?: SortOrder
     sabaqiAtkann?: SortOrder
     manzil?: SortOrder
     manzilBeforeDetail?: SortOrder
+    manzilBeforePara?: SortOrder
+    manzilBeforeRuku?: SortOrder
+    manzilBeforeAyatFrom?: SortOrder
+    manzilBeforeAyatTo?: SortOrder
     manzilBeforeMistake?: SortOrder
     manzilBeforeAtkann?: SortOrder
     manzilAfterDetail?: SortOrder
+    manzilAfterPara?: SortOrder
+    manzilAfterRuku?: SortOrder
+    manzilAfterAyatFrom?: SortOrder
+    manzilAfterAyatTo?: SortOrder
     manzilAfterMistake?: SortOrder
     manzilAfterAtkann?: SortOrder
     lessonDetail?: SortOrder
@@ -51053,16 +51458,31 @@ export namespace Prisma {
     date?: SortOrder
     sabq?: SortOrder
     sabqListener?: SortOrder
+    sabqRuku?: SortOrder
+    sabqAyatFrom?: SortOrder
+    sabqAyatTo?: SortOrder
+    sabqTeacherName?: SortOrder
     sabqMistake?: SortOrder
     sabqAtkann?: SortOrder
     sabaqi?: SortOrder
+    sabaqiRuku?: SortOrder
+    sabaqiAyatFrom?: SortOrder
+    sabaqiAyatTo?: SortOrder
     sabaqiMistake?: SortOrder
     sabaqiAtkann?: SortOrder
     manzil?: SortOrder
     manzilBeforeDetail?: SortOrder
+    manzilBeforePara?: SortOrder
+    manzilBeforeRuku?: SortOrder
+    manzilBeforeAyatFrom?: SortOrder
+    manzilBeforeAyatTo?: SortOrder
     manzilBeforeMistake?: SortOrder
     manzilBeforeAtkann?: SortOrder
     manzilAfterDetail?: SortOrder
+    manzilAfterPara?: SortOrder
+    manzilAfterRuku?: SortOrder
+    manzilAfterAyatFrom?: SortOrder
+    manzilAfterAyatTo?: SortOrder
     manzilAfterMistake?: SortOrder
     manzilAfterAtkann?: SortOrder
     lessonDetail?: SortOrder
@@ -57593,16 +58013,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -57619,16 +58054,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -57969,16 +58419,31 @@ export namespace Prisma {
     date?: DateTimeFilter<"HifzDailyEntry"> | Date | string
     sabq?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqListener?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabqTeacherName?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabqMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabqAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqi?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    sabaqiAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     sabaqiMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     sabaqiAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzil?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforePara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilBeforeAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilBeforeMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilBeforeAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterPara?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterRuku?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatFrom?: StringNullableFilter<"HifzDailyEntry"> | string | null
+    manzilAfterAyatTo?: StringNullableFilter<"HifzDailyEntry"> | string | null
     manzilAfterMistake?: IntNullableFilter<"HifzDailyEntry"> | number | null
     manzilAfterAtkann?: IntNullableFilter<"HifzDailyEntry"> | number | null
     lessonDetail?: StringNullableFilter<"HifzDailyEntry"> | string | null
@@ -62440,16 +62905,31 @@ export namespace Prisma {
     date: Date | string
     sabq?: string | null
     sabqListener?: string | null
+    sabqRuku?: string | null
+    sabqAyatFrom?: string | null
+    sabqAyatTo?: string | null
+    sabqTeacherName?: string | null
     sabqMistake?: number | null
     sabqAtkann?: number | null
     sabaqi?: string | null
+    sabaqiRuku?: string | null
+    sabaqiAyatFrom?: string | null
+    sabaqiAyatTo?: string | null
     sabaqiMistake?: number | null
     sabaqiAtkann?: number | null
     manzil?: string | null
     manzilBeforeDetail?: string | null
+    manzilBeforePara?: string | null
+    manzilBeforeRuku?: string | null
+    manzilBeforeAyatFrom?: string | null
+    manzilBeforeAyatTo?: string | null
     manzilBeforeMistake?: number | null
     manzilBeforeAtkann?: number | null
     manzilAfterDetail?: string | null
+    manzilAfterPara?: string | null
+    manzilAfterRuku?: string | null
+    manzilAfterAyatFrom?: string | null
+    manzilAfterAyatTo?: string | null
     manzilAfterMistake?: number | null
     manzilAfterAtkann?: number | null
     lessonDetail?: string | null
@@ -62654,16 +63134,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62680,16 +63175,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62706,16 +63216,31 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     sabq?: NullableStringFieldUpdateOperationsInput | string | null
     sabqListener?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
+    sabqTeacherName?: NullableStringFieldUpdateOperationsInput | string | null
     sabqMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabqAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqi?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    sabaqiAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     sabaqiMistake?: NullableIntFieldUpdateOperationsInput | number | null
     sabaqiAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzil?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforePara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilBeforeAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilBeforeMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilBeforeAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterDetail?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterPara?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterRuku?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatFrom?: NullableStringFieldUpdateOperationsInput | string | null
+    manzilAfterAyatTo?: NullableStringFieldUpdateOperationsInput | string | null
     manzilAfterMistake?: NullableIntFieldUpdateOperationsInput | number | null
     manzilAfterAtkann?: NullableIntFieldUpdateOperationsInput | number | null
     lessonDetail?: NullableStringFieldUpdateOperationsInput | string | null

@@ -1,0 +1,16 @@
+ALTER TABLE `hifz_daily_entries`
+  ADD COLUMN `sabqRuku` VARCHAR(100) NULL,
+  ADD COLUMN `sabqAyatFrom` VARCHAR(100) NULL,
+  ADD COLUMN `sabqAyatTo` VARCHAR(100) NULL,
+  ADD COLUMN `sabqTeacherName` VARCHAR(150) NULL,
+  ADD COLUMN `sabaqiRuku` VARCHAR(100) NULL,
+  ADD COLUMN `sabaqiAyatFrom` VARCHAR(100) NULL,
+  ADD COLUMN `sabaqiAyatTo` VARCHAR(100) NULL,
+  ADD COLUMN `manzilBeforePara` VARCHAR(100) NULL,
+  ADD COLUMN `manzilBeforeRuku` VARCHAR(100) NULL,
+  ADD COLUMN `manzilBeforeAyatFrom` VARCHAR(100) NULL,
+  ADD COLUMN `manzilBeforeAyatTo` VARCHAR(100) NULL,
+  ADD COLUMN `manzilAfterPara` VARCHAR(100) NULL,
+  ADD COLUMN `manzilAfterRuku` VARCHAR(100) NULL,
+  ADD COLUMN `manzilAfterAyatFrom` VARCHAR(100) NULL,
+  ADD COLUMN `manzilAfterAyatTo` VARCHAR(100) NULL;

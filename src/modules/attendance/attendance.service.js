@@ -4,6 +4,10 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const studentAttendanceSelect = {
   id: true,
+  studentId: true,
+  branchId: true,
+  classId: true,
+  sectionId: true,
   date: true,
   status: true,
   remarks: true,
@@ -156,9 +160,17 @@ export const attendanceService = {
 
   async getStudentAttendance(query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const dateFilter = query.date
+      ? normalizeDate(query.date)
+      : query.startDate || query.endDate
+        ? {
+            ...(query.startDate ? { gte: normalizeDate(query.startDate) } : {}),
+            ...(query.endDate ? { lte: normalizeDate(query.endDate) } : {}),
+          }
+        : undefined;
 
     const where = {
-      ...(query.date ? { date: normalizeDate(query.date) } : {}),
+      ...(dateFilter ? { date: dateFilter } : {}),
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.branchId ? { branchId: query.branchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),

@@ -29,7 +29,7 @@ const bodySchema = z.object({
   status: z.enum(['active', 'inactive']).optional(),
 }).superRefine((value, ctx) => {
   if (value.weekEndDate < value.weekStartDate) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['weekEndDate'], message: 'Week end date must be after start date.' });
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['weekEndDate'], message: 'اختتامی تاریخ شروع کی تاریخ کے بعد ہونی چاہیے۔' });
   }
 });
 
