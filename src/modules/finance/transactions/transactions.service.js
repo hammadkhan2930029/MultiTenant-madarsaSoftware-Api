@@ -20,6 +20,7 @@ const select = {
 
 const normalizeDate = (value) => {
   const date = new Date(value);
+  if (Number.isNaN(date.getTime())) throw new AppError('تاریخ ضروری ہے۔', 400);
   date.setHours(0, 0, 0, 0);
   return date;
 };
@@ -30,6 +31,13 @@ const normalizeEndDate = (value) => {
   return date;
 };
 
+const toAmount = (value) => {
+  const numberValue = Number(value || 0);
+  return Number.isFinite(numberValue) ? numberValue : 0;
+};
+
+const normalizeText = (value) => String(value || '').trim();
+
 const ensureHead = async ({ financeHeadId, type }) => {
   const head = await prisma.financeHead.findUnique({ where: { id: financeHeadId } });
   if (!head) throw new AppError('مالیاتی مد نہیں ملی۔', 404);
@@ -37,7 +45,109 @@ const ensureHead = async ({ financeHeadId, type }) => {
   if (head.type !== type) throw new AppError('منتخب مالیاتی مد آمدن/خرچ کی قسم سے مطابقت نہیں رکھتی۔', 400);
 };
 
+const getOrCreateExpenseHead = async (category) => {
+  const headName = normalizeText(category);
+  if (!headName) throw new AppError('خرچ کی کیٹیگری ضروری ہے۔', 400);
+
+  const existing = await prisma.$queryRaw`SELECT id FROM finance_heads WHERE name = ${headName} LIMIT 1`;
+  if (existing.length) return Number(existing[0].id);
+
+  await prisma.$executeRaw`
+    INSERT INTO finance_heads (name, type, description, status, createdAt, updatedAt)
+    VALUES (${headName}, 'expense', ${headName}, 'active', ${new Date()}, ${new Date()})
+  `;
+  const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
+  return Number(rows[0].id);
+};
+
+const mapExpense = (row) => ({
+  id: Number(row.id),
+  title: row.details,
+  category: row.category,
+  amount: toAmount(row.amount),
+  paymentMethod: row.paymentMode,
+  referenceType: row.referenceType,
+  referenceId: row.referenceId === null || row.referenceId === undefined ? null : Number(row.referenceId),
+  date: row.transactionDate,
+  note: row.slipNo,
+  status: row.status,
+  createdAt: row.createdAt,
+  updatedAt: row.updatedAt,
+});
+
 export const transactionsService = {
+  async createExpense(payload) {
+    const title = normalizeText(payload.title);
+    const category = normalizeText(payload.category) || 'عام اخراجات';
+    const amount = toAmount(payload.amount);
+    const date = normalizeDate(payload.date);
+    const paymentMethod = normalizeText(payload.paymentMethod) || null;
+    const referenceType = normalizeText(payload.referenceType) || null;
+    const referenceId = payload.referenceId ? Number(payload.referenceId) : null;
+    const note = normalizeText(payload.note) || null;
+
+    if (!title) throw new AppError('خرچ کا عنوان ضروری ہے۔', 400);
+    if (amount <= 0) throw new AppError('رقم صفر سے زیادہ ہونی چاہیے۔', 400);
+    if (referenceId && (!Number.isInteger(referenceId) || referenceId <= 0)) throw new AppError('حوالہ درست نہیں ہے۔', 400);
+
+    const financeHeadId = await getOrCreateExpenseHead(category);
+    const existing = referenceType && referenceId
+      ? await prisma.$queryRaw`SELECT id FROM finance_transactions WHERE referenceType = ${referenceType} AND referenceId = ${referenceId} LIMIT 1`
+      : [];
+
+    if (existing.length) {
+      const id = Number(existing[0].id);
+      await prisma.$executeRaw`
+        UPDATE finance_transactions
+        SET financeHeadId = ${financeHeadId},
+            type = 'expense',
+            amount = ${amount},
+            transactionDate = ${date},
+            paymentMode = ${paymentMethod},
+            paymentStatus = 'مکمل',
+            slipNo = ${note},
+            details = ${title},
+            status = 'active',
+            updatedAt = ${new Date()}
+        WHERE id = ${id}
+      `;
+      return this.getExpenseById(id);
+    }
+
+    await prisma.$executeRaw`
+      INSERT INTO finance_transactions (financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
+      VALUES (${financeHeadId}, 'expense', ${amount}, ${date}, ${paymentMethod}, 'مکمل', ${note}, ${title}, ${referenceType}, ${referenceId}, 'active', ${new Date()}, ${new Date()})
+    `;
+    const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
+    return this.getExpenseById(Number(rows[0].id));
+  },
+
+  async getExpenseById(id) {
+    const rows = await prisma.$queryRaw`
+      SELECT ft.*, fh.name AS category
+      FROM finance_transactions ft
+      JOIN finance_heads fh ON fh.id = ft.financeHeadId
+      WHERE ft.id = ${id} AND ft.type = 'expense'
+      LIMIT 1
+    `;
+    if (!rows.length) throw new AppError('خرچ کا ریکارڈ نہیں ملا۔', 404);
+    return mapExpense(rows[0]);
+  },
+
+  async getExpenses(query = {}) {
+    const category = normalizeText(query.category);
+    const rows = await prisma.$queryRaw`
+      SELECT ft.*, fh.name AS category
+      FROM finance_transactions ft
+      JOIN finance_heads fh ON fh.id = ft.financeHeadId
+      WHERE ft.type = 'expense'
+        AND ft.status = 'active'
+        AND (${category} = '' OR fh.name = ${category})
+      ORDER BY ft.transactionDate DESC, ft.id DESC
+    `;
+    return { items: rows.map(mapExpense), meta: null };
+  },
+
   async createEntry(payload) {
     await ensureHead(payload);
     return prisma.financeTransaction.create({

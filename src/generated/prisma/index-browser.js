@@ -649,6 +649,31 @@ exports.Prisma.FinancialRecordScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StoreItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  unit: 'unit',
+  quantity: 'quantity',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StorePurchaseScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalAmount: 'totalAmount',
+  purchaseDate: 'purchaseDate',
+  supplierName: 'supplierName',
+  remarks: 'remarks',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -987,6 +1012,19 @@ exports.Prisma.FinancialRecordOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.StoreItemOrderByRelevanceFieldEnum = {
+  name: 'name',
+  code: 'code',
+  unit: 'unit',
+  status: 'status'
+};
+
+exports.Prisma.StorePurchaseOrderByRelevanceFieldEnum = {
+  supplierName: 'supplierName',
+  remarks: 'remarks',
+  status: 'status'
+};
+
 
 exports.Prisma.ModelName = {
   Admin: 'Admin',
@@ -1022,7 +1060,9 @@ exports.Prisma.ModelName = {
   FundCollection: 'FundCollection',
   SalaryEntry: 'SalaryEntry',
   FinanceTransaction: 'FinanceTransaction',
-  FinancialRecord: 'FinancialRecord'
+  FinancialRecord: 'FinancialRecord',
+  StoreItem: 'StoreItem',
+  StorePurchase: 'StorePurchase'
 };
 
 /**

@@ -56,3 +56,19 @@ export const madrassaProfileImageUpload = multer({
   },
   fileFilter: imageFileFilter,
 });
+
+export const storeInvoiceImageUpload = multer({
+  storage: createStorage('store-invoices'),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: imageFileFilter,
+});
+
+export const storeIssueSignatureUpload = multer({
+  storage: createStorage('store-issue-signatures'),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: imageFileFilter,
+});

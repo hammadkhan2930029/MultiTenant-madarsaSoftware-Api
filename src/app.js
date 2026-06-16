@@ -30,6 +30,7 @@ import { teacherSchedulesRoutes } from './modules/teacher-schedules/teacher-sche
 import { examSchedulesRoutes } from './modules/exam-schedules/exam-schedules.routes.js';
 import { resultGradesRoutes } from './modules/result-grades/result-grades.routes.js';
 import { examResultsRoutes } from './modules/exam-results/exam-results.routes.js';
+import { storeRoutes } from './modules/store/store.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -92,6 +93,7 @@ app.use('/api/teacher-schedules', teacherSchedulesRoutes);
 app.use('/api/exam-schedules', examSchedulesRoutes);
 app.use('/api/result-grades', resultGradesRoutes);
 app.use('/api/exam-results', examResultsRoutes);
+app.use('/api/store', storeRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

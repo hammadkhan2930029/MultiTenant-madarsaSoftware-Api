@@ -2,6 +2,16 @@ import { apiResponse } from '../../../utils/apiResponse.js';
 import { asyncHandler } from '../../../utils/asyncHandler.js';
 import { transactionsService } from './transactions.service.js';
 
+export const createExpense = asyncHandler(async (req, res) => {
+  const entry = await transactionsService.createExpense(req.body);
+  return apiResponse(res, { statusCode: 201, message: 'خرچ کا ریکارڈ کامیابی سے محفوظ ہو گیا۔', data: entry });
+});
+
+export const getExpenses = asyncHandler(async (req, res) => {
+  const entries = await transactionsService.getExpenses(req.query);
+  return apiResponse(res, { message: 'خرچ کے ریکارڈز کامیابی سے لوڈ ہو گئے۔', data: entries });
+});
+
 export const createTransaction = asyncHandler(async (req, res) => {
   const entry = await transactionsService.createEntry(req.body);
   return apiResponse(res, { statusCode: 201, message: 'مالیاتی ریکارڈ کامیابی سے محفوظ ہو گیا۔', data: entry });
