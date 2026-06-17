@@ -31,6 +31,9 @@ const teacherBodySchema = z.object({
   joiningDate: optionalStringField(20, 'تاریخ شمولیت درست نہیں۔'),
   experienceSummary: optionalStringField(500, 'تجربہ بہت لمبا ہے۔'),
   notes: optionalStringField(500, 'نوٹس بہت لمبے ہیں۔'),
+  shiftId: z
+    .union([z.coerce.number().int().positive('Shift must be valid.'), z.literal(''), z.undefined()])
+    .transform((value) => (value === '' ? undefined : value)),
   status: z.enum(['active', 'inactive']).optional(),
 });
 
@@ -75,6 +78,31 @@ export const updateTeacherStatusValidationSchema = z.object({
   }),
   params: z.object({
     id: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
+  }),
+  query: z.object({}).default({}),
+});
+
+export const listTeacherIncrementsValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({}).default({}),
+  query: z.object({
+    search: z.string().trim().optional(),
+    staffType: z.enum(['teacher', 'staff']).optional(),
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().max(100).optional(),
+  }),
+});
+
+export const teacherIncrementValidationSchema = z.object({
+  body: z.object({
+    incrementAmount: z.coerce.number().positive('Increment amount must be greater than zero.'),
+    effectiveDate: z.string().trim().min(1, 'Effective date is required.').max(20, 'Effective date is invalid.'),
+    reason: z.union([z.string().trim().max(255, 'Reason is too long.'), z.literal(''), z.undefined()]).transform((value) =>
+      value === '' ? undefined : value
+    ),
+  }),
+  params: z.object({
+    id: z.coerce.number().int().positive('Teacher id must be valid.'),
   }),
   query: z.object({}).default({}),
 });

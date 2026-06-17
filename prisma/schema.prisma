@@ -20,6 +20,9 @@ model Admin {
   updatedAt        DateTime          @updatedAt
   madrassaProfile  MadrassaProfile?
   financialRecords FinancialRecord[]
+  suggestions      Suggestion[]
+  supportRequests  SupportRequest[]
+  salaryIncrements TeacherSalaryIncrement[]
 
   @@map("admins")
 }
@@ -55,6 +58,51 @@ model City {
   @@map("cities")
 }
 
+model Suggestion {
+  id             Int      @id @default(autoincrement())
+  type           String   @db.VarChar(100)
+  title          String   @db.VarChar(180)
+  priority       String   @default("normal") @db.VarChar(50)
+  description    String   @db.Text
+  submitterName  String?  @db.VarChar(150)
+  submitterEmail String?  @db.VarChar(150)
+  adminId        Int?
+  emailRecipient String?  @db.VarChar(150)
+  emailStatus    String   @default("pending") @db.VarChar(50)
+  emailError     String?  @db.VarChar(500)
+  status         String   @default("new") @db.VarChar(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  admin          Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([priority])
+  @@index([adminId])
+  @@map("suggestions")
+}
+
+model SupportRequest {
+  id             Int      @id @default(autoincrement())
+  topic          String   @db.VarChar(120)
+  priority       String   @default("normal") @db.VarChar(50)
+  message        String   @db.Text
+  submitterName  String?  @db.VarChar(150)
+  submitterEmail String?  @db.VarChar(150)
+  adminId        Int?
+  emailRecipient String?  @db.VarChar(150)
+  emailStatus    String   @default("pending") @db.VarChar(50)
+  emailError     String?  @db.VarChar(500)
+  status         String   @default("open") @db.VarChar(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  admin          Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([priority])
+  @@index([adminId])
+  @@map("support_requests")
+}
+
 model Shift {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(150)
@@ -64,6 +112,7 @@ model Shift {
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  teachers  Teacher[]
 
   @@map("shifts")
 }
@@ -418,6 +467,7 @@ model Teacher {
   educationYear      String?             @db.VarChar(20)
   specialization     String?             @db.VarChar(150)
   address            String?             @db.VarChar(255)
+  shiftId            Int?
   imageUrl           String?             @db.VarChar(255)
   basicSalary        Decimal             @db.Decimal(10, 2)
   bankName           String?             @db.VarChar(150)
@@ -435,10 +485,34 @@ model Teacher {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   attendances        TeacherAttendance[]
+  salaryIncrements   TeacherSalaryIncrement[]
   salaryEntries      SalaryEntry[]
   schedules          TeacherSchedule[]
+  shift              Shift?              @relation(fields: [shiftId], references: [id], onDelete: SetNull)
 
+  @@index([shiftId])
   @@map("teachers")
+}
+
+model TeacherSalaryIncrement {
+  id              Int      @id @default(autoincrement())
+  teacherId       Int
+  previousSalary  Decimal  @db.Decimal(10, 2)
+  incrementAmount Decimal  @db.Decimal(10, 2)
+  newSalary       Decimal  @db.Decimal(10, 2)
+  effectiveDate   String   @db.VarChar(20)
+  reason          String?  @db.VarChar(255)
+  createdById     Int?
+  status          String   @default("active") @db.VarChar(50)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  teacher         Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  createdBy       Admin?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([teacherId])
+  @@index([effectiveDate])
+  @@index([createdById])
+  @@map("teacher_salary_increments")
 }
 
 model StudentAttendance {
@@ -728,7 +802,7 @@ model StoreItem {
   status        String          @default("active") @db.VarChar(50)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  purchases     StorePurchase[]
+  purchaseItems StorePurchaseItem[]
   stockIssues   StoreStockIssue[]
   returns       StoreReturn[]
   damagedStocks StoreDamagedStock[]

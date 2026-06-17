@@ -35,6 +35,7 @@ let storeItemTablePromise = null;
 let storeItemColumnSetPromise = null;
 let storeUnitTablePromise = null;
 let storeCategoryTablePromise = null;
+let storePurchaseTablePromise = null;
 
 const ensureStoreItemsTable = async () => {
   if (!storeItemTablePromise) {
@@ -139,6 +140,89 @@ const ensureStoreCategoriesTable = async () => {
     })();
   }
   await storeCategoryTablePromise;
+};
+
+const ensureStorePurchaseTables = async () => {
+  await ensureStoreItemsTable();
+
+  if (!storePurchaseTablePromise) {
+    storePurchaseTablePromise = (async () => {
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS store_suppliers (
+          id INTEGER NOT NULL AUTO_INCREMENT,
+          supplierName VARCHAR(150) NOT NULL,
+          mobileNumber VARCHAR(50) NULL,
+          address VARCHAR(255) NULL,
+          shopName VARCHAR(150) NULL,
+          balance DECIMAL(10, 2) NOT NULL DEFAULT 0,
+          status VARCHAR(50) NOT NULL DEFAULT 'active',
+          createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+          updatedAt DATETIME(3) NOT NULL,
+          UNIQUE INDEX store_suppliers_supplierName_key(supplierName),
+          INDEX store_suppliers_status_idx(status),
+          PRIMARY KEY (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+      `;
+
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS store_purchases (
+          id INTEGER NOT NULL AUTO_INCREMENT,
+          purchaseDate DATETIME(3) NOT NULL,
+          supplierId INTEGER NOT NULL,
+          invoiceNumber VARCHAR(100) NULL,
+          totalAmount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+          paidAmount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+          remainingAmount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+          paymentMethod VARCHAR(50) NULL,
+          invoiceImage VARCHAR(255) NULL,
+          approvalStatus VARCHAR(50) NOT NULL DEFAULT 'approved',
+          financeTransactionId INTEGER NULL,
+          status VARCHAR(50) NOT NULL DEFAULT 'active',
+          createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+          updatedAt DATETIME(3) NOT NULL,
+          INDEX store_purchases_purchaseDate_status_idx(purchaseDate, status),
+          INDEX store_purchases_supplierId_idx(supplierId),
+          INDEX store_purchases_financeTransactionId_idx(financeTransactionId),
+          PRIMARY KEY (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+      `;
+
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS store_purchase_items (
+          id INTEGER NOT NULL AUTO_INCREMENT,
+          purchaseId INTEGER NOT NULL,
+          itemId INTEGER NOT NULL,
+          quantity DECIMAL(10, 2) NOT NULL,
+          rate DECIMAL(10, 2) NOT NULL,
+          total DECIMAL(10, 2) NOT NULL,
+          createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+          updatedAt DATETIME(3) NOT NULL,
+          INDEX store_purchase_items_purchaseId_idx(purchaseId),
+          INDEX store_purchase_items_itemId_idx(itemId),
+          PRIMARY KEY (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+      `;
+
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS store_supplier_payments (
+          id INTEGER NOT NULL AUTO_INCREMENT,
+          supplierId INTEGER NOT NULL,
+          amount DECIMAL(10, 2) NOT NULL,
+          paymentDate DATETIME(3) NOT NULL,
+          paymentMethod VARCHAR(50) NULL,
+          note VARCHAR(255) NULL,
+          status VARCHAR(50) NOT NULL DEFAULT 'active',
+          createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+          updatedAt DATETIME(3) NOT NULL,
+          INDEX store_supplier_payments_supplierId_idx(supplierId),
+          INDEX store_supplier_payments_paymentDate_status_idx(paymentDate, status),
+          PRIMARY KEY (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+      `;
+    })();
+  }
+
+  await storePurchaseTablePromise;
 };
 
 const normalizeStatus = (value) => {
@@ -927,11 +1011,22 @@ export const storeService = {
   async deleteUnit(id) {
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
-    await this.getUnitById(unitId);
+    const unit = await this.getUnitById(unitId);
+    await ensureStoreItemsTable();
+
+    const linkedItems = await prisma.$queryRaw`
+      SELECT id
+      FROM store_items
+      WHERE unit = ${unit.name}
+      LIMIT 1
+    `;
+
+    if (linkedItems.length) {
+      throw new AppError('یہ اکائی اشیاء میں استعمال ہو رہی ہے، پہلے متعلقہ اشیاء تبدیل یا حذف کریں۔', 400);
+    }
 
     await prisma.$executeRaw`
-      UPDATE store_units
-      SET status = 'inactive', updatedAt = ${new Date()}
+      DELETE FROM store_units
       WHERE id = ${unitId}
     `;
     return { id: unitId };
@@ -1008,11 +1103,22 @@ export const storeService = {
   async deleteCategory(id) {
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
-    await this.getCategoryById(categoryId);
+    const category = await this.getCategoryById(categoryId);
+    await ensureStoreItemsTable();
+
+    const linkedItems = await prisma.$queryRaw`
+      SELECT id
+      FROM store_items
+      WHERE category = ${category.name}
+      LIMIT 1
+    `;
+
+    if (linkedItems.length) {
+      throw new AppError('یہ کیٹیگری اشیاء میں استعمال ہو رہی ہے، پہلے متعلقہ اشیاء تبدیل یا حذف کریں۔', 400);
+    }
 
     await prisma.$executeRaw`
-      UPDATE store_categories
-      SET status = 'inactive', updatedAt = ${new Date()}
+      DELETE FROM store_categories
       WHERE id = ${categoryId}
     `;
     return { id: categoryId };
@@ -1135,6 +1241,7 @@ export const storeService = {
   },
 
   async getSuppliers() {
+    await ensureStorePurchaseTables();
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
       FROM store_suppliers
@@ -1145,6 +1252,7 @@ export const storeService = {
   },
 
   async getSupplierById(id) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
@@ -1157,6 +1265,7 @@ export const storeService = {
   },
 
   async createSupplier(payload) {
+    await ensureStorePurchaseTables();
     const data = validateSupplierPayload(payload);
     await ensureUniqueSupplierName(data.supplierName);
     const now = new Date();
@@ -1170,6 +1279,7 @@ export const storeService = {
   },
 
   async updateSupplier(id, payload) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(supplierId);
     const data = validateSupplierPayload(payload);
@@ -1190,6 +1300,7 @@ export const storeService = {
   },
 
   async deleteSupplier(id) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(supplierId);
     await prisma.$executeRaw`UPDATE store_suppliers SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${supplierId}`;
@@ -1197,6 +1308,7 @@ export const storeService = {
   },
 
   async getSupplierPurchases(id) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(supplierId);
     const rows = await prisma.$queryRaw`
@@ -1223,6 +1335,7 @@ export const storeService = {
   },
 
   async getSupplierPayments(id) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(supplierId);
     const rows = await prisma.$queryRaw`
@@ -1235,6 +1348,7 @@ export const storeService = {
   },
 
   async createSupplierPayment(id, payload) {
+    await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(supplierId);
     const data = validatePaymentPayload(payload);
@@ -1263,6 +1377,7 @@ export const storeService = {
   },
 
   async getPurchases(query = {}) {
+    await ensureStorePurchaseTables();
     const search = normalizeText(query.search);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
     const { fromDate, toDate } = getReportDateRange(query);
@@ -1295,10 +1410,12 @@ export const storeService = {
   },
 
   async getPurchaseById(id) {
+    await ensureStorePurchaseTables();
     return getPurchaseRows(id);
   },
 
   async createPurchase({ body, file }) {
+    await ensureStorePurchaseTables();
     const data = validatePurchasePayload(body);
     const invoiceImage = buildInvoiceImagePath(file);
 
@@ -1332,6 +1449,7 @@ export const storeService = {
   },
 
   async updatePurchase(id, { body, file }) {
+    await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
     const existing = await getPurchaseRows(purchaseId);
     const data = validatePurchasePayload(body);
@@ -1400,6 +1518,7 @@ export const storeService = {
   },
 
   async deletePurchase(id) {
+    await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
     const existing = await getPurchaseRows(purchaseId);
 

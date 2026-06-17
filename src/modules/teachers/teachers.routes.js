@@ -4,16 +4,21 @@ import { validate } from '../../middlewares/validate.middleware.js';
 import { teacherImageUpload } from '../../middlewares/upload.middleware.js';
 import {
   createTeacher,
+  createTeacherIncrement,
+  getAllTeacherIncrements,
   getTeachers,
   getTeacherById,
+  getTeacherIncrements,
   updateTeacher,
   updateTeacherStatus,
   deleteTeacher,
 } from './teachers.controller.js';
 import {
   createTeacherValidationSchema,
+  listTeacherIncrementsValidationSchema,
   listTeachersValidationSchema,
   teacherIdValidationSchema,
+  teacherIncrementValidationSchema,
   updateTeacherValidationSchema,
   updateTeacherStatusValidationSchema,
 } from './teachers.validation.js';
@@ -24,6 +29,9 @@ router.use(authMiddleware);
 
 router.post('/', teacherImageUpload.single('image'), validate(createTeacherValidationSchema), createTeacher);
 router.get('/', validate(listTeachersValidationSchema), getTeachers);
+router.get('/increments', validate(listTeacherIncrementsValidationSchema), getAllTeacherIncrements);
+router.get('/:id/increments', validate(teacherIdValidationSchema), getTeacherIncrements);
+router.post('/:id/increments', validate(teacherIncrementValidationSchema), createTeacherIncrement);
 router.get('/:id', validate(teacherIdValidationSchema), getTeacherById);
 router.put('/:id', teacherImageUpload.single('image'), validate(updateTeacherValidationSchema), updateTeacher);
 router.patch('/:id/status', validate(updateTeacherStatusValidationSchema), updateTeacherStatus);

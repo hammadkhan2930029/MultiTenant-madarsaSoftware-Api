@@ -33,6 +33,34 @@ export const getTeacherById = asyncHandler(async (req, res) => {
   });
 });
 
+export const getAllTeacherIncrements = asyncHandler(async (req, res) => {
+  const result = await teachersService.getAllTeacherIncrements(req.query);
+
+  return apiResponse(res, {
+    message: 'Teacher increments fetched successfully.',
+    data: result,
+  });
+});
+
+export const getTeacherIncrements = asyncHandler(async (req, res) => {
+  const increments = await teachersService.getTeacherIncrements(Number(req.params.id));
+
+  return apiResponse(res, {
+    message: 'Teacher increments fetched successfully.',
+    data: increments,
+  });
+});
+
+export const createTeacherIncrement = asyncHandler(async (req, res) => {
+  const result = await teachersService.createTeacherIncrement(Number(req.params.id), req.body, req.admin);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Teacher salary increment saved successfully.',
+    data: result,
+  });
+});
+
 export const updateTeacher = asyncHandler(async (req, res) => {
   const teacher = await teachersService.updateTeacher(Number(req.params.id), {
     body: req.body,

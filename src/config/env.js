@@ -29,4 +29,13 @@ export const env = {
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,
+  smtpHost: process.env.SMTP_HOST || '',
+  smtpPort: Number(process.env.SMTP_PORT || 587),
+  smtpUser: process.env.SMTP_USER || '',
+  smtpPass: process.env.SMTP_PASS || '',
+  smtpFrom: process.env.SMTP_FROM || process.env.SMTP_USER || '',
+  smtpSecure: process.env.SMTP_SECURE === 'true',
+  smtpRejectUnauthorized: process.env.SMTP_REJECT_UNAUTHORIZED !== 'false',
+  suggestionsRecipientEmail: process.env.SUGGESTIONS_RECIPIENT_EMAIL || 'info@cogentdevs.com',
+  supportRecipientEmail: process.env.SUPPORT_RECIPIENT_EMAIL || 'info@cogentdevs.com',
 };

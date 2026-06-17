@@ -4,6 +4,39 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/teachers/${file.filename}` : null);
 const optionalString = (value) => (value ? value : null);
+const optionalNumber = (value) => (value ? Number(value) : null);
+
+const teacherIncrementTableSql = `
+CREATE TABLE IF NOT EXISTS teacher_salary_increments (
+  id INT NOT NULL AUTO_INCREMENT,
+  teacherId INT NOT NULL,
+  previousSalary DECIMAL(10, 2) NOT NULL,
+  incrementAmount DECIMAL(10, 2) NOT NULL,
+  newSalary DECIMAL(10, 2) NOT NULL,
+  effectiveDate VARCHAR(20) NOT NULL,
+  reason VARCHAR(255) NULL,
+  createdById INT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'active',
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  INDEX teacher_salary_increments_teacherId_idx (teacherId),
+  INDEX teacher_salary_increments_effectiveDate_idx (effectiveDate),
+  INDEX teacher_salary_increments_createdById_idx (createdById),
+  CONSTRAINT teacher_salary_increments_teacherId_fkey FOREIGN KEY (teacherId) REFERENCES teachers(id) ON DELETE CASCADE,
+  CONSTRAINT teacher_salary_increments_createdById_fkey FOREIGN KEY (createdById) REFERENCES admins(id) ON DELETE SET NULL
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+`;
+
+let teacherIncrementTablePromise = null;
+
+const ensureTeacherIncrementTable = () => {
+  if (!teacherIncrementTablePromise) {
+    teacherIncrementTablePromise = prisma.$executeRawUnsafe(teacherIncrementTableSql);
+  }
+
+  return teacherIncrementTablePromise;
+};
 
 const teacherSelect = {
   id: true,
@@ -18,6 +51,17 @@ const teacherSelect = {
   educationYear: true,
   specialization: true,
   address: true,
+  shiftId: true,
+  shift: {
+    select: {
+      id: true,
+      name: true,
+      startTime: true,
+      endTime: true,
+      type: true,
+      status: true,
+    },
+  },
   imageUrl: true,
   basicSalary: true,
   bankName: true,
@@ -36,6 +80,26 @@ const teacherSelect = {
   updatedAt: true,
 };
 
+const mapTeacherIncrement = (row) => ({
+  id: row.id,
+  teacherId: row.teacherId,
+  teacherName: row.teacherName,
+  staffType: row.staffType,
+  department: row.department,
+  jobTitle: row.jobTitle,
+  currentSalary: row.currentSalary,
+  previousSalary: row.previousSalary,
+  incrementAmount: row.incrementAmount,
+  newSalary: row.newSalary,
+  effectiveDate: row.effectiveDate,
+  reason: row.reason,
+  createdById: row.createdById,
+  createdByName: row.createdByName,
+  status: row.status,
+  createdAt: row.createdAt,
+  updatedAt: row.updatedAt,
+});
+
 const buildDuplicateWhere = (payload, excludeId) => {
   const conditions = [];
 
@@ -53,8 +117,23 @@ const buildDuplicateWhere = (payload, excludeId) => {
   };
 };
 
+const ensureShiftExists = async (shiftId) => {
+  if (!shiftId) return;
+
+  const shift = await prisma.shift.findUnique({
+    where: { id: Number(shiftId) },
+    select: { id: true },
+  });
+
+  if (!shift) {
+    throw new AppError('Shift not found.', 404);
+  }
+};
+
 export const teachersService = {
   async createTeacher({ body, file }) {
+    await ensureShiftExists(body.shiftId);
+
     if (body.phone || body.cnic) {
       const duplicateTeacher = await prisma.teacher.findFirst({
         where: buildDuplicateWhere(body),
@@ -78,6 +157,7 @@ export const teachersService = {
         educationYear: optionalString(body.educationYear),
         specialization: optionalString(body.specialization),
         address: optionalString(body.address),
+        shiftId: optionalNumber(body.shiftId),
         imageUrl: buildImageUrl(file),
         basicSalary: body.basicSalary,
         bankName: optionalString(body.bankName),
@@ -106,6 +186,7 @@ export const teachersService = {
               { fullName: { contains: query.search } },
               { phone: { contains: query.search } },
               { subject: { contains: query.search } },
+              { shift: { name: { contains: query.search } } },
             ],
           }
         : {}),
@@ -144,6 +225,132 @@ export const teachersService = {
     return teacher;
   },
 
+  async getAllTeacherIncrements(query) {
+    await ensureTeacherIncrementTable();
+
+    const { page, limit, skip } = getPagination(query.page, query.limit);
+    const search = query.search ? `%${query.search}%` : null;
+    const staffType = query.staffType || null;
+
+    const items = await prisma.$queryRaw`
+      SELECT
+        increment.*,
+        teacher.fullName AS teacherName,
+        teacher.staffType,
+        teacher.department,
+        teacher.jobTitle,
+        teacher.basicSalary AS currentSalary,
+        admin.name AS createdByName
+      FROM teacher_salary_increments increment
+      INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+      LEFT JOIN admins admin ON admin.id = increment.createdById
+      WHERE (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
+        AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
+      ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
+      LIMIT ${limit} OFFSET ${skip}
+    `;
+
+    const totalRows = await prisma.$queryRaw`
+      SELECT COUNT(*) AS total
+      FROM teacher_salary_increments increment
+      INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+      WHERE (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
+        AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
+    `;
+
+    return {
+      items: items.map(mapTeacherIncrement),
+      meta: buildPaginationMeta({ totalItems: Number(totalRows[0]?.total || 0), page, limit }),
+    };
+  },
+
+  async getTeacherIncrements(id) {
+    await ensureTeacherIncrementTable();
+
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!teacher) {
+      throw new AppError('استاد نہیں ملا۔', 404);
+    }
+
+    const rows = await prisma.$queryRaw`
+      SELECT increment.*, admin.name AS createdByName
+      FROM teacher_salary_increments increment
+      LEFT JOIN admins admin ON admin.id = increment.createdById
+      WHERE increment.teacherId = ${id}
+      ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
+    `;
+
+    return rows.map(mapTeacherIncrement);
+  },
+
+  async createTeacherIncrement(id, payload, admin) {
+    await ensureTeacherIncrementTable();
+
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      select: { id: true, basicSalary: true },
+    });
+
+    if (!teacher) {
+      throw new AppError('استاد نہیں ملا۔', 404);
+    }
+
+    const previousSalary = Number(teacher.basicSalary || 0);
+    const incrementAmount = Number(payload.incrementAmount || 0);
+    const newSalary = previousSalary + incrementAmount;
+
+    const [increment] = await prisma.$transaction(async (tx) => {
+      await tx.teacher.update({
+        where: { id },
+        data: { basicSalary: newSalary },
+        select: { id: true },
+      });
+
+      await tx.$executeRaw`
+        INSERT INTO teacher_salary_increments (
+          teacherId,
+          previousSalary,
+          incrementAmount,
+          newSalary,
+          effectiveDate,
+          reason,
+          createdById,
+          status
+        )
+        VALUES (
+          ${id},
+          ${previousSalary},
+          ${incrementAmount},
+          ${newSalary},
+          ${payload.effectiveDate},
+          ${optionalString(payload.reason)},
+          ${admin?.id || null},
+          'active'
+        )
+      `;
+
+      const idRows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
+      return tx.$queryRaw`
+        SELECT increment.*, admin.name AS createdByName
+        FROM teacher_salary_increments increment
+        LEFT JOIN admins admin ON admin.id = increment.createdById
+        WHERE increment.id = ${Number(idRows[0]?.id)}
+      `;
+    }).then((rows) => rows.map(mapTeacherIncrement));
+
+    return {
+      increment,
+      teacher: await prisma.teacher.findUnique({
+        where: { id },
+        select: teacherSelect,
+      }),
+    };
+  },
+
   async updateTeacher(id, { body, file }) {
     const existingTeacher = await prisma.teacher.findUnique({
       where: { id },
@@ -152,6 +359,8 @@ export const teachersService = {
     if (!existingTeacher) {
       throw new AppError('استاد نہیں ملا۔', 404);
     }
+
+    await ensureShiftExists(body.shiftId);
 
     if (body.phone || body.cnic) {
       const duplicateTeacher = await prisma.teacher.findFirst({
@@ -177,6 +386,7 @@ export const teachersService = {
         educationYear: optionalString(body.educationYear),
         specialization: optionalString(body.specialization),
         address: optionalString(body.address),
+        shiftId: optionalNumber(body.shiftId),
         imageUrl: file ? buildImageUrl(file) : existingTeacher.imageUrl,
         basicSalary: body.basicSalary,
         bankName: optionalString(body.bankName),

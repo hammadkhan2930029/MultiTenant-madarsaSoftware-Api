@@ -56,14 +56,15 @@ model City {
 }
 
 model Shift {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
-  startTime String   @db.VarChar(10)
-  endTime   String   @db.VarChar(10)
-  type      String   @db.VarChar(50)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(150)
+  startTime String    @db.VarChar(10)
+  endTime   String    @db.VarChar(10)
+  type      String    @db.VarChar(50)
+  status    String    @default("active") @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  teachers  Teacher[]
 
   @@map("shifts")
 }
@@ -418,6 +419,7 @@ model Teacher {
   educationYear      String?             @db.VarChar(20)
   specialization     String?             @db.VarChar(150)
   address            String?             @db.VarChar(255)
+  shiftId            Int?
   imageUrl           String?             @db.VarChar(255)
   basicSalary        Decimal             @db.Decimal(10, 2)
   bankName           String?             @db.VarChar(150)
@@ -437,7 +439,9 @@ model Teacher {
   attendances        TeacherAttendance[]
   salaryEntries      SalaryEntry[]
   schedules          TeacherSchedule[]
+  shift              Shift?              @relation(fields: [shiftId], references: [id], onDelete: SetNull)
 
+  @@index([shiftId])
   @@map("teachers")
 }
 
@@ -686,11 +690,14 @@ model FinanceTransaction {
   paymentStatus   String?     @db.VarChar(50)
   slipNo          String?     @db.VarChar(100)
   details         String?     @db.VarChar(255)
+  referenceType   String?     @db.VarChar(50)
+  referenceId     Int?
   status          String      @default("active") @db.VarChar(50)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   financeHead     FinanceHead @relation(fields: [financeHeadId], references: [id])
 
+  @@unique([referenceType, referenceId])
   @@index([type, transactionDate])
   @@index([financeHeadId])
   @@map("finance_transactions")
@@ -712,4 +719,226 @@ model FinancialRecord {
   @@index([type, date, status])
   @@index([createdById])
   @@map("financial_records")
+}
+
+model StoreItem {
+  id               Int                    @id @default(autoincrement())
+  itemName         String                 @db.VarChar(150)
+  category         String                 @db.VarChar(150)
+  unit             String                 @db.VarChar(50)
+  itemCode         String                 @unique @db.VarChar(100)
+  currentStock     Decimal                @default(0) @db.Decimal(10, 2)
+  purchasePrice    Decimal                @default(0) @db.Decimal(10, 2)
+  status           String                 @default("active") @db.VarChar(50)
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  purchaseItems    StorePurchaseItem[]
+  stockIssues      StoreStockIssue[]
+  returns          StoreReturn[]
+  damagedStocks    StoreDamagedStock[]
+  stockAdjustments StoreStockAdjustment[]
+
+  @@index([category])
+  @@index([status])
+  @@map("store_items")
+}
+
+model StoreUnit {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(150)
+  shortName   String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  status      String   @default("active") @db.VarChar(50)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@map("store_units")
+}
+
+model StoreCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(150)
+  description String?  @db.VarChar(255)
+  status      String   @default("active") @db.VarChar(50)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@map("store_categories")
+}
+
+model StoreSupplier {
+  id           Int                    @id @default(autoincrement())
+  supplierName String                 @unique @db.VarChar(150)
+  mobileNumber String?                @db.VarChar(50)
+  address      String?                @db.VarChar(255)
+  shopName     String?                @db.VarChar(150)
+  balance      Decimal                @default(0) @db.Decimal(10, 2)
+  status       String                 @default("active") @db.VarChar(50)
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  purchases    StorePurchase[]
+  payments     StoreSupplierPayment[]
+
+  @@index([status])
+  @@map("store_suppliers")
+}
+
+model StoreSupplierPayment {
+  id            Int           @id @default(autoincrement())
+  supplierId    Int
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentDate   DateTime
+  paymentMethod String?       @db.VarChar(50)
+  note          String?       @db.VarChar(255)
+  status        String        @default("active") @db.VarChar(50)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  supplier      StoreSupplier @relation(fields: [supplierId], references: [id])
+
+  @@index([supplierId])
+  @@index([paymentDate, status])
+  @@map("store_supplier_payments")
+}
+
+model StorePurchase {
+  id                   Int                 @id @default(autoincrement())
+  purchaseDate         DateTime
+  supplierId           Int
+  invoiceNumber        String?             @db.VarChar(100)
+  totalAmount          Decimal             @default(0) @db.Decimal(10, 2)
+  paidAmount           Decimal             @default(0) @db.Decimal(10, 2)
+  remainingAmount      Decimal             @default(0) @db.Decimal(10, 2)
+  paymentMethod        String?             @db.VarChar(50)
+  invoiceImage         String?             @db.VarChar(255)
+  approvalStatus       String              @default("approved") @db.VarChar(50)
+  financeTransactionId Int?
+  status               String              @default("active") @db.VarChar(50)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  supplier             StoreSupplier       @relation(fields: [supplierId], references: [id])
+  items                StorePurchaseItem[]
+
+  @@index([purchaseDate, status])
+  @@index([supplierId])
+  @@index([financeTransactionId])
+  @@map("store_purchases")
+}
+
+model StorePurchaseItem {
+  id         Int           @id @default(autoincrement())
+  purchaseId Int
+  itemId     Int
+  quantity   Decimal       @db.Decimal(10, 2)
+  rate       Decimal       @db.Decimal(10, 2)
+  total      Decimal       @db.Decimal(10, 2)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  purchase   StorePurchase @relation(fields: [purchaseId], references: [id])
+  item       StoreItem     @relation(fields: [itemId], references: [id])
+
+  @@index([purchaseId])
+  @@index([itemId])
+  @@map("store_purchase_items")
+}
+
+model StoreStockIssue {
+  id                Int           @id @default(autoincrement())
+  issueDate         DateTime
+  itemId            Int
+  quantity          Decimal       @db.Decimal(10, 2)
+  returnedQuantity  Decimal       @default(0) @db.Decimal(10, 2)
+  department        String        @db.VarChar(150)
+  receiverName      String        @db.VarChar(150)
+  purpose           String?       @db.VarChar(255)
+  issuedBy          String        @db.VarChar(150)
+  receiverSignature String?       @db.VarChar(255)
+  approvalStatus    String        @default("approved") @db.VarChar(50)
+  status            String        @default("active") @db.VarChar(50)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  item              StoreItem     @relation(fields: [itemId], references: [id])
+  returns           StoreReturn[]
+
+  @@index([itemId])
+  @@index([issueDate, status])
+  @@index([approvalStatus])
+  @@map("store_stock_issues")
+}
+
+model StoreReturn {
+  id             Int             @id @default(autoincrement())
+  stockIssueId   Int
+  itemId         Int
+  returnQuantity Decimal         @db.Decimal(10, 2)
+  condition      String          @db.VarChar(50)
+  addToStock     Boolean         @default(true)
+  note           String?         @db.VarChar(255)
+  status         String          @default("active") @db.VarChar(50)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  stockIssue     StoreStockIssue @relation(fields: [stockIssueId], references: [id])
+  item           StoreItem       @relation(fields: [itemId], references: [id])
+
+  @@index([stockIssueId])
+  @@index([itemId])
+  @@map("store_returns")
+}
+
+model StoreDamagedStock {
+  id                Int       @id @default(autoincrement())
+  returnId          Int?
+  itemId            Int
+  quantity          Decimal   @db.Decimal(10, 2)
+  reason            String?   @db.VarChar(255)
+  date              DateTime  @default(now())
+  responsiblePerson String?   @db.VarChar(150)
+  amountLoss        Decimal   @default(0) @db.Decimal(10, 2)
+  approvalStatus    String    @default("approved") @db.VarChar(50)
+  note              String?   @db.VarChar(255)
+  status            String    @default("active") @db.VarChar(50)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  item              StoreItem @relation(fields: [itemId], references: [id])
+
+  @@index([returnId])
+  @@index([itemId])
+  @@index([date, status])
+  @@index([approvalStatus])
+  @@map("store_damaged_stock")
+}
+
+model StoreApprovalLog {
+  id         Int      @id @default(autoincrement())
+  moduleType String   @db.VarChar(50)
+  recordId   Int
+  status     String   @db.VarChar(50)
+  approvedBy String?  @db.VarChar(150)
+  remarks    String?  @db.VarChar(255)
+  createdAt  DateTime @default(now())
+
+  @@index([moduleType, recordId])
+  @@index([status])
+  @@map("store_approval_logs")
+}
+
+model StoreStockAdjustment {
+  id             Int       @id @default(autoincrement())
+  itemId         Int
+  adjustmentType String    @db.VarChar(20)
+  quantity       Decimal   @db.Decimal(10, 2)
+  previousStock  Decimal   @default(0) @db.Decimal(10, 2)
+  adjustedStock  Decimal   @default(0) @db.Decimal(10, 2)
+  reason         String?   @db.VarChar(255)
+  approvalStatus String    @default("pending") @db.VarChar(50)
+  status         String    @default("active") @db.VarChar(50)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  item           StoreItem @relation(fields: [itemId], references: [id])
+
+  @@index([itemId])
+  @@index([approvalStatus])
+  @@index([status])
+  @@map("store_stock_adjustments")
 }

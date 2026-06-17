@@ -413,6 +413,7 @@ exports.Prisma.TeacherScalarFieldEnum = {
   educationYear: 'educationYear',
   specialization: 'specialization',
   address: 'address',
+  shiftId: 'shiftId',
   imageUrl: 'imageUrl',
   basicSalary: 'basicSalary',
   bankName: 'bankName',
@@ -631,6 +632,8 @@ exports.Prisma.FinanceTransactionScalarFieldEnum = {
   paymentStatus: 'paymentStatus',
   slipNo: 'slipNo',
   details: 'details',
+  referenceType: 'referenceType',
+  referenceId: 'referenceId',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -651,10 +654,55 @@ exports.Prisma.FinancialRecordScalarFieldEnum = {
 
 exports.Prisma.StoreItemScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  code: 'code',
+  itemName: 'itemName',
+  category: 'category',
   unit: 'unit',
-  quantity: 'quantity',
+  itemCode: 'itemCode',
+  currentStock: 'currentStock',
+  purchasePrice: 'purchasePrice',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreUnitScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  shortName: 'shortName',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreSupplierScalarFieldEnum = {
+  id: 'id',
+  supplierName: 'supplierName',
+  mobileNumber: 'mobileNumber',
+  address: 'address',
+  shopName: 'shopName',
+  balance: 'balance',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreSupplierPaymentScalarFieldEnum = {
+  id: 'id',
+  supplierId: 'supplierId',
+  amount: 'amount',
+  paymentDate: 'paymentDate',
+  paymentMethod: 'paymentMethod',
+  note: 'note',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -662,13 +710,97 @@ exports.Prisma.StoreItemScalarFieldEnum = {
 
 exports.Prisma.StorePurchaseScalarFieldEnum = {
   id: 'id',
+  purchaseDate: 'purchaseDate',
+  supplierId: 'supplierId',
+  invoiceNumber: 'invoiceNumber',
+  totalAmount: 'totalAmount',
+  paidAmount: 'paidAmount',
+  remainingAmount: 'remainingAmount',
+  paymentMethod: 'paymentMethod',
+  invoiceImage: 'invoiceImage',
+  approvalStatus: 'approvalStatus',
+  financeTransactionId: 'financeTransactionId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StorePurchaseItemScalarFieldEnum = {
+  id: 'id',
+  purchaseId: 'purchaseId',
   itemId: 'itemId',
   quantity: 'quantity',
-  unitPrice: 'unitPrice',
-  totalAmount: 'totalAmount',
-  purchaseDate: 'purchaseDate',
-  supplierName: 'supplierName',
+  rate: 'rate',
+  total: 'total',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreStockIssueScalarFieldEnum = {
+  id: 'id',
+  issueDate: 'issueDate',
+  itemId: 'itemId',
+  quantity: 'quantity',
+  returnedQuantity: 'returnedQuantity',
+  department: 'department',
+  receiverName: 'receiverName',
+  purpose: 'purpose',
+  issuedBy: 'issuedBy',
+  receiverSignature: 'receiverSignature',
+  approvalStatus: 'approvalStatus',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreReturnScalarFieldEnum = {
+  id: 'id',
+  stockIssueId: 'stockIssueId',
+  itemId: 'itemId',
+  returnQuantity: 'returnQuantity',
+  condition: 'condition',
+  addToStock: 'addToStock',
+  note: 'note',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreDamagedStockScalarFieldEnum = {
+  id: 'id',
+  returnId: 'returnId',
+  itemId: 'itemId',
+  quantity: 'quantity',
+  reason: 'reason',
+  date: 'date',
+  responsiblePerson: 'responsiblePerson',
+  amountLoss: 'amountLoss',
+  approvalStatus: 'approvalStatus',
+  note: 'note',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreApprovalLogScalarFieldEnum = {
+  id: 'id',
+  moduleType: 'moduleType',
+  recordId: 'recordId',
+  status: 'status',
+  approvedBy: 'approvedBy',
   remarks: 'remarks',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StoreStockAdjustmentScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  adjustmentType: 'adjustmentType',
+  quantity: 'quantity',
+  previousStock: 'previousStock',
+  adjustedStock: 'adjustedStock',
+  reason: 'reason',
+  approvalStatus: 'approvalStatus',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1002,6 +1134,7 @@ exports.Prisma.FinanceTransactionOrderByRelevanceFieldEnum = {
   paymentStatus: 'paymentStatus',
   slipNo: 'slipNo',
   details: 'details',
+  referenceType: 'referenceType',
   status: 'status'
 };
 
@@ -1013,15 +1146,83 @@ exports.Prisma.FinancialRecordOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.StoreItemOrderByRelevanceFieldEnum = {
-  name: 'name',
-  code: 'code',
+  itemName: 'itemName',
+  category: 'category',
   unit: 'unit',
+  itemCode: 'itemCode',
+  status: 'status'
+};
+
+exports.Prisma.StoreUnitOrderByRelevanceFieldEnum = {
+  name: 'name',
+  shortName: 'shortName',
+  description: 'description',
+  status: 'status'
+};
+
+exports.Prisma.StoreCategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description',
+  status: 'status'
+};
+
+exports.Prisma.StoreSupplierOrderByRelevanceFieldEnum = {
+  supplierName: 'supplierName',
+  mobileNumber: 'mobileNumber',
+  address: 'address',
+  shopName: 'shopName',
+  status: 'status'
+};
+
+exports.Prisma.StoreSupplierPaymentOrderByRelevanceFieldEnum = {
+  paymentMethod: 'paymentMethod',
+  note: 'note',
   status: 'status'
 };
 
 exports.Prisma.StorePurchaseOrderByRelevanceFieldEnum = {
-  supplierName: 'supplierName',
-  remarks: 'remarks',
+  invoiceNumber: 'invoiceNumber',
+  paymentMethod: 'paymentMethod',
+  invoiceImage: 'invoiceImage',
+  approvalStatus: 'approvalStatus',
+  status: 'status'
+};
+
+exports.Prisma.StoreStockIssueOrderByRelevanceFieldEnum = {
+  department: 'department',
+  receiverName: 'receiverName',
+  purpose: 'purpose',
+  issuedBy: 'issuedBy',
+  receiverSignature: 'receiverSignature',
+  approvalStatus: 'approvalStatus',
+  status: 'status'
+};
+
+exports.Prisma.StoreReturnOrderByRelevanceFieldEnum = {
+  condition: 'condition',
+  note: 'note',
+  status: 'status'
+};
+
+exports.Prisma.StoreDamagedStockOrderByRelevanceFieldEnum = {
+  reason: 'reason',
+  responsiblePerson: 'responsiblePerson',
+  approvalStatus: 'approvalStatus',
+  note: 'note',
+  status: 'status'
+};
+
+exports.Prisma.StoreApprovalLogOrderByRelevanceFieldEnum = {
+  moduleType: 'moduleType',
+  status: 'status',
+  approvedBy: 'approvedBy',
+  remarks: 'remarks'
+};
+
+exports.Prisma.StoreStockAdjustmentOrderByRelevanceFieldEnum = {
+  adjustmentType: 'adjustmentType',
+  reason: 'reason',
+  approvalStatus: 'approvalStatus',
   status: 'status'
 };
 
@@ -1062,7 +1263,17 @@ exports.Prisma.ModelName = {
   FinanceTransaction: 'FinanceTransaction',
   FinancialRecord: 'FinancialRecord',
   StoreItem: 'StoreItem',
-  StorePurchase: 'StorePurchase'
+  StoreUnit: 'StoreUnit',
+  StoreCategory: 'StoreCategory',
+  StoreSupplier: 'StoreSupplier',
+  StoreSupplierPayment: 'StoreSupplierPayment',
+  StorePurchase: 'StorePurchase',
+  StorePurchaseItem: 'StorePurchaseItem',
+  StoreStockIssue: 'StoreStockIssue',
+  StoreReturn: 'StoreReturn',
+  StoreDamagedStock: 'StoreDamagedStock',
+  StoreApprovalLog: 'StoreApprovalLog',
+  StoreStockAdjustment: 'StoreStockAdjustment'
 };
 
 /**
