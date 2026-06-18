@@ -128,9 +128,36 @@ exports.Prisma.AdminScalarFieldEnum = {
   username: 'username',
   password: 'password',
   role: 'role',
+  roleId: 'roleId',
+  ownerAdminId: 'ownerAdminId',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  roleName: 'roleName',
+  description: 'description',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PermissionScalarFieldEnum = {
+  id: 'id',
+  permissionKey: 'permissionKey',
+  permissionName: 'permissionName',
+  pagePath: 'pagePath',
+  moduleName: 'moduleName',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RolePermissionScalarFieldEnum = {
+  id: 'id',
+  roleId: 'roleId',
+  permissionId: 'permissionId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.MadrassaProfileScalarFieldEnum = {
@@ -154,6 +181,39 @@ exports.Prisma.MadrassaProfileScalarFieldEnum = {
 exports.Prisma.CityScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SuggestionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  priority: 'priority',
+  description: 'description',
+  submitterName: 'submitterName',
+  submitterEmail: 'submitterEmail',
+  adminId: 'adminId',
+  emailRecipient: 'emailRecipient',
+  emailStatus: 'emailStatus',
+  emailError: 'emailError',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SupportRequestScalarFieldEnum = {
+  id: 'id',
+  topic: 'topic',
+  priority: 'priority',
+  message: 'message',
+  submitterName: 'submitterName',
+  submitterEmail: 'submitterEmail',
+  adminId: 'adminId',
+  emailRecipient: 'emailRecipient',
+  emailStatus: 'emailStatus',
+  emailError: 'emailError',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -427,6 +487,20 @@ exports.Prisma.TeacherScalarFieldEnum = {
   joiningDate: 'joiningDate',
   experienceSummary: 'experienceSummary',
   notes: 'notes',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeacherSalaryIncrementScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  previousSalary: 'previousSalary',
+  incrementAmount: 'incrementAmount',
+  newSalary: 'newSalary',
+  effectiveDate: 'effectiveDate',
+  reason: 'reason',
+  createdById: 'createdById',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -815,6 +889,11 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.AdminOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
@@ -824,9 +903,16 @@ exports.Prisma.AdminOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
+exports.Prisma.RoleOrderByRelevanceFieldEnum = {
+  roleName: 'roleName',
+  description: 'description'
+};
+
+exports.Prisma.PermissionOrderByRelevanceFieldEnum = {
+  permissionKey: 'permissionKey',
+  permissionName: 'permissionName',
+  pagePath: 'pagePath',
+  moduleName: 'moduleName'
 };
 
 exports.Prisma.MadrassaProfileOrderByRelevanceFieldEnum = {
@@ -845,6 +931,31 @@ exports.Prisma.MadrassaProfileOrderByRelevanceFieldEnum = {
 
 exports.Prisma.CityOrderByRelevanceFieldEnum = {
   name: 'name',
+  status: 'status'
+};
+
+exports.Prisma.SuggestionOrderByRelevanceFieldEnum = {
+  type: 'type',
+  title: 'title',
+  priority: 'priority',
+  description: 'description',
+  submitterName: 'submitterName',
+  submitterEmail: 'submitterEmail',
+  emailRecipient: 'emailRecipient',
+  emailStatus: 'emailStatus',
+  emailError: 'emailError',
+  status: 'status'
+};
+
+exports.Prisma.SupportRequestOrderByRelevanceFieldEnum = {
+  topic: 'topic',
+  priority: 'priority',
+  message: 'message',
+  submitterName: 'submitterName',
+  submitterEmail: 'submitterEmail',
+  emailRecipient: 'emailRecipient',
+  emailStatus: 'emailStatus',
+  emailError: 'emailError',
   status: 'status'
 };
 
@@ -1022,6 +1133,12 @@ exports.Prisma.TeacherOrderByRelevanceFieldEnum = {
   joiningDate: 'joiningDate',
   experienceSummary: 'experienceSummary',
   notes: 'notes',
+  status: 'status'
+};
+
+exports.Prisma.TeacherSalaryIncrementOrderByRelevanceFieldEnum = {
+  effectiveDate: 'effectiveDate',
+  reason: 'reason',
   status: 'status'
 };
 
@@ -1229,8 +1346,13 @@ exports.Prisma.StoreStockAdjustmentOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ModelName = {
   Admin: 'Admin',
+  Role: 'Role',
+  Permission: 'Permission',
+  RolePermission: 'RolePermission',
   MadrassaProfile: 'MadrassaProfile',
   City: 'City',
+  Suggestion: 'Suggestion',
+  SupportRequest: 'SupportRequest',
   Shift: 'Shift',
   Department: 'Department',
   Qualification: 'Qualification',
@@ -1250,6 +1372,7 @@ exports.Prisma.ModelName = {
   StudentParent: 'StudentParent',
   StudentClassAssignment: 'StudentClassAssignment',
   Teacher: 'Teacher',
+  TeacherSalaryIncrement: 'TeacherSalaryIncrement',
   StudentAttendance: 'StudentAttendance',
   TeacherAttendance: 'TeacherAttendance',
   HifzDailyEntry: 'HifzDailyEntry',

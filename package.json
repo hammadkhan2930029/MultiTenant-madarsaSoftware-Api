@@ -8,6 +8,7 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "seed": "node scripts/seed.js",
+    "seed:permissions": "node scripts/seed-role-permissions.js",
     "smoke:test": "node scripts/smoke-test.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

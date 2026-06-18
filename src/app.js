@@ -33,6 +33,8 @@ import { examResultsRoutes } from './modules/exam-results/exam-results.routes.js
 import { storeRoutes } from './modules/store/store.routes.js';
 import { suggestionsRoutes } from './modules/suggestions/suggestions.routes.js';
 import { supportRoutes } from './modules/support/support.routes.js';
+import { rolesRoutes } from './modules/roles/roles.routes.js';
+import { usersRoutes } from './modules/users/users.routes.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -98,6 +100,8 @@ app.use('/api/exam-results', examResultsRoutes);
 app.use('/api/store', storeRoutes);
 app.use('/api/suggestions', suggestionsRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/roles', rolesRoutes);
+app.use('/api/users', usersRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

@@ -15,16 +15,65 @@ model Admin {
   username         String            @unique @db.VarChar(100)
   password         String            @db.VarChar(255)
   role             String            @default("admin") @db.VarChar(50)
+  roleId           Int?              @map("role_id")
+  ownerAdminId     Int?              @map("owner_admin_id")
   status           String            @default("active") @db.VarChar(50)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  assignedRole     Role?             @relation("AdminAssignedRole", fields: [roleId], references: [id], onDelete: SetNull)
+  ownerAdmin       Admin?            @relation("AdminMadrassaOwner", fields: [ownerAdminId], references: [id], onDelete: SetNull)
+  ownedUsers       Admin[]           @relation("AdminMadrassaOwner")
+  createdRoles     Role[]            @relation("RoleCreatedBy")
   madrassaProfile  MadrassaProfile?
   financialRecords FinancialRecord[]
   suggestions      Suggestion[]
   supportRequests  SupportRequest[]
   salaryIncrements TeacherSalaryIncrement[]
 
+  @@index([roleId])
+  @@index([ownerAdminId])
   @@map("admins")
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  roleName        String           @unique @map("role_name") @db.VarChar(100)
+  description     String?          @db.VarChar(255)
+  createdBy       Int?             @map("created_by")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  creator         Admin?           @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  admins          Admin[]          @relation("AdminAssignedRole")
+  rolePermissions RolePermission[]
+
+  @@index([createdBy])
+  @@map("roles")
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  permissionKey   String           @unique @map("permission_key") @db.VarChar(150)
+  permissionName  String           @map("permission_name") @db.VarChar(150)
+  pagePath        String?          @map("page_path") @db.VarChar(255)
+  moduleName      String           @map("module_name") @db.VarChar(100)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  rolePermissions RolePermission[]
+
+  @@index([moduleName])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           Int        @id @default(autoincrement())
+  roleId       Int        @map("role_id")
+  permissionId Int        @map("permission_id")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
 }
 
 model MadrassaProfile {

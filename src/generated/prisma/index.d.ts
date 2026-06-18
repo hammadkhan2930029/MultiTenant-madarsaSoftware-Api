@@ -19,6 +19,21 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Admin = $Result.DefaultSelection<Prisma.$AdminPayload>
 /**
+ * Model Role
+ * 
+ */
+export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
+/**
+ * Model Permission
+ * 
+ */
+export type Permission = $Result.DefaultSelection<Prisma.$PermissionPayload>
+/**
+ * Model RolePermission
+ * 
+ */
+export type RolePermission = $Result.DefaultSelection<Prisma.$RolePermissionPayload>
+/**
  * Model MadrassaProfile
  * 
  */
@@ -28,6 +43,16 @@ export type MadrassaProfile = $Result.DefaultSelection<Prisma.$MadrassaProfilePa
  * 
  */
 export type City = $Result.DefaultSelection<Prisma.$CityPayload>
+/**
+ * Model Suggestion
+ * 
+ */
+export type Suggestion = $Result.DefaultSelection<Prisma.$SuggestionPayload>
+/**
+ * Model SupportRequest
+ * 
+ */
+export type SupportRequest = $Result.DefaultSelection<Prisma.$SupportRequestPayload>
 /**
  * Model Shift
  * 
@@ -123,6 +148,11 @@ export type StudentClassAssignment = $Result.DefaultSelection<Prisma.$StudentCla
  * 
  */
 export type Teacher = $Result.DefaultSelection<Prisma.$TeacherPayload>
+/**
+ * Model TeacherSalaryIncrement
+ * 
+ */
+export type TeacherSalaryIncrement = $Result.DefaultSelection<Prisma.$TeacherSalaryIncrementPayload>
 /**
  * Model StudentAttendance
  * 
@@ -373,6 +403,36 @@ export class PrismaClient<
   get admin(): Prisma.AdminDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.role`: Exposes CRUD operations for the **Role** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Roles
+    * const roles = await prisma.role.findMany()
+    * ```
+    */
+  get role(): Prisma.RoleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.permission`: Exposes CRUD operations for the **Permission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Permissions
+    * const permissions = await prisma.permission.findMany()
+    * ```
+    */
+  get permission(): Prisma.PermissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rolePermission`: Exposes CRUD operations for the **RolePermission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RolePermissions
+    * const rolePermissions = await prisma.rolePermission.findMany()
+    * ```
+    */
+  get rolePermission(): Prisma.RolePermissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.madrassaProfile`: Exposes CRUD operations for the **MadrassaProfile** model.
     * Example usage:
     * ```ts
@@ -391,6 +451,26 @@ export class PrismaClient<
     * ```
     */
   get city(): Prisma.CityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.suggestion`: Exposes CRUD operations for the **Suggestion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Suggestions
+    * const suggestions = await prisma.suggestion.findMany()
+    * ```
+    */
+  get suggestion(): Prisma.SuggestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.supportRequest`: Exposes CRUD operations for the **SupportRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SupportRequests
+    * const supportRequests = await prisma.supportRequest.findMany()
+    * ```
+    */
+  get supportRequest(): Prisma.SupportRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.shift`: Exposes CRUD operations for the **Shift** model.
@@ -581,6 +661,16 @@ export class PrismaClient<
     * ```
     */
   get teacher(): Prisma.TeacherDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.teacherSalaryIncrement`: Exposes CRUD operations for the **TeacherSalaryIncrement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeacherSalaryIncrements
+    * const teacherSalaryIncrements = await prisma.teacherSalaryIncrement.findMany()
+    * ```
+    */
+  get teacherSalaryIncrement(): Prisma.TeacherSalaryIncrementDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.studentAttendance`: Exposes CRUD operations for the **StudentAttendance** model.
@@ -1263,8 +1353,13 @@ export namespace Prisma {
 
   export const ModelName: {
     Admin: 'Admin',
+    Role: 'Role',
+    Permission: 'Permission',
+    RolePermission: 'RolePermission',
     MadrassaProfile: 'MadrassaProfile',
     City: 'City',
+    Suggestion: 'Suggestion',
+    SupportRequest: 'SupportRequest',
     Shift: 'Shift',
     Department: 'Department',
     Qualification: 'Qualification',
@@ -1284,6 +1379,7 @@ export namespace Prisma {
     StudentParent: 'StudentParent',
     StudentClassAssignment: 'StudentClassAssignment',
     Teacher: 'Teacher',
+    TeacherSalaryIncrement: 'TeacherSalaryIncrement',
     StudentAttendance: 'StudentAttendance',
     TeacherAttendance: 'TeacherAttendance',
     HifzDailyEntry: 'HifzDailyEntry',
@@ -1326,7 +1422,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "admin" | "madrassaProfile" | "city" | "shift" | "department" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "examSchedule" | "resultGrade" | "examResult" | "examResultSubject" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "studentFeeVoucher" | "fundCollection" | "salaryEntry" | "financeTransaction" | "financialRecord" | "storeItem" | "storeUnit" | "storeCategory" | "storeSupplier" | "storeSupplierPayment" | "storePurchase" | "storePurchaseItem" | "storeStockIssue" | "storeReturn" | "storeDamagedStock" | "storeApprovalLog" | "storeStockAdjustment"
+      modelProps: "admin" | "role" | "permission" | "rolePermission" | "madrassaProfile" | "city" | "suggestion" | "supportRequest" | "shift" | "department" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "examSchedule" | "resultGrade" | "examResult" | "examResultSubject" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "teacherSalaryIncrement" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "studentFeeVoucher" | "fundCollection" | "salaryEntry" | "financeTransaction" | "financialRecord" | "storeItem" | "storeUnit" | "storeCategory" | "storeSupplier" | "storeSupplierPayment" | "storePurchase" | "storePurchaseItem" | "storeStockIssue" | "storeReturn" | "storeDamagedStock" | "storeApprovalLog" | "storeStockAdjustment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1393,6 +1489,204 @@ export namespace Prisma {
           count: {
             args: Prisma.AdminCountArgs<ExtArgs>
             result: $Utils.Optional<AdminCountAggregateOutputType> | number
+          }
+        }
+      }
+      Role: {
+        payload: Prisma.$RolePayload<ExtArgs>
+        fields: Prisma.RoleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findFirst: {
+            args: Prisma.RoleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findMany: {
+            args: Prisma.RoleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          create: {
+            args: Prisma.RoleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          createMany: {
+            args: Prisma.RoleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.RoleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          update: {
+            args: Prisma.RoleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RoleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          aggregate: {
+            args: Prisma.RoleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRole>
+          }
+          groupBy: {
+            args: Prisma.RoleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoleCountArgs<ExtArgs>
+            result: $Utils.Optional<RoleCountAggregateOutputType> | number
+          }
+        }
+      }
+      Permission: {
+        payload: Prisma.$PermissionPayload<ExtArgs>
+        fields: Prisma.PermissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PermissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PermissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          findFirst: {
+            args: Prisma.PermissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PermissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          findMany: {
+            args: Prisma.PermissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>[]
+          }
+          create: {
+            args: Prisma.PermissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          createMany: {
+            args: Prisma.PermissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PermissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          update: {
+            args: Prisma.PermissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.PermissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PermissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PermissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
+          }
+          aggregate: {
+            args: Prisma.PermissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePermission>
+          }
+          groupBy: {
+            args: Prisma.PermissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PermissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PermissionCountArgs<ExtArgs>
+            result: $Utils.Optional<PermissionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RolePermission: {
+        payload: Prisma.$RolePermissionPayload<ExtArgs>
+        fields: Prisma.RolePermissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RolePermissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RolePermissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          findFirst: {
+            args: Prisma.RolePermissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RolePermissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          findMany: {
+            args: Prisma.RolePermissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>[]
+          }
+          create: {
+            args: Prisma.RolePermissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          createMany: {
+            args: Prisma.RolePermissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.RolePermissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          update: {
+            args: Prisma.RolePermissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.RolePermissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RolePermissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RolePermissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+          }
+          aggregate: {
+            args: Prisma.RolePermissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRolePermission>
+          }
+          groupBy: {
+            args: Prisma.RolePermissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RolePermissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RolePermissionCountArgs<ExtArgs>
+            result: $Utils.Optional<RolePermissionCountAggregateOutputType> | number
           }
         }
       }
@@ -1525,6 +1819,138 @@ export namespace Prisma {
           count: {
             args: Prisma.CityCountArgs<ExtArgs>
             result: $Utils.Optional<CityCountAggregateOutputType> | number
+          }
+        }
+      }
+      Suggestion: {
+        payload: Prisma.$SuggestionPayload<ExtArgs>
+        fields: Prisma.SuggestionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SuggestionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SuggestionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          findFirst: {
+            args: Prisma.SuggestionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SuggestionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          findMany: {
+            args: Prisma.SuggestionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>[]
+          }
+          create: {
+            args: Prisma.SuggestionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          createMany: {
+            args: Prisma.SuggestionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SuggestionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          update: {
+            args: Prisma.SuggestionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SuggestionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SuggestionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SuggestionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SuggestionPayload>
+          }
+          aggregate: {
+            args: Prisma.SuggestionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSuggestion>
+          }
+          groupBy: {
+            args: Prisma.SuggestionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SuggestionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SuggestionCountArgs<ExtArgs>
+            result: $Utils.Optional<SuggestionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SupportRequest: {
+        payload: Prisma.$SupportRequestPayload<ExtArgs>
+        fields: Prisma.SupportRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SupportRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SupportRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.SupportRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SupportRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          findMany: {
+            args: Prisma.SupportRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>[]
+          }
+          create: {
+            args: Prisma.SupportRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          createMany: {
+            args: Prisma.SupportRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SupportRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          update: {
+            args: Prisma.SupportRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.SupportRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SupportRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SupportRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.SupportRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSupportRequest>
+          }
+          groupBy: {
+            args: Prisma.SupportRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SupportRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SupportRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<SupportRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -2779,6 +3205,72 @@ export namespace Prisma {
           count: {
             args: Prisma.TeacherCountArgs<ExtArgs>
             result: $Utils.Optional<TeacherCountAggregateOutputType> | number
+          }
+        }
+      }
+      TeacherSalaryIncrement: {
+        payload: Prisma.$TeacherSalaryIncrementPayload<ExtArgs>
+        fields: Prisma.TeacherSalaryIncrementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TeacherSalaryIncrementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TeacherSalaryIncrementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          findFirst: {
+            args: Prisma.TeacherSalaryIncrementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TeacherSalaryIncrementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          findMany: {
+            args: Prisma.TeacherSalaryIncrementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>[]
+          }
+          create: {
+            args: Prisma.TeacherSalaryIncrementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          createMany: {
+            args: Prisma.TeacherSalaryIncrementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.TeacherSalaryIncrementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          update: {
+            args: Prisma.TeacherSalaryIncrementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          deleteMany: {
+            args: Prisma.TeacherSalaryIncrementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TeacherSalaryIncrementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TeacherSalaryIncrementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TeacherSalaryIncrementPayload>
+          }
+          aggregate: {
+            args: Prisma.TeacherSalaryIncrementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTeacherSalaryIncrement>
+          }
+          groupBy: {
+            args: Prisma.TeacherSalaryIncrementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TeacherSalaryIncrementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TeacherSalaryIncrementCountArgs<ExtArgs>
+            result: $Utils.Optional<TeacherSalaryIncrementCountAggregateOutputType> | number
           }
         }
       }
@@ -4463,8 +4955,13 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     admin?: AdminOmit
+    role?: RoleOmit
+    permission?: PermissionOmit
+    rolePermission?: RolePermissionOmit
     madrassaProfile?: MadrassaProfileOmit
     city?: CityOmit
+    suggestion?: SuggestionOmit
+    supportRequest?: SupportRequestOmit
     shift?: ShiftOmit
     department?: DepartmentOmit
     qualification?: QualificationOmit
@@ -4484,6 +4981,7 @@ export namespace Prisma {
     studentParent?: StudentParentOmit
     studentClassAssignment?: StudentClassAssignmentOmit
     teacher?: TeacherOmit
+    teacherSalaryIncrement?: TeacherSalaryIncrementOmit
     studentAttendance?: StudentAttendanceOmit
     teacherAttendance?: TeacherAttendanceOmit
     hifzDailyEntry?: HifzDailyEntryOmit
@@ -4588,11 +5086,21 @@ export namespace Prisma {
    */
 
   export type AdminCountOutputType = {
+    ownedUsers: number
+    createdRoles: number
     financialRecords: number
+    suggestions: number
+    supportRequests: number
+    salaryIncrements: number
   }
 
   export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ownedUsers?: boolean | AdminCountOutputTypeCountOwnedUsersArgs
+    createdRoles?: boolean | AdminCountOutputTypeCountCreatedRolesArgs
     financialRecords?: boolean | AdminCountOutputTypeCountFinancialRecordsArgs
+    suggestions?: boolean | AdminCountOutputTypeCountSuggestionsArgs
+    supportRequests?: boolean | AdminCountOutputTypeCountSupportRequestsArgs
+    salaryIncrements?: boolean | AdminCountOutputTypeCountSalaryIncrementsArgs
   }
 
   // Custom InputTypes
@@ -4609,8 +5117,114 @@ export namespace Prisma {
   /**
    * AdminCountOutputType without action
    */
+  export type AdminCountOutputTypeCountOwnedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountCreatedRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
   export type AdminCountOutputTypeCountFinancialRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FinancialRecordWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountSuggestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SuggestionWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountSupportRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupportRequestWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountSalaryIncrementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeacherSalaryIncrementWhereInput
+  }
+
+
+  /**
+   * Count Type RoleCountOutputType
+   */
+
+  export type RoleCountOutputType = {
+    admins: number
+    rolePermissions: number
+  }
+
+  export type RoleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admins?: boolean | RoleCountOutputTypeCountAdminsArgs
+    rolePermissions?: boolean | RoleCountOutputTypeCountRolePermissionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleCountOutputType
+     */
+    select?: RoleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountAdminsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminWhereInput
+  }
+
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountRolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RolePermissionWhereInput
+  }
+
+
+  /**
+   * Count Type PermissionCountOutputType
+   */
+
+  export type PermissionCountOutputType = {
+    rolePermissions: number
+  }
+
+  export type PermissionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rolePermissions?: boolean | PermissionCountOutputTypeCountRolePermissionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PermissionCountOutputType without action
+   */
+  export type PermissionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PermissionCountOutputType
+     */
+    select?: PermissionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PermissionCountOutputType without action
+   */
+  export type PermissionCountOutputTypeCountRolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RolePermissionWhereInput
   }
 
 
@@ -5133,12 +5747,14 @@ export namespace Prisma {
 
   export type TeacherCountOutputType = {
     attendances: number
+    salaryIncrements: number
     salaryEntries: number
     schedules: number
   }
 
   export type TeacherCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendances?: boolean | TeacherCountOutputTypeCountAttendancesArgs
+    salaryIncrements?: boolean | TeacherCountOutputTypeCountSalaryIncrementsArgs
     salaryEntries?: boolean | TeacherCountOutputTypeCountSalaryEntriesArgs
     schedules?: boolean | TeacherCountOutputTypeCountSchedulesArgs
   }
@@ -5159,6 +5775,13 @@ export namespace Prisma {
    */
   export type TeacherCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeacherAttendanceWhereInput
+  }
+
+  /**
+   * TeacherCountOutputType without action
+   */
+  export type TeacherCountOutputTypeCountSalaryIncrementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeacherSalaryIncrementWhereInput
   }
 
   /**
@@ -5403,10 +6026,14 @@ export namespace Prisma {
 
   export type AdminAvgAggregateOutputType = {
     id: number | null
+    roleId: number | null
+    ownerAdminId: number | null
   }
 
   export type AdminSumAggregateOutputType = {
     id: number | null
+    roleId: number | null
+    ownerAdminId: number | null
   }
 
   export type AdminMinAggregateOutputType = {
@@ -5416,6 +6043,8 @@ export namespace Prisma {
     username: string | null
     password: string | null
     role: string | null
+    roleId: number | null
+    ownerAdminId: number | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5428,6 +6057,8 @@ export namespace Prisma {
     username: string | null
     password: string | null
     role: string | null
+    roleId: number | null
+    ownerAdminId: number | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5440,6 +6071,8 @@ export namespace Prisma {
     username: number
     password: number
     role: number
+    roleId: number
+    ownerAdminId: number
     status: number
     createdAt: number
     updatedAt: number
@@ -5449,10 +6082,14 @@ export namespace Prisma {
 
   export type AdminAvgAggregateInputType = {
     id?: true
+    roleId?: true
+    ownerAdminId?: true
   }
 
   export type AdminSumAggregateInputType = {
     id?: true
+    roleId?: true
+    ownerAdminId?: true
   }
 
   export type AdminMinAggregateInputType = {
@@ -5462,6 +6099,8 @@ export namespace Prisma {
     username?: true
     password?: true
     role?: true
+    roleId?: true
+    ownerAdminId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5474,6 +6113,8 @@ export namespace Prisma {
     username?: true
     password?: true
     role?: true
+    roleId?: true
+    ownerAdminId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5486,6 +6127,8 @@ export namespace Prisma {
     username?: true
     password?: true
     role?: true
+    roleId?: true
+    ownerAdminId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5585,6 +6228,8 @@ export namespace Prisma {
     username: string
     password: string
     role: string
+    roleId: number | null
+    ownerAdminId: number | null
     status: string
     createdAt: Date
     updatedAt: Date
@@ -5616,11 +6261,20 @@ export namespace Prisma {
     username?: boolean
     password?: boolean
     role?: boolean
+    roleId?: boolean
+    ownerAdminId?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    assignedRole?: boolean | Admin$assignedRoleArgs<ExtArgs>
+    ownerAdmin?: boolean | Admin$ownerAdminArgs<ExtArgs>
+    ownedUsers?: boolean | Admin$ownedUsersArgs<ExtArgs>
+    createdRoles?: boolean | Admin$createdRolesArgs<ExtArgs>
     madrassaProfile?: boolean | Admin$madrassaProfileArgs<ExtArgs>
     financialRecords?: boolean | Admin$financialRecordsArgs<ExtArgs>
+    suggestions?: boolean | Admin$suggestionsArgs<ExtArgs>
+    supportRequests?: boolean | Admin$supportRequestsArgs<ExtArgs>
+    salaryIncrements?: boolean | Admin$salaryIncrementsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -5633,23 +6287,39 @@ export namespace Prisma {
     username?: boolean
     password?: boolean
     role?: boolean
+    roleId?: boolean
+    ownerAdminId?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "username" | "password" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
+  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "username" | "password" | "role" | "roleId" | "ownerAdminId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedRole?: boolean | Admin$assignedRoleArgs<ExtArgs>
+    ownerAdmin?: boolean | Admin$ownerAdminArgs<ExtArgs>
+    ownedUsers?: boolean | Admin$ownedUsersArgs<ExtArgs>
+    createdRoles?: boolean | Admin$createdRolesArgs<ExtArgs>
     madrassaProfile?: boolean | Admin$madrassaProfileArgs<ExtArgs>
     financialRecords?: boolean | Admin$financialRecordsArgs<ExtArgs>
+    suggestions?: boolean | Admin$suggestionsArgs<ExtArgs>
+    supportRequests?: boolean | Admin$supportRequestsArgs<ExtArgs>
+    salaryIncrements?: boolean | Admin$salaryIncrementsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $AdminPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Admin"
     objects: {
+      assignedRole: Prisma.$RolePayload<ExtArgs> | null
+      ownerAdmin: Prisma.$AdminPayload<ExtArgs> | null
+      ownedUsers: Prisma.$AdminPayload<ExtArgs>[]
+      createdRoles: Prisma.$RolePayload<ExtArgs>[]
       madrassaProfile: Prisma.$MadrassaProfilePayload<ExtArgs> | null
       financialRecords: Prisma.$FinancialRecordPayload<ExtArgs>[]
+      suggestions: Prisma.$SuggestionPayload<ExtArgs>[]
+      supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
+      salaryIncrements: Prisma.$TeacherSalaryIncrementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5658,6 +6328,8 @@ export namespace Prisma {
       username: string
       password: string
       role: string
+      roleId: number | null
+      ownerAdminId: number | null
       status: string
       createdAt: Date
       updatedAt: Date
@@ -6001,8 +6673,15 @@ export namespace Prisma {
    */
   export interface Prisma__AdminClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    assignedRole<T extends Admin$assignedRoleArgs<ExtArgs> = {}>(args?: Subset<T, Admin$assignedRoleArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    ownerAdmin<T extends Admin$ownerAdminArgs<ExtArgs> = {}>(args?: Subset<T, Admin$ownerAdminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    ownedUsers<T extends Admin$ownedUsersArgs<ExtArgs> = {}>(args?: Subset<T, Admin$ownedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdRoles<T extends Admin$createdRolesArgs<ExtArgs> = {}>(args?: Subset<T, Admin$createdRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     madrassaProfile<T extends Admin$madrassaProfileArgs<ExtArgs> = {}>(args?: Subset<T, Admin$madrassaProfileArgs<ExtArgs>>): Prisma__MadrassaProfileClient<$Result.GetResult<Prisma.$MadrassaProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     financialRecords<T extends Admin$financialRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$financialRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinancialRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    suggestions<T extends Admin$suggestionsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    supportRequests<T extends Admin$supportRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    salaryIncrements<T extends Admin$salaryIncrementsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$salaryIncrementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6038,6 +6717,8 @@ export namespace Prisma {
     readonly username: FieldRef<"Admin", 'String'>
     readonly password: FieldRef<"Admin", 'String'>
     readonly role: FieldRef<"Admin", 'String'>
+    readonly roleId: FieldRef<"Admin", 'Int'>
+    readonly ownerAdminId: FieldRef<"Admin", 'Int'>
     readonly status: FieldRef<"Admin", 'String'>
     readonly createdAt: FieldRef<"Admin", 'DateTime'>
     readonly updatedAt: FieldRef<"Admin", 'DateTime'>
@@ -6384,6 +7065,92 @@ export namespace Prisma {
   }
 
   /**
+   * Admin.assignedRole
+   */
+  export type Admin$assignedRoleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    where?: RoleWhereInput
+  }
+
+  /**
+   * Admin.ownerAdmin
+   */
+  export type Admin$ownerAdminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * Admin.ownedUsers
+   */
+  export type Admin$ownedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+    orderBy?: AdminOrderByWithRelationInput | AdminOrderByWithRelationInput[]
+    cursor?: AdminWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminScalarFieldEnum | AdminScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.createdRoles
+   */
+  export type Admin$createdRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    where?: RoleWhereInput
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    cursor?: RoleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
    * Admin.madrassaProfile
    */
   export type Admin$madrassaProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6427,6 +7194,78 @@ export namespace Prisma {
   }
 
   /**
+   * Admin.suggestions
+   */
+  export type Admin$suggestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    where?: SuggestionWhereInput
+    orderBy?: SuggestionOrderByWithRelationInput | SuggestionOrderByWithRelationInput[]
+    cursor?: SuggestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SuggestionScalarFieldEnum | SuggestionScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.supportRequests
+   */
+  export type Admin$supportRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    where?: SupportRequestWhereInput
+    orderBy?: SupportRequestOrderByWithRelationInput | SupportRequestOrderByWithRelationInput[]
+    cursor?: SupportRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SupportRequestScalarFieldEnum | SupportRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.salaryIncrements
+   */
+  export type Admin$salaryIncrementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    where?: TeacherSalaryIncrementWhereInput
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeacherSalaryIncrementScalarFieldEnum | TeacherSalaryIncrementScalarFieldEnum[]
+  }
+
+  /**
    * Admin without action
    */
   export type AdminDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6442,6 +7281,3025 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AdminInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Role
+   */
+
+  export type AggregateRole = {
+    _count: RoleCountAggregateOutputType | null
+    _avg: RoleAvgAggregateOutputType | null
+    _sum: RoleSumAggregateOutputType | null
+    _min: RoleMinAggregateOutputType | null
+    _max: RoleMaxAggregateOutputType | null
+  }
+
+  export type RoleAvgAggregateOutputType = {
+    id: number | null
+    createdBy: number | null
+  }
+
+  export type RoleSumAggregateOutputType = {
+    id: number | null
+    createdBy: number | null
+  }
+
+  export type RoleMinAggregateOutputType = {
+    id: number | null
+    roleName: string | null
+    description: string | null
+    createdBy: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RoleMaxAggregateOutputType = {
+    id: number | null
+    roleName: string | null
+    description: string | null
+    createdBy: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RoleCountAggregateOutputType = {
+    id: number
+    roleName: number
+    description: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RoleAvgAggregateInputType = {
+    id?: true
+    createdBy?: true
+  }
+
+  export type RoleSumAggregateInputType = {
+    id?: true
+    createdBy?: true
+  }
+
+  export type RoleMinAggregateInputType = {
+    id?: true
+    roleName?: true
+    description?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RoleMaxAggregateInputType = {
+    id?: true
+    roleName?: true
+    description?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RoleCountAggregateInputType = {
+    id?: true
+    roleName?: true
+    description?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RoleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Role to aggregate.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Roles
+    **/
+    _count?: true | RoleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RoleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RoleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoleMaxAggregateInputType
+  }
+
+  export type GetRoleAggregateType<T extends RoleAggregateArgs> = {
+        [P in keyof T & keyof AggregateRole]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRole[P]>
+      : GetScalarType<T[P], AggregateRole[P]>
+  }
+
+
+
+
+  export type RoleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleWhereInput
+    orderBy?: RoleOrderByWithAggregationInput | RoleOrderByWithAggregationInput[]
+    by: RoleScalarFieldEnum[] | RoleScalarFieldEnum
+    having?: RoleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoleCountAggregateInputType | true
+    _avg?: RoleAvgAggregateInputType
+    _sum?: RoleSumAggregateInputType
+    _min?: RoleMinAggregateInputType
+    _max?: RoleMaxAggregateInputType
+  }
+
+  export type RoleGroupByOutputType = {
+    id: number
+    roleName: string
+    description: string | null
+    createdBy: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: RoleCountAggregateOutputType | null
+    _avg: RoleAvgAggregateOutputType | null
+    _sum: RoleSumAggregateOutputType | null
+    _min: RoleMinAggregateOutputType | null
+    _max: RoleMaxAggregateOutputType | null
+  }
+
+  type GetRoleGroupByPayload<T extends RoleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoleGroupByOutputType[P]>
+            : GetScalarType<T[P], RoleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    roleName?: boolean
+    description?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | Role$creatorArgs<ExtArgs>
+    admins?: boolean | Role$adminsArgs<ExtArgs>
+    rolePermissions?: boolean | Role$rolePermissionsArgs<ExtArgs>
+    _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["role"]>
+
+
+
+  export type RoleSelectScalar = {
+    id?: boolean
+    roleName?: boolean
+    description?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleName" | "description" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
+  export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | Role$creatorArgs<ExtArgs>
+    admins?: boolean | Role$adminsArgs<ExtArgs>
+    rolePermissions?: boolean | Role$rolePermissionsArgs<ExtArgs>
+    _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $RolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Role"
+    objects: {
+      creator: Prisma.$AdminPayload<ExtArgs> | null
+      admins: Prisma.$AdminPayload<ExtArgs>[]
+      rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      roleName: string
+      description: string | null
+      createdBy: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["role"]>
+    composites: {}
+  }
+
+  type RoleGetPayload<S extends boolean | null | undefined | RoleDefaultArgs> = $Result.GetResult<Prisma.$RolePayload, S>
+
+  type RoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoleCountAggregateInputType | true
+    }
+
+  export interface RoleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Role'], meta: { name: 'Role' } }
+    /**
+     * Find zero or one Role that matches the filter.
+     * @param {RoleFindUniqueArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoleFindUniqueArgs>(args: SelectSubset<T, RoleFindUniqueArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Role that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoleFindUniqueOrThrowArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoleFindUniqueOrThrowArgs>(args: SelectSubset<T, RoleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Role that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindFirstArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoleFindFirstArgs>(args?: SelectSubset<T, RoleFindFirstArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Role that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindFirstOrThrowArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoleFindFirstOrThrowArgs>(args?: SelectSubset<T, RoleFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Roles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Roles
+     * const roles = await prisma.role.findMany()
+     * 
+     * // Get first 10 Roles
+     * const roles = await prisma.role.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roleWithIdOnly = await prisma.role.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoleFindManyArgs>(args?: SelectSubset<T, RoleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Role.
+     * @param {RoleCreateArgs} args - Arguments to create a Role.
+     * @example
+     * // Create one Role
+     * const Role = await prisma.role.create({
+     *   data: {
+     *     // ... data to create a Role
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoleCreateArgs>(args: SelectSubset<T, RoleCreateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Roles.
+     * @param {RoleCreateManyArgs} args - Arguments to create many Roles.
+     * @example
+     * // Create many Roles
+     * const role = await prisma.role.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoleCreateManyArgs>(args?: SelectSubset<T, RoleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Role.
+     * @param {RoleDeleteArgs} args - Arguments to delete one Role.
+     * @example
+     * // Delete one Role
+     * const Role = await prisma.role.delete({
+     *   where: {
+     *     // ... filter to delete one Role
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoleDeleteArgs>(args: SelectSubset<T, RoleDeleteArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Role.
+     * @param {RoleUpdateArgs} args - Arguments to update one Role.
+     * @example
+     * // Update one Role
+     * const role = await prisma.role.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoleUpdateArgs>(args: SelectSubset<T, RoleUpdateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Roles.
+     * @param {RoleDeleteManyArgs} args - Arguments to filter Roles to delete.
+     * @example
+     * // Delete a few Roles
+     * const { count } = await prisma.role.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoleDeleteManyArgs>(args?: SelectSubset<T, RoleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Roles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Roles
+     * const role = await prisma.role.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoleUpdateManyArgs>(args: SelectSubset<T, RoleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Role.
+     * @param {RoleUpsertArgs} args - Arguments to update or create a Role.
+     * @example
+     * // Update or create a Role
+     * const role = await prisma.role.upsert({
+     *   create: {
+     *     // ... data to create a Role
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Role we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoleUpsertArgs>(args: SelectSubset<T, RoleUpsertArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Roles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleCountArgs} args - Arguments to filter Roles to count.
+     * @example
+     * // Count the number of Roles
+     * const count = await prisma.role.count({
+     *   where: {
+     *     // ... the filter for the Roles we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoleCountArgs>(
+      args?: Subset<T, RoleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Role.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoleAggregateArgs>(args: Subset<T, RoleAggregateArgs>): Prisma.PrismaPromise<GetRoleAggregateType<T>>
+
+    /**
+     * Group by Role.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoleGroupByArgs['orderBy'] }
+        : { orderBy?: RoleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Role model
+   */
+  readonly fields: RoleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Role.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends Role$creatorArgs<ExtArgs> = {}>(args?: Subset<T, Role$creatorArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    admins<T extends Role$adminsArgs<ExtArgs> = {}>(args?: Subset<T, Role$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rolePermissions<T extends Role$rolePermissionsArgs<ExtArgs> = {}>(args?: Subset<T, Role$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Role model
+   */
+  interface RoleFieldRefs {
+    readonly id: FieldRef<"Role", 'Int'>
+    readonly roleName: FieldRef<"Role", 'String'>
+    readonly description: FieldRef<"Role", 'String'>
+    readonly createdBy: FieldRef<"Role", 'Int'>
+    readonly createdAt: FieldRef<"Role", 'DateTime'>
+    readonly updatedAt: FieldRef<"Role", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Role findUnique
+   */
+  export type RoleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role findUniqueOrThrow
+   */
+  export type RoleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role findFirst
+   */
+  export type RoleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roles.
+     */
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role findFirstOrThrow
+   */
+  export type RoleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roles.
+     */
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role findMany
+   */
+  export type RoleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter, which Roles to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role create
+   */
+  export type RoleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Role.
+     */
+    data: XOR<RoleCreateInput, RoleUncheckedCreateInput>
+  }
+
+  /**
+   * Role createMany
+   */
+  export type RoleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Roles.
+     */
+    data: RoleCreateManyInput | RoleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Role update
+   */
+  export type RoleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Role.
+     */
+    data: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
+    /**
+     * Choose, which Role to update.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role updateMany
+   */
+  export type RoleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Roles.
+     */
+    data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyInput>
+    /**
+     * Filter which Roles to update
+     */
+    where?: RoleWhereInput
+    /**
+     * Limit how many Roles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Role upsert
+   */
+  export type RoleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Role to update in case it exists.
+     */
+    where: RoleWhereUniqueInput
+    /**
+     * In case the Role found by the `where` argument doesn't exist, create a new Role with this data.
+     */
+    create: XOR<RoleCreateInput, RoleUncheckedCreateInput>
+    /**
+     * In case the Role was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
+  }
+
+  /**
+   * Role delete
+   */
+  export type RoleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    /**
+     * Filter which Role to delete.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role deleteMany
+   */
+  export type RoleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Roles to delete
+     */
+    where?: RoleWhereInput
+    /**
+     * Limit how many Roles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Role.creator
+   */
+  export type Role$creatorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * Role.admins
+   */
+  export type Role$adminsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+    orderBy?: AdminOrderByWithRelationInput | AdminOrderByWithRelationInput[]
+    cursor?: AdminWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminScalarFieldEnum | AdminScalarFieldEnum[]
+  }
+
+  /**
+   * Role.rolePermissions
+   */
+  export type Role$rolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    where?: RolePermissionWhereInput
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    cursor?: RolePermissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Role without action
+   */
+  export type RoleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Permission
+   */
+
+  export type AggregatePermission = {
+    _count: PermissionCountAggregateOutputType | null
+    _avg: PermissionAvgAggregateOutputType | null
+    _sum: PermissionSumAggregateOutputType | null
+    _min: PermissionMinAggregateOutputType | null
+    _max: PermissionMaxAggregateOutputType | null
+  }
+
+  export type PermissionAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PermissionSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PermissionMinAggregateOutputType = {
+    id: number | null
+    permissionKey: string | null
+    permissionName: string | null
+    pagePath: string | null
+    moduleName: string | null
+    createdAt: Date | null
+  }
+
+  export type PermissionMaxAggregateOutputType = {
+    id: number | null
+    permissionKey: string | null
+    permissionName: string | null
+    pagePath: string | null
+    moduleName: string | null
+    createdAt: Date | null
+  }
+
+  export type PermissionCountAggregateOutputType = {
+    id: number
+    permissionKey: number
+    permissionName: number
+    pagePath: number
+    moduleName: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PermissionAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type PermissionSumAggregateInputType = {
+    id?: true
+  }
+
+  export type PermissionMinAggregateInputType = {
+    id?: true
+    permissionKey?: true
+    permissionName?: true
+    pagePath?: true
+    moduleName?: true
+    createdAt?: true
+  }
+
+  export type PermissionMaxAggregateInputType = {
+    id?: true
+    permissionKey?: true
+    permissionName?: true
+    pagePath?: true
+    moduleName?: true
+    createdAt?: true
+  }
+
+  export type PermissionCountAggregateInputType = {
+    id?: true
+    permissionKey?: true
+    permissionName?: true
+    pagePath?: true
+    moduleName?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PermissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Permission to aggregate.
+     */
+    where?: PermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Permissions to fetch.
+     */
+    orderBy?: PermissionOrderByWithRelationInput | PermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Permissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Permissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Permissions
+    **/
+    _count?: true | PermissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PermissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PermissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PermissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PermissionMaxAggregateInputType
+  }
+
+  export type GetPermissionAggregateType<T extends PermissionAggregateArgs> = {
+        [P in keyof T & keyof AggregatePermission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePermission[P]>
+      : GetScalarType<T[P], AggregatePermission[P]>
+  }
+
+
+
+
+  export type PermissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PermissionWhereInput
+    orderBy?: PermissionOrderByWithAggregationInput | PermissionOrderByWithAggregationInput[]
+    by: PermissionScalarFieldEnum[] | PermissionScalarFieldEnum
+    having?: PermissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PermissionCountAggregateInputType | true
+    _avg?: PermissionAvgAggregateInputType
+    _sum?: PermissionSumAggregateInputType
+    _min?: PermissionMinAggregateInputType
+    _max?: PermissionMaxAggregateInputType
+  }
+
+  export type PermissionGroupByOutputType = {
+    id: number
+    permissionKey: string
+    permissionName: string
+    pagePath: string | null
+    moduleName: string
+    createdAt: Date
+    _count: PermissionCountAggregateOutputType | null
+    _avg: PermissionAvgAggregateOutputType | null
+    _sum: PermissionSumAggregateOutputType | null
+    _min: PermissionMinAggregateOutputType | null
+    _max: PermissionMaxAggregateOutputType | null
+  }
+
+  type GetPermissionGroupByPayload<T extends PermissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PermissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PermissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PermissionGroupByOutputType[P]>
+            : GetScalarType<T[P], PermissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PermissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    permissionKey?: boolean
+    permissionName?: boolean
+    pagePath?: boolean
+    moduleName?: boolean
+    createdAt?: boolean
+    rolePermissions?: boolean | Permission$rolePermissionsArgs<ExtArgs>
+    _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["permission"]>
+
+
+
+  export type PermissionSelectScalar = {
+    id?: boolean
+    permissionKey?: boolean
+    permissionName?: boolean
+    pagePath?: boolean
+    moduleName?: boolean
+    createdAt?: boolean
+  }
+
+  export type PermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "permissionKey" | "permissionName" | "pagePath" | "moduleName" | "createdAt", ExtArgs["result"]["permission"]>
+  export type PermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rolePermissions?: boolean | Permission$rolePermissionsArgs<ExtArgs>
+    _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PermissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Permission"
+    objects: {
+      rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      permissionKey: string
+      permissionName: string
+      pagePath: string | null
+      moduleName: string
+      createdAt: Date
+    }, ExtArgs["result"]["permission"]>
+    composites: {}
+  }
+
+  type PermissionGetPayload<S extends boolean | null | undefined | PermissionDefaultArgs> = $Result.GetResult<Prisma.$PermissionPayload, S>
+
+  type PermissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PermissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PermissionCountAggregateInputType | true
+    }
+
+  export interface PermissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Permission'], meta: { name: 'Permission' } }
+    /**
+     * Find zero or one Permission that matches the filter.
+     * @param {PermissionFindUniqueArgs} args - Arguments to find a Permission
+     * @example
+     * // Get one Permission
+     * const permission = await prisma.permission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PermissionFindUniqueArgs>(args: SelectSubset<T, PermissionFindUniqueArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Permission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PermissionFindUniqueOrThrowArgs} args - Arguments to find a Permission
+     * @example
+     * // Get one Permission
+     * const permission = await prisma.permission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PermissionFindUniqueOrThrowArgs>(args: SelectSubset<T, PermissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Permission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionFindFirstArgs} args - Arguments to find a Permission
+     * @example
+     * // Get one Permission
+     * const permission = await prisma.permission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PermissionFindFirstArgs>(args?: SelectSubset<T, PermissionFindFirstArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Permission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionFindFirstOrThrowArgs} args - Arguments to find a Permission
+     * @example
+     * // Get one Permission
+     * const permission = await prisma.permission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PermissionFindFirstOrThrowArgs>(args?: SelectSubset<T, PermissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Permissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Permissions
+     * const permissions = await prisma.permission.findMany()
+     * 
+     * // Get first 10 Permissions
+     * const permissions = await prisma.permission.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const permissionWithIdOnly = await prisma.permission.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PermissionFindManyArgs>(args?: SelectSubset<T, PermissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Permission.
+     * @param {PermissionCreateArgs} args - Arguments to create a Permission.
+     * @example
+     * // Create one Permission
+     * const Permission = await prisma.permission.create({
+     *   data: {
+     *     // ... data to create a Permission
+     *   }
+     * })
+     * 
+     */
+    create<T extends PermissionCreateArgs>(args: SelectSubset<T, PermissionCreateArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Permissions.
+     * @param {PermissionCreateManyArgs} args - Arguments to create many Permissions.
+     * @example
+     * // Create many Permissions
+     * const permission = await prisma.permission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PermissionCreateManyArgs>(args?: SelectSubset<T, PermissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Permission.
+     * @param {PermissionDeleteArgs} args - Arguments to delete one Permission.
+     * @example
+     * // Delete one Permission
+     * const Permission = await prisma.permission.delete({
+     *   where: {
+     *     // ... filter to delete one Permission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PermissionDeleteArgs>(args: SelectSubset<T, PermissionDeleteArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Permission.
+     * @param {PermissionUpdateArgs} args - Arguments to update one Permission.
+     * @example
+     * // Update one Permission
+     * const permission = await prisma.permission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PermissionUpdateArgs>(args: SelectSubset<T, PermissionUpdateArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Permissions.
+     * @param {PermissionDeleteManyArgs} args - Arguments to filter Permissions to delete.
+     * @example
+     * // Delete a few Permissions
+     * const { count } = await prisma.permission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PermissionDeleteManyArgs>(args?: SelectSubset<T, PermissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Permissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Permissions
+     * const permission = await prisma.permission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PermissionUpdateManyArgs>(args: SelectSubset<T, PermissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Permission.
+     * @param {PermissionUpsertArgs} args - Arguments to update or create a Permission.
+     * @example
+     * // Update or create a Permission
+     * const permission = await prisma.permission.upsert({
+     *   create: {
+     *     // ... data to create a Permission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Permission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PermissionUpsertArgs>(args: SelectSubset<T, PermissionUpsertArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Permissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionCountArgs} args - Arguments to filter Permissions to count.
+     * @example
+     * // Count the number of Permissions
+     * const count = await prisma.permission.count({
+     *   where: {
+     *     // ... the filter for the Permissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends PermissionCountArgs>(
+      args?: Subset<T, PermissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PermissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Permission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PermissionAggregateArgs>(args: Subset<T, PermissionAggregateArgs>): Prisma.PrismaPromise<GetPermissionAggregateType<T>>
+
+    /**
+     * Group by Permission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PermissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PermissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PermissionGroupByArgs['orderBy'] }
+        : { orderBy?: PermissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PermissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPermissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Permission model
+   */
+  readonly fields: PermissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Permission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PermissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    rolePermissions<T extends Permission$rolePermissionsArgs<ExtArgs> = {}>(args?: Subset<T, Permission$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Permission model
+   */
+  interface PermissionFieldRefs {
+    readonly id: FieldRef<"Permission", 'Int'>
+    readonly permissionKey: FieldRef<"Permission", 'String'>
+    readonly permissionName: FieldRef<"Permission", 'String'>
+    readonly pagePath: FieldRef<"Permission", 'String'>
+    readonly moduleName: FieldRef<"Permission", 'String'>
+    readonly createdAt: FieldRef<"Permission", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Permission findUnique
+   */
+  export type PermissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Permission to fetch.
+     */
+    where: PermissionWhereUniqueInput
+  }
+
+  /**
+   * Permission findUniqueOrThrow
+   */
+  export type PermissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Permission to fetch.
+     */
+    where: PermissionWhereUniqueInput
+  }
+
+  /**
+   * Permission findFirst
+   */
+  export type PermissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Permission to fetch.
+     */
+    where?: PermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Permissions to fetch.
+     */
+    orderBy?: PermissionOrderByWithRelationInput | PermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Permissions.
+     */
+    cursor?: PermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Permissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Permissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Permissions.
+     */
+    distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Permission findFirstOrThrow
+   */
+  export type PermissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Permission to fetch.
+     */
+    where?: PermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Permissions to fetch.
+     */
+    orderBy?: PermissionOrderByWithRelationInput | PermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Permissions.
+     */
+    cursor?: PermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Permissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Permissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Permissions.
+     */
+    distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Permission findMany
+   */
+  export type PermissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which Permissions to fetch.
+     */
+    where?: PermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Permissions to fetch.
+     */
+    orderBy?: PermissionOrderByWithRelationInput | PermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Permissions.
+     */
+    cursor?: PermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Permissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Permissions.
+     */
+    skip?: number
+    distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Permission create
+   */
+  export type PermissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Permission.
+     */
+    data: XOR<PermissionCreateInput, PermissionUncheckedCreateInput>
+  }
+
+  /**
+   * Permission createMany
+   */
+  export type PermissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Permissions.
+     */
+    data: PermissionCreateManyInput | PermissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Permission update
+   */
+  export type PermissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Permission.
+     */
+    data: XOR<PermissionUpdateInput, PermissionUncheckedUpdateInput>
+    /**
+     * Choose, which Permission to update.
+     */
+    where: PermissionWhereUniqueInput
+  }
+
+  /**
+   * Permission updateMany
+   */
+  export type PermissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Permissions.
+     */
+    data: XOR<PermissionUpdateManyMutationInput, PermissionUncheckedUpdateManyInput>
+    /**
+     * Filter which Permissions to update
+     */
+    where?: PermissionWhereInput
+    /**
+     * Limit how many Permissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Permission upsert
+   */
+  export type PermissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Permission to update in case it exists.
+     */
+    where: PermissionWhereUniqueInput
+    /**
+     * In case the Permission found by the `where` argument doesn't exist, create a new Permission with this data.
+     */
+    create: XOR<PermissionCreateInput, PermissionUncheckedCreateInput>
+    /**
+     * In case the Permission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PermissionUpdateInput, PermissionUncheckedUpdateInput>
+  }
+
+  /**
+   * Permission delete
+   */
+  export type PermissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+    /**
+     * Filter which Permission to delete.
+     */
+    where: PermissionWhereUniqueInput
+  }
+
+  /**
+   * Permission deleteMany
+   */
+  export type PermissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Permissions to delete
+     */
+    where?: PermissionWhereInput
+    /**
+     * Limit how many Permissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Permission.rolePermissions
+   */
+  export type Permission$rolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    where?: RolePermissionWhereInput
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    cursor?: RolePermissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Permission without action
+   */
+  export type PermissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Permission
+     */
+    omit?: PermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PermissionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RolePermission
+   */
+
+  export type AggregateRolePermission = {
+    _count: RolePermissionCountAggregateOutputType | null
+    _avg: RolePermissionAvgAggregateOutputType | null
+    _sum: RolePermissionSumAggregateOutputType | null
+    _min: RolePermissionMinAggregateOutputType | null
+    _max: RolePermissionMaxAggregateOutputType | null
+  }
+
+  export type RolePermissionAvgAggregateOutputType = {
+    id: number | null
+    roleId: number | null
+    permissionId: number | null
+  }
+
+  export type RolePermissionSumAggregateOutputType = {
+    id: number | null
+    roleId: number | null
+    permissionId: number | null
+  }
+
+  export type RolePermissionMinAggregateOutputType = {
+    id: number | null
+    roleId: number | null
+    permissionId: number | null
+    createdAt: Date | null
+  }
+
+  export type RolePermissionMaxAggregateOutputType = {
+    id: number | null
+    roleId: number | null
+    permissionId: number | null
+    createdAt: Date | null
+  }
+
+  export type RolePermissionCountAggregateOutputType = {
+    id: number
+    roleId: number
+    permissionId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RolePermissionAvgAggregateInputType = {
+    id?: true
+    roleId?: true
+    permissionId?: true
+  }
+
+  export type RolePermissionSumAggregateInputType = {
+    id?: true
+    roleId?: true
+    permissionId?: true
+  }
+
+  export type RolePermissionMinAggregateInputType = {
+    id?: true
+    roleId?: true
+    permissionId?: true
+    createdAt?: true
+  }
+
+  export type RolePermissionMaxAggregateInputType = {
+    id?: true
+    roleId?: true
+    permissionId?: true
+    createdAt?: true
+  }
+
+  export type RolePermissionCountAggregateInputType = {
+    id?: true
+    roleId?: true
+    permissionId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RolePermissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RolePermission to aggregate.
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RolePermissions to fetch.
+     */
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RolePermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RolePermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RolePermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RolePermissions
+    **/
+    _count?: true | RolePermissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RolePermissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RolePermissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RolePermissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RolePermissionMaxAggregateInputType
+  }
+
+  export type GetRolePermissionAggregateType<T extends RolePermissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateRolePermission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRolePermission[P]>
+      : GetScalarType<T[P], AggregateRolePermission[P]>
+  }
+
+
+
+
+  export type RolePermissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RolePermissionWhereInput
+    orderBy?: RolePermissionOrderByWithAggregationInput | RolePermissionOrderByWithAggregationInput[]
+    by: RolePermissionScalarFieldEnum[] | RolePermissionScalarFieldEnum
+    having?: RolePermissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RolePermissionCountAggregateInputType | true
+    _avg?: RolePermissionAvgAggregateInputType
+    _sum?: RolePermissionSumAggregateInputType
+    _min?: RolePermissionMinAggregateInputType
+    _max?: RolePermissionMaxAggregateInputType
+  }
+
+  export type RolePermissionGroupByOutputType = {
+    id: number
+    roleId: number
+    permissionId: number
+    createdAt: Date
+    _count: RolePermissionCountAggregateOutputType | null
+    _avg: RolePermissionAvgAggregateOutputType | null
+    _sum: RolePermissionSumAggregateOutputType | null
+    _min: RolePermissionMinAggregateOutputType | null
+    _max: RolePermissionMaxAggregateOutputType | null
+  }
+
+  type GetRolePermissionGroupByPayload<T extends RolePermissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RolePermissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RolePermissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RolePermissionGroupByOutputType[P]>
+            : GetScalarType<T[P], RolePermissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RolePermissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    roleId?: boolean
+    permissionId?: boolean
+    createdAt?: boolean
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rolePermission"]>
+
+
+
+  export type RolePermissionSelectScalar = {
+    id?: boolean
+    roleId?: boolean
+    permissionId?: boolean
+    createdAt?: boolean
+  }
+
+  export type RolePermissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roleId" | "permissionId" | "createdAt", ExtArgs["result"]["rolePermission"]>
+  export type RolePermissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+    permission?: boolean | PermissionDefaultArgs<ExtArgs>
+  }
+
+  export type $RolePermissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RolePermission"
+    objects: {
+      role: Prisma.$RolePayload<ExtArgs>
+      permission: Prisma.$PermissionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      roleId: number
+      permissionId: number
+      createdAt: Date
+    }, ExtArgs["result"]["rolePermission"]>
+    composites: {}
+  }
+
+  type RolePermissionGetPayload<S extends boolean | null | undefined | RolePermissionDefaultArgs> = $Result.GetResult<Prisma.$RolePermissionPayload, S>
+
+  type RolePermissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RolePermissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RolePermissionCountAggregateInputType | true
+    }
+
+  export interface RolePermissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RolePermission'], meta: { name: 'RolePermission' } }
+    /**
+     * Find zero or one RolePermission that matches the filter.
+     * @param {RolePermissionFindUniqueArgs} args - Arguments to find a RolePermission
+     * @example
+     * // Get one RolePermission
+     * const rolePermission = await prisma.rolePermission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RolePermissionFindUniqueArgs>(args: SelectSubset<T, RolePermissionFindUniqueArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RolePermission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RolePermissionFindUniqueOrThrowArgs} args - Arguments to find a RolePermission
+     * @example
+     * // Get one RolePermission
+     * const rolePermission = await prisma.rolePermission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RolePermissionFindUniqueOrThrowArgs>(args: SelectSubset<T, RolePermissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RolePermission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionFindFirstArgs} args - Arguments to find a RolePermission
+     * @example
+     * // Get one RolePermission
+     * const rolePermission = await prisma.rolePermission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RolePermissionFindFirstArgs>(args?: SelectSubset<T, RolePermissionFindFirstArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RolePermission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionFindFirstOrThrowArgs} args - Arguments to find a RolePermission
+     * @example
+     * // Get one RolePermission
+     * const rolePermission = await prisma.rolePermission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RolePermissionFindFirstOrThrowArgs>(args?: SelectSubset<T, RolePermissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RolePermissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RolePermissions
+     * const rolePermissions = await prisma.rolePermission.findMany()
+     * 
+     * // Get first 10 RolePermissions
+     * const rolePermissions = await prisma.rolePermission.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rolePermissionWithIdOnly = await prisma.rolePermission.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RolePermissionFindManyArgs>(args?: SelectSubset<T, RolePermissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RolePermission.
+     * @param {RolePermissionCreateArgs} args - Arguments to create a RolePermission.
+     * @example
+     * // Create one RolePermission
+     * const RolePermission = await prisma.rolePermission.create({
+     *   data: {
+     *     // ... data to create a RolePermission
+     *   }
+     * })
+     * 
+     */
+    create<T extends RolePermissionCreateArgs>(args: SelectSubset<T, RolePermissionCreateArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RolePermissions.
+     * @param {RolePermissionCreateManyArgs} args - Arguments to create many RolePermissions.
+     * @example
+     * // Create many RolePermissions
+     * const rolePermission = await prisma.rolePermission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RolePermissionCreateManyArgs>(args?: SelectSubset<T, RolePermissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a RolePermission.
+     * @param {RolePermissionDeleteArgs} args - Arguments to delete one RolePermission.
+     * @example
+     * // Delete one RolePermission
+     * const RolePermission = await prisma.rolePermission.delete({
+     *   where: {
+     *     // ... filter to delete one RolePermission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RolePermissionDeleteArgs>(args: SelectSubset<T, RolePermissionDeleteArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RolePermission.
+     * @param {RolePermissionUpdateArgs} args - Arguments to update one RolePermission.
+     * @example
+     * // Update one RolePermission
+     * const rolePermission = await prisma.rolePermission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RolePermissionUpdateArgs>(args: SelectSubset<T, RolePermissionUpdateArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RolePermissions.
+     * @param {RolePermissionDeleteManyArgs} args - Arguments to filter RolePermissions to delete.
+     * @example
+     * // Delete a few RolePermissions
+     * const { count } = await prisma.rolePermission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RolePermissionDeleteManyArgs>(args?: SelectSubset<T, RolePermissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RolePermissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RolePermissions
+     * const rolePermission = await prisma.rolePermission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RolePermissionUpdateManyArgs>(args: SelectSubset<T, RolePermissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one RolePermission.
+     * @param {RolePermissionUpsertArgs} args - Arguments to update or create a RolePermission.
+     * @example
+     * // Update or create a RolePermission
+     * const rolePermission = await prisma.rolePermission.upsert({
+     *   create: {
+     *     // ... data to create a RolePermission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RolePermission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RolePermissionUpsertArgs>(args: SelectSubset<T, RolePermissionUpsertArgs<ExtArgs>>): Prisma__RolePermissionClient<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RolePermissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionCountArgs} args - Arguments to filter RolePermissions to count.
+     * @example
+     * // Count the number of RolePermissions
+     * const count = await prisma.rolePermission.count({
+     *   where: {
+     *     // ... the filter for the RolePermissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends RolePermissionCountArgs>(
+      args?: Subset<T, RolePermissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RolePermissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RolePermission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RolePermissionAggregateArgs>(args: Subset<T, RolePermissionAggregateArgs>): Prisma.PrismaPromise<GetRolePermissionAggregateType<T>>
+
+    /**
+     * Group by RolePermission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RolePermissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RolePermissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RolePermissionGroupByArgs['orderBy'] }
+        : { orderBy?: RolePermissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RolePermissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRolePermissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RolePermission model
+   */
+  readonly fields: RolePermissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RolePermission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RolePermissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    permission<T extends PermissionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PermissionDefaultArgs<ExtArgs>>): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RolePermission model
+   */
+  interface RolePermissionFieldRefs {
+    readonly id: FieldRef<"RolePermission", 'Int'>
+    readonly roleId: FieldRef<"RolePermission", 'Int'>
+    readonly permissionId: FieldRef<"RolePermission", 'Int'>
+    readonly createdAt: FieldRef<"RolePermission", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RolePermission findUnique
+   */
+  export type RolePermissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which RolePermission to fetch.
+     */
+    where: RolePermissionWhereUniqueInput
+  }
+
+  /**
+   * RolePermission findUniqueOrThrow
+   */
+  export type RolePermissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which RolePermission to fetch.
+     */
+    where: RolePermissionWhereUniqueInput
+  }
+
+  /**
+   * RolePermission findFirst
+   */
+  export type RolePermissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which RolePermission to fetch.
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RolePermissions to fetch.
+     */
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RolePermissions.
+     */
+    cursor?: RolePermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RolePermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RolePermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RolePermissions.
+     */
+    distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * RolePermission findFirstOrThrow
+   */
+  export type RolePermissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which RolePermission to fetch.
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RolePermissions to fetch.
+     */
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RolePermissions.
+     */
+    cursor?: RolePermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RolePermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RolePermissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RolePermissions.
+     */
+    distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * RolePermission findMany
+   */
+  export type RolePermissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter, which RolePermissions to fetch.
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RolePermissions to fetch.
+     */
+    orderBy?: RolePermissionOrderByWithRelationInput | RolePermissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RolePermissions.
+     */
+    cursor?: RolePermissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RolePermissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RolePermissions.
+     */
+    skip?: number
+    distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * RolePermission create
+   */
+  export type RolePermissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RolePermission.
+     */
+    data: XOR<RolePermissionCreateInput, RolePermissionUncheckedCreateInput>
+  }
+
+  /**
+   * RolePermission createMany
+   */
+  export type RolePermissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RolePermissions.
+     */
+    data: RolePermissionCreateManyInput | RolePermissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RolePermission update
+   */
+  export type RolePermissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RolePermission.
+     */
+    data: XOR<RolePermissionUpdateInput, RolePermissionUncheckedUpdateInput>
+    /**
+     * Choose, which RolePermission to update.
+     */
+    where: RolePermissionWhereUniqueInput
+  }
+
+  /**
+   * RolePermission updateMany
+   */
+  export type RolePermissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RolePermissions.
+     */
+    data: XOR<RolePermissionUpdateManyMutationInput, RolePermissionUncheckedUpdateManyInput>
+    /**
+     * Filter which RolePermissions to update
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * Limit how many RolePermissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RolePermission upsert
+   */
+  export type RolePermissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RolePermission to update in case it exists.
+     */
+    where: RolePermissionWhereUniqueInput
+    /**
+     * In case the RolePermission found by the `where` argument doesn't exist, create a new RolePermission with this data.
+     */
+    create: XOR<RolePermissionCreateInput, RolePermissionUncheckedCreateInput>
+    /**
+     * In case the RolePermission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RolePermissionUpdateInput, RolePermissionUncheckedUpdateInput>
+  }
+
+  /**
+   * RolePermission delete
+   */
+  export type RolePermissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
+    /**
+     * Filter which RolePermission to delete.
+     */
+    where: RolePermissionWhereUniqueInput
+  }
+
+  /**
+   * RolePermission deleteMany
+   */
+  export type RolePermissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RolePermissions to delete
+     */
+    where?: RolePermissionWhereInput
+    /**
+     * Limit how many RolePermissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RolePermission without action
+   */
+  export type RolePermissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RolePermission
+     */
+    select?: RolePermissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RolePermission
+     */
+    omit?: RolePermissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RolePermissionInclude<ExtArgs> | null
   }
 
 
@@ -8435,6 +12293,2165 @@ export namespace Prisma {
      * Omit specific fields from the City
      */
     omit?: CityOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Suggestion
+   */
+
+  export type AggregateSuggestion = {
+    _count: SuggestionCountAggregateOutputType | null
+    _avg: SuggestionAvgAggregateOutputType | null
+    _sum: SuggestionSumAggregateOutputType | null
+    _min: SuggestionMinAggregateOutputType | null
+    _max: SuggestionMaxAggregateOutputType | null
+  }
+
+  export type SuggestionAvgAggregateOutputType = {
+    id: number | null
+    adminId: number | null
+  }
+
+  export type SuggestionSumAggregateOutputType = {
+    id: number | null
+    adminId: number | null
+  }
+
+  export type SuggestionMinAggregateOutputType = {
+    id: number | null
+    type: string | null
+    title: string | null
+    priority: string | null
+    description: string | null
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string | null
+    emailError: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SuggestionMaxAggregateOutputType = {
+    id: number | null
+    type: string | null
+    title: string | null
+    priority: string | null
+    description: string | null
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string | null
+    emailError: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SuggestionCountAggregateOutputType = {
+    id: number
+    type: number
+    title: number
+    priority: number
+    description: number
+    submitterName: number
+    submitterEmail: number
+    adminId: number
+    emailRecipient: number
+    emailStatus: number
+    emailError: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SuggestionAvgAggregateInputType = {
+    id?: true
+    adminId?: true
+  }
+
+  export type SuggestionSumAggregateInputType = {
+    id?: true
+    adminId?: true
+  }
+
+  export type SuggestionMinAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    priority?: true
+    description?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SuggestionMaxAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    priority?: true
+    description?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SuggestionCountAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    priority?: true
+    description?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SuggestionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Suggestion to aggregate.
+     */
+    where?: SuggestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Suggestions to fetch.
+     */
+    orderBy?: SuggestionOrderByWithRelationInput | SuggestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SuggestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Suggestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Suggestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Suggestions
+    **/
+    _count?: true | SuggestionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SuggestionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SuggestionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SuggestionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SuggestionMaxAggregateInputType
+  }
+
+  export type GetSuggestionAggregateType<T extends SuggestionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSuggestion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSuggestion[P]>
+      : GetScalarType<T[P], AggregateSuggestion[P]>
+  }
+
+
+
+
+  export type SuggestionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SuggestionWhereInput
+    orderBy?: SuggestionOrderByWithAggregationInput | SuggestionOrderByWithAggregationInput[]
+    by: SuggestionScalarFieldEnum[] | SuggestionScalarFieldEnum
+    having?: SuggestionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SuggestionCountAggregateInputType | true
+    _avg?: SuggestionAvgAggregateInputType
+    _sum?: SuggestionSumAggregateInputType
+    _min?: SuggestionMinAggregateInputType
+    _max?: SuggestionMaxAggregateInputType
+  }
+
+  export type SuggestionGroupByOutputType = {
+    id: number
+    type: string
+    title: string
+    priority: string
+    description: string
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string
+    emailError: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SuggestionCountAggregateOutputType | null
+    _avg: SuggestionAvgAggregateOutputType | null
+    _sum: SuggestionSumAggregateOutputType | null
+    _min: SuggestionMinAggregateOutputType | null
+    _max: SuggestionMaxAggregateOutputType | null
+  }
+
+  type GetSuggestionGroupByPayload<T extends SuggestionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SuggestionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SuggestionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SuggestionGroupByOutputType[P]>
+            : GetScalarType<T[P], SuggestionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SuggestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    title?: boolean
+    priority?: boolean
+    description?: boolean
+    submitterName?: boolean
+    submitterEmail?: boolean
+    adminId?: boolean
+    emailRecipient?: boolean
+    emailStatus?: boolean
+    emailError?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | Suggestion$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["suggestion"]>
+
+
+
+  export type SuggestionSelectScalar = {
+    id?: boolean
+    type?: boolean
+    title?: boolean
+    priority?: boolean
+    description?: boolean
+    submitterName?: boolean
+    submitterEmail?: boolean
+    adminId?: boolean
+    emailRecipient?: boolean
+    emailStatus?: boolean
+    emailError?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "priority" | "description" | "submitterName" | "submitterEmail" | "adminId" | "emailRecipient" | "emailStatus" | "emailError" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["suggestion"]>
+  export type SuggestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | Suggestion$adminArgs<ExtArgs>
+  }
+
+  export type $SuggestionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Suggestion"
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      type: string
+      title: string
+      priority: string
+      description: string
+      submitterName: string | null
+      submitterEmail: string | null
+      adminId: number | null
+      emailRecipient: string | null
+      emailStatus: string
+      emailError: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["suggestion"]>
+    composites: {}
+  }
+
+  type SuggestionGetPayload<S extends boolean | null | undefined | SuggestionDefaultArgs> = $Result.GetResult<Prisma.$SuggestionPayload, S>
+
+  type SuggestionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SuggestionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SuggestionCountAggregateInputType | true
+    }
+
+  export interface SuggestionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Suggestion'], meta: { name: 'Suggestion' } }
+    /**
+     * Find zero or one Suggestion that matches the filter.
+     * @param {SuggestionFindUniqueArgs} args - Arguments to find a Suggestion
+     * @example
+     * // Get one Suggestion
+     * const suggestion = await prisma.suggestion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SuggestionFindUniqueArgs>(args: SelectSubset<T, SuggestionFindUniqueArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Suggestion that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SuggestionFindUniqueOrThrowArgs} args - Arguments to find a Suggestion
+     * @example
+     * // Get one Suggestion
+     * const suggestion = await prisma.suggestion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SuggestionFindUniqueOrThrowArgs>(args: SelectSubset<T, SuggestionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Suggestion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionFindFirstArgs} args - Arguments to find a Suggestion
+     * @example
+     * // Get one Suggestion
+     * const suggestion = await prisma.suggestion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SuggestionFindFirstArgs>(args?: SelectSubset<T, SuggestionFindFirstArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Suggestion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionFindFirstOrThrowArgs} args - Arguments to find a Suggestion
+     * @example
+     * // Get one Suggestion
+     * const suggestion = await prisma.suggestion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SuggestionFindFirstOrThrowArgs>(args?: SelectSubset<T, SuggestionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Suggestions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Suggestions
+     * const suggestions = await prisma.suggestion.findMany()
+     * 
+     * // Get first 10 Suggestions
+     * const suggestions = await prisma.suggestion.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const suggestionWithIdOnly = await prisma.suggestion.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SuggestionFindManyArgs>(args?: SelectSubset<T, SuggestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Suggestion.
+     * @param {SuggestionCreateArgs} args - Arguments to create a Suggestion.
+     * @example
+     * // Create one Suggestion
+     * const Suggestion = await prisma.suggestion.create({
+     *   data: {
+     *     // ... data to create a Suggestion
+     *   }
+     * })
+     * 
+     */
+    create<T extends SuggestionCreateArgs>(args: SelectSubset<T, SuggestionCreateArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Suggestions.
+     * @param {SuggestionCreateManyArgs} args - Arguments to create many Suggestions.
+     * @example
+     * // Create many Suggestions
+     * const suggestion = await prisma.suggestion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SuggestionCreateManyArgs>(args?: SelectSubset<T, SuggestionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Suggestion.
+     * @param {SuggestionDeleteArgs} args - Arguments to delete one Suggestion.
+     * @example
+     * // Delete one Suggestion
+     * const Suggestion = await prisma.suggestion.delete({
+     *   where: {
+     *     // ... filter to delete one Suggestion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SuggestionDeleteArgs>(args: SelectSubset<T, SuggestionDeleteArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Suggestion.
+     * @param {SuggestionUpdateArgs} args - Arguments to update one Suggestion.
+     * @example
+     * // Update one Suggestion
+     * const suggestion = await prisma.suggestion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SuggestionUpdateArgs>(args: SelectSubset<T, SuggestionUpdateArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Suggestions.
+     * @param {SuggestionDeleteManyArgs} args - Arguments to filter Suggestions to delete.
+     * @example
+     * // Delete a few Suggestions
+     * const { count } = await prisma.suggestion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SuggestionDeleteManyArgs>(args?: SelectSubset<T, SuggestionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Suggestions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Suggestions
+     * const suggestion = await prisma.suggestion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SuggestionUpdateManyArgs>(args: SelectSubset<T, SuggestionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Suggestion.
+     * @param {SuggestionUpsertArgs} args - Arguments to update or create a Suggestion.
+     * @example
+     * // Update or create a Suggestion
+     * const suggestion = await prisma.suggestion.upsert({
+     *   create: {
+     *     // ... data to create a Suggestion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Suggestion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SuggestionUpsertArgs>(args: SelectSubset<T, SuggestionUpsertArgs<ExtArgs>>): Prisma__SuggestionClient<$Result.GetResult<Prisma.$SuggestionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Suggestions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionCountArgs} args - Arguments to filter Suggestions to count.
+     * @example
+     * // Count the number of Suggestions
+     * const count = await prisma.suggestion.count({
+     *   where: {
+     *     // ... the filter for the Suggestions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SuggestionCountArgs>(
+      args?: Subset<T, SuggestionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SuggestionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Suggestion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SuggestionAggregateArgs>(args: Subset<T, SuggestionAggregateArgs>): Prisma.PrismaPromise<GetSuggestionAggregateType<T>>
+
+    /**
+     * Group by Suggestion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SuggestionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SuggestionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SuggestionGroupByArgs['orderBy'] }
+        : { orderBy?: SuggestionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SuggestionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSuggestionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Suggestion model
+   */
+  readonly fields: SuggestionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Suggestion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SuggestionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends Suggestion$adminArgs<ExtArgs> = {}>(args?: Subset<T, Suggestion$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Suggestion model
+   */
+  interface SuggestionFieldRefs {
+    readonly id: FieldRef<"Suggestion", 'Int'>
+    readonly type: FieldRef<"Suggestion", 'String'>
+    readonly title: FieldRef<"Suggestion", 'String'>
+    readonly priority: FieldRef<"Suggestion", 'String'>
+    readonly description: FieldRef<"Suggestion", 'String'>
+    readonly submitterName: FieldRef<"Suggestion", 'String'>
+    readonly submitterEmail: FieldRef<"Suggestion", 'String'>
+    readonly adminId: FieldRef<"Suggestion", 'Int'>
+    readonly emailRecipient: FieldRef<"Suggestion", 'String'>
+    readonly emailStatus: FieldRef<"Suggestion", 'String'>
+    readonly emailError: FieldRef<"Suggestion", 'String'>
+    readonly status: FieldRef<"Suggestion", 'String'>
+    readonly createdAt: FieldRef<"Suggestion", 'DateTime'>
+    readonly updatedAt: FieldRef<"Suggestion", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Suggestion findUnique
+   */
+  export type SuggestionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Suggestion to fetch.
+     */
+    where: SuggestionWhereUniqueInput
+  }
+
+  /**
+   * Suggestion findUniqueOrThrow
+   */
+  export type SuggestionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Suggestion to fetch.
+     */
+    where: SuggestionWhereUniqueInput
+  }
+
+  /**
+   * Suggestion findFirst
+   */
+  export type SuggestionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Suggestion to fetch.
+     */
+    where?: SuggestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Suggestions to fetch.
+     */
+    orderBy?: SuggestionOrderByWithRelationInput | SuggestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Suggestions.
+     */
+    cursor?: SuggestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Suggestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Suggestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Suggestions.
+     */
+    distinct?: SuggestionScalarFieldEnum | SuggestionScalarFieldEnum[]
+  }
+
+  /**
+   * Suggestion findFirstOrThrow
+   */
+  export type SuggestionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Suggestion to fetch.
+     */
+    where?: SuggestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Suggestions to fetch.
+     */
+    orderBy?: SuggestionOrderByWithRelationInput | SuggestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Suggestions.
+     */
+    cursor?: SuggestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Suggestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Suggestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Suggestions.
+     */
+    distinct?: SuggestionScalarFieldEnum | SuggestionScalarFieldEnum[]
+  }
+
+  /**
+   * Suggestion findMany
+   */
+  export type SuggestionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Suggestions to fetch.
+     */
+    where?: SuggestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Suggestions to fetch.
+     */
+    orderBy?: SuggestionOrderByWithRelationInput | SuggestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Suggestions.
+     */
+    cursor?: SuggestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Suggestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Suggestions.
+     */
+    skip?: number
+    distinct?: SuggestionScalarFieldEnum | SuggestionScalarFieldEnum[]
+  }
+
+  /**
+   * Suggestion create
+   */
+  export type SuggestionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Suggestion.
+     */
+    data: XOR<SuggestionCreateInput, SuggestionUncheckedCreateInput>
+  }
+
+  /**
+   * Suggestion createMany
+   */
+  export type SuggestionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Suggestions.
+     */
+    data: SuggestionCreateManyInput | SuggestionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Suggestion update
+   */
+  export type SuggestionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Suggestion.
+     */
+    data: XOR<SuggestionUpdateInput, SuggestionUncheckedUpdateInput>
+    /**
+     * Choose, which Suggestion to update.
+     */
+    where: SuggestionWhereUniqueInput
+  }
+
+  /**
+   * Suggestion updateMany
+   */
+  export type SuggestionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Suggestions.
+     */
+    data: XOR<SuggestionUpdateManyMutationInput, SuggestionUncheckedUpdateManyInput>
+    /**
+     * Filter which Suggestions to update
+     */
+    where?: SuggestionWhereInput
+    /**
+     * Limit how many Suggestions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Suggestion upsert
+   */
+  export type SuggestionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Suggestion to update in case it exists.
+     */
+    where: SuggestionWhereUniqueInput
+    /**
+     * In case the Suggestion found by the `where` argument doesn't exist, create a new Suggestion with this data.
+     */
+    create: XOR<SuggestionCreateInput, SuggestionUncheckedCreateInput>
+    /**
+     * In case the Suggestion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SuggestionUpdateInput, SuggestionUncheckedUpdateInput>
+  }
+
+  /**
+   * Suggestion delete
+   */
+  export type SuggestionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+    /**
+     * Filter which Suggestion to delete.
+     */
+    where: SuggestionWhereUniqueInput
+  }
+
+  /**
+   * Suggestion deleteMany
+   */
+  export type SuggestionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Suggestions to delete
+     */
+    where?: SuggestionWhereInput
+    /**
+     * Limit how many Suggestions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Suggestion.admin
+   */
+  export type Suggestion$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * Suggestion without action
+   */
+  export type SuggestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Suggestion
+     */
+    select?: SuggestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Suggestion
+     */
+    omit?: SuggestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SuggestionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SupportRequest
+   */
+
+  export type AggregateSupportRequest = {
+    _count: SupportRequestCountAggregateOutputType | null
+    _avg: SupportRequestAvgAggregateOutputType | null
+    _sum: SupportRequestSumAggregateOutputType | null
+    _min: SupportRequestMinAggregateOutputType | null
+    _max: SupportRequestMaxAggregateOutputType | null
+  }
+
+  export type SupportRequestAvgAggregateOutputType = {
+    id: number | null
+    adminId: number | null
+  }
+
+  export type SupportRequestSumAggregateOutputType = {
+    id: number | null
+    adminId: number | null
+  }
+
+  export type SupportRequestMinAggregateOutputType = {
+    id: number | null
+    topic: string | null
+    priority: string | null
+    message: string | null
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string | null
+    emailError: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SupportRequestMaxAggregateOutputType = {
+    id: number | null
+    topic: string | null
+    priority: string | null
+    message: string | null
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string | null
+    emailError: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SupportRequestCountAggregateOutputType = {
+    id: number
+    topic: number
+    priority: number
+    message: number
+    submitterName: number
+    submitterEmail: number
+    adminId: number
+    emailRecipient: number
+    emailStatus: number
+    emailError: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SupportRequestAvgAggregateInputType = {
+    id?: true
+    adminId?: true
+  }
+
+  export type SupportRequestSumAggregateInputType = {
+    id?: true
+    adminId?: true
+  }
+
+  export type SupportRequestMinAggregateInputType = {
+    id?: true
+    topic?: true
+    priority?: true
+    message?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SupportRequestMaxAggregateInputType = {
+    id?: true
+    topic?: true
+    priority?: true
+    message?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SupportRequestCountAggregateInputType = {
+    id?: true
+    topic?: true
+    priority?: true
+    message?: true
+    submitterName?: true
+    submitterEmail?: true
+    adminId?: true
+    emailRecipient?: true
+    emailStatus?: true
+    emailError?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SupportRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportRequest to aggregate.
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportRequests to fetch.
+     */
+    orderBy?: SupportRequestOrderByWithRelationInput | SupportRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SupportRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SupportRequests
+    **/
+    _count?: true | SupportRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SupportRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SupportRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SupportRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SupportRequestMaxAggregateInputType
+  }
+
+  export type GetSupportRequestAggregateType<T extends SupportRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateSupportRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSupportRequest[P]>
+      : GetScalarType<T[P], AggregateSupportRequest[P]>
+  }
+
+
+
+
+  export type SupportRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupportRequestWhereInput
+    orderBy?: SupportRequestOrderByWithAggregationInput | SupportRequestOrderByWithAggregationInput[]
+    by: SupportRequestScalarFieldEnum[] | SupportRequestScalarFieldEnum
+    having?: SupportRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SupportRequestCountAggregateInputType | true
+    _avg?: SupportRequestAvgAggregateInputType
+    _sum?: SupportRequestSumAggregateInputType
+    _min?: SupportRequestMinAggregateInputType
+    _max?: SupportRequestMaxAggregateInputType
+  }
+
+  export type SupportRequestGroupByOutputType = {
+    id: number
+    topic: string
+    priority: string
+    message: string
+    submitterName: string | null
+    submitterEmail: string | null
+    adminId: number | null
+    emailRecipient: string | null
+    emailStatus: string
+    emailError: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SupportRequestCountAggregateOutputType | null
+    _avg: SupportRequestAvgAggregateOutputType | null
+    _sum: SupportRequestSumAggregateOutputType | null
+    _min: SupportRequestMinAggregateOutputType | null
+    _max: SupportRequestMaxAggregateOutputType | null
+  }
+
+  type GetSupportRequestGroupByPayload<T extends SupportRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SupportRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SupportRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SupportRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], SupportRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SupportRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    topic?: boolean
+    priority?: boolean
+    message?: boolean
+    submitterName?: boolean
+    submitterEmail?: boolean
+    adminId?: boolean
+    emailRecipient?: boolean
+    emailStatus?: boolean
+    emailError?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | SupportRequest$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["supportRequest"]>
+
+
+
+  export type SupportRequestSelectScalar = {
+    id?: boolean
+    topic?: boolean
+    priority?: boolean
+    message?: boolean
+    submitterName?: boolean
+    submitterEmail?: boolean
+    adminId?: boolean
+    emailRecipient?: boolean
+    emailStatus?: boolean
+    emailError?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SupportRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "priority" | "message" | "submitterName" | "submitterEmail" | "adminId" | "emailRecipient" | "emailStatus" | "emailError" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["supportRequest"]>
+  export type SupportRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | SupportRequest$adminArgs<ExtArgs>
+  }
+
+  export type $SupportRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SupportRequest"
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      topic: string
+      priority: string
+      message: string
+      submitterName: string | null
+      submitterEmail: string | null
+      adminId: number | null
+      emailRecipient: string | null
+      emailStatus: string
+      emailError: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["supportRequest"]>
+    composites: {}
+  }
+
+  type SupportRequestGetPayload<S extends boolean | null | undefined | SupportRequestDefaultArgs> = $Result.GetResult<Prisma.$SupportRequestPayload, S>
+
+  type SupportRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SupportRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SupportRequestCountAggregateInputType | true
+    }
+
+  export interface SupportRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SupportRequest'], meta: { name: 'SupportRequest' } }
+    /**
+     * Find zero or one SupportRequest that matches the filter.
+     * @param {SupportRequestFindUniqueArgs} args - Arguments to find a SupportRequest
+     * @example
+     * // Get one SupportRequest
+     * const supportRequest = await prisma.supportRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SupportRequestFindUniqueArgs>(args: SelectSubset<T, SupportRequestFindUniqueArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SupportRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SupportRequestFindUniqueOrThrowArgs} args - Arguments to find a SupportRequest
+     * @example
+     * // Get one SupportRequest
+     * const supportRequest = await prisma.supportRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SupportRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, SupportRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SupportRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestFindFirstArgs} args - Arguments to find a SupportRequest
+     * @example
+     * // Get one SupportRequest
+     * const supportRequest = await prisma.supportRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SupportRequestFindFirstArgs>(args?: SelectSubset<T, SupportRequestFindFirstArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SupportRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestFindFirstOrThrowArgs} args - Arguments to find a SupportRequest
+     * @example
+     * // Get one SupportRequest
+     * const supportRequest = await prisma.supportRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SupportRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, SupportRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SupportRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SupportRequests
+     * const supportRequests = await prisma.supportRequest.findMany()
+     * 
+     * // Get first 10 SupportRequests
+     * const supportRequests = await prisma.supportRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const supportRequestWithIdOnly = await prisma.supportRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SupportRequestFindManyArgs>(args?: SelectSubset<T, SupportRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SupportRequest.
+     * @param {SupportRequestCreateArgs} args - Arguments to create a SupportRequest.
+     * @example
+     * // Create one SupportRequest
+     * const SupportRequest = await prisma.supportRequest.create({
+     *   data: {
+     *     // ... data to create a SupportRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends SupportRequestCreateArgs>(args: SelectSubset<T, SupportRequestCreateArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SupportRequests.
+     * @param {SupportRequestCreateManyArgs} args - Arguments to create many SupportRequests.
+     * @example
+     * // Create many SupportRequests
+     * const supportRequest = await prisma.supportRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SupportRequestCreateManyArgs>(args?: SelectSubset<T, SupportRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SupportRequest.
+     * @param {SupportRequestDeleteArgs} args - Arguments to delete one SupportRequest.
+     * @example
+     * // Delete one SupportRequest
+     * const SupportRequest = await prisma.supportRequest.delete({
+     *   where: {
+     *     // ... filter to delete one SupportRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SupportRequestDeleteArgs>(args: SelectSubset<T, SupportRequestDeleteArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SupportRequest.
+     * @param {SupportRequestUpdateArgs} args - Arguments to update one SupportRequest.
+     * @example
+     * // Update one SupportRequest
+     * const supportRequest = await prisma.supportRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SupportRequestUpdateArgs>(args: SelectSubset<T, SupportRequestUpdateArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SupportRequests.
+     * @param {SupportRequestDeleteManyArgs} args - Arguments to filter SupportRequests to delete.
+     * @example
+     * // Delete a few SupportRequests
+     * const { count } = await prisma.supportRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SupportRequestDeleteManyArgs>(args?: SelectSubset<T, SupportRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SupportRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SupportRequests
+     * const supportRequest = await prisma.supportRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SupportRequestUpdateManyArgs>(args: SelectSubset<T, SupportRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SupportRequest.
+     * @param {SupportRequestUpsertArgs} args - Arguments to update or create a SupportRequest.
+     * @example
+     * // Update or create a SupportRequest
+     * const supportRequest = await prisma.supportRequest.upsert({
+     *   create: {
+     *     // ... data to create a SupportRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SupportRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SupportRequestUpsertArgs>(args: SelectSubset<T, SupportRequestUpsertArgs<ExtArgs>>): Prisma__SupportRequestClient<$Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SupportRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestCountArgs} args - Arguments to filter SupportRequests to count.
+     * @example
+     * // Count the number of SupportRequests
+     * const count = await prisma.supportRequest.count({
+     *   where: {
+     *     // ... the filter for the SupportRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends SupportRequestCountArgs>(
+      args?: Subset<T, SupportRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SupportRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SupportRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SupportRequestAggregateArgs>(args: Subset<T, SupportRequestAggregateArgs>): Prisma.PrismaPromise<GetSupportRequestAggregateType<T>>
+
+    /**
+     * Group by SupportRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SupportRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SupportRequestGroupByArgs['orderBy'] }
+        : { orderBy?: SupportRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SupportRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSupportRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SupportRequest model
+   */
+  readonly fields: SupportRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SupportRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SupportRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends SupportRequest$adminArgs<ExtArgs> = {}>(args?: Subset<T, SupportRequest$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SupportRequest model
+   */
+  interface SupportRequestFieldRefs {
+    readonly id: FieldRef<"SupportRequest", 'Int'>
+    readonly topic: FieldRef<"SupportRequest", 'String'>
+    readonly priority: FieldRef<"SupportRequest", 'String'>
+    readonly message: FieldRef<"SupportRequest", 'String'>
+    readonly submitterName: FieldRef<"SupportRequest", 'String'>
+    readonly submitterEmail: FieldRef<"SupportRequest", 'String'>
+    readonly adminId: FieldRef<"SupportRequest", 'Int'>
+    readonly emailRecipient: FieldRef<"SupportRequest", 'String'>
+    readonly emailStatus: FieldRef<"SupportRequest", 'String'>
+    readonly emailError: FieldRef<"SupportRequest", 'String'>
+    readonly status: FieldRef<"SupportRequest", 'String'>
+    readonly createdAt: FieldRef<"SupportRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"SupportRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SupportRequest findUnique
+   */
+  export type SupportRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SupportRequest to fetch.
+     */
+    where: SupportRequestWhereUniqueInput
+  }
+
+  /**
+   * SupportRequest findUniqueOrThrow
+   */
+  export type SupportRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SupportRequest to fetch.
+     */
+    where: SupportRequestWhereUniqueInput
+  }
+
+  /**
+   * SupportRequest findFirst
+   */
+  export type SupportRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SupportRequest to fetch.
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportRequests to fetch.
+     */
+    orderBy?: SupportRequestOrderByWithRelationInput | SupportRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportRequests.
+     */
+    cursor?: SupportRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportRequests.
+     */
+    distinct?: SupportRequestScalarFieldEnum | SupportRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SupportRequest findFirstOrThrow
+   */
+  export type SupportRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SupportRequest to fetch.
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportRequests to fetch.
+     */
+    orderBy?: SupportRequestOrderByWithRelationInput | SupportRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportRequests.
+     */
+    cursor?: SupportRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportRequests.
+     */
+    distinct?: SupportRequestScalarFieldEnum | SupportRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SupportRequest findMany
+   */
+  export type SupportRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SupportRequests to fetch.
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportRequests to fetch.
+     */
+    orderBy?: SupportRequestOrderByWithRelationInput | SupportRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SupportRequests.
+     */
+    cursor?: SupportRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportRequests.
+     */
+    skip?: number
+    distinct?: SupportRequestScalarFieldEnum | SupportRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SupportRequest create
+   */
+  export type SupportRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SupportRequest.
+     */
+    data: XOR<SupportRequestCreateInput, SupportRequestUncheckedCreateInput>
+  }
+
+  /**
+   * SupportRequest createMany
+   */
+  export type SupportRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SupportRequests.
+     */
+    data: SupportRequestCreateManyInput | SupportRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupportRequest update
+   */
+  export type SupportRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SupportRequest.
+     */
+    data: XOR<SupportRequestUpdateInput, SupportRequestUncheckedUpdateInput>
+    /**
+     * Choose, which SupportRequest to update.
+     */
+    where: SupportRequestWhereUniqueInput
+  }
+
+  /**
+   * SupportRequest updateMany
+   */
+  export type SupportRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SupportRequests.
+     */
+    data: XOR<SupportRequestUpdateManyMutationInput, SupportRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which SupportRequests to update
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * Limit how many SupportRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SupportRequest upsert
+   */
+  export type SupportRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SupportRequest to update in case it exists.
+     */
+    where: SupportRequestWhereUniqueInput
+    /**
+     * In case the SupportRequest found by the `where` argument doesn't exist, create a new SupportRequest with this data.
+     */
+    create: XOR<SupportRequestCreateInput, SupportRequestUncheckedCreateInput>
+    /**
+     * In case the SupportRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SupportRequestUpdateInput, SupportRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * SupportRequest delete
+   */
+  export type SupportRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
+    /**
+     * Filter which SupportRequest to delete.
+     */
+    where: SupportRequestWhereUniqueInput
+  }
+
+  /**
+   * SupportRequest deleteMany
+   */
+  export type SupportRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportRequests to delete
+     */
+    where?: SupportRequestWhereInput
+    /**
+     * Limit how many SupportRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SupportRequest.admin
+   */
+  export type SupportRequest$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * SupportRequest without action
+   */
+  export type SupportRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportRequest
+     */
+    select?: SupportRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportRequest
+     */
+    omit?: SupportRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SupportRequestInclude<ExtArgs> | null
   }
 
 
@@ -28286,6 +34303,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     attendances?: boolean | Teacher$attendancesArgs<ExtArgs>
+    salaryIncrements?: boolean | Teacher$salaryIncrementsArgs<ExtArgs>
     salaryEntries?: boolean | Teacher$salaryEntriesArgs<ExtArgs>
     schedules?: boolean | Teacher$schedulesArgs<ExtArgs>
     shift?: boolean | Teacher$shiftArgs<ExtArgs>
@@ -28329,6 +34347,7 @@ export namespace Prisma {
   export type TeacherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "staffType" | "fullName" | "email" | "phone" | "cnic" | "subject" | "qualification" | "educationInstitute" | "educationYear" | "specialization" | "address" | "shiftId" | "imageUrl" | "basicSalary" | "bankName" | "accountTitle" | "accountNumber" | "iban" | "jobTitle" | "department" | "employmentType" | "appointmentDate" | "joiningDate" | "experienceSummary" | "notes" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["teacher"]>
   export type TeacherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendances?: boolean | Teacher$attendancesArgs<ExtArgs>
+    salaryIncrements?: boolean | Teacher$salaryIncrementsArgs<ExtArgs>
     salaryEntries?: boolean | Teacher$salaryEntriesArgs<ExtArgs>
     schedules?: boolean | Teacher$schedulesArgs<ExtArgs>
     shift?: boolean | Teacher$shiftArgs<ExtArgs>
@@ -28339,6 +34358,7 @@ export namespace Prisma {
     name: "Teacher"
     objects: {
       attendances: Prisma.$TeacherAttendancePayload<ExtArgs>[]
+      salaryIncrements: Prisma.$TeacherSalaryIncrementPayload<ExtArgs>[]
       salaryEntries: Prisma.$SalaryEntryPayload<ExtArgs>[]
       schedules: Prisma.$TeacherSchedulePayload<ExtArgs>[]
       shift: Prisma.$ShiftPayload<ExtArgs> | null
@@ -28714,6 +34734,7 @@ export namespace Prisma {
   export interface Prisma__TeacherClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     attendances<T extends Teacher$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    salaryIncrements<T extends Teacher$salaryIncrementsArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$salaryIncrementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salaryEntries<T extends Teacher$salaryEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$salaryEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     schedules<T extends Teacher$schedulesArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$schedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     shift<T extends Teacher$shiftArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$shiftArgs<ExtArgs>>): Prisma__ShiftClient<$Result.GetResult<Prisma.$ShiftPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -29142,6 +35163,30 @@ export namespace Prisma {
   }
 
   /**
+   * Teacher.salaryIncrements
+   */
+  export type Teacher$salaryIncrementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    where?: TeacherSalaryIncrementWhereInput
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeacherSalaryIncrementScalarFieldEnum | TeacherSalaryIncrementScalarFieldEnum[]
+  }
+
+  /**
    * Teacher.salaryEntries
    */
   export type Teacher$salaryEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -29224,6 +35269,1078 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TeacherInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TeacherSalaryIncrement
+   */
+
+  export type AggregateTeacherSalaryIncrement = {
+    _count: TeacherSalaryIncrementCountAggregateOutputType | null
+    _avg: TeacherSalaryIncrementAvgAggregateOutputType | null
+    _sum: TeacherSalaryIncrementSumAggregateOutputType | null
+    _min: TeacherSalaryIncrementMinAggregateOutputType | null
+    _max: TeacherSalaryIncrementMaxAggregateOutputType | null
+  }
+
+  export type TeacherSalaryIncrementAvgAggregateOutputType = {
+    id: number | null
+    teacherId: number | null
+    previousSalary: Decimal | null
+    incrementAmount: Decimal | null
+    newSalary: Decimal | null
+    createdById: number | null
+  }
+
+  export type TeacherSalaryIncrementSumAggregateOutputType = {
+    id: number | null
+    teacherId: number | null
+    previousSalary: Decimal | null
+    incrementAmount: Decimal | null
+    newSalary: Decimal | null
+    createdById: number | null
+  }
+
+  export type TeacherSalaryIncrementMinAggregateOutputType = {
+    id: number | null
+    teacherId: number | null
+    previousSalary: Decimal | null
+    incrementAmount: Decimal | null
+    newSalary: Decimal | null
+    effectiveDate: string | null
+    reason: string | null
+    createdById: number | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeacherSalaryIncrementMaxAggregateOutputType = {
+    id: number | null
+    teacherId: number | null
+    previousSalary: Decimal | null
+    incrementAmount: Decimal | null
+    newSalary: Decimal | null
+    effectiveDate: string | null
+    reason: string | null
+    createdById: number | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TeacherSalaryIncrementCountAggregateOutputType = {
+    id: number
+    teacherId: number
+    previousSalary: number
+    incrementAmount: number
+    newSalary: number
+    effectiveDate: number
+    reason: number
+    createdById: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TeacherSalaryIncrementAvgAggregateInputType = {
+    id?: true
+    teacherId?: true
+    previousSalary?: true
+    incrementAmount?: true
+    newSalary?: true
+    createdById?: true
+  }
+
+  export type TeacherSalaryIncrementSumAggregateInputType = {
+    id?: true
+    teacherId?: true
+    previousSalary?: true
+    incrementAmount?: true
+    newSalary?: true
+    createdById?: true
+  }
+
+  export type TeacherSalaryIncrementMinAggregateInputType = {
+    id?: true
+    teacherId?: true
+    previousSalary?: true
+    incrementAmount?: true
+    newSalary?: true
+    effectiveDate?: true
+    reason?: true
+    createdById?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeacherSalaryIncrementMaxAggregateInputType = {
+    id?: true
+    teacherId?: true
+    previousSalary?: true
+    incrementAmount?: true
+    newSalary?: true
+    effectiveDate?: true
+    reason?: true
+    createdById?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TeacherSalaryIncrementCountAggregateInputType = {
+    id?: true
+    teacherId?: true
+    previousSalary?: true
+    incrementAmount?: true
+    newSalary?: true
+    effectiveDate?: true
+    reason?: true
+    createdById?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TeacherSalaryIncrementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeacherSalaryIncrement to aggregate.
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherSalaryIncrements to fetch.
+     */
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherSalaryIncrements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherSalaryIncrements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TeacherSalaryIncrements
+    **/
+    _count?: true | TeacherSalaryIncrementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TeacherSalaryIncrementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TeacherSalaryIncrementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TeacherSalaryIncrementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TeacherSalaryIncrementMaxAggregateInputType
+  }
+
+  export type GetTeacherSalaryIncrementAggregateType<T extends TeacherSalaryIncrementAggregateArgs> = {
+        [P in keyof T & keyof AggregateTeacherSalaryIncrement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTeacherSalaryIncrement[P]>
+      : GetScalarType<T[P], AggregateTeacherSalaryIncrement[P]>
+  }
+
+
+
+
+  export type TeacherSalaryIncrementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeacherSalaryIncrementWhereInput
+    orderBy?: TeacherSalaryIncrementOrderByWithAggregationInput | TeacherSalaryIncrementOrderByWithAggregationInput[]
+    by: TeacherSalaryIncrementScalarFieldEnum[] | TeacherSalaryIncrementScalarFieldEnum
+    having?: TeacherSalaryIncrementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TeacherSalaryIncrementCountAggregateInputType | true
+    _avg?: TeacherSalaryIncrementAvgAggregateInputType
+    _sum?: TeacherSalaryIncrementSumAggregateInputType
+    _min?: TeacherSalaryIncrementMinAggregateInputType
+    _max?: TeacherSalaryIncrementMaxAggregateInputType
+  }
+
+  export type TeacherSalaryIncrementGroupByOutputType = {
+    id: number
+    teacherId: number
+    previousSalary: Decimal
+    incrementAmount: Decimal
+    newSalary: Decimal
+    effectiveDate: string
+    reason: string | null
+    createdById: number | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: TeacherSalaryIncrementCountAggregateOutputType | null
+    _avg: TeacherSalaryIncrementAvgAggregateOutputType | null
+    _sum: TeacherSalaryIncrementSumAggregateOutputType | null
+    _min: TeacherSalaryIncrementMinAggregateOutputType | null
+    _max: TeacherSalaryIncrementMaxAggregateOutputType | null
+  }
+
+  type GetTeacherSalaryIncrementGroupByPayload<T extends TeacherSalaryIncrementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TeacherSalaryIncrementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TeacherSalaryIncrementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TeacherSalaryIncrementGroupByOutputType[P]>
+            : GetScalarType<T[P], TeacherSalaryIncrementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TeacherSalaryIncrementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    teacherId?: boolean
+    previousSalary?: boolean
+    incrementAmount?: boolean
+    newSalary?: boolean
+    effectiveDate?: boolean
+    reason?: boolean
+    createdById?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    createdBy?: boolean | TeacherSalaryIncrement$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["teacherSalaryIncrement"]>
+
+
+
+  export type TeacherSalaryIncrementSelectScalar = {
+    id?: boolean
+    teacherId?: boolean
+    previousSalary?: boolean
+    incrementAmount?: boolean
+    newSalary?: boolean
+    effectiveDate?: boolean
+    reason?: boolean
+    createdById?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TeacherSalaryIncrementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "previousSalary" | "incrementAmount" | "newSalary" | "effectiveDate" | "reason" | "createdById" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherSalaryIncrement"]>
+  export type TeacherSalaryIncrementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    createdBy?: boolean | TeacherSalaryIncrement$createdByArgs<ExtArgs>
+  }
+
+  export type $TeacherSalaryIncrementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TeacherSalaryIncrement"
+    objects: {
+      teacher: Prisma.$TeacherPayload<ExtArgs>
+      createdBy: Prisma.$AdminPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      teacherId: number
+      previousSalary: Prisma.Decimal
+      incrementAmount: Prisma.Decimal
+      newSalary: Prisma.Decimal
+      effectiveDate: string
+      reason: string | null
+      createdById: number | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["teacherSalaryIncrement"]>
+    composites: {}
+  }
+
+  type TeacherSalaryIncrementGetPayload<S extends boolean | null | undefined | TeacherSalaryIncrementDefaultArgs> = $Result.GetResult<Prisma.$TeacherSalaryIncrementPayload, S>
+
+  type TeacherSalaryIncrementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TeacherSalaryIncrementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TeacherSalaryIncrementCountAggregateInputType | true
+    }
+
+  export interface TeacherSalaryIncrementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TeacherSalaryIncrement'], meta: { name: 'TeacherSalaryIncrement' } }
+    /**
+     * Find zero or one TeacherSalaryIncrement that matches the filter.
+     * @param {TeacherSalaryIncrementFindUniqueArgs} args - Arguments to find a TeacherSalaryIncrement
+     * @example
+     * // Get one TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TeacherSalaryIncrementFindUniqueArgs>(args: SelectSubset<T, TeacherSalaryIncrementFindUniqueArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TeacherSalaryIncrement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TeacherSalaryIncrementFindUniqueOrThrowArgs} args - Arguments to find a TeacherSalaryIncrement
+     * @example
+     * // Get one TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TeacherSalaryIncrementFindUniqueOrThrowArgs>(args: SelectSubset<T, TeacherSalaryIncrementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeacherSalaryIncrement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementFindFirstArgs} args - Arguments to find a TeacherSalaryIncrement
+     * @example
+     * // Get one TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TeacherSalaryIncrementFindFirstArgs>(args?: SelectSubset<T, TeacherSalaryIncrementFindFirstArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TeacherSalaryIncrement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementFindFirstOrThrowArgs} args - Arguments to find a TeacherSalaryIncrement
+     * @example
+     * // Get one TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TeacherSalaryIncrementFindFirstOrThrowArgs>(args?: SelectSubset<T, TeacherSalaryIncrementFindFirstOrThrowArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TeacherSalaryIncrements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TeacherSalaryIncrements
+     * const teacherSalaryIncrements = await prisma.teacherSalaryIncrement.findMany()
+     * 
+     * // Get first 10 TeacherSalaryIncrements
+     * const teacherSalaryIncrements = await prisma.teacherSalaryIncrement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const teacherSalaryIncrementWithIdOnly = await prisma.teacherSalaryIncrement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TeacherSalaryIncrementFindManyArgs>(args?: SelectSubset<T, TeacherSalaryIncrementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TeacherSalaryIncrement.
+     * @param {TeacherSalaryIncrementCreateArgs} args - Arguments to create a TeacherSalaryIncrement.
+     * @example
+     * // Create one TeacherSalaryIncrement
+     * const TeacherSalaryIncrement = await prisma.teacherSalaryIncrement.create({
+     *   data: {
+     *     // ... data to create a TeacherSalaryIncrement
+     *   }
+     * })
+     * 
+     */
+    create<T extends TeacherSalaryIncrementCreateArgs>(args: SelectSubset<T, TeacherSalaryIncrementCreateArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TeacherSalaryIncrements.
+     * @param {TeacherSalaryIncrementCreateManyArgs} args - Arguments to create many TeacherSalaryIncrements.
+     * @example
+     * // Create many TeacherSalaryIncrements
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TeacherSalaryIncrementCreateManyArgs>(args?: SelectSubset<T, TeacherSalaryIncrementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TeacherSalaryIncrement.
+     * @param {TeacherSalaryIncrementDeleteArgs} args - Arguments to delete one TeacherSalaryIncrement.
+     * @example
+     * // Delete one TeacherSalaryIncrement
+     * const TeacherSalaryIncrement = await prisma.teacherSalaryIncrement.delete({
+     *   where: {
+     *     // ... filter to delete one TeacherSalaryIncrement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TeacherSalaryIncrementDeleteArgs>(args: SelectSubset<T, TeacherSalaryIncrementDeleteArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TeacherSalaryIncrement.
+     * @param {TeacherSalaryIncrementUpdateArgs} args - Arguments to update one TeacherSalaryIncrement.
+     * @example
+     * // Update one TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TeacherSalaryIncrementUpdateArgs>(args: SelectSubset<T, TeacherSalaryIncrementUpdateArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TeacherSalaryIncrements.
+     * @param {TeacherSalaryIncrementDeleteManyArgs} args - Arguments to filter TeacherSalaryIncrements to delete.
+     * @example
+     * // Delete a few TeacherSalaryIncrements
+     * const { count } = await prisma.teacherSalaryIncrement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TeacherSalaryIncrementDeleteManyArgs>(args?: SelectSubset<T, TeacherSalaryIncrementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeacherSalaryIncrements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TeacherSalaryIncrements
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TeacherSalaryIncrementUpdateManyArgs>(args: SelectSubset<T, TeacherSalaryIncrementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TeacherSalaryIncrement.
+     * @param {TeacherSalaryIncrementUpsertArgs} args - Arguments to update or create a TeacherSalaryIncrement.
+     * @example
+     * // Update or create a TeacherSalaryIncrement
+     * const teacherSalaryIncrement = await prisma.teacherSalaryIncrement.upsert({
+     *   create: {
+     *     // ... data to create a TeacherSalaryIncrement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TeacherSalaryIncrement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TeacherSalaryIncrementUpsertArgs>(args: SelectSubset<T, TeacherSalaryIncrementUpsertArgs<ExtArgs>>): Prisma__TeacherSalaryIncrementClient<$Result.GetResult<Prisma.$TeacherSalaryIncrementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TeacherSalaryIncrements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementCountArgs} args - Arguments to filter TeacherSalaryIncrements to count.
+     * @example
+     * // Count the number of TeacherSalaryIncrements
+     * const count = await prisma.teacherSalaryIncrement.count({
+     *   where: {
+     *     // ... the filter for the TeacherSalaryIncrements we want to count
+     *   }
+     * })
+    **/
+    count<T extends TeacherSalaryIncrementCountArgs>(
+      args?: Subset<T, TeacherSalaryIncrementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TeacherSalaryIncrementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TeacherSalaryIncrement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TeacherSalaryIncrementAggregateArgs>(args: Subset<T, TeacherSalaryIncrementAggregateArgs>): Prisma.PrismaPromise<GetTeacherSalaryIncrementAggregateType<T>>
+
+    /**
+     * Group by TeacherSalaryIncrement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeacherSalaryIncrementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TeacherSalaryIncrementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TeacherSalaryIncrementGroupByArgs['orderBy'] }
+        : { orderBy?: TeacherSalaryIncrementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TeacherSalaryIncrementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTeacherSalaryIncrementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TeacherSalaryIncrement model
+   */
+  readonly fields: TeacherSalaryIncrementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TeacherSalaryIncrement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TeacherSalaryIncrementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdBy<T extends TeacherSalaryIncrement$createdByArgs<ExtArgs> = {}>(args?: Subset<T, TeacherSalaryIncrement$createdByArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TeacherSalaryIncrement model
+   */
+  interface TeacherSalaryIncrementFieldRefs {
+    readonly id: FieldRef<"TeacherSalaryIncrement", 'Int'>
+    readonly teacherId: FieldRef<"TeacherSalaryIncrement", 'Int'>
+    readonly previousSalary: FieldRef<"TeacherSalaryIncrement", 'Decimal'>
+    readonly incrementAmount: FieldRef<"TeacherSalaryIncrement", 'Decimal'>
+    readonly newSalary: FieldRef<"TeacherSalaryIncrement", 'Decimal'>
+    readonly effectiveDate: FieldRef<"TeacherSalaryIncrement", 'String'>
+    readonly reason: FieldRef<"TeacherSalaryIncrement", 'String'>
+    readonly createdById: FieldRef<"TeacherSalaryIncrement", 'Int'>
+    readonly status: FieldRef<"TeacherSalaryIncrement", 'String'>
+    readonly createdAt: FieldRef<"TeacherSalaryIncrement", 'DateTime'>
+    readonly updatedAt: FieldRef<"TeacherSalaryIncrement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TeacherSalaryIncrement findUnique
+   */
+  export type TeacherSalaryIncrementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherSalaryIncrement to fetch.
+     */
+    where: TeacherSalaryIncrementWhereUniqueInput
+  }
+
+  /**
+   * TeacherSalaryIncrement findUniqueOrThrow
+   */
+  export type TeacherSalaryIncrementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherSalaryIncrement to fetch.
+     */
+    where: TeacherSalaryIncrementWhereUniqueInput
+  }
+
+  /**
+   * TeacherSalaryIncrement findFirst
+   */
+  export type TeacherSalaryIncrementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherSalaryIncrement to fetch.
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherSalaryIncrements to fetch.
+     */
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeacherSalaryIncrements.
+     */
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherSalaryIncrements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherSalaryIncrements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeacherSalaryIncrements.
+     */
+    distinct?: TeacherSalaryIncrementScalarFieldEnum | TeacherSalaryIncrementScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherSalaryIncrement findFirstOrThrow
+   */
+  export type TeacherSalaryIncrementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherSalaryIncrement to fetch.
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherSalaryIncrements to fetch.
+     */
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeacherSalaryIncrements.
+     */
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherSalaryIncrements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherSalaryIncrements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeacherSalaryIncrements.
+     */
+    distinct?: TeacherSalaryIncrementScalarFieldEnum | TeacherSalaryIncrementScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherSalaryIncrement findMany
+   */
+  export type TeacherSalaryIncrementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter, which TeacherSalaryIncrements to fetch.
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeacherSalaryIncrements to fetch.
+     */
+    orderBy?: TeacherSalaryIncrementOrderByWithRelationInput | TeacherSalaryIncrementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TeacherSalaryIncrements.
+     */
+    cursor?: TeacherSalaryIncrementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeacherSalaryIncrements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeacherSalaryIncrements.
+     */
+    skip?: number
+    distinct?: TeacherSalaryIncrementScalarFieldEnum | TeacherSalaryIncrementScalarFieldEnum[]
+  }
+
+  /**
+   * TeacherSalaryIncrement create
+   */
+  export type TeacherSalaryIncrementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TeacherSalaryIncrement.
+     */
+    data: XOR<TeacherSalaryIncrementCreateInput, TeacherSalaryIncrementUncheckedCreateInput>
+  }
+
+  /**
+   * TeacherSalaryIncrement createMany
+   */
+  export type TeacherSalaryIncrementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TeacherSalaryIncrements.
+     */
+    data: TeacherSalaryIncrementCreateManyInput | TeacherSalaryIncrementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TeacherSalaryIncrement update
+   */
+  export type TeacherSalaryIncrementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TeacherSalaryIncrement.
+     */
+    data: XOR<TeacherSalaryIncrementUpdateInput, TeacherSalaryIncrementUncheckedUpdateInput>
+    /**
+     * Choose, which TeacherSalaryIncrement to update.
+     */
+    where: TeacherSalaryIncrementWhereUniqueInput
+  }
+
+  /**
+   * TeacherSalaryIncrement updateMany
+   */
+  export type TeacherSalaryIncrementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TeacherSalaryIncrements.
+     */
+    data: XOR<TeacherSalaryIncrementUpdateManyMutationInput, TeacherSalaryIncrementUncheckedUpdateManyInput>
+    /**
+     * Filter which TeacherSalaryIncrements to update
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * Limit how many TeacherSalaryIncrements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeacherSalaryIncrement upsert
+   */
+  export type TeacherSalaryIncrementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TeacherSalaryIncrement to update in case it exists.
+     */
+    where: TeacherSalaryIncrementWhereUniqueInput
+    /**
+     * In case the TeacherSalaryIncrement found by the `where` argument doesn't exist, create a new TeacherSalaryIncrement with this data.
+     */
+    create: XOR<TeacherSalaryIncrementCreateInput, TeacherSalaryIncrementUncheckedCreateInput>
+    /**
+     * In case the TeacherSalaryIncrement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TeacherSalaryIncrementUpdateInput, TeacherSalaryIncrementUncheckedUpdateInput>
+  }
+
+  /**
+   * TeacherSalaryIncrement delete
+   */
+  export type TeacherSalaryIncrementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
+    /**
+     * Filter which TeacherSalaryIncrement to delete.
+     */
+    where: TeacherSalaryIncrementWhereUniqueInput
+  }
+
+  /**
+   * TeacherSalaryIncrement deleteMany
+   */
+  export type TeacherSalaryIncrementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeacherSalaryIncrements to delete
+     */
+    where?: TeacherSalaryIncrementWhereInput
+    /**
+     * Limit how many TeacherSalaryIncrements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TeacherSalaryIncrement.createdBy
+   */
+  export type TeacherSalaryIncrement$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * TeacherSalaryIncrement without action
+   */
+  export type TeacherSalaryIncrementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherSalaryIncrement
+     */
+    select?: TeacherSalaryIncrementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherSalaryIncrement
+     */
+    omit?: TeacherSalaryIncrementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherSalaryIncrementInclude<ExtArgs> | null
   }
 
 
@@ -54851,12 +61968,48 @@ export namespace Prisma {
     username: 'username',
     password: 'password',
     role: 'role',
+    roleId: 'roleId',
+    ownerAdminId: 'ownerAdminId',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
+
+
+  export const RoleScalarFieldEnum: {
+    id: 'id',
+    roleName: 'roleName',
+    description: 'description',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+  export const PermissionScalarFieldEnum: {
+    id: 'id',
+    permissionKey: 'permissionKey',
+    permissionName: 'permissionName',
+    pagePath: 'pagePath',
+    moduleName: 'moduleName',
+    createdAt: 'createdAt'
+  };
+
+  export type PermissionScalarFieldEnum = (typeof PermissionScalarFieldEnum)[keyof typeof PermissionScalarFieldEnum]
+
+
+  export const RolePermissionScalarFieldEnum: {
+    id: 'id',
+    roleId: 'roleId',
+    permissionId: 'permissionId',
+    createdAt: 'createdAt'
+  };
+
+  export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
 
 
   export const MadrassaProfileScalarFieldEnum: {
@@ -54889,6 +62042,45 @@ export namespace Prisma {
   };
 
   export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
+
+
+  export const SuggestionScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    title: 'title',
+    priority: 'priority',
+    description: 'description',
+    submitterName: 'submitterName',
+    submitterEmail: 'submitterEmail',
+    adminId: 'adminId',
+    emailRecipient: 'emailRecipient',
+    emailStatus: 'emailStatus',
+    emailError: 'emailError',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SuggestionScalarFieldEnum = (typeof SuggestionScalarFieldEnum)[keyof typeof SuggestionScalarFieldEnum]
+
+
+  export const SupportRequestScalarFieldEnum: {
+    id: 'id',
+    topic: 'topic',
+    priority: 'priority',
+    message: 'message',
+    submitterName: 'submitterName',
+    submitterEmail: 'submitterEmail',
+    adminId: 'adminId',
+    emailRecipient: 'emailRecipient',
+    emailStatus: 'emailStatus',
+    emailError: 'emailError',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SupportRequestScalarFieldEnum = (typeof SupportRequestScalarFieldEnum)[keyof typeof SupportRequestScalarFieldEnum]
 
 
   export const ShiftScalarFieldEnum: {
@@ -55219,6 +62411,23 @@ export namespace Prisma {
   };
 
   export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
+
+
+  export const TeacherSalaryIncrementScalarFieldEnum: {
+    id: 'id',
+    teacherId: 'teacherId',
+    previousSalary: 'previousSalary',
+    incrementAmount: 'incrementAmount',
+    newSalary: 'newSalary',
+    effectiveDate: 'effectiveDate',
+    reason: 'reason',
+    createdById: 'createdById',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TeacherSalaryIncrementScalarFieldEnum = (typeof TeacherSalaryIncrementScalarFieldEnum)[keyof typeof TeacherSalaryIncrementScalarFieldEnum]
 
 
   export const StudentAttendanceScalarFieldEnum: {
@@ -55682,6 +62891,14 @@ export namespace Prisma {
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   export const AdminOrderByRelevanceFieldEnum: {
     name: 'name',
     email: 'email',
@@ -55694,12 +62911,22 @@ export namespace Prisma {
   export type AdminOrderByRelevanceFieldEnum = (typeof AdminOrderByRelevanceFieldEnum)[keyof typeof AdminOrderByRelevanceFieldEnum]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
+  export const RoleOrderByRelevanceFieldEnum: {
+    roleName: 'roleName',
+    description: 'description'
   };
 
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+  export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
+
+
+  export const PermissionOrderByRelevanceFieldEnum: {
+    permissionKey: 'permissionKey',
+    permissionName: 'permissionName',
+    pagePath: 'pagePath',
+    moduleName: 'moduleName'
+  };
+
+  export type PermissionOrderByRelevanceFieldEnum = (typeof PermissionOrderByRelevanceFieldEnum)[keyof typeof PermissionOrderByRelevanceFieldEnum]
 
 
   export const MadrassaProfileOrderByRelevanceFieldEnum: {
@@ -55725,6 +62952,37 @@ export namespace Prisma {
   };
 
   export type CityOrderByRelevanceFieldEnum = (typeof CityOrderByRelevanceFieldEnum)[keyof typeof CityOrderByRelevanceFieldEnum]
+
+
+  export const SuggestionOrderByRelevanceFieldEnum: {
+    type: 'type',
+    title: 'title',
+    priority: 'priority',
+    description: 'description',
+    submitterName: 'submitterName',
+    submitterEmail: 'submitterEmail',
+    emailRecipient: 'emailRecipient',
+    emailStatus: 'emailStatus',
+    emailError: 'emailError',
+    status: 'status'
+  };
+
+  export type SuggestionOrderByRelevanceFieldEnum = (typeof SuggestionOrderByRelevanceFieldEnum)[keyof typeof SuggestionOrderByRelevanceFieldEnum]
+
+
+  export const SupportRequestOrderByRelevanceFieldEnum: {
+    topic: 'topic',
+    priority: 'priority',
+    message: 'message',
+    submitterName: 'submitterName',
+    submitterEmail: 'submitterEmail',
+    emailRecipient: 'emailRecipient',
+    emailStatus: 'emailStatus',
+    emailError: 'emailError',
+    status: 'status'
+  };
+
+  export type SupportRequestOrderByRelevanceFieldEnum = (typeof SupportRequestOrderByRelevanceFieldEnum)[keyof typeof SupportRequestOrderByRelevanceFieldEnum]
 
 
   export const ShiftOrderByRelevanceFieldEnum: {
@@ -55965,6 +63223,15 @@ export namespace Prisma {
   };
 
   export type TeacherOrderByRelevanceFieldEnum = (typeof TeacherOrderByRelevanceFieldEnum)[keyof typeof TeacherOrderByRelevanceFieldEnum]
+
+
+  export const TeacherSalaryIncrementOrderByRelevanceFieldEnum: {
+    effectiveDate: 'effectiveDate',
+    reason: 'reason',
+    status: 'status'
+  };
+
+  export type TeacherSalaryIncrementOrderByRelevanceFieldEnum = (typeof TeacherSalaryIncrementOrderByRelevanceFieldEnum)[keyof typeof TeacherSalaryIncrementOrderByRelevanceFieldEnum]
 
 
   export const StudentAttendanceOrderByRelevanceFieldEnum: {
@@ -56311,11 +63578,20 @@ export namespace Prisma {
     username?: StringFilter<"Admin"> | string
     password?: StringFilter<"Admin"> | string
     role?: StringFilter<"Admin"> | string
+    roleId?: IntNullableFilter<"Admin"> | number | null
+    ownerAdminId?: IntNullableFilter<"Admin"> | number | null
     status?: StringFilter<"Admin"> | string
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
+    assignedRole?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
+    ownerAdmin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    ownedUsers?: AdminListRelationFilter
+    createdRoles?: RoleListRelationFilter
     madrassaProfile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
     financialRecords?: FinancialRecordListRelationFilter
+    suggestions?: SuggestionListRelationFilter
+    supportRequests?: SupportRequestListRelationFilter
+    salaryIncrements?: TeacherSalaryIncrementListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -56325,11 +63601,20 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    roleId?: SortOrderInput | SortOrder
+    ownerAdminId?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    assignedRole?: RoleOrderByWithRelationInput
+    ownerAdmin?: AdminOrderByWithRelationInput
+    ownedUsers?: AdminOrderByRelationAggregateInput
+    createdRoles?: RoleOrderByRelationAggregateInput
     madrassaProfile?: MadrassaProfileOrderByWithRelationInput
     financialRecords?: FinancialRecordOrderByRelationAggregateInput
+    suggestions?: SuggestionOrderByRelationAggregateInput
+    supportRequests?: SupportRequestOrderByRelationAggregateInput
+    salaryIncrements?: TeacherSalaryIncrementOrderByRelationAggregateInput
     _relevance?: AdminOrderByRelevanceInput
   }
 
@@ -56343,11 +63628,20 @@ export namespace Prisma {
     name?: StringFilter<"Admin"> | string
     password?: StringFilter<"Admin"> | string
     role?: StringFilter<"Admin"> | string
+    roleId?: IntNullableFilter<"Admin"> | number | null
+    ownerAdminId?: IntNullableFilter<"Admin"> | number | null
     status?: StringFilter<"Admin"> | string
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
+    assignedRole?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
+    ownerAdmin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    ownedUsers?: AdminListRelationFilter
+    createdRoles?: RoleListRelationFilter
     madrassaProfile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
     financialRecords?: FinancialRecordListRelationFilter
+    suggestions?: SuggestionListRelationFilter
+    supportRequests?: SupportRequestListRelationFilter
+    salaryIncrements?: TeacherSalaryIncrementListRelationFilter
   }, "id" | "email" | "username">
 
   export type AdminOrderByWithAggregationInput = {
@@ -56357,6 +63651,8 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    roleId?: SortOrderInput | SortOrder
+    ownerAdminId?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -56377,9 +63673,199 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"Admin"> | string
     password?: StringWithAggregatesFilter<"Admin"> | string
     role?: StringWithAggregatesFilter<"Admin"> | string
+    roleId?: IntNullableWithAggregatesFilter<"Admin"> | number | null
+    ownerAdminId?: IntNullableWithAggregatesFilter<"Admin"> | number | null
     status?: StringWithAggregatesFilter<"Admin"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
+  }
+
+  export type RoleWhereInput = {
+    AND?: RoleWhereInput | RoleWhereInput[]
+    OR?: RoleWhereInput[]
+    NOT?: RoleWhereInput | RoleWhereInput[]
+    id?: IntFilter<"Role"> | number
+    roleName?: StringFilter<"Role"> | string
+    description?: StringNullableFilter<"Role"> | string | null
+    createdBy?: IntNullableFilter<"Role"> | number | null
+    createdAt?: DateTimeFilter<"Role"> | Date | string
+    updatedAt?: DateTimeFilter<"Role"> | Date | string
+    creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    admins?: AdminListRelationFilter
+    rolePermissions?: RolePermissionListRelationFilter
+  }
+
+  export type RoleOrderByWithRelationInput = {
+    id?: SortOrder
+    roleName?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creator?: AdminOrderByWithRelationInput
+    admins?: AdminOrderByRelationAggregateInput
+    rolePermissions?: RolePermissionOrderByRelationAggregateInput
+    _relevance?: RoleOrderByRelevanceInput
+  }
+
+  export type RoleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    roleName?: string
+    AND?: RoleWhereInput | RoleWhereInput[]
+    OR?: RoleWhereInput[]
+    NOT?: RoleWhereInput | RoleWhereInput[]
+    description?: StringNullableFilter<"Role"> | string | null
+    createdBy?: IntNullableFilter<"Role"> | number | null
+    createdAt?: DateTimeFilter<"Role"> | Date | string
+    updatedAt?: DateTimeFilter<"Role"> | Date | string
+    creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+    admins?: AdminListRelationFilter
+    rolePermissions?: RolePermissionListRelationFilter
+  }, "id" | "roleName">
+
+  export type RoleOrderByWithAggregationInput = {
+    id?: SortOrder
+    roleName?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RoleCountOrderByAggregateInput
+    _avg?: RoleAvgOrderByAggregateInput
+    _max?: RoleMaxOrderByAggregateInput
+    _min?: RoleMinOrderByAggregateInput
+    _sum?: RoleSumOrderByAggregateInput
+  }
+
+  export type RoleScalarWhereWithAggregatesInput = {
+    AND?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
+    OR?: RoleScalarWhereWithAggregatesInput[]
+    NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Role"> | number
+    roleName?: StringWithAggregatesFilter<"Role"> | string
+    description?: StringNullableWithAggregatesFilter<"Role"> | string | null
+    createdBy?: IntNullableWithAggregatesFilter<"Role"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
+  }
+
+  export type PermissionWhereInput = {
+    AND?: PermissionWhereInput | PermissionWhereInput[]
+    OR?: PermissionWhereInput[]
+    NOT?: PermissionWhereInput | PermissionWhereInput[]
+    id?: IntFilter<"Permission"> | number
+    permissionKey?: StringFilter<"Permission"> | string
+    permissionName?: StringFilter<"Permission"> | string
+    pagePath?: StringNullableFilter<"Permission"> | string | null
+    moduleName?: StringFilter<"Permission"> | string
+    createdAt?: DateTimeFilter<"Permission"> | Date | string
+    rolePermissions?: RolePermissionListRelationFilter
+  }
+
+  export type PermissionOrderByWithRelationInput = {
+    id?: SortOrder
+    permissionKey?: SortOrder
+    permissionName?: SortOrder
+    pagePath?: SortOrderInput | SortOrder
+    moduleName?: SortOrder
+    createdAt?: SortOrder
+    rolePermissions?: RolePermissionOrderByRelationAggregateInput
+    _relevance?: PermissionOrderByRelevanceInput
+  }
+
+  export type PermissionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    permissionKey?: string
+    AND?: PermissionWhereInput | PermissionWhereInput[]
+    OR?: PermissionWhereInput[]
+    NOT?: PermissionWhereInput | PermissionWhereInput[]
+    permissionName?: StringFilter<"Permission"> | string
+    pagePath?: StringNullableFilter<"Permission"> | string | null
+    moduleName?: StringFilter<"Permission"> | string
+    createdAt?: DateTimeFilter<"Permission"> | Date | string
+    rolePermissions?: RolePermissionListRelationFilter
+  }, "id" | "permissionKey">
+
+  export type PermissionOrderByWithAggregationInput = {
+    id?: SortOrder
+    permissionKey?: SortOrder
+    permissionName?: SortOrder
+    pagePath?: SortOrderInput | SortOrder
+    moduleName?: SortOrder
+    createdAt?: SortOrder
+    _count?: PermissionCountOrderByAggregateInput
+    _avg?: PermissionAvgOrderByAggregateInput
+    _max?: PermissionMaxOrderByAggregateInput
+    _min?: PermissionMinOrderByAggregateInput
+    _sum?: PermissionSumOrderByAggregateInput
+  }
+
+  export type PermissionScalarWhereWithAggregatesInput = {
+    AND?: PermissionScalarWhereWithAggregatesInput | PermissionScalarWhereWithAggregatesInput[]
+    OR?: PermissionScalarWhereWithAggregatesInput[]
+    NOT?: PermissionScalarWhereWithAggregatesInput | PermissionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Permission"> | number
+    permissionKey?: StringWithAggregatesFilter<"Permission"> | string
+    permissionName?: StringWithAggregatesFilter<"Permission"> | string
+    pagePath?: StringNullableWithAggregatesFilter<"Permission"> | string | null
+    moduleName?: StringWithAggregatesFilter<"Permission"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Permission"> | Date | string
+  }
+
+  export type RolePermissionWhereInput = {
+    AND?: RolePermissionWhereInput | RolePermissionWhereInput[]
+    OR?: RolePermissionWhereInput[]
+    NOT?: RolePermissionWhereInput | RolePermissionWhereInput[]
+    id?: IntFilter<"RolePermission"> | number
+    roleId?: IntFilter<"RolePermission"> | number
+    permissionId?: IntFilter<"RolePermission"> | number
+    createdAt?: DateTimeFilter<"RolePermission"> | Date | string
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    permission?: XOR<PermissionScalarRelationFilter, PermissionWhereInput>
+  }
+
+  export type RolePermissionOrderByWithRelationInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+    createdAt?: SortOrder
+    role?: RoleOrderByWithRelationInput
+    permission?: PermissionOrderByWithRelationInput
+  }
+
+  export type RolePermissionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    roleId_permissionId?: RolePermissionRoleIdPermissionIdCompoundUniqueInput
+    AND?: RolePermissionWhereInput | RolePermissionWhereInput[]
+    OR?: RolePermissionWhereInput[]
+    NOT?: RolePermissionWhereInput | RolePermissionWhereInput[]
+    roleId?: IntFilter<"RolePermission"> | number
+    permissionId?: IntFilter<"RolePermission"> | number
+    createdAt?: DateTimeFilter<"RolePermission"> | Date | string
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    permission?: XOR<PermissionScalarRelationFilter, PermissionWhereInput>
+  }, "id" | "roleId_permissionId">
+
+  export type RolePermissionOrderByWithAggregationInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+    createdAt?: SortOrder
+    _count?: RolePermissionCountOrderByAggregateInput
+    _avg?: RolePermissionAvgOrderByAggregateInput
+    _max?: RolePermissionMaxOrderByAggregateInput
+    _min?: RolePermissionMinOrderByAggregateInput
+    _sum?: RolePermissionSumOrderByAggregateInput
+  }
+
+  export type RolePermissionScalarWhereWithAggregatesInput = {
+    AND?: RolePermissionScalarWhereWithAggregatesInput | RolePermissionScalarWhereWithAggregatesInput[]
+    OR?: RolePermissionScalarWhereWithAggregatesInput[]
+    NOT?: RolePermissionScalarWhereWithAggregatesInput | RolePermissionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RolePermission"> | number
+    roleId?: IntWithAggregatesFilter<"RolePermission"> | number
+    permissionId?: IntWithAggregatesFilter<"RolePermission"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"RolePermission"> | Date | string
   }
 
   export type MadrassaProfileWhereInput = {
@@ -56543,6 +64029,207 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"City"> | string
     createdAt?: DateTimeWithAggregatesFilter<"City"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"City"> | Date | string
+  }
+
+  export type SuggestionWhereInput = {
+    AND?: SuggestionWhereInput | SuggestionWhereInput[]
+    OR?: SuggestionWhereInput[]
+    NOT?: SuggestionWhereInput | SuggestionWhereInput[]
+    id?: IntFilter<"Suggestion"> | number
+    type?: StringFilter<"Suggestion"> | string
+    title?: StringFilter<"Suggestion"> | string
+    priority?: StringFilter<"Suggestion"> | string
+    description?: StringFilter<"Suggestion"> | string
+    submitterName?: StringNullableFilter<"Suggestion"> | string | null
+    submitterEmail?: StringNullableFilter<"Suggestion"> | string | null
+    adminId?: IntNullableFilter<"Suggestion"> | number | null
+    emailRecipient?: StringNullableFilter<"Suggestion"> | string | null
+    emailStatus?: StringFilter<"Suggestion"> | string
+    emailError?: StringNullableFilter<"Suggestion"> | string | null
+    status?: StringFilter<"Suggestion"> | string
+    createdAt?: DateTimeFilter<"Suggestion"> | Date | string
+    updatedAt?: DateTimeFilter<"Suggestion"> | Date | string
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }
+
+  export type SuggestionOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    submitterName?: SortOrderInput | SortOrder
+    submitterEmail?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    emailRecipient?: SortOrderInput | SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    _relevance?: SuggestionOrderByRelevanceInput
+  }
+
+  export type SuggestionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: SuggestionWhereInput | SuggestionWhereInput[]
+    OR?: SuggestionWhereInput[]
+    NOT?: SuggestionWhereInput | SuggestionWhereInput[]
+    type?: StringFilter<"Suggestion"> | string
+    title?: StringFilter<"Suggestion"> | string
+    priority?: StringFilter<"Suggestion"> | string
+    description?: StringFilter<"Suggestion"> | string
+    submitterName?: StringNullableFilter<"Suggestion"> | string | null
+    submitterEmail?: StringNullableFilter<"Suggestion"> | string | null
+    adminId?: IntNullableFilter<"Suggestion"> | number | null
+    emailRecipient?: StringNullableFilter<"Suggestion"> | string | null
+    emailStatus?: StringFilter<"Suggestion"> | string
+    emailError?: StringNullableFilter<"Suggestion"> | string | null
+    status?: StringFilter<"Suggestion"> | string
+    createdAt?: DateTimeFilter<"Suggestion"> | Date | string
+    updatedAt?: DateTimeFilter<"Suggestion"> | Date | string
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }, "id">
+
+  export type SuggestionOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    submitterName?: SortOrderInput | SortOrder
+    submitterEmail?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    emailRecipient?: SortOrderInput | SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SuggestionCountOrderByAggregateInput
+    _avg?: SuggestionAvgOrderByAggregateInput
+    _max?: SuggestionMaxOrderByAggregateInput
+    _min?: SuggestionMinOrderByAggregateInput
+    _sum?: SuggestionSumOrderByAggregateInput
+  }
+
+  export type SuggestionScalarWhereWithAggregatesInput = {
+    AND?: SuggestionScalarWhereWithAggregatesInput | SuggestionScalarWhereWithAggregatesInput[]
+    OR?: SuggestionScalarWhereWithAggregatesInput[]
+    NOT?: SuggestionScalarWhereWithAggregatesInput | SuggestionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Suggestion"> | number
+    type?: StringWithAggregatesFilter<"Suggestion"> | string
+    title?: StringWithAggregatesFilter<"Suggestion"> | string
+    priority?: StringWithAggregatesFilter<"Suggestion"> | string
+    description?: StringWithAggregatesFilter<"Suggestion"> | string
+    submitterName?: StringNullableWithAggregatesFilter<"Suggestion"> | string | null
+    submitterEmail?: StringNullableWithAggregatesFilter<"Suggestion"> | string | null
+    adminId?: IntNullableWithAggregatesFilter<"Suggestion"> | number | null
+    emailRecipient?: StringNullableWithAggregatesFilter<"Suggestion"> | string | null
+    emailStatus?: StringWithAggregatesFilter<"Suggestion"> | string
+    emailError?: StringNullableWithAggregatesFilter<"Suggestion"> | string | null
+    status?: StringWithAggregatesFilter<"Suggestion"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Suggestion"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Suggestion"> | Date | string
+  }
+
+  export type SupportRequestWhereInput = {
+    AND?: SupportRequestWhereInput | SupportRequestWhereInput[]
+    OR?: SupportRequestWhereInput[]
+    NOT?: SupportRequestWhereInput | SupportRequestWhereInput[]
+    id?: IntFilter<"SupportRequest"> | number
+    topic?: StringFilter<"SupportRequest"> | string
+    priority?: StringFilter<"SupportRequest"> | string
+    message?: StringFilter<"SupportRequest"> | string
+    submitterName?: StringNullableFilter<"SupportRequest"> | string | null
+    submitterEmail?: StringNullableFilter<"SupportRequest"> | string | null
+    adminId?: IntNullableFilter<"SupportRequest"> | number | null
+    emailRecipient?: StringNullableFilter<"SupportRequest"> | string | null
+    emailStatus?: StringFilter<"SupportRequest"> | string
+    emailError?: StringNullableFilter<"SupportRequest"> | string | null
+    status?: StringFilter<"SupportRequest"> | string
+    createdAt?: DateTimeFilter<"SupportRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SupportRequest"> | Date | string
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }
+
+  export type SupportRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    submitterName?: SortOrderInput | SortOrder
+    submitterEmail?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    emailRecipient?: SortOrderInput | SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    _relevance?: SupportRequestOrderByRelevanceInput
+  }
+
+  export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: SupportRequestWhereInput | SupportRequestWhereInput[]
+    OR?: SupportRequestWhereInput[]
+    NOT?: SupportRequestWhereInput | SupportRequestWhereInput[]
+    topic?: StringFilter<"SupportRequest"> | string
+    priority?: StringFilter<"SupportRequest"> | string
+    message?: StringFilter<"SupportRequest"> | string
+    submitterName?: StringNullableFilter<"SupportRequest"> | string | null
+    submitterEmail?: StringNullableFilter<"SupportRequest"> | string | null
+    adminId?: IntNullableFilter<"SupportRequest"> | number | null
+    emailRecipient?: StringNullableFilter<"SupportRequest"> | string | null
+    emailStatus?: StringFilter<"SupportRequest"> | string
+    emailError?: StringNullableFilter<"SupportRequest"> | string | null
+    status?: StringFilter<"SupportRequest"> | string
+    createdAt?: DateTimeFilter<"SupportRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SupportRequest"> | Date | string
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }, "id">
+
+  export type SupportRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    submitterName?: SortOrderInput | SortOrder
+    submitterEmail?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    emailRecipient?: SortOrderInput | SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SupportRequestCountOrderByAggregateInput
+    _avg?: SupportRequestAvgOrderByAggregateInput
+    _max?: SupportRequestMaxOrderByAggregateInput
+    _min?: SupportRequestMinOrderByAggregateInput
+    _sum?: SupportRequestSumOrderByAggregateInput
+  }
+
+  export type SupportRequestScalarWhereWithAggregatesInput = {
+    AND?: SupportRequestScalarWhereWithAggregatesInput | SupportRequestScalarWhereWithAggregatesInput[]
+    OR?: SupportRequestScalarWhereWithAggregatesInput[]
+    NOT?: SupportRequestScalarWhereWithAggregatesInput | SupportRequestScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SupportRequest"> | number
+    topic?: StringWithAggregatesFilter<"SupportRequest"> | string
+    priority?: StringWithAggregatesFilter<"SupportRequest"> | string
+    message?: StringWithAggregatesFilter<"SupportRequest"> | string
+    submitterName?: StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+    submitterEmail?: StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+    adminId?: IntNullableWithAggregatesFilter<"SupportRequest"> | number | null
+    emailRecipient?: StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+    emailStatus?: StringWithAggregatesFilter<"SupportRequest"> | string
+    emailError?: StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+    status?: StringWithAggregatesFilter<"SupportRequest"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SupportRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SupportRequest"> | Date | string
   }
 
   export type ShiftWhereInput = {
@@ -58239,6 +65926,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeFilter<"Teacher"> | Date | string
     attendances?: TeacherAttendanceListRelationFilter
+    salaryIncrements?: TeacherSalaryIncrementListRelationFilter
     salaryEntries?: SalaryEntryListRelationFilter
     schedules?: TeacherScheduleListRelationFilter
     shift?: XOR<ShiftNullableScalarRelationFilter, ShiftWhereInput> | null
@@ -58275,6 +65963,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     attendances?: TeacherAttendanceOrderByRelationAggregateInput
+    salaryIncrements?: TeacherSalaryIncrementOrderByRelationAggregateInput
     salaryEntries?: SalaryEntryOrderByRelationAggregateInput
     schedules?: TeacherScheduleOrderByRelationAggregateInput
     shift?: ShiftOrderByWithRelationInput
@@ -58315,6 +66004,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeFilter<"Teacher"> | Date | string
     attendances?: TeacherAttendanceListRelationFilter
+    salaryIncrements?: TeacherSalaryIncrementListRelationFilter
     salaryEntries?: SalaryEntryListRelationFilter
     schedules?: TeacherScheduleListRelationFilter
     shift?: XOR<ShiftNullableScalarRelationFilter, ShiftWhereInput> | null
@@ -58390,6 +66080,97 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Teacher"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Teacher"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Teacher"> | Date | string
+  }
+
+  export type TeacherSalaryIncrementWhereInput = {
+    AND?: TeacherSalaryIncrementWhereInput | TeacherSalaryIncrementWhereInput[]
+    OR?: TeacherSalaryIncrementWhereInput[]
+    NOT?: TeacherSalaryIncrementWhereInput | TeacherSalaryIncrementWhereInput[]
+    id?: IntFilter<"TeacherSalaryIncrement"> | number
+    teacherId?: IntFilter<"TeacherSalaryIncrement"> | number
+    previousSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFilter<"TeacherSalaryIncrement"> | string
+    reason?: StringNullableFilter<"TeacherSalaryIncrement"> | string | null
+    createdById?: IntNullableFilter<"TeacherSalaryIncrement"> | number | null
+    status?: StringFilter<"TeacherSalaryIncrement"> | string
+    createdAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+    updatedAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    createdBy?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }
+
+  export type TeacherSalaryIncrementOrderByWithRelationInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    effectiveDate?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teacher?: TeacherOrderByWithRelationInput
+    createdBy?: AdminOrderByWithRelationInput
+    _relevance?: TeacherSalaryIncrementOrderByRelevanceInput
+  }
+
+  export type TeacherSalaryIncrementWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TeacherSalaryIncrementWhereInput | TeacherSalaryIncrementWhereInput[]
+    OR?: TeacherSalaryIncrementWhereInput[]
+    NOT?: TeacherSalaryIncrementWhereInput | TeacherSalaryIncrementWhereInput[]
+    teacherId?: IntFilter<"TeacherSalaryIncrement"> | number
+    previousSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFilter<"TeacherSalaryIncrement"> | string
+    reason?: StringNullableFilter<"TeacherSalaryIncrement"> | string | null
+    createdById?: IntNullableFilter<"TeacherSalaryIncrement"> | number | null
+    status?: StringFilter<"TeacherSalaryIncrement"> | string
+    createdAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+    updatedAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    createdBy?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }, "id">
+
+  export type TeacherSalaryIncrementOrderByWithAggregationInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    effectiveDate?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TeacherSalaryIncrementCountOrderByAggregateInput
+    _avg?: TeacherSalaryIncrementAvgOrderByAggregateInput
+    _max?: TeacherSalaryIncrementMaxOrderByAggregateInput
+    _min?: TeacherSalaryIncrementMinOrderByAggregateInput
+    _sum?: TeacherSalaryIncrementSumOrderByAggregateInput
+  }
+
+  export type TeacherSalaryIncrementScalarWhereWithAggregatesInput = {
+    AND?: TeacherSalaryIncrementScalarWhereWithAggregatesInput | TeacherSalaryIncrementScalarWhereWithAggregatesInput[]
+    OR?: TeacherSalaryIncrementScalarWhereWithAggregatesInput[]
+    NOT?: TeacherSalaryIncrementScalarWhereWithAggregatesInput | TeacherSalaryIncrementScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TeacherSalaryIncrement"> | number
+    teacherId?: IntWithAggregatesFilter<"TeacherSalaryIncrement"> | number
+    previousSalary?: DecimalWithAggregatesFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalWithAggregatesFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalWithAggregatesFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringWithAggregatesFilter<"TeacherSalaryIncrement"> | string
+    reason?: StringNullableWithAggregatesFilter<"TeacherSalaryIncrement"> | string | null
+    createdById?: IntNullableWithAggregatesFilter<"TeacherSalaryIncrement"> | number | null
+    status?: StringWithAggregatesFilter<"TeacherSalaryIncrement"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TeacherSalaryIncrement"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TeacherSalaryIncrement"> | Date | string
   }
 
   export type StudentAttendanceWhereInput = {
@@ -60744,8 +68525,15 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
     madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
     financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -60755,11 +68543,18 @@ export namespace Prisma {
     username: string
     password: string
     role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
     madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
     financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUpdateInput = {
@@ -60771,8 +68566,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
     madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
     financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -60782,11 +68584,18 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
     madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
     financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -60796,6 +68605,8 @@ export namespace Prisma {
     username: string
     password: string
     role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60819,9 +68630,186 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleCreateInput = {
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: AdminCreateNestedOneWithoutCreatedRolesInput
+    admins?: AdminCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUpdateInput = {
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
+    admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleCreateManyInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoleUpdateManyMutationInput = {
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PermissionCreateInput = {
+    permissionKey: string
+    permissionName: string
+    pagePath?: string | null
+    moduleName: string
+    createdAt?: Date | string
+    rolePermissions?: RolePermissionCreateNestedManyWithoutPermissionInput
+  }
+
+  export type PermissionUncheckedCreateInput = {
+    id?: number
+    permissionKey: string
+    permissionName: string
+    pagePath?: string | null
+    moduleName: string
+    createdAt?: Date | string
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutPermissionInput
+  }
+
+  export type PermissionUpdateInput = {
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rolePermissions?: RolePermissionUpdateManyWithoutPermissionNestedInput
+  }
+
+  export type PermissionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutPermissionNestedInput
+  }
+
+  export type PermissionCreateManyInput = {
+    id?: number
+    permissionKey: string
+    permissionName: string
+    pagePath?: string | null
+    moduleName: string
+    createdAt?: Date | string
+  }
+
+  export type PermissionUpdateManyMutationInput = {
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PermissionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionCreateInput = {
+    createdAt?: Date | string
+    role: RoleCreateNestedOneWithoutRolePermissionsInput
+    permission: PermissionCreateNestedOneWithoutRolePermissionsInput
+  }
+
+  export type RolePermissionUncheckedCreateInput = {
+    id?: number
+    roleId: number
+    permissionId: number
+    createdAt?: Date | string
+  }
+
+  export type RolePermissionUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: RoleUpdateOneRequiredWithoutRolePermissionsNestedInput
+    permission?: PermissionUpdateOneRequiredWithoutRolePermissionsNestedInput
+  }
+
+  export type RolePermissionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionCreateManyInput = {
+    id?: number
+    roleId: number
+    permissionId: number
+    createdAt?: Date | string
+  }
+
+  export type RolePermissionUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MadrassaProfileCreateInput = {
@@ -60994,6 +68982,229 @@ export namespace Prisma {
   export type CityUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionCreateInput = {
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutSuggestionsInput
+  }
+
+  export type SuggestionUncheckedCreateInput = {
+    id?: number
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    adminId?: number | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SuggestionUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutSuggestionsNestedInput
+  }
+
+  export type SuggestionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionCreateManyInput = {
+    id?: number
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    adminId?: number | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SuggestionUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestCreateInput = {
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutSupportRequestsInput
+  }
+
+  export type SupportRequestUncheckedCreateInput = {
+    id?: number
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    adminId?: number | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupportRequestUpdateInput = {
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutSupportRequestsNestedInput
+  }
+
+  export type SupportRequestUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestCreateManyInput = {
+    id?: number
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    adminId?: number | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupportRequestUpdateManyMutationInput = {
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62776,6 +70987,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
     shift?: ShiftCreateNestedOneWithoutTeachersInput
@@ -62812,6 +71024,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
   }
@@ -62845,6 +71058,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
     shift?: ShiftUpdateOneWithoutTeachersNestedInput
@@ -62881,6 +71095,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   }
@@ -62974,6 +71189,99 @@ export namespace Prisma {
     joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
     experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementCreateInput = {
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teacher: TeacherCreateNestedOneWithoutSalaryIncrementsInput
+    createdBy?: AdminCreateNestedOneWithoutSalaryIncrementsInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedCreateInput = {
+    id?: number
+    teacherId: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    createdById?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherSalaryIncrementUpdateInput = {
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teacher?: TeacherUpdateOneRequiredWithoutSalaryIncrementsNestedInput
+    createdBy?: AdminUpdateOneWithoutSalaryIncrementsNestedInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    teacherId?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementCreateManyInput = {
+    id?: number
+    teacherId: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    createdById?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherSalaryIncrementUpdateManyMutationInput = {
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    teacherId?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65571,6 +73879,17 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -65580,6 +73899,28 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type RoleNullableScalarRelationFilter = {
+    is?: RoleWhereInput | null
+    isNot?: RoleWhereInput | null
+  }
+
+  export type AdminNullableScalarRelationFilter = {
+    is?: AdminWhereInput | null
+    isNot?: AdminWhereInput | null
+  }
+
+  export type AdminListRelationFilter = {
+    every?: AdminWhereInput
+    some?: AdminWhereInput
+    none?: AdminWhereInput
+  }
+
+  export type RoleListRelationFilter = {
+    every?: RoleWhereInput
+    some?: RoleWhereInput
+    none?: RoleWhereInput
   }
 
   export type MadrassaProfileNullableScalarRelationFilter = {
@@ -65593,7 +73934,50 @@ export namespace Prisma {
     none?: FinancialRecordWhereInput
   }
 
+  export type SuggestionListRelationFilter = {
+    every?: SuggestionWhereInput
+    some?: SuggestionWhereInput
+    none?: SuggestionWhereInput
+  }
+
+  export type SupportRequestListRelationFilter = {
+    every?: SupportRequestWhereInput
+    some?: SupportRequestWhereInput
+    none?: SupportRequestWhereInput
+  }
+
+  export type TeacherSalaryIncrementListRelationFilter = {
+    every?: TeacherSalaryIncrementWhereInput
+    some?: TeacherSalaryIncrementWhereInput
+    none?: TeacherSalaryIncrementWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type AdminOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type FinancialRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SuggestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SupportRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -65610,6 +73994,8 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    roleId?: SortOrder
+    ownerAdminId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -65617,6 +74003,8 @@ export namespace Prisma {
 
   export type AdminAvgOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
+    ownerAdminId?: SortOrder
   }
 
   export type AdminMaxOrderByAggregateInput = {
@@ -65626,6 +74014,8 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    roleId?: SortOrder
+    ownerAdminId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -65638,6 +74028,8 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     role?: SortOrder
+    roleId?: SortOrder
+    ownerAdminId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -65645,6 +74037,8 @@ export namespace Prisma {
 
   export type AdminSumOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
+    ownerAdminId?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -65681,6 +74075,22 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -65710,14 +74120,169 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type RolePermissionListRelationFilter = {
+    every?: RolePermissionWhereInput
+    some?: RolePermissionWhereInput
+    none?: RolePermissionWhereInput
+  }
+
+  export type RolePermissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RoleOrderByRelevanceInput = {
+    fields: RoleOrderByRelevanceFieldEnum | RoleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type RoleCountOrderByAggregateInput = {
+    id?: SortOrder
+    roleName?: SortOrder
+    description?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RoleAvgOrderByAggregateInput = {
+    id?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type RoleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    roleName?: SortOrder
+    description?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RoleMinOrderByAggregateInput = {
+    id?: SortOrder
+    roleName?: SortOrder
+    description?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RoleSumOrderByAggregateInput = {
+    id?: SortOrder
+    createdBy?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type PermissionOrderByRelevanceInput = {
+    fields: PermissionOrderByRelevanceFieldEnum | PermissionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PermissionCountOrderByAggregateInput = {
+    id?: SortOrder
+    permissionKey?: SortOrder
+    permissionName?: SortOrder
+    pagePath?: SortOrder
+    moduleName?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PermissionAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type PermissionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    permissionKey?: SortOrder
+    permissionName?: SortOrder
+    pagePath?: SortOrder
+    moduleName?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PermissionMinOrderByAggregateInput = {
+    id?: SortOrder
+    permissionKey?: SortOrder
+    permissionName?: SortOrder
+    pagePath?: SortOrder
+    moduleName?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PermissionSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type RoleScalarRelationFilter = {
+    is?: RoleWhereInput
+    isNot?: RoleWhereInput
+  }
+
+  export type PermissionScalarRelationFilter = {
+    is?: PermissionWhereInput
+    isNot?: PermissionWhereInput
+  }
+
+  export type RolePermissionRoleIdPermissionIdCompoundUniqueInput = {
+    roleId: number
+    permissionId: number
+  }
+
+  export type RolePermissionCountOrderByAggregateInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RolePermissionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+  }
+
+  export type RolePermissionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RolePermissionMinOrderByAggregateInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RolePermissionSumOrderByAggregateInput = {
+    id?: SortOrder
+    roleId?: SortOrder
+    permissionId?: SortOrder
+  }
+
   export type AdminScalarRelationFilter = {
     is?: AdminWhereInput
     isNot?: AdminWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type MadrassaProfileOrderByRelevanceInput = {
@@ -65790,24 +74355,6 @@ export namespace Prisma {
     adminId?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type CityOrderByRelevanceInput = {
     fields: CityOrderByRelevanceFieldEnum | CityOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -65844,6 +74391,137 @@ export namespace Prisma {
 
   export type CitySumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type SuggestionOrderByRelevanceInput = {
+    fields: SuggestionOrderByRelevanceFieldEnum | SuggestionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SuggestionCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SuggestionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type SuggestionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SuggestionMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SuggestionSumOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type SupportRequestOrderByRelevanceInput = {
+    fields: SupportRequestOrderByRelevanceFieldEnum | SupportRequestOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SupportRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportRequestAvgOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type SupportRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    submitterName?: SortOrder
+    submitterEmail?: SortOrder
+    adminId?: SortOrder
+    emailRecipient?: SortOrder
+    emailStatus?: SortOrder
+    emailError?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportRequestSumOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
   }
 
   export type TeacherListRelationFilter = {
@@ -66516,17 +75194,6 @@ export namespace Prisma {
     sectionId?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type SubjectScalarRelationFilter = {
     is?: SubjectWhereInput
     isNot?: SubjectWhereInput
@@ -66606,22 +75273,6 @@ export namespace Prisma {
     classId?: SortOrder
     subjectId?: SortOrder
     totalMarks?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type ResultGradeOrderByRelevanceInput = {
@@ -67431,6 +76082,72 @@ export namespace Prisma {
     id?: SortOrder
     shiftId?: SortOrder
     basicSalary?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementOrderByRelevanceInput = {
+    fields: TeacherSalaryIncrementOrderByRelevanceFieldEnum | TeacherSalaryIncrementOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type TeacherSalaryIncrementCountOrderByAggregateInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    effectiveDate?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementAvgOrderByAggregateInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    effectiveDate?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementMinOrderByAggregateInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    effectiveDate?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TeacherSalaryIncrementSumOrderByAggregateInput = {
+    id?: SortOrder
+    teacherId?: SortOrder
+    previousSalary?: SortOrder
+    incrementAmount?: SortOrder
+    newSalary?: SortOrder
+    createdById?: SortOrder
   }
 
   export type StudentAttendanceOrderByRelevanceInput = {
@@ -68370,11 +77087,6 @@ export namespace Prisma {
     referenceId?: SortOrder
   }
 
-  export type AdminNullableScalarRelationFilter = {
-    is?: AdminWhereInput | null
-    isNot?: AdminWhereInput | null
-  }
-
   export type FinancialRecordOrderByRelevanceInput = {
     fields: FinancialRecordOrderByRelevanceFieldEnum | FinancialRecordOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -69206,6 +77918,32 @@ export namespace Prisma {
     adjustedStock?: SortOrder
   }
 
+  export type RoleCreateNestedOneWithoutAdminsInput = {
+    create?: XOR<RoleCreateWithoutAdminsInput, RoleUncheckedCreateWithoutAdminsInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutAdminsInput
+    connect?: RoleWhereUniqueInput
+  }
+
+  export type AdminCreateNestedOneWithoutOwnedUsersInput = {
+    create?: XOR<AdminCreateWithoutOwnedUsersInput, AdminUncheckedCreateWithoutOwnedUsersInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnedUsersInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type AdminCreateNestedManyWithoutOwnerAdminInput = {
+    create?: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput> | AdminCreateWithoutOwnerAdminInput[] | AdminUncheckedCreateWithoutOwnerAdminInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnerAdminInput | AdminCreateOrConnectWithoutOwnerAdminInput[]
+    createMany?: AdminCreateManyOwnerAdminInputEnvelope
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+  }
+
+  export type RoleCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput> | RoleCreateWithoutCreatorInput[] | RoleUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: RoleCreateOrConnectWithoutCreatorInput | RoleCreateOrConnectWithoutCreatorInput[]
+    createMany?: RoleCreateManyCreatorInputEnvelope
+    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+  }
+
   export type MadrassaProfileCreateNestedOneWithoutAdminInput = {
     create?: XOR<MadrassaProfileCreateWithoutAdminInput, MadrassaProfileUncheckedCreateWithoutAdminInput>
     connectOrCreate?: MadrassaProfileCreateOrConnectWithoutAdminInput
@@ -69217,6 +77955,41 @@ export namespace Prisma {
     connectOrCreate?: FinancialRecordCreateOrConnectWithoutCreatedByInput | FinancialRecordCreateOrConnectWithoutCreatedByInput[]
     createMany?: FinancialRecordCreateManyCreatedByInputEnvelope
     connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
+  }
+
+  export type SuggestionCreateNestedManyWithoutAdminInput = {
+    create?: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput> | SuggestionCreateWithoutAdminInput[] | SuggestionUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SuggestionCreateOrConnectWithoutAdminInput | SuggestionCreateOrConnectWithoutAdminInput[]
+    createMany?: SuggestionCreateManyAdminInputEnvelope
+    connect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+  }
+
+  export type SupportRequestCreateNestedManyWithoutAdminInput = {
+    create?: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput> | SupportRequestCreateWithoutAdminInput[] | SupportRequestUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SupportRequestCreateOrConnectWithoutAdminInput | SupportRequestCreateOrConnectWithoutAdminInput[]
+    createMany?: SupportRequestCreateManyAdminInputEnvelope
+    connect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+  }
+
+  export type TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput> | TeacherSalaryIncrementCreateWithoutCreatedByInput[] | TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput | TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TeacherSalaryIncrementCreateManyCreatedByInputEnvelope
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+  }
+
+  export type AdminUncheckedCreateNestedManyWithoutOwnerAdminInput = {
+    create?: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput> | AdminCreateWithoutOwnerAdminInput[] | AdminUncheckedCreateWithoutOwnerAdminInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnerAdminInput | AdminCreateOrConnectWithoutOwnerAdminInput[]
+    createMany?: AdminCreateManyOwnerAdminInputEnvelope
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+  }
+
+  export type RoleUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput> | RoleCreateWithoutCreatorInput[] | RoleUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: RoleCreateOrConnectWithoutCreatorInput | RoleCreateOrConnectWithoutCreatorInput[]
+    createMany?: RoleCreateManyCreatorInputEnvelope
+    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
   }
 
   export type MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput = {
@@ -69232,12 +78005,81 @@ export namespace Prisma {
     connect?: FinancialRecordWhereUniqueInput | FinancialRecordWhereUniqueInput[]
   }
 
+  export type SuggestionUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput> | SuggestionCreateWithoutAdminInput[] | SuggestionUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SuggestionCreateOrConnectWithoutAdminInput | SuggestionCreateOrConnectWithoutAdminInput[]
+    createMany?: SuggestionCreateManyAdminInputEnvelope
+    connect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+  }
+
+  export type SupportRequestUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput> | SupportRequestCreateWithoutAdminInput[] | SupportRequestUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SupportRequestCreateOrConnectWithoutAdminInput | SupportRequestCreateOrConnectWithoutAdminInput[]
+    createMany?: SupportRequestCreateManyAdminInputEnvelope
+    connect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+  }
+
+  export type TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput> | TeacherSalaryIncrementCreateWithoutCreatedByInput[] | TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput | TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TeacherSalaryIncrementCreateManyCreatedByInputEnvelope
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type RoleUpdateOneWithoutAdminsNestedInput = {
+    create?: XOR<RoleCreateWithoutAdminsInput, RoleUncheckedCreateWithoutAdminsInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutAdminsInput
+    upsert?: RoleUpsertWithoutAdminsInput
+    disconnect?: RoleWhereInput | boolean
+    delete?: RoleWhereInput | boolean
+    connect?: RoleWhereUniqueInput
+    update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutAdminsInput, RoleUpdateWithoutAdminsInput>, RoleUncheckedUpdateWithoutAdminsInput>
+  }
+
+  export type AdminUpdateOneWithoutOwnedUsersNestedInput = {
+    create?: XOR<AdminCreateWithoutOwnedUsersInput, AdminUncheckedCreateWithoutOwnedUsersInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnedUsersInput
+    upsert?: AdminUpsertWithoutOwnedUsersInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutOwnedUsersInput, AdminUpdateWithoutOwnedUsersInput>, AdminUncheckedUpdateWithoutOwnedUsersInput>
+  }
+
+  export type AdminUpdateManyWithoutOwnerAdminNestedInput = {
+    create?: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput> | AdminCreateWithoutOwnerAdminInput[] | AdminUncheckedCreateWithoutOwnerAdminInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnerAdminInput | AdminCreateOrConnectWithoutOwnerAdminInput[]
+    upsert?: AdminUpsertWithWhereUniqueWithoutOwnerAdminInput | AdminUpsertWithWhereUniqueWithoutOwnerAdminInput[]
+    createMany?: AdminCreateManyOwnerAdminInputEnvelope
+    set?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    disconnect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    delete?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    update?: AdminUpdateWithWhereUniqueWithoutOwnerAdminInput | AdminUpdateWithWhereUniqueWithoutOwnerAdminInput[]
+    updateMany?: AdminUpdateManyWithWhereWithoutOwnerAdminInput | AdminUpdateManyWithWhereWithoutOwnerAdminInput[]
+    deleteMany?: AdminScalarWhereInput | AdminScalarWhereInput[]
+  }
+
+  export type RoleUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput> | RoleCreateWithoutCreatorInput[] | RoleUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: RoleCreateOrConnectWithoutCreatorInput | RoleCreateOrConnectWithoutCreatorInput[]
+    upsert?: RoleUpsertWithWhereUniqueWithoutCreatorInput | RoleUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: RoleCreateManyCreatorInputEnvelope
+    set?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    disconnect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    delete?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    update?: RoleUpdateWithWhereUniqueWithoutCreatorInput | RoleUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: RoleUpdateManyWithWhereWithoutCreatorInput | RoleUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
   }
 
   export type MadrassaProfileUpdateOneWithoutAdminNestedInput = {
@@ -69264,12 +78106,90 @@ export namespace Prisma {
     deleteMany?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
   }
 
+  export type SuggestionUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput> | SuggestionCreateWithoutAdminInput[] | SuggestionUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SuggestionCreateOrConnectWithoutAdminInput | SuggestionCreateOrConnectWithoutAdminInput[]
+    upsert?: SuggestionUpsertWithWhereUniqueWithoutAdminInput | SuggestionUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: SuggestionCreateManyAdminInputEnvelope
+    set?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    disconnect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    delete?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    connect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    update?: SuggestionUpdateWithWhereUniqueWithoutAdminInput | SuggestionUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: SuggestionUpdateManyWithWhereWithoutAdminInput | SuggestionUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: SuggestionScalarWhereInput | SuggestionScalarWhereInput[]
+  }
+
+  export type SupportRequestUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput> | SupportRequestCreateWithoutAdminInput[] | SupportRequestUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SupportRequestCreateOrConnectWithoutAdminInput | SupportRequestCreateOrConnectWithoutAdminInput[]
+    upsert?: SupportRequestUpsertWithWhereUniqueWithoutAdminInput | SupportRequestUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: SupportRequestCreateManyAdminInputEnvelope
+    set?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    disconnect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    delete?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    connect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    update?: SupportRequestUpdateWithWhereUniqueWithoutAdminInput | SupportRequestUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: SupportRequestUpdateManyWithWhereWithoutAdminInput | SupportRequestUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: SupportRequestScalarWhereInput | SupportRequestScalarWhereInput[]
+  }
+
+  export type TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput> | TeacherSalaryIncrementCreateWithoutCreatedByInput[] | TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput | TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TeacherSalaryIncrementUpsertWithWhereUniqueWithoutCreatedByInput | TeacherSalaryIncrementUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TeacherSalaryIncrementCreateManyCreatedByInputEnvelope
+    set?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    disconnect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    delete?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    update?: TeacherSalaryIncrementUpdateWithWhereUniqueWithoutCreatedByInput | TeacherSalaryIncrementUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TeacherSalaryIncrementUpdateManyWithWhereWithoutCreatedByInput | TeacherSalaryIncrementUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput = {
+    create?: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput> | AdminCreateWithoutOwnerAdminInput[] | AdminUncheckedCreateWithoutOwnerAdminInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutOwnerAdminInput | AdminCreateOrConnectWithoutOwnerAdminInput[]
+    upsert?: AdminUpsertWithWhereUniqueWithoutOwnerAdminInput | AdminUpsertWithWhereUniqueWithoutOwnerAdminInput[]
+    createMany?: AdminCreateManyOwnerAdminInputEnvelope
+    set?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    disconnect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    delete?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    update?: AdminUpdateWithWhereUniqueWithoutOwnerAdminInput | AdminUpdateWithWhereUniqueWithoutOwnerAdminInput[]
+    updateMany?: AdminUpdateManyWithWhereWithoutOwnerAdminInput | AdminUpdateManyWithWhereWithoutOwnerAdminInput[]
+    deleteMany?: AdminScalarWhereInput | AdminScalarWhereInput[]
+  }
+
+  export type RoleUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput> | RoleCreateWithoutCreatorInput[] | RoleUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: RoleCreateOrConnectWithoutCreatorInput | RoleCreateOrConnectWithoutCreatorInput[]
+    upsert?: RoleUpsertWithWhereUniqueWithoutCreatorInput | RoleUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: RoleCreateManyCreatorInputEnvelope
+    set?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    disconnect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    delete?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+    update?: RoleUpdateWithWhereUniqueWithoutCreatorInput | RoleUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: RoleUpdateManyWithWhereWithoutCreatorInput | RoleUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
   }
 
   export type MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput = {
@@ -69296,14 +78216,226 @@ export namespace Prisma {
     deleteMany?: FinancialRecordScalarWhereInput | FinancialRecordScalarWhereInput[]
   }
 
-  export type AdminCreateNestedOneWithoutMadrassaProfileInput = {
-    create?: XOR<AdminCreateWithoutMadrassaProfileInput, AdminUncheckedCreateWithoutMadrassaProfileInput>
-    connectOrCreate?: AdminCreateOrConnectWithoutMadrassaProfileInput
+  export type SuggestionUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput> | SuggestionCreateWithoutAdminInput[] | SuggestionUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SuggestionCreateOrConnectWithoutAdminInput | SuggestionCreateOrConnectWithoutAdminInput[]
+    upsert?: SuggestionUpsertWithWhereUniqueWithoutAdminInput | SuggestionUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: SuggestionCreateManyAdminInputEnvelope
+    set?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    disconnect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    delete?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    connect?: SuggestionWhereUniqueInput | SuggestionWhereUniqueInput[]
+    update?: SuggestionUpdateWithWhereUniqueWithoutAdminInput | SuggestionUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: SuggestionUpdateManyWithWhereWithoutAdminInput | SuggestionUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: SuggestionScalarWhereInput | SuggestionScalarWhereInput[]
+  }
+
+  export type SupportRequestUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput> | SupportRequestCreateWithoutAdminInput[] | SupportRequestUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: SupportRequestCreateOrConnectWithoutAdminInput | SupportRequestCreateOrConnectWithoutAdminInput[]
+    upsert?: SupportRequestUpsertWithWhereUniqueWithoutAdminInput | SupportRequestUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: SupportRequestCreateManyAdminInputEnvelope
+    set?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    disconnect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    delete?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    connect?: SupportRequestWhereUniqueInput | SupportRequestWhereUniqueInput[]
+    update?: SupportRequestUpdateWithWhereUniqueWithoutAdminInput | SupportRequestUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: SupportRequestUpdateManyWithWhereWithoutAdminInput | SupportRequestUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: SupportRequestScalarWhereInput | SupportRequestScalarWhereInput[]
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput> | TeacherSalaryIncrementCreateWithoutCreatedByInput[] | TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput | TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TeacherSalaryIncrementUpsertWithWhereUniqueWithoutCreatedByInput | TeacherSalaryIncrementUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TeacherSalaryIncrementCreateManyCreatedByInputEnvelope
+    set?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    disconnect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    delete?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    update?: TeacherSalaryIncrementUpdateWithWhereUniqueWithoutCreatedByInput | TeacherSalaryIncrementUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TeacherSalaryIncrementUpdateManyWithWhereWithoutCreatedByInput | TeacherSalaryIncrementUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
+  }
+
+  export type AdminCreateNestedOneWithoutCreatedRolesInput = {
+    create?: XOR<AdminCreateWithoutCreatedRolesInput, AdminUncheckedCreateWithoutCreatedRolesInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCreatedRolesInput
     connect?: AdminWhereUniqueInput
+  }
+
+  export type AdminCreateNestedManyWithoutAssignedRoleInput = {
+    create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
+    createMany?: AdminCreateManyAssignedRoleInputEnvelope
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+  }
+
+  export type RolePermissionCreateNestedManyWithoutRoleInput = {
+    create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
+    createMany?: RolePermissionCreateManyRoleInputEnvelope
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type AdminUncheckedCreateNestedManyWithoutAssignedRoleInput = {
+    create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
+    createMany?: AdminCreateManyAssignedRoleInputEnvelope
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+  }
+
+  export type RolePermissionUncheckedCreateNestedManyWithoutRoleInput = {
+    create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
+    createMany?: RolePermissionCreateManyRoleInputEnvelope
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type AdminUpdateOneWithoutCreatedRolesNestedInput = {
+    create?: XOR<AdminCreateWithoutCreatedRolesInput, AdminUncheckedCreateWithoutCreatedRolesInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCreatedRolesInput
+    upsert?: AdminUpsertWithoutCreatedRolesInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutCreatedRolesInput, AdminUpdateWithoutCreatedRolesInput>, AdminUncheckedUpdateWithoutCreatedRolesInput>
+  }
+
+  export type AdminUpdateManyWithoutAssignedRoleNestedInput = {
+    create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
+    upsert?: AdminUpsertWithWhereUniqueWithoutAssignedRoleInput | AdminUpsertWithWhereUniqueWithoutAssignedRoleInput[]
+    createMany?: AdminCreateManyAssignedRoleInputEnvelope
+    set?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    disconnect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    delete?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    update?: AdminUpdateWithWhereUniqueWithoutAssignedRoleInput | AdminUpdateWithWhereUniqueWithoutAssignedRoleInput[]
+    updateMany?: AdminUpdateManyWithWhereWithoutAssignedRoleInput | AdminUpdateManyWithWhereWithoutAssignedRoleInput[]
+    deleteMany?: AdminScalarWhereInput | AdminScalarWhereInput[]
+  }
+
+  export type RolePermissionUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
+    upsert?: RolePermissionUpsertWithWhereUniqueWithoutRoleInput | RolePermissionUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: RolePermissionCreateManyRoleInputEnvelope
+    set?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    disconnect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    delete?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    update?: RolePermissionUpdateWithWhereUniqueWithoutRoleInput | RolePermissionUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: RolePermissionUpdateManyWithWhereWithoutRoleInput | RolePermissionUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput = {
+    create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
+    connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
+    upsert?: AdminUpsertWithWhereUniqueWithoutAssignedRoleInput | AdminUpsertWithWhereUniqueWithoutAssignedRoleInput[]
+    createMany?: AdminCreateManyAssignedRoleInputEnvelope
+    set?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    disconnect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    delete?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    connect?: AdminWhereUniqueInput | AdminWhereUniqueInput[]
+    update?: AdminUpdateWithWhereUniqueWithoutAssignedRoleInput | AdminUpdateWithWhereUniqueWithoutAssignedRoleInput[]
+    updateMany?: AdminUpdateManyWithWhereWithoutAssignedRoleInput | AdminUpdateManyWithWhereWithoutAssignedRoleInput[]
+    deleteMany?: AdminScalarWhereInput | AdminScalarWhereInput[]
+  }
+
+  export type RolePermissionUncheckedUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
+    upsert?: RolePermissionUpsertWithWhereUniqueWithoutRoleInput | RolePermissionUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: RolePermissionCreateManyRoleInputEnvelope
+    set?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    disconnect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    delete?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    update?: RolePermissionUpdateWithWhereUniqueWithoutRoleInput | RolePermissionUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: RolePermissionUpdateManyWithWhereWithoutRoleInput | RolePermissionUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RolePermissionCreateNestedManyWithoutPermissionInput = {
+    create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
+    createMany?: RolePermissionCreateManyPermissionInputEnvelope
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type RolePermissionUncheckedCreateNestedManyWithoutPermissionInput = {
+    create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
+    createMany?: RolePermissionCreateManyPermissionInputEnvelope
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type RolePermissionUpdateManyWithoutPermissionNestedInput = {
+    create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
+    upsert?: RolePermissionUpsertWithWhereUniqueWithoutPermissionInput | RolePermissionUpsertWithWhereUniqueWithoutPermissionInput[]
+    createMany?: RolePermissionCreateManyPermissionInputEnvelope
+    set?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    disconnect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    delete?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    update?: RolePermissionUpdateWithWhereUniqueWithoutPermissionInput | RolePermissionUpdateWithWhereUniqueWithoutPermissionInput[]
+    updateMany?: RolePermissionUpdateManyWithWhereWithoutPermissionInput | RolePermissionUpdateManyWithWhereWithoutPermissionInput[]
+    deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RolePermissionUncheckedUpdateManyWithoutPermissionNestedInput = {
+    create?: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput> | RolePermissionCreateWithoutPermissionInput[] | RolePermissionUncheckedCreateWithoutPermissionInput[]
+    connectOrCreate?: RolePermissionCreateOrConnectWithoutPermissionInput | RolePermissionCreateOrConnectWithoutPermissionInput[]
+    upsert?: RolePermissionUpsertWithWhereUniqueWithoutPermissionInput | RolePermissionUpsertWithWhereUniqueWithoutPermissionInput[]
+    createMany?: RolePermissionCreateManyPermissionInputEnvelope
+    set?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    disconnect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    delete?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+    update?: RolePermissionUpdateWithWhereUniqueWithoutPermissionInput | RolePermissionUpdateWithWhereUniqueWithoutPermissionInput[]
+    updateMany?: RolePermissionUpdateManyWithWhereWithoutPermissionInput | RolePermissionUpdateManyWithWhereWithoutPermissionInput[]
+    deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RoleCreateNestedOneWithoutRolePermissionsInput = {
+    create?: XOR<RoleCreateWithoutRolePermissionsInput, RoleUncheckedCreateWithoutRolePermissionsInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutRolePermissionsInput
+    connect?: RoleWhereUniqueInput
+  }
+
+  export type PermissionCreateNestedOneWithoutRolePermissionsInput = {
+    create?: XOR<PermissionCreateWithoutRolePermissionsInput, PermissionUncheckedCreateWithoutRolePermissionsInput>
+    connectOrCreate?: PermissionCreateOrConnectWithoutRolePermissionsInput
+    connect?: PermissionWhereUniqueInput
+  }
+
+  export type RoleUpdateOneRequiredWithoutRolePermissionsNestedInput = {
+    create?: XOR<RoleCreateWithoutRolePermissionsInput, RoleUncheckedCreateWithoutRolePermissionsInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutRolePermissionsInput
+    upsert?: RoleUpsertWithoutRolePermissionsInput
+    connect?: RoleWhereUniqueInput
+    update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutRolePermissionsInput, RoleUpdateWithoutRolePermissionsInput>, RoleUncheckedUpdateWithoutRolePermissionsInput>
+  }
+
+  export type PermissionUpdateOneRequiredWithoutRolePermissionsNestedInput = {
+    create?: XOR<PermissionCreateWithoutRolePermissionsInput, PermissionUncheckedCreateWithoutRolePermissionsInput>
+    connectOrCreate?: PermissionCreateOrConnectWithoutRolePermissionsInput
+    upsert?: PermissionUpsertWithoutRolePermissionsInput
+    connect?: PermissionWhereUniqueInput
+    update?: XOR<XOR<PermissionUpdateToOneWithWhereWithoutRolePermissionsInput, PermissionUpdateWithoutRolePermissionsInput>, PermissionUncheckedUpdateWithoutRolePermissionsInput>
+  }
+
+  export type AdminCreateNestedOneWithoutMadrassaProfileInput = {
+    create?: XOR<AdminCreateWithoutMadrassaProfileInput, AdminUncheckedCreateWithoutMadrassaProfileInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutMadrassaProfileInput
+    connect?: AdminWhereUniqueInput
   }
 
   export type AdminUpdateOneRequiredWithoutMadrassaProfileNestedInput = {
@@ -69312,6 +78444,38 @@ export namespace Prisma {
     upsert?: AdminUpsertWithoutMadrassaProfileInput
     connect?: AdminWhereUniqueInput
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutMadrassaProfileInput, AdminUpdateWithoutMadrassaProfileInput>, AdminUncheckedUpdateWithoutMadrassaProfileInput>
+  }
+
+  export type AdminCreateNestedOneWithoutSuggestionsInput = {
+    create?: XOR<AdminCreateWithoutSuggestionsInput, AdminUncheckedCreateWithoutSuggestionsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSuggestionsInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type AdminUpdateOneWithoutSuggestionsNestedInput = {
+    create?: XOR<AdminCreateWithoutSuggestionsInput, AdminUncheckedCreateWithoutSuggestionsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSuggestionsInput
+    upsert?: AdminUpsertWithoutSuggestionsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutSuggestionsInput, AdminUpdateWithoutSuggestionsInput>, AdminUncheckedUpdateWithoutSuggestionsInput>
+  }
+
+  export type AdminCreateNestedOneWithoutSupportRequestsInput = {
+    create?: XOR<AdminCreateWithoutSupportRequestsInput, AdminUncheckedCreateWithoutSupportRequestsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSupportRequestsInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type AdminUpdateOneWithoutSupportRequestsNestedInput = {
+    create?: XOR<AdminCreateWithoutSupportRequestsInput, AdminUncheckedCreateWithoutSupportRequestsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSupportRequestsInput
+    upsert?: AdminUpsertWithoutSupportRequestsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutSupportRequestsInput, AdminUpdateWithoutSupportRequestsInput>, AdminUncheckedUpdateWithoutSupportRequestsInput>
   }
 
   export type TeacherCreateNestedManyWithoutShiftInput = {
@@ -70466,14 +79630,6 @@ export namespace Prisma {
     connect?: SubjectWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type AcademicSessionUpdateOneRequiredWithoutExamSchedulesNestedInput = {
     create?: XOR<AcademicSessionCreateWithoutExamSchedulesInput, AcademicSessionUncheckedCreateWithoutExamSchedulesInput>
     connectOrCreate?: AcademicSessionCreateOrConnectWithoutExamSchedulesInput
@@ -71175,6 +80331,13 @@ export namespace Prisma {
     connect?: TeacherAttendanceWhereUniqueInput | TeacherAttendanceWhereUniqueInput[]
   }
 
+  export type TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput> | TeacherSalaryIncrementCreateWithoutTeacherInput[] | TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput | TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput[]
+    createMany?: TeacherSalaryIncrementCreateManyTeacherInputEnvelope
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+  }
+
   export type SalaryEntryCreateNestedManyWithoutTeacherInput = {
     create?: XOR<SalaryEntryCreateWithoutTeacherInput, SalaryEntryUncheckedCreateWithoutTeacherInput> | SalaryEntryCreateWithoutTeacherInput[] | SalaryEntryUncheckedCreateWithoutTeacherInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutTeacherInput | SalaryEntryCreateOrConnectWithoutTeacherInput[]
@@ -71200,6 +80363,13 @@ export namespace Prisma {
     connectOrCreate?: TeacherAttendanceCreateOrConnectWithoutTeacherInput | TeacherAttendanceCreateOrConnectWithoutTeacherInput[]
     createMany?: TeacherAttendanceCreateManyTeacherInputEnvelope
     connect?: TeacherAttendanceWhereUniqueInput | TeacherAttendanceWhereUniqueInput[]
+  }
+
+  export type TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput> | TeacherSalaryIncrementCreateWithoutTeacherInput[] | TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput | TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput[]
+    createMany?: TeacherSalaryIncrementCreateManyTeacherInputEnvelope
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
   }
 
   export type SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput = {
@@ -71228,6 +80398,20 @@ export namespace Prisma {
     update?: TeacherAttendanceUpdateWithWhereUniqueWithoutTeacherInput | TeacherAttendanceUpdateWithWhereUniqueWithoutTeacherInput[]
     updateMany?: TeacherAttendanceUpdateManyWithWhereWithoutTeacherInput | TeacherAttendanceUpdateManyWithWhereWithoutTeacherInput[]
     deleteMany?: TeacherAttendanceScalarWhereInput | TeacherAttendanceScalarWhereInput[]
+  }
+
+  export type TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput> | TeacherSalaryIncrementCreateWithoutTeacherInput[] | TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput | TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput[]
+    upsert?: TeacherSalaryIncrementUpsertWithWhereUniqueWithoutTeacherInput | TeacherSalaryIncrementUpsertWithWhereUniqueWithoutTeacherInput[]
+    createMany?: TeacherSalaryIncrementCreateManyTeacherInputEnvelope
+    set?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    disconnect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    delete?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    update?: TeacherSalaryIncrementUpdateWithWhereUniqueWithoutTeacherInput | TeacherSalaryIncrementUpdateWithWhereUniqueWithoutTeacherInput[]
+    updateMany?: TeacherSalaryIncrementUpdateManyWithWhereWithoutTeacherInput | TeacherSalaryIncrementUpdateManyWithWhereWithoutTeacherInput[]
+    deleteMany?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
   }
 
   export type SalaryEntryUpdateManyWithoutTeacherNestedInput = {
@@ -71282,6 +80466,20 @@ export namespace Prisma {
     deleteMany?: TeacherAttendanceScalarWhereInput | TeacherAttendanceScalarWhereInput[]
   }
 
+  export type TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput = {
+    create?: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput> | TeacherSalaryIncrementCreateWithoutTeacherInput[] | TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput | TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput[]
+    upsert?: TeacherSalaryIncrementUpsertWithWhereUniqueWithoutTeacherInput | TeacherSalaryIncrementUpsertWithWhereUniqueWithoutTeacherInput[]
+    createMany?: TeacherSalaryIncrementCreateManyTeacherInputEnvelope
+    set?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    disconnect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    delete?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    connect?: TeacherSalaryIncrementWhereUniqueInput | TeacherSalaryIncrementWhereUniqueInput[]
+    update?: TeacherSalaryIncrementUpdateWithWhereUniqueWithoutTeacherInput | TeacherSalaryIncrementUpdateWithWhereUniqueWithoutTeacherInput[]
+    updateMany?: TeacherSalaryIncrementUpdateManyWithWhereWithoutTeacherInput | TeacherSalaryIncrementUpdateManyWithWhereWithoutTeacherInput[]
+    deleteMany?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
+  }
+
   export type SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput = {
     create?: XOR<SalaryEntryCreateWithoutTeacherInput, SalaryEntryUncheckedCreateWithoutTeacherInput> | SalaryEntryCreateWithoutTeacherInput[] | SalaryEntryUncheckedCreateWithoutTeacherInput[]
     connectOrCreate?: SalaryEntryCreateOrConnectWithoutTeacherInput | SalaryEntryCreateOrConnectWithoutTeacherInput[]
@@ -71308,6 +80506,36 @@ export namespace Prisma {
     update?: TeacherScheduleUpdateWithWhereUniqueWithoutTeacherInput | TeacherScheduleUpdateWithWhereUniqueWithoutTeacherInput[]
     updateMany?: TeacherScheduleUpdateManyWithWhereWithoutTeacherInput | TeacherScheduleUpdateManyWithWhereWithoutTeacherInput[]
     deleteMany?: TeacherScheduleScalarWhereInput | TeacherScheduleScalarWhereInput[]
+  }
+
+  export type TeacherCreateNestedOneWithoutSalaryIncrementsInput = {
+    create?: XOR<TeacherCreateWithoutSalaryIncrementsInput, TeacherUncheckedCreateWithoutSalaryIncrementsInput>
+    connectOrCreate?: TeacherCreateOrConnectWithoutSalaryIncrementsInput
+    connect?: TeacherWhereUniqueInput
+  }
+
+  export type AdminCreateNestedOneWithoutSalaryIncrementsInput = {
+    create?: XOR<AdminCreateWithoutSalaryIncrementsInput, AdminUncheckedCreateWithoutSalaryIncrementsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSalaryIncrementsInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type TeacherUpdateOneRequiredWithoutSalaryIncrementsNestedInput = {
+    create?: XOR<TeacherCreateWithoutSalaryIncrementsInput, TeacherUncheckedCreateWithoutSalaryIncrementsInput>
+    connectOrCreate?: TeacherCreateOrConnectWithoutSalaryIncrementsInput
+    upsert?: TeacherUpsertWithoutSalaryIncrementsInput
+    connect?: TeacherWhereUniqueInput
+    update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutSalaryIncrementsInput, TeacherUpdateWithoutSalaryIncrementsInput>, TeacherUncheckedUpdateWithoutSalaryIncrementsInput>
+  }
+
+  export type AdminUpdateOneWithoutSalaryIncrementsNestedInput = {
+    create?: XOR<AdminCreateWithoutSalaryIncrementsInput, AdminUncheckedCreateWithoutSalaryIncrementsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutSalaryIncrementsInput
+    upsert?: AdminUpsertWithoutSalaryIncrementsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutSalaryIncrementsInput, AdminUpdateWithoutSalaryIncrementsInput>, AdminUncheckedUpdateWithoutSalaryIncrementsInput>
   }
 
   export type StudentCreateNestedOneWithoutAttendancesInput = {
@@ -72136,6 +81364,17 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -72192,6 +81431,33 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -72238,17 +81504,6 @@ export namespace Prisma {
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -72271,33 +81526,6 @@ export namespace Prisma {
     gt?: InputJsonValue
     gte?: InputJsonValue
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -72392,6 +81620,152 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type RoleCreateWithoutAdminsInput = {
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: AdminCreateNestedOneWithoutCreatedRolesInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutAdminsInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutAdminsInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutAdminsInput, RoleUncheckedCreateWithoutAdminsInput>
+  }
+
+  export type AdminCreateWithoutOwnedUsersInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutOwnedUsersInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutOwnedUsersInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutOwnedUsersInput, AdminUncheckedCreateWithoutOwnedUsersInput>
+  }
+
+  export type AdminCreateWithoutOwnerAdminInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutOwnerAdminInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutOwnerAdminInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput>
+  }
+
+  export type AdminCreateManyOwnerAdminInputEnvelope = {
+    data: AdminCreateManyOwnerAdminInput | AdminCreateManyOwnerAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RoleCreateWithoutCreatorInput = {
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutCreatorInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutCreatorInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type RoleCreateManyCreatorInputEnvelope = {
+    data: RoleCreateManyCreatorInput | RoleCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MadrassaProfileCreateWithoutAdminInput = {
     name: string
     email: string
@@ -72461,6 +81835,262 @@ export namespace Prisma {
   export type FinancialRecordCreateManyCreatedByInputEnvelope = {
     data: FinancialRecordCreateManyCreatedByInput | FinancialRecordCreateManyCreatedByInput[]
     skipDuplicates?: boolean
+  }
+
+  export type SuggestionCreateWithoutAdminInput = {
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SuggestionUncheckedCreateWithoutAdminInput = {
+    id?: number
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SuggestionCreateOrConnectWithoutAdminInput = {
+    where: SuggestionWhereUniqueInput
+    create: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput>
+  }
+
+  export type SuggestionCreateManyAdminInputEnvelope = {
+    data: SuggestionCreateManyAdminInput | SuggestionCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SupportRequestCreateWithoutAdminInput = {
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupportRequestUncheckedCreateWithoutAdminInput = {
+    id?: number
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupportRequestCreateOrConnectWithoutAdminInput = {
+    where: SupportRequestWhereUniqueInput
+    create: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput>
+  }
+
+  export type SupportRequestCreateManyAdminInputEnvelope = {
+    data: SupportRequestCreateManyAdminInput | SupportRequestCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TeacherSalaryIncrementCreateWithoutCreatedByInput = {
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teacher: TeacherCreateNestedOneWithoutSalaryIncrementsInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput = {
+    id?: number
+    teacherId: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherSalaryIncrementCreateOrConnectWithoutCreatedByInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    create: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TeacherSalaryIncrementCreateManyCreatedByInputEnvelope = {
+    data: TeacherSalaryIncrementCreateManyCreatedByInput | TeacherSalaryIncrementCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RoleUpsertWithoutAdminsInput = {
+    update: XOR<RoleUpdateWithoutAdminsInput, RoleUncheckedUpdateWithoutAdminsInput>
+    create: XOR<RoleCreateWithoutAdminsInput, RoleUncheckedCreateWithoutAdminsInput>
+    where?: RoleWhereInput
+  }
+
+  export type RoleUpdateToOneWithWhereWithoutAdminsInput = {
+    where?: RoleWhereInput
+    data: XOR<RoleUpdateWithoutAdminsInput, RoleUncheckedUpdateWithoutAdminsInput>
+  }
+
+  export type RoleUpdateWithoutAdminsInput = {
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutAdminsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type AdminUpsertWithoutOwnedUsersInput = {
+    update: XOR<AdminUpdateWithoutOwnedUsersInput, AdminUncheckedUpdateWithoutOwnedUsersInput>
+    create: XOR<AdminCreateWithoutOwnedUsersInput, AdminUncheckedCreateWithoutOwnedUsersInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutOwnedUsersInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutOwnedUsersInput, AdminUncheckedUpdateWithoutOwnedUsersInput>
+  }
+
+  export type AdminUpdateWithoutOwnedUsersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutOwnedUsersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUpsertWithWhereUniqueWithoutOwnerAdminInput = {
+    where: AdminWhereUniqueInput
+    update: XOR<AdminUpdateWithoutOwnerAdminInput, AdminUncheckedUpdateWithoutOwnerAdminInput>
+    create: XOR<AdminCreateWithoutOwnerAdminInput, AdminUncheckedCreateWithoutOwnerAdminInput>
+  }
+
+  export type AdminUpdateWithWhereUniqueWithoutOwnerAdminInput = {
+    where: AdminWhereUniqueInput
+    data: XOR<AdminUpdateWithoutOwnerAdminInput, AdminUncheckedUpdateWithoutOwnerAdminInput>
+  }
+
+  export type AdminUpdateManyWithWhereWithoutOwnerAdminInput = {
+    where: AdminScalarWhereInput
+    data: XOR<AdminUpdateManyMutationInput, AdminUncheckedUpdateManyWithoutOwnerAdminInput>
+  }
+
+  export type AdminScalarWhereInput = {
+    AND?: AdminScalarWhereInput | AdminScalarWhereInput[]
+    OR?: AdminScalarWhereInput[]
+    NOT?: AdminScalarWhereInput | AdminScalarWhereInput[]
+    id?: IntFilter<"Admin"> | number
+    name?: StringFilter<"Admin"> | string
+    email?: StringFilter<"Admin"> | string
+    username?: StringFilter<"Admin"> | string
+    password?: StringFilter<"Admin"> | string
+    role?: StringFilter<"Admin"> | string
+    roleId?: IntNullableFilter<"Admin"> | number | null
+    ownerAdminId?: IntNullableFilter<"Admin"> | number | null
+    status?: StringFilter<"Admin"> | string
+    createdAt?: DateTimeFilter<"Admin"> | Date | string
+    updatedAt?: DateTimeFilter<"Admin"> | Date | string
+  }
+
+  export type RoleUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: RoleWhereUniqueInput
+    update: XOR<RoleUpdateWithoutCreatorInput, RoleUncheckedUpdateWithoutCreatorInput>
+    create: XOR<RoleCreateWithoutCreatorInput, RoleUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type RoleUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: RoleWhereUniqueInput
+    data: XOR<RoleUpdateWithoutCreatorInput, RoleUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type RoleUpdateManyWithWhereWithoutCreatorInput = {
+    where: RoleScalarWhereInput
+    data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type RoleScalarWhereInput = {
+    AND?: RoleScalarWhereInput | RoleScalarWhereInput[]
+    OR?: RoleScalarWhereInput[]
+    NOT?: RoleScalarWhereInput | RoleScalarWhereInput[]
+    id?: IntFilter<"Role"> | number
+    roleName?: StringFilter<"Role"> | string
+    description?: StringNullableFilter<"Role"> | string | null
+    createdBy?: IntNullableFilter<"Role"> | number | null
+    createdAt?: DateTimeFilter<"Role"> | Date | string
+    updatedAt?: DateTimeFilter<"Role"> | Date | string
   }
 
   export type MadrassaProfileUpsertWithoutAdminInput = {
@@ -72539,6 +82169,457 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"FinancialRecord"> | Date | string
   }
 
+  export type SuggestionUpsertWithWhereUniqueWithoutAdminInput = {
+    where: SuggestionWhereUniqueInput
+    update: XOR<SuggestionUpdateWithoutAdminInput, SuggestionUncheckedUpdateWithoutAdminInput>
+    create: XOR<SuggestionCreateWithoutAdminInput, SuggestionUncheckedCreateWithoutAdminInput>
+  }
+
+  export type SuggestionUpdateWithWhereUniqueWithoutAdminInput = {
+    where: SuggestionWhereUniqueInput
+    data: XOR<SuggestionUpdateWithoutAdminInput, SuggestionUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type SuggestionUpdateManyWithWhereWithoutAdminInput = {
+    where: SuggestionScalarWhereInput
+    data: XOR<SuggestionUpdateManyMutationInput, SuggestionUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type SuggestionScalarWhereInput = {
+    AND?: SuggestionScalarWhereInput | SuggestionScalarWhereInput[]
+    OR?: SuggestionScalarWhereInput[]
+    NOT?: SuggestionScalarWhereInput | SuggestionScalarWhereInput[]
+    id?: IntFilter<"Suggestion"> | number
+    type?: StringFilter<"Suggestion"> | string
+    title?: StringFilter<"Suggestion"> | string
+    priority?: StringFilter<"Suggestion"> | string
+    description?: StringFilter<"Suggestion"> | string
+    submitterName?: StringNullableFilter<"Suggestion"> | string | null
+    submitterEmail?: StringNullableFilter<"Suggestion"> | string | null
+    adminId?: IntNullableFilter<"Suggestion"> | number | null
+    emailRecipient?: StringNullableFilter<"Suggestion"> | string | null
+    emailStatus?: StringFilter<"Suggestion"> | string
+    emailError?: StringNullableFilter<"Suggestion"> | string | null
+    status?: StringFilter<"Suggestion"> | string
+    createdAt?: DateTimeFilter<"Suggestion"> | Date | string
+    updatedAt?: DateTimeFilter<"Suggestion"> | Date | string
+  }
+
+  export type SupportRequestUpsertWithWhereUniqueWithoutAdminInput = {
+    where: SupportRequestWhereUniqueInput
+    update: XOR<SupportRequestUpdateWithoutAdminInput, SupportRequestUncheckedUpdateWithoutAdminInput>
+    create: XOR<SupportRequestCreateWithoutAdminInput, SupportRequestUncheckedCreateWithoutAdminInput>
+  }
+
+  export type SupportRequestUpdateWithWhereUniqueWithoutAdminInput = {
+    where: SupportRequestWhereUniqueInput
+    data: XOR<SupportRequestUpdateWithoutAdminInput, SupportRequestUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type SupportRequestUpdateManyWithWhereWithoutAdminInput = {
+    where: SupportRequestScalarWhereInput
+    data: XOR<SupportRequestUpdateManyMutationInput, SupportRequestUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type SupportRequestScalarWhereInput = {
+    AND?: SupportRequestScalarWhereInput | SupportRequestScalarWhereInput[]
+    OR?: SupportRequestScalarWhereInput[]
+    NOT?: SupportRequestScalarWhereInput | SupportRequestScalarWhereInput[]
+    id?: IntFilter<"SupportRequest"> | number
+    topic?: StringFilter<"SupportRequest"> | string
+    priority?: StringFilter<"SupportRequest"> | string
+    message?: StringFilter<"SupportRequest"> | string
+    submitterName?: StringNullableFilter<"SupportRequest"> | string | null
+    submitterEmail?: StringNullableFilter<"SupportRequest"> | string | null
+    adminId?: IntNullableFilter<"SupportRequest"> | number | null
+    emailRecipient?: StringNullableFilter<"SupportRequest"> | string | null
+    emailStatus?: StringFilter<"SupportRequest"> | string
+    emailError?: StringNullableFilter<"SupportRequest"> | string | null
+    status?: StringFilter<"SupportRequest"> | string
+    createdAt?: DateTimeFilter<"SupportRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SupportRequest"> | Date | string
+  }
+
+  export type TeacherSalaryIncrementUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    update: XOR<TeacherSalaryIncrementUpdateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<TeacherSalaryIncrementCreateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TeacherSalaryIncrementUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    data: XOR<TeacherSalaryIncrementUpdateWithoutCreatedByInput, TeacherSalaryIncrementUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type TeacherSalaryIncrementUpdateManyWithWhereWithoutCreatedByInput = {
+    where: TeacherSalaryIncrementScalarWhereInput
+    data: XOR<TeacherSalaryIncrementUpdateManyMutationInput, TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type TeacherSalaryIncrementScalarWhereInput = {
+    AND?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
+    OR?: TeacherSalaryIncrementScalarWhereInput[]
+    NOT?: TeacherSalaryIncrementScalarWhereInput | TeacherSalaryIncrementScalarWhereInput[]
+    id?: IntFilter<"TeacherSalaryIncrement"> | number
+    teacherId?: IntFilter<"TeacherSalaryIncrement"> | number
+    previousSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFilter<"TeacherSalaryIncrement"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFilter<"TeacherSalaryIncrement"> | string
+    reason?: StringNullableFilter<"TeacherSalaryIncrement"> | string | null
+    createdById?: IntNullableFilter<"TeacherSalaryIncrement"> | number | null
+    status?: StringFilter<"TeacherSalaryIncrement"> | string
+    createdAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+    updatedAt?: DateTimeFilter<"TeacherSalaryIncrement"> | Date | string
+  }
+
+  export type AdminCreateWithoutCreatedRolesInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutCreatedRolesInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutCreatedRolesInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutCreatedRolesInput, AdminUncheckedCreateWithoutCreatedRolesInput>
+  }
+
+  export type AdminCreateWithoutAssignedRoleInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutAssignedRoleInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutAssignedRoleInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput>
+  }
+
+  export type AdminCreateManyAssignedRoleInputEnvelope = {
+    data: AdminCreateManyAssignedRoleInput | AdminCreateManyAssignedRoleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RolePermissionCreateWithoutRoleInput = {
+    createdAt?: Date | string
+    permission: PermissionCreateNestedOneWithoutRolePermissionsInput
+  }
+
+  export type RolePermissionUncheckedCreateWithoutRoleInput = {
+    id?: number
+    permissionId: number
+    createdAt?: Date | string
+  }
+
+  export type RolePermissionCreateOrConnectWithoutRoleInput = {
+    where: RolePermissionWhereUniqueInput
+    create: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput>
+  }
+
+  export type RolePermissionCreateManyRoleInputEnvelope = {
+    data: RolePermissionCreateManyRoleInput | RolePermissionCreateManyRoleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminUpsertWithoutCreatedRolesInput = {
+    update: XOR<AdminUpdateWithoutCreatedRolesInput, AdminUncheckedUpdateWithoutCreatedRolesInput>
+    create: XOR<AdminCreateWithoutCreatedRolesInput, AdminUncheckedCreateWithoutCreatedRolesInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutCreatedRolesInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutCreatedRolesInput, AdminUncheckedUpdateWithoutCreatedRolesInput>
+  }
+
+  export type AdminUpdateWithoutCreatedRolesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutCreatedRolesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUpsertWithWhereUniqueWithoutAssignedRoleInput = {
+    where: AdminWhereUniqueInput
+    update: XOR<AdminUpdateWithoutAssignedRoleInput, AdminUncheckedUpdateWithoutAssignedRoleInput>
+    create: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput>
+  }
+
+  export type AdminUpdateWithWhereUniqueWithoutAssignedRoleInput = {
+    where: AdminWhereUniqueInput
+    data: XOR<AdminUpdateWithoutAssignedRoleInput, AdminUncheckedUpdateWithoutAssignedRoleInput>
+  }
+
+  export type AdminUpdateManyWithWhereWithoutAssignedRoleInput = {
+    where: AdminScalarWhereInput
+    data: XOR<AdminUpdateManyMutationInput, AdminUncheckedUpdateManyWithoutAssignedRoleInput>
+  }
+
+  export type RolePermissionUpsertWithWhereUniqueWithoutRoleInput = {
+    where: RolePermissionWhereUniqueInput
+    update: XOR<RolePermissionUpdateWithoutRoleInput, RolePermissionUncheckedUpdateWithoutRoleInput>
+    create: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput>
+  }
+
+  export type RolePermissionUpdateWithWhereUniqueWithoutRoleInput = {
+    where: RolePermissionWhereUniqueInput
+    data: XOR<RolePermissionUpdateWithoutRoleInput, RolePermissionUncheckedUpdateWithoutRoleInput>
+  }
+
+  export type RolePermissionUpdateManyWithWhereWithoutRoleInput = {
+    where: RolePermissionScalarWhereInput
+    data: XOR<RolePermissionUpdateManyMutationInput, RolePermissionUncheckedUpdateManyWithoutRoleInput>
+  }
+
+  export type RolePermissionScalarWhereInput = {
+    AND?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+    OR?: RolePermissionScalarWhereInput[]
+    NOT?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+    id?: IntFilter<"RolePermission"> | number
+    roleId?: IntFilter<"RolePermission"> | number
+    permissionId?: IntFilter<"RolePermission"> | number
+    createdAt?: DateTimeFilter<"RolePermission"> | Date | string
+  }
+
+  export type RolePermissionCreateWithoutPermissionInput = {
+    createdAt?: Date | string
+    role: RoleCreateNestedOneWithoutRolePermissionsInput
+  }
+
+  export type RolePermissionUncheckedCreateWithoutPermissionInput = {
+    id?: number
+    roleId: number
+    createdAt?: Date | string
+  }
+
+  export type RolePermissionCreateOrConnectWithoutPermissionInput = {
+    where: RolePermissionWhereUniqueInput
+    create: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput>
+  }
+
+  export type RolePermissionCreateManyPermissionInputEnvelope = {
+    data: RolePermissionCreateManyPermissionInput | RolePermissionCreateManyPermissionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RolePermissionUpsertWithWhereUniqueWithoutPermissionInput = {
+    where: RolePermissionWhereUniqueInput
+    update: XOR<RolePermissionUpdateWithoutPermissionInput, RolePermissionUncheckedUpdateWithoutPermissionInput>
+    create: XOR<RolePermissionCreateWithoutPermissionInput, RolePermissionUncheckedCreateWithoutPermissionInput>
+  }
+
+  export type RolePermissionUpdateWithWhereUniqueWithoutPermissionInput = {
+    where: RolePermissionWhereUniqueInput
+    data: XOR<RolePermissionUpdateWithoutPermissionInput, RolePermissionUncheckedUpdateWithoutPermissionInput>
+  }
+
+  export type RolePermissionUpdateManyWithWhereWithoutPermissionInput = {
+    where: RolePermissionScalarWhereInput
+    data: XOR<RolePermissionUpdateManyMutationInput, RolePermissionUncheckedUpdateManyWithoutPermissionInput>
+  }
+
+  export type RoleCreateWithoutRolePermissionsInput = {
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: AdminCreateNestedOneWithoutCreatedRolesInput
+    admins?: AdminCreateNestedManyWithoutAssignedRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutRolePermissionsInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutRolePermissionsInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutRolePermissionsInput, RoleUncheckedCreateWithoutRolePermissionsInput>
+  }
+
+  export type PermissionCreateWithoutRolePermissionsInput = {
+    permissionKey: string
+    permissionName: string
+    pagePath?: string | null
+    moduleName: string
+    createdAt?: Date | string
+  }
+
+  export type PermissionUncheckedCreateWithoutRolePermissionsInput = {
+    id?: number
+    permissionKey: string
+    permissionName: string
+    pagePath?: string | null
+    moduleName: string
+    createdAt?: Date | string
+  }
+
+  export type PermissionCreateOrConnectWithoutRolePermissionsInput = {
+    where: PermissionWhereUniqueInput
+    create: XOR<PermissionCreateWithoutRolePermissionsInput, PermissionUncheckedCreateWithoutRolePermissionsInput>
+  }
+
+  export type RoleUpsertWithoutRolePermissionsInput = {
+    update: XOR<RoleUpdateWithoutRolePermissionsInput, RoleUncheckedUpdateWithoutRolePermissionsInput>
+    create: XOR<RoleCreateWithoutRolePermissionsInput, RoleUncheckedCreateWithoutRolePermissionsInput>
+    where?: RoleWhereInput
+  }
+
+  export type RoleUpdateToOneWithWhereWithoutRolePermissionsInput = {
+    where?: RoleWhereInput
+    data: XOR<RoleUpdateWithoutRolePermissionsInput, RoleUncheckedUpdateWithoutRolePermissionsInput>
+  }
+
+  export type RoleUpdateWithoutRolePermissionsInput = {
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
+    admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutRolePermissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
+  }
+
+  export type PermissionUpsertWithoutRolePermissionsInput = {
+    update: XOR<PermissionUpdateWithoutRolePermissionsInput, PermissionUncheckedUpdateWithoutRolePermissionsInput>
+    create: XOR<PermissionCreateWithoutRolePermissionsInput, PermissionUncheckedCreateWithoutRolePermissionsInput>
+    where?: PermissionWhereInput
+  }
+
+  export type PermissionUpdateToOneWithWhereWithoutRolePermissionsInput = {
+    where?: PermissionWhereInput
+    data: XOR<PermissionUpdateWithoutRolePermissionsInput, PermissionUncheckedUpdateWithoutRolePermissionsInput>
+  }
+
+  export type PermissionUpdateWithoutRolePermissionsInput = {
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PermissionUncheckedUpdateWithoutRolePermissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    permissionKey?: StringFieldUpdateOperationsInput | string
+    permissionName?: StringFieldUpdateOperationsInput | string
+    pagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AdminCreateWithoutMadrassaProfileInput = {
     name: string
     email: string
@@ -72548,7 +82629,14 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
     financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUncheckedCreateWithoutMadrassaProfileInput = {
@@ -72558,10 +82646,17 @@ export namespace Prisma {
     username: string
     password: string
     role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
     financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminCreateOrConnectWithoutMadrassaProfileInput = {
@@ -72589,7 +82684,14 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
     financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutMadrassaProfileInput = {
@@ -72599,10 +82701,205 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
     financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminCreateWithoutSuggestionsInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutSuggestionsInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutSuggestionsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutSuggestionsInput, AdminUncheckedCreateWithoutSuggestionsInput>
+  }
+
+  export type AdminUpsertWithoutSuggestionsInput = {
+    update: XOR<AdminUpdateWithoutSuggestionsInput, AdminUncheckedUpdateWithoutSuggestionsInput>
+    create: XOR<AdminCreateWithoutSuggestionsInput, AdminUncheckedCreateWithoutSuggestionsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutSuggestionsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutSuggestionsInput, AdminUncheckedUpdateWithoutSuggestionsInput>
+  }
+
+  export type AdminUpdateWithoutSuggestionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutSuggestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminCreateWithoutSupportRequestsInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminUncheckedCreateWithoutSupportRequestsInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type AdminCreateOrConnectWithoutSupportRequestsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutSupportRequestsInput, AdminUncheckedCreateWithoutSupportRequestsInput>
+  }
+
+  export type AdminUpsertWithoutSupportRequestsInput = {
+    update: XOR<AdminUpdateWithoutSupportRequestsInput, AdminUncheckedUpdateWithoutSupportRequestsInput>
+    create: XOR<AdminCreateWithoutSupportRequestsInput, AdminUncheckedCreateWithoutSupportRequestsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutSupportRequestsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutSupportRequestsInput, AdminUncheckedUpdateWithoutSupportRequestsInput>
+  }
+
+  export type AdminUpdateWithoutSupportRequestsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutSupportRequestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type TeacherCreateWithoutShiftInput = {
@@ -72634,6 +82931,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
   }
@@ -72668,6 +82966,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
   }
@@ -74493,6 +84792,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
     shift?: ShiftCreateNestedOneWithoutTeachersInput
   }
@@ -74528,6 +84828,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
   }
 
@@ -74672,6 +84973,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
     shift?: ShiftUpdateOneWithoutTeachersNestedInput
   }
@@ -74707,6 +85009,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
@@ -77110,6 +87413,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TeacherSalaryIncrementCreateWithoutTeacherInput = {
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: AdminCreateNestedOneWithoutSalaryIncrementsInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput = {
+    id?: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    createdById?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherSalaryIncrementCreateOrConnectWithoutTeacherInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    create: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput>
+  }
+
+  export type TeacherSalaryIncrementCreateManyTeacherInputEnvelope = {
+    data: TeacherSalaryIncrementCreateManyTeacherInput | TeacherSalaryIncrementCreateManyTeacherInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SalaryEntryCreateWithoutTeacherInput = {
     amount: Decimal | DecimalJsLike | number | string
     salaryMonth: number
@@ -77224,6 +87562,22 @@ export namespace Prisma {
     data: XOR<TeacherAttendanceUpdateManyMutationInput, TeacherAttendanceUncheckedUpdateManyWithoutTeacherInput>
   }
 
+  export type TeacherSalaryIncrementUpsertWithWhereUniqueWithoutTeacherInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    update: XOR<TeacherSalaryIncrementUpdateWithoutTeacherInput, TeacherSalaryIncrementUncheckedUpdateWithoutTeacherInput>
+    create: XOR<TeacherSalaryIncrementCreateWithoutTeacherInput, TeacherSalaryIncrementUncheckedCreateWithoutTeacherInput>
+  }
+
+  export type TeacherSalaryIncrementUpdateWithWhereUniqueWithoutTeacherInput = {
+    where: TeacherSalaryIncrementWhereUniqueInput
+    data: XOR<TeacherSalaryIncrementUpdateWithoutTeacherInput, TeacherSalaryIncrementUncheckedUpdateWithoutTeacherInput>
+  }
+
+  export type TeacherSalaryIncrementUpdateManyWithWhereWithoutTeacherInput = {
+    where: TeacherSalaryIncrementScalarWhereInput
+    data: XOR<TeacherSalaryIncrementUpdateManyMutationInput, TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherInput>
+  }
+
   export type SalaryEntryUpsertWithWhereUniqueWithoutTeacherInput = {
     where: SalaryEntryWhereUniqueInput
     update: XOR<SalaryEntryUpdateWithoutTeacherInput, SalaryEntryUncheckedUpdateWithoutTeacherInput>
@@ -77303,6 +87657,254 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherCreateWithoutSalaryIncrementsInput = {
+    staffType?: string
+    fullName: string
+    email?: string | null
+    phone?: string | null
+    cnic?: string | null
+    subject?: string | null
+    qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
+    address?: string | null
+    imageUrl?: string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
+    schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
+    shift?: ShiftCreateNestedOneWithoutTeachersInput
+  }
+
+  export type TeacherUncheckedCreateWithoutSalaryIncrementsInput = {
+    id?: number
+    staffType?: string
+    fullName: string
+    email?: string | null
+    phone?: string | null
+    cnic?: string | null
+    subject?: string | null
+    qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
+    address?: string | null
+    shiftId?: number | null
+    imageUrl?: string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
+    schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type TeacherCreateOrConnectWithoutSalaryIncrementsInput = {
+    where: TeacherWhereUniqueInput
+    create: XOR<TeacherCreateWithoutSalaryIncrementsInput, TeacherUncheckedCreateWithoutSalaryIncrementsInput>
+  }
+
+  export type AdminCreateWithoutSalaryIncrementsInput = {
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutSalaryIncrementsInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
+    madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutSalaryIncrementsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutSalaryIncrementsInput, AdminUncheckedCreateWithoutSalaryIncrementsInput>
+  }
+
+  export type TeacherUpsertWithoutSalaryIncrementsInput = {
+    update: XOR<TeacherUpdateWithoutSalaryIncrementsInput, TeacherUncheckedUpdateWithoutSalaryIncrementsInput>
+    create: XOR<TeacherCreateWithoutSalaryIncrementsInput, TeacherUncheckedCreateWithoutSalaryIncrementsInput>
+    where?: TeacherWhereInput
+  }
+
+  export type TeacherUpdateToOneWithWhereWithoutSalaryIncrementsInput = {
+    where?: TeacherWhereInput
+    data: XOR<TeacherUpdateWithoutSalaryIncrementsInput, TeacherUncheckedUpdateWithoutSalaryIncrementsInput>
+  }
+
+  export type TeacherUpdateWithoutSalaryIncrementsInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
+    schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
+    shift?: ShiftUpdateOneWithoutTeachersNestedInput
+  }
+
+  export type TeacherUncheckedUpdateWithoutSalaryIncrementsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    staffType?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    shiftId?: NullableIntFieldUpdateOperationsInput | number | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
+    schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type AdminUpsertWithoutSalaryIncrementsInput = {
+    update: XOR<AdminUpdateWithoutSalaryIncrementsInput, AdminUncheckedUpdateWithoutSalaryIncrementsInput>
+    create: XOR<AdminCreateWithoutSalaryIncrementsInput, AdminUncheckedCreateWithoutSalaryIncrementsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutSalaryIncrementsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutSalaryIncrementsInput, AdminUncheckedUpdateWithoutSalaryIncrementsInput>
+  }
+
+  export type AdminUpdateWithoutSalaryIncrementsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutSalaryIncrementsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type StudentCreateWithoutAttendancesInput = {
@@ -77725,6 +88327,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
     shift?: ShiftCreateNestedOneWithoutTeachersInput
@@ -77760,6 +88363,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
     salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
   }
@@ -77838,6 +88442,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
     shift?: ShiftUpdateOneWithoutTeachersNestedInput
@@ -77873,6 +88478,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   }
@@ -79000,6 +89606,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
     shift?: ShiftCreateNestedOneWithoutTeachersInput
   }
@@ -79035,6 +89642,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
   }
 
@@ -79109,6 +89717,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
     shift?: ShiftUpdateOneWithoutTeachersNestedInput
   }
@@ -79144,6 +89753,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
@@ -79246,7 +89856,14 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    assignedRole?: RoleCreateNestedOneWithoutAdminsInput
+    ownerAdmin?: AdminCreateNestedOneWithoutOwnedUsersInput
+    ownedUsers?: AdminCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleCreateNestedManyWithoutCreatorInput
     madrassaProfile?: MadrassaProfileCreateNestedOneWithoutAdminInput
+    suggestions?: SuggestionCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminUncheckedCreateWithoutFinancialRecordsInput = {
@@ -79256,10 +89873,17 @@ export namespace Prisma {
     username: string
     password: string
     role?: string
+    roleId?: number | null
+    ownerAdminId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    ownedUsers?: AdminUncheckedCreateNestedManyWithoutOwnerAdminInput
+    createdRoles?: RoleUncheckedCreateNestedManyWithoutCreatorInput
     madrassaProfile?: MadrassaProfileUncheckedCreateNestedOneWithoutAdminInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutAdminInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutAdminInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type AdminCreateOrConnectWithoutFinancialRecordsInput = {
@@ -79287,7 +89911,14 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
     madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutFinancialRecordsInput = {
@@ -79297,10 +89928,17 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
     madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type StorePurchaseItemCreateWithoutItemInput = {
@@ -80589,6 +91227,27 @@ export namespace Prisma {
     damagedStocks?: StoreDamagedStockUncheckedUpdateManyWithoutItemNestedInput
   }
 
+  export type AdminCreateManyOwnerAdminInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    roleId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoleCreateManyCreatorInput = {
+    id?: number
+    roleName: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type FinancialRecordCreateManyCreatedByInput = {
     id?: number
     type: string
@@ -80599,6 +91258,129 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type SuggestionCreateManyAdminInput = {
+    id?: number
+    type: string
+    title: string
+    priority?: string
+    description: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SupportRequestCreateManyAdminInput = {
+    id?: number
+    topic: string
+    priority?: string
+    message: string
+    submitterName?: string | null
+    submitterEmail?: string | null
+    emailRecipient?: string | null
+    emailStatus?: string
+    emailError?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TeacherSalaryIncrementCreateManyCreatedByInput = {
+    id?: number
+    teacherId: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdminUpdateWithoutOwnerAdminInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedRole?: RoleUpdateOneWithoutAdminsNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutOwnerAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateManyWithoutOwnerAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    roleId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleUpdateWithoutCreatorInput = {
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutCreatorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateManyWithoutCreatorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FinancialRecordUpdateWithoutCreatedByInput = {
@@ -80634,6 +91416,246 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionUpdateWithoutAdminInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionUncheckedUpdateWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SuggestionUncheckedUpdateManyWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestUpdateWithoutAdminInput = {
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestUncheckedUpdateWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportRequestUncheckedUpdateManyWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topic?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    submitterName?: NullableStringFieldUpdateOperationsInput | string | null
+    submitterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailRecipient?: NullableStringFieldUpdateOperationsInput | string | null
+    emailStatus?: StringFieldUpdateOperationsInput | string
+    emailError?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementUpdateWithoutCreatedByInput = {
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teacher?: TeacherUpdateOneRequiredWithoutSalaryIncrementsNestedInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    teacherId?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    teacherId?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminCreateManyAssignedRoleInput = {
+    id?: number
+    name: string
+    email: string
+    username: string
+    password: string
+    role?: string
+    ownerAdminId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RolePermissionCreateManyRoleInput = {
+    id?: number
+    permissionId: number
+    createdAt?: Date | string
+  }
+
+  export type AdminUpdateWithoutAssignedRoleInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerAdmin?: AdminUpdateOneWithoutOwnedUsersNestedInput
+    ownedUsers?: AdminUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutAssignedRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownedUsers?: AdminUncheckedUpdateManyWithoutOwnerAdminNestedInput
+    createdRoles?: RoleUncheckedUpdateManyWithoutCreatorNestedInput
+    madrassaProfile?: MadrassaProfileUncheckedUpdateOneWithoutAdminNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutAdminNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutAdminNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type AdminUncheckedUpdateManyWithoutAssignedRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionUpdateWithoutRoleInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permission?: PermissionUpdateOneRequiredWithoutRolePermissionsNestedInput
+  }
+
+  export type RolePermissionUncheckedUpdateWithoutRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionUncheckedUpdateManyWithoutRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionCreateManyPermissionInput = {
+    id?: number
+    roleId: number
+    createdAt?: Date | string
+  }
+
+  export type RolePermissionUpdateWithoutPermissionInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: RoleUpdateOneRequiredWithoutRolePermissionsNestedInput
+  }
+
+  export type RolePermissionUncheckedUpdateWithoutPermissionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RolePermissionUncheckedUpdateManyWithoutPermissionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeacherCreateManyShiftInput = {
@@ -80696,6 +91718,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
   }
@@ -80730,6 +91753,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
     salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   }
@@ -82753,6 +93777,19 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TeacherSalaryIncrementCreateManyTeacherInput = {
+    id?: number
+    previousSalary: Decimal | DecimalJsLike | number | string
+    incrementAmount: Decimal | DecimalJsLike | number | string
+    newSalary: Decimal | DecimalJsLike | number | string
+    effectiveDate: string
+    reason?: string | null
+    createdById?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SalaryEntryCreateManyTeacherInput = {
     id?: number
     financeHeadId: number
@@ -82805,6 +93842,44 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementUpdateWithoutTeacherInput = {
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: AdminUpdateOneWithoutSalaryIncrementsNestedInput
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateWithoutTeacherInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    previousSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incrementAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
