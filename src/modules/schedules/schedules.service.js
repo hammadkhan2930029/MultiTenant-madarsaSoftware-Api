@@ -2,8 +2,19 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const scheduleSelect = {
   id: true,
+  tenantId: true,
   subjects: true,
   days: true,
   startTime: true,
@@ -16,11 +27,11 @@ const scheduleSelect = {
   section: { select: { id: true, name: true } },
 };
 
-const ensureScheduleReferences = async ({ sessionId, classId, sectionId }) => {
+const ensureScheduleReferences = async (tenantId, { sessionId, classId, sectionId }) => {
   const [session, academicClass, section] = await Promise.all([
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findUnique({ where: { id: classId } }),
-    prisma.section.findUnique({ where: { id: sectionId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
   ]);
 
   if (!session || session.status !== 'active') {
@@ -41,11 +52,13 @@ const ensureScheduleReferences = async ({ sessionId, classId, sectionId }) => {
 };
 
 export const schedulesService = {
-  async createSchedule(payload) {
-    await ensureScheduleReferences(payload);
+  async createSchedule(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureScheduleReferences(resolvedTenantId, payload);
 
     return prisma.studentSchedule.create({
       data: {
+        tenantId: resolvedTenantId,
         sessionId: payload.sessionId,
         classId: payload.classId,
         sectionId: payload.sectionId,
@@ -59,9 +72,13 @@ export const schedulesService = {
     });
   },
 
-  async getSchedules(query) {
+  async getSchedules(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      class: { tenantId: resolvedTenantId },
+      section: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
@@ -85,19 +102,23 @@ export const schedulesService = {
     };
   },
 
-  async updateSchedule(id, payload) {
-    const existingSchedule = await prisma.studentSchedule.findUnique({ where: { id } });
+  async updateSchedule(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingSchedule = await prisma.studentSchedule.findFirst({
+      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId }, section: { tenantId: resolvedTenantId } },
+    });
 
     if (!existingSchedule) {
       throw new AppError('Schedule not found.', 404);
     }
 
-    await ensureScheduleReferences(payload);
+    await ensureScheduleReferences(resolvedTenantId, payload);
 
     return prisma.studentSchedule.update({
       where: { id },
       data: {
         sessionId: payload.sessionId,
+        tenantId: resolvedTenantId,
         classId: payload.classId,
         sectionId: payload.sectionId,
         subjects: payload.subjects,
@@ -110,8 +131,11 @@ export const schedulesService = {
     });
   },
 
-  async deleteSchedule(id) {
-    const schedule = await prisma.studentSchedule.findUnique({ where: { id } });
+  async deleteSchedule(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const schedule = await prisma.studentSchedule.findFirst({
+      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId }, section: { tenantId: resolvedTenantId } },
+    });
 
     if (!schedule) {
       throw new AppError('Schedule not found.', 404);

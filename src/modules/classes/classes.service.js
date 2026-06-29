@@ -2,8 +2,19 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const classSelect = {
   id: true,
+  tenantId: true,
   name: true,
   branchId: true,
   status: true,
@@ -25,9 +36,10 @@ const classSelect = {
 };
 
 export const classesService = {
-  async createClass(payload) {
-    const branch = await prisma.branch.findUnique({
-      where: { id: payload.branchId },
+  async createClass(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branch = await prisma.branch.findFirst({
+      where: { id: payload.branchId, tenantId: resolvedTenantId },
     });
 
     if (!branch) {
@@ -36,6 +48,7 @@ export const classesService = {
 
     const duplicateClass = await prisma.academicClass.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         branchId: payload.branchId,
         name: payload.name,
       },
@@ -47,6 +60,7 @@ export const classesService = {
 
     return prisma.academicClass.create({
       data: {
+        tenantId: resolvedTenantId,
         name: payload.name,
         branchId: payload.branchId,
       },
@@ -54,10 +68,12 @@ export const classesService = {
     });
   },
 
-  async getClasses(query) {
+  async getClasses(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             name: {
@@ -86,9 +102,10 @@ export const classesService = {
     };
   },
 
-  async getClassById(id) {
-    const academicClass = await prisma.academicClass.findUnique({
-      where: { id },
+  async getClassById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const academicClass = await prisma.academicClass.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       select: {
         ...classSelect,
         sections: {
@@ -109,17 +126,18 @@ export const classesService = {
     return academicClass;
   },
 
-  async updateClass(id, payload) {
-    const academicClass = await prisma.academicClass.findUnique({
-      where: { id },
+  async updateClass(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const academicClass = await prisma.academicClass.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!academicClass) {
       throw new AppError('Class not found.', 404);
     }
 
-    const branch = await prisma.branch.findUnique({
-      where: { id: payload.branchId },
+    const branch = await prisma.branch.findFirst({
+      where: { id: payload.branchId, tenantId: resolvedTenantId },
     });
 
     if (!branch) {
@@ -128,6 +146,7 @@ export const classesService = {
 
     const duplicateClass = await prisma.academicClass.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         id: { not: id },
         branchId: payload.branchId,
         name: payload.name,
@@ -149,9 +168,10 @@ export const classesService = {
     });
   },
 
-  async deleteClass(id) {
-    const academicClass = await prisma.academicClass.findUnique({
-      where: { id },
+  async deleteClass(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const academicClass = await prisma.academicClass.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!academicClass) {

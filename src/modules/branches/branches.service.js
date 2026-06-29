@@ -2,8 +2,19 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const branchSelect = {
   id: true,
+  tenantId: true,
   name: true,
   code: true,
   address: true,
@@ -24,18 +35,38 @@ const defaultBranchData = {
   status: 'active',
 };
 
-const ensureDefaultBranch = async () =>
-  prisma.branch.upsert({
-    where: { name: defaultBranchData.name },
-    update: defaultBranchData,
-    create: defaultBranchData,
+const ensureDefaultBranch = async (tenantId) => {
+  const existingBranch = await prisma.branch.findFirst({
+    where: {
+      tenantId,
+      name: defaultBranchData.name,
+    },
     select: branchSelect,
   });
 
+  if (existingBranch) {
+    return prisma.branch.update({
+      where: { id: existingBranch.id },
+      data: defaultBranchData,
+      select: branchSelect,
+    });
+  }
+
+  return prisma.branch.create({
+    data: {
+      ...defaultBranchData,
+      tenantId,
+    },
+    select: branchSelect,
+  });
+};
+
 export const branchesService = {
-  async createBranch(payload) {
+  async createBranch(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const existingBranch = await prisma.branch.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
       },
     });
@@ -46,6 +77,7 @@ export const branchesService = {
 
     return prisma.branch.create({
       data: {
+        tenantId: resolvedTenantId,
         name: payload.name,
         code: payload.code || null,
         address: payload.address || null,
@@ -54,12 +86,14 @@ export const branchesService = {
     });
   },
 
-  async getBranches(query) {
-    await ensureDefaultBranch();
+  async getBranches(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureDefaultBranch(resolvedTenantId);
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -89,9 +123,10 @@ export const branchesService = {
     };
   },
 
-  async getBranchById(id) {
-    const branch = await prisma.branch.findUnique({
-      where: { id },
+  async getBranchById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branch = await prisma.branch.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       select: {
         ...branchSelect,
         classes: {
@@ -112,9 +147,10 @@ export const branchesService = {
     return branch;
   },
 
-  async updateBranch(id, payload) {
-    const branch = await prisma.branch.findUnique({
-      where: { id },
+  async updateBranch(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branch = await prisma.branch.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!branch) {
@@ -123,6 +159,7 @@ export const branchesService = {
 
     const duplicateBranch = await prisma.branch.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         id: { not: id },
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
       },
@@ -144,9 +181,10 @@ export const branchesService = {
     });
   },
 
-  async deleteBranch(id) {
-    const branch = await prisma.branch.findUnique({
-      where: { id },
+  async deleteBranch(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branch = await prisma.branch.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!branch) {

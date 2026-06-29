@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const examScheduleSelect = {
   id: true,
+  tenantId: true,
   examName: true,
   examDate: true,
   startTime: true,
@@ -16,8 +17,18 @@ const examScheduleSelect = {
   createdAt: true,
   updatedAt: true,
   session: { select: { id: true, name: true, startDate: true, endDate: true } },
-  class: { select: { id: true, name: true } },
-  subject: { select: { id: true, name: true } },
+  class: { select: { id: true, tenantId: true, name: true } },
+  subject: { select: { id: true, tenantId: true, name: true } },
+};
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
 };
 
 const normalizeStartDate = (value) => {
@@ -32,11 +43,11 @@ const normalizeEndDate = (value) => {
   return date;
 };
 
-const ensureExamScheduleReferences = async ({ sessionId, classId, subjectId }) => {
+const ensureExamScheduleReferences = async (tenantId, { sessionId, classId, subjectId }) => {
   const [session, academicClass, subject] = await Promise.all([
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findUnique({ where: { id: classId } }),
-    prisma.subject.findUnique({ where: { id: subjectId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.subject.findFirst({ where: { id: subjectId, tenantId } }),
   ]);
 
   if (!session || session.status !== 'active') {
@@ -52,12 +63,27 @@ const ensureExamScheduleReferences = async ({ sessionId, classId, subjectId }) =
   }
 };
 
+const getTenantExamSchedule = async (tenantId, id) => {
+  const schedule = await prisma.examSchedule.findFirst({
+    where: { id, tenantId },
+    select: examScheduleSelect,
+  });
+
+  if (!schedule) {
+    throw new AppError('Exam schedule not found.', 404);
+  }
+
+  return schedule;
+};
+
 export const examSchedulesService = {
-  async createExamSchedule(payload) {
-    await ensureExamScheduleReferences(payload);
+  async createExamSchedule(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureExamScheduleReferences(resolvedTenantId, payload);
 
     return prisma.examSchedule.create({
       data: {
+        tenantId: resolvedTenantId,
         examName: payload.examName,
         sessionId: payload.sessionId,
         classId: payload.classId,
@@ -75,9 +101,13 @@ export const examSchedulesService = {
     });
   },
 
-  async getExamSchedules(query) {
+  async getExamSchedules(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      class: { tenantId: resolvedTenantId },
+      subject: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
       ...(query.subjectId ? { subjectId: query.subjectId } : {}),
@@ -121,14 +151,10 @@ export const examSchedulesService = {
     };
   },
 
-  async updateExamSchedule(id, payload) {
-    const schedule = await prisma.examSchedule.findUnique({ where: { id } });
-
-    if (!schedule) {
-      throw new AppError('Exam schedule not found.', 404);
-    }
-
-    await ensureExamScheduleReferences(payload);
+  async updateExamSchedule(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await getTenantExamSchedule(resolvedTenantId, id);
+    await ensureExamScheduleReferences(resolvedTenantId, payload);
 
     return prisma.examSchedule.update({
       where: { id },
@@ -150,12 +176,9 @@ export const examSchedulesService = {
     });
   },
 
-  async deleteExamSchedule(id) {
-    const schedule = await prisma.examSchedule.findUnique({ where: { id } });
-
-    if (!schedule) {
-      throw new AppError('Exam schedule not found.', 404);
-    }
+  async deleteExamSchedule(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await getTenantExamSchedule(resolvedTenantId, id);
 
     return prisma.examSchedule.update({
       where: { id },

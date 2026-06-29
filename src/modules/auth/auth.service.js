@@ -7,6 +7,7 @@ import { getAdminRoleAndPermissions } from '../roles/roleAccess.service.js';
 const madrassaProfileSelect = {
   id: true,
   adminId: true,
+  tenantId: true,
   name: true,
   email: true,
   phone1: true,
@@ -25,8 +26,9 @@ const madrassaProfileSelect = {
 const emptyToNull = (value) => (value ? value : null);
 const buildLogoUrl = (file) => (file ? `/uploads/madrassa-profiles/${file.filename}` : null);
 
-const buildDefaultMadrassaProfileData = (admin) => ({
+const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
   adminId: admin.id,
+  tenantId,
   name: 'Jamia Anwar ul Quran',
   email: admin.email,
   phone1: '0300-1234567',
@@ -47,45 +49,6 @@ const canManageMadrassaProfile = async (admin) => {
   return roleName === 'super_admin' || roleName === 'admin';
 };
 
-const resolveMadrassaProfileOwner = async (admin) => {
-  const ownerAdminId = Number(admin.ownerAdminId || admin.owner_admin_id || admin.id);
-
-  const access = await getAdminRoleAndPermissions(admin);
-  const roleName = access.role?.roleName || access.role?.role_name || admin.role;
-
-  if (!admin.ownerAdminId && !admin.owner_admin_id && roleName !== 'super_admin') {
-    const existingProfiles = await prisma.$queryRaw`
-      SELECT mp.adminId
-      FROM madrassa_profiles mp
-      INNER JOIN admins a ON a.id = mp.adminId
-      LEFT JOIN roles r ON r.id = a.role_id
-      WHERE r.role_name = 'super_admin' OR a.role = 'super_admin'
-      ORDER BY mp.id ASC
-      LIMIT 1
-    `;
-
-    if (existingProfiles[0]?.adminId) {
-      return { ...admin, id: Number(existingProfiles[0].adminId) };
-    }
-  }
-
-  if (!ownerAdminId || ownerAdminId === Number(admin.id)) {
-    return { ...admin, id: Number(admin.id) };
-  }
-
-  const rows = await prisma.$queryRaw`
-    SELECT id, name, email, username, role, role_id, owner_admin_id, status, createdAt, updatedAt
-    FROM admins
-    WHERE id = ${ownerAdminId}
-    LIMIT 1
-  `;
-
-  return rows[0] ? {
-    ...rows[0],
-    id: Number(rows[0].id),
-  } : { ...admin, id: Number(admin.id) };
-};
-
 const buildAdminAuthPayload = async (admin) => {
   const access = await getAdminRoleAndPermissions(admin);
 
@@ -95,6 +58,7 @@ const buildAdminAuthPayload = async (admin) => {
     email: admin.email,
     username: admin.username,
     role: admin.role,
+    tenantId: admin.tenantId || admin.tenant_id || null,
     ownerAdminId: admin.ownerAdminId || admin.owner_admin_id || null,
     roleId: access.role?.id || null,
     roleDetails: access.role,
@@ -105,10 +69,51 @@ const buildAdminAuthPayload = async (admin) => {
   };
 };
 
+const normalizeTenantId = (tenantId) => (
+  tenantId === null || tenantId === undefined || tenantId === '' ? null : Number(tenantId)
+);
+
+const isSuperAdminAccount = (admin) => {
+  const assignedRoleName = admin.assignedRole?.roleName || admin.assignedRole?.role_name;
+  return admin.role === 'super_admin' || assignedRoleName === 'super_admin';
+};
+
+const findTenantAdminByIdentity = (identity, tenantId) =>
+  prisma.admin.findFirst({
+    where: {
+      tenantId,
+      OR: [{ email: identity }, { username: identity }],
+    },
+    include: {
+      assignedRole: true,
+    },
+  });
+
+const findGlobalSuperAdminByIdentity = (identity) =>
+  prisma.admin.findFirst({
+    where: {
+      tenantId: null,
+      AND: [
+        {
+          OR: [{ email: identity }, { username: identity }],
+        },
+        {
+          OR: [
+            { role: 'super_admin' },
+            { assignedRole: { roleName: 'super_admin' } },
+          ],
+        },
+      ],
+    },
+    include: {
+      assignedRole: true,
+    },
+  });
+
 export const authService = {
   async getAuthenticatedAdminById(adminId) {
     const rows = await prisma.$queryRaw`
-      SELECT id, name, email, username, role, role_id, owner_admin_id, status, createdAt, updatedAt
+      SELECT id, name, email, username, role, tenant_id, role_id, owner_admin_id, status, createdAt, updatedAt
       FROM admins
       WHERE id = ${adminId}
       LIMIT 1
@@ -123,6 +128,8 @@ export const authService = {
       email: admin.email,
       username: admin.username,
       role: admin.role,
+      tenantId: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
+      tenant_id: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
       roleId: admin.role_id === null || admin.role_id === undefined ? null : Number(admin.role_id),
       ownerAdminId: admin.owner_admin_id === null || admin.owner_admin_id === undefined ? null : Number(admin.owner_admin_id),
       owner_admin_id: admin.owner_admin_id === null || admin.owner_admin_id === undefined ? null : Number(admin.owner_admin_id),
@@ -132,15 +139,40 @@ export const authService = {
     };
   },
 
-  async loginAdmin(payload) {
-    const admin = await prisma.admin.findFirst({
-      where: {
-        OR: [{ email: payload.identity }, { username: payload.identity }],
-      },
-    });
+  async loginAdmin(payload, context = {}) {
+    const tenantId = normalizeTenantId(context.tenantId);
+    const identity = String(payload.identity || '').trim();
+
+    let admin = await findTenantAdminByIdentity(identity, tenantId);
+
+    if (!admin && context.isSystemHost) {
+      admin = await findGlobalSuperAdminByIdentity(identity);
+    }
 
     if (!admin) {
       throw new AppError('Invalid email/username or password.', 401);
+    }
+
+    const adminTenantId = normalizeTenantId(admin.tenantId);
+    const isGlobalSuperAdmin = isSuperAdminAccount(admin) && adminTenantId === null;
+
+    if (!isGlobalSuperAdmin && adminTenantId !== tenantId) {
+      throw new AppError('Invalid email/username or password.', 401);
+    }
+
+    if (isGlobalSuperAdmin && !context.isSystemHost) {
+      throw new AppError('Super admin login is only available from the global admin panel.', 403);
+    }
+
+    if (!isGlobalSuperAdmin) {
+      const tenant = await prisma.tenant.findUnique({
+        where: { id: tenantId },
+        select: { status: true },
+      });
+
+      if (!tenant || tenant.status !== 'active') {
+        throw new AppError('Tenant is inactive. Please contact support.', 403);
+      }
     }
 
     if (admin.status !== 'active') {
@@ -153,8 +185,8 @@ export const authService = {
       throw new AppError('Invalid email/username or password.', 401);
     }
 
-    const token = generateAdminToken(admin);
     const adminPayload = await buildAdminAuthPayload(admin);
+    const token = generateAdminToken(adminPayload);
 
     return {
       token,
@@ -210,29 +242,33 @@ export const authService = {
     return buildAdminAuthPayload(admin);
   },
 
-  async getMadrassaProfile(admin) {
-    const profileOwner = await resolveMadrassaProfileOwner(admin);
+  async getMadrassaProfile(admin, tenantId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+
+    if (!resolvedTenantId) {
+      throw new AppError('Tenant context is required for madrassa profile.', 403);
+    }
 
     return prisma.madrassaProfile.upsert({
-      where: { adminId: profileOwner.id },
+      where: { tenantId: resolvedTenantId },
       update: {},
-      create: buildDefaultMadrassaProfileData(profileOwner),
+      create: buildDefaultMadrassaProfileData(admin, resolvedTenantId),
       select: madrassaProfileSelect,
     });
   },
 
-  async updateMadrassaProfile(admin, payload, file) {
+  async updateMadrassaProfile(admin, tenantId, payload, file) {
     const isAllowedToManage = await canManageMadrassaProfile(admin);
 
     if (!isAllowedToManage) {
       throw new AppError('Only Super Admin or Admin can edit madrassa profile.', 403);
     }
 
-    const profileOwner = await resolveMadrassaProfileOwner(admin);
-    await this.getMadrassaProfile(admin);
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await this.getMadrassaProfile(admin, resolvedTenantId);
 
     return prisma.madrassaProfile.update({
-      where: { adminId: profileOwner.id },
+      where: { tenantId: resolvedTenantId },
       data: {
         name: payload.name,
         email: payload.email,

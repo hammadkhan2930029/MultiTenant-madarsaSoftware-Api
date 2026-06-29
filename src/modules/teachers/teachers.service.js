@@ -5,10 +5,20 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 const buildImageUrl = (file) => (file ? `/uploads/teachers/${file.filename}` : null);
 const optionalString = (value) => (value ? value : null);
 const optionalNumber = (value) => (value ? Number(value) : null);
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
 
 const teacherIncrementTableSql = `
 CREATE TABLE IF NOT EXISTS teacher_salary_increments (
   id INT NOT NULL AUTO_INCREMENT,
+  tenant_id INT NOT NULL,
   teacherId INT NOT NULL,
   previousSalary DECIMAL(10, 2) NOT NULL,
   incrementAmount DECIMAL(10, 2) NOT NULL,
@@ -20,9 +30,11 @@ CREATE TABLE IF NOT EXISTS teacher_salary_increments (
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  INDEX teacher_salary_increments_tenant_id_idx (tenant_id),
   INDEX teacher_salary_increments_teacherId_idx (teacherId),
   INDEX teacher_salary_increments_effectiveDate_idx (effectiveDate),
   INDEX teacher_salary_increments_createdById_idx (createdById),
+  CONSTRAINT teacher_salary_increments_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES Tenant(id),
   CONSTRAINT teacher_salary_increments_teacherId_fkey FOREIGN KEY (teacherId) REFERENCES teachers(id) ON DELETE CASCADE,
   CONSTRAINT teacher_salary_increments_createdById_fkey FOREIGN KEY (createdById) REFERENCES admins(id) ON DELETE SET NULL
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -40,6 +52,7 @@ const ensureTeacherIncrementTable = () => {
 
 const teacherSelect = {
   id: true,
+  tenantId: true,
   staffType: true,
   fullName: true,
   email: true,
@@ -100,7 +113,7 @@ const mapTeacherIncrement = (row) => ({
   updatedAt: row.updatedAt,
 });
 
-const buildDuplicateWhere = (payload, excludeId) => {
+const buildDuplicateWhere = (tenantId, payload, excludeId) => {
   const conditions = [];
 
   if (payload.phone) {
@@ -112,6 +125,7 @@ const buildDuplicateWhere = (payload, excludeId) => {
   }
 
   return {
+    tenantId,
     ...(excludeId ? { id: { not: excludeId } } : {}),
     OR: conditions,
   };
@@ -131,12 +145,13 @@ const ensureShiftExists = async (shiftId) => {
 };
 
 export const teachersService = {
-  async createTeacher({ body, file }) {
+  async createTeacher(tenantId, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureShiftExists(body.shiftId);
 
     if (body.phone || body.cnic) {
       const duplicateTeacher = await prisma.teacher.findFirst({
-        where: buildDuplicateWhere(body),
+        where: buildDuplicateWhere(resolvedTenantId, body),
       });
 
       if (duplicateTeacher) {
@@ -146,6 +161,7 @@ export const teachersService = {
 
     return prisma.teacher.create({
       data: {
+        tenantId: resolvedTenantId,
         staffType: optionalString(body.staffType) || 'teacher',
         fullName: body.fullName,
         email: optionalString(body.email),
@@ -176,10 +192,12 @@ export const teachersService = {
     });
   },
 
-  async getTeachers(query) {
+  async getTeachers(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -212,9 +230,10 @@ export const teachersService = {
     };
   },
 
-  async getTeacherById(id) {
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+  async getTeacherById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const teacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       select: teacherSelect,
     });
 
@@ -225,7 +244,8 @@ export const teachersService = {
     return teacher;
   },
 
-  async getAllTeacherIncrements(query) {
+  async getAllTeacherIncrements(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureTeacherIncrementTable();
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
@@ -244,7 +264,9 @@ export const teachersService = {
       FROM teacher_salary_increments increment
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       LEFT JOIN admins admin ON admin.id = increment.createdById
-      WHERE (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
+      WHERE increment.tenant_id = ${resolvedTenantId}
+        AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
       ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
       LIMIT ${limit} OFFSET ${skip}
@@ -254,7 +276,9 @@ export const teachersService = {
       SELECT COUNT(*) AS total
       FROM teacher_salary_increments increment
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
-      WHERE (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
+      WHERE increment.tenant_id = ${resolvedTenantId}
+        AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
     `;
 
@@ -264,11 +288,12 @@ export const teachersService = {
     };
   },
 
-  async getTeacherIncrements(id) {
+  async getTeacherIncrements(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureTeacherIncrementTable();
 
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+    const teacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       select: { id: true },
     });
 
@@ -280,18 +305,20 @@ export const teachersService = {
       SELECT increment.*, admin.name AS createdByName
       FROM teacher_salary_increments increment
       LEFT JOIN admins admin ON admin.id = increment.createdById
-      WHERE increment.teacherId = ${id}
+      WHERE increment.tenant_id = ${resolvedTenantId}
+        AND increment.teacherId = ${id}
       ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
     `;
 
     return rows.map(mapTeacherIncrement);
   },
 
-  async createTeacherIncrement(id, payload, admin) {
+  async createTeacherIncrement(tenantId, id, payload, admin) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureTeacherIncrementTable();
 
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+    const teacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       select: { id: true, basicSalary: true },
     });
 
@@ -312,6 +339,7 @@ export const teachersService = {
 
       await tx.$executeRaw`
         INSERT INTO teacher_salary_increments (
+          tenant_id,
           teacherId,
           previousSalary,
           incrementAmount,
@@ -322,6 +350,7 @@ export const teachersService = {
           status
         )
         VALUES (
+          ${resolvedTenantId},
           ${id},
           ${previousSalary},
           ${incrementAmount},
@@ -339,6 +368,7 @@ export const teachersService = {
         FROM teacher_salary_increments increment
         LEFT JOIN admins admin ON admin.id = increment.createdById
         WHERE increment.id = ${Number(idRows[0]?.id)}
+          AND increment.tenant_id = ${resolvedTenantId}
       `;
     }).then((rows) => rows.map(mapTeacherIncrement));
 
@@ -351,9 +381,10 @@ export const teachersService = {
     };
   },
 
-  async updateTeacher(id, { body, file }) {
-    const existingTeacher = await prisma.teacher.findUnique({
-      where: { id },
+  async updateTeacher(tenantId, id, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingTeacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!existingTeacher) {
@@ -364,7 +395,7 @@ export const teachersService = {
 
     if (body.phone || body.cnic) {
       const duplicateTeacher = await prisma.teacher.findFirst({
-        where: buildDuplicateWhere(body, id),
+        where: buildDuplicateWhere(resolvedTenantId, body, id),
       });
 
       if (duplicateTeacher) {
@@ -406,9 +437,10 @@ export const teachersService = {
     });
   },
 
-  async updateTeacherStatus(id, status) {
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+  async updateTeacherStatus(tenantId, id, status) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const teacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
     });
 
     if (!teacher) {
@@ -426,9 +458,10 @@ export const teachersService = {
     });
   },
 
-  async deleteTeacher(id) {
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+  async deleteTeacher(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const teacher = await prisma.teacher.findFirst({
+      where: { id, tenantId: resolvedTenantId },
       include: {
         _count: {
           select: {

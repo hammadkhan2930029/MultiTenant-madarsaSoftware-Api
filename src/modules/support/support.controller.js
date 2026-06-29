@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { supportService } from './support.service.js';
 
 export const createSupportRequest = asyncHandler(async (req, res) => {
-  const result = await supportService.createSupportRequest(req.body, req.admin);
+  const result = await supportService.createSupportRequest(req.tenantId, req.body, req.admin);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSupportRequest = asyncHandler(async (req, res) => {
 });
 
 export const getSupportRequests = asyncHandler(async (req, res) => {
-  const result = await supportService.getSupportRequests(req.query);
+  const result = await supportService.getSupportRequests(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Support requests fetched successfully.',

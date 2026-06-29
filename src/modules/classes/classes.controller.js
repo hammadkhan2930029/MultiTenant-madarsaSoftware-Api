@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { classesService } from './classes.service.js';
 
 export const createClass = asyncHandler(async (req, res) => {
-  const academicClass = await classesService.createClass(req.body);
+  const academicClass = await classesService.createClass(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createClass = asyncHandler(async (req, res) => {
 });
 
 export const getClasses = asyncHandler(async (req, res) => {
-  const academicClasses = await classesService.getClasses(req.query);
+  const academicClasses = await classesService.getClasses(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Classes fetched successfully.',
@@ -22,7 +22,7 @@ export const getClasses = asyncHandler(async (req, res) => {
 });
 
 export const getClassById = asyncHandler(async (req, res) => {
-  const academicClass = await classesService.getClassById(Number(req.params.id));
+  const academicClass = await classesService.getClassById(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Class fetched successfully.',
@@ -31,7 +31,7 @@ export const getClassById = asyncHandler(async (req, res) => {
 });
 
 export const updateClass = asyncHandler(async (req, res) => {
-  const academicClass = await classesService.updateClass(Number(req.params.id), req.body);
+  const academicClass = await classesService.updateClass(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     message: 'Class updated successfully.',
@@ -40,7 +40,7 @@ export const updateClass = asyncHandler(async (req, res) => {
 });
 
 export const deleteClass = asyncHandler(async (req, res) => {
-  const academicClass = await classesService.deleteClass(Number(req.params.id));
+  const academicClass = await classesService.deleteClass(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Class deleted successfully.',

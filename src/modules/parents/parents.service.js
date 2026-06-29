@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const parentSelect = {
   id: true,
+  tenantId: true,
   fullName: true,
   familyNumber: true,
   phone: true,
@@ -32,11 +33,21 @@ const parentSelect = {
 
 const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
 
-const ensureFamilyNumberUnique = async (familyNumber, excludeId) => {
+const normalizeTenantId = (tenantId) => {
+  const normalizedTenantId = Number(tenantId);
+  if (!Number.isInteger(normalizedTenantId) || normalizedTenantId <= 0) {
+    throw new AppError('Tenant context is required for parents.', 403);
+  }
+
+  return normalizedTenantId;
+};
+
+const ensureFamilyNumberUnique = async (tenantId, familyNumber, excludeId) => {
   if (!familyNumber) return;
 
   const existingParent = await prisma.parent.findFirst({
     where: {
+      tenantId,
       familyNumber,
       ...(excludeId ? { id: { not: excludeId } } : {}),
     },
@@ -48,8 +59,9 @@ const ensureFamilyNumberUnique = async (familyNumber, excludeId) => {
   }
 };
 
-const buildDuplicateParentWhere = (payload, excludeId) => ({
+const buildDuplicateParentWhere = (tenantId, payload, excludeId) => ({
   AND: [
+    { tenantId },
     { fullName: payload.fullName },
     {
       OR: [
@@ -62,12 +74,13 @@ const buildDuplicateParentWhere = (payload, excludeId) => ({
 });
 
 export const parentsService = {
-  async createParent(payload) {
-    await ensureFamilyNumberUnique(payload.familyNumber);
+  async createParent(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureFamilyNumberUnique(resolvedTenantId, payload.familyNumber);
 
     if (payload.phone || payload.email) {
       const duplicateParent = await prisma.parent.findFirst({
-        where: buildDuplicateParentWhere(payload),
+        where: buildDuplicateParentWhere(resolvedTenantId, payload),
       });
 
       if (duplicateParent) {
@@ -77,6 +90,7 @@ export const parentsService = {
 
     const createdParent = await prisma.parent.create({
       data: {
+        tenantId: resolvedTenantId,
         fullName: payload.fullName,
         familyNumber: payload.familyNumber || null,
         phone: payload.phone || null,
@@ -106,10 +120,12 @@ export const parentsService = {
     });
   },
 
-  async getParents(query) {
+  async getParents(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -140,9 +156,13 @@ export const parentsService = {
     };
   },
 
-  async getParentById(id) {
-    const parent = await prisma.parent.findUnique({
-      where: { id },
+  async getParentById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const parent = await prisma.parent.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
       select: parentSelect,
     });
 
@@ -153,20 +173,24 @@ export const parentsService = {
     return parent;
   },
 
-  async updateParent(id, payload) {
-    const existingParent = await prisma.parent.findUnique({
-      where: { id },
+  async updateParent(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingParent = await prisma.parent.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
     });
 
     if (!existingParent) {
       throw new AppError('Parent not found.', 404);
     }
 
-    await ensureFamilyNumberUnique(payload.familyNumber, id);
+    await ensureFamilyNumberUnique(resolvedTenantId, payload.familyNumber, id);
 
     if (payload.phone || payload.email) {
       const duplicateParent = await prisma.parent.findFirst({
-        where: buildDuplicateParentWhere(payload, id),
+        where: buildDuplicateParentWhere(resolvedTenantId, payload, id),
       });
 
       if (duplicateParent) {
@@ -190,9 +214,13 @@ export const parentsService = {
     });
   },
 
-  async deactivateParent(id) {
-    const parent = await prisma.parent.findUnique({
-      where: { id },
+  async deactivateParent(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const parent = await prisma.parent.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
     });
 
     if (!parent) {

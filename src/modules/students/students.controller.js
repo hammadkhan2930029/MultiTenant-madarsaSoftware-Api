@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { studentsService } from './students.service.js';
 
 export const createStudent = asyncHandler(async (req, res) => {
-  const student = await studentsService.createStudent({
+  const student = await studentsService.createStudent(req.tenantId, {
     body: req.body,
     file: req.file,
   });
@@ -16,7 +16,7 @@ export const createStudent = asyncHandler(async (req, res) => {
 });
 
 export const getStudents = asyncHandler(async (req, res) => {
-  const students = await studentsService.getStudents(req.query);
+  const students = await studentsService.getStudents(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Students fetched successfully.',
@@ -25,7 +25,7 @@ export const getStudents = asyncHandler(async (req, res) => {
 });
 
 export const getNextAdmissionNumber = asyncHandler(async (req, res) => {
-  const nextAdmissionNumber = await studentsService.getNextAdmissionNumber();
+  const nextAdmissionNumber = await studentsService.getNextAdmissionNumber(req.tenantId);
 
   return apiResponse(res, {
     message: 'Next admission number fetched successfully.',
@@ -34,7 +34,7 @@ export const getNextAdmissionNumber = asyncHandler(async (req, res) => {
 });
 
 export const getStudentById = asyncHandler(async (req, res) => {
-  const student = await studentsService.getStudentById(Number(req.params.id));
+  const student = await studentsService.getStudentById(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Student profile fetched successfully.',
@@ -43,7 +43,7 @@ export const getStudentById = asyncHandler(async (req, res) => {
 });
 
 export const updateStudent = asyncHandler(async (req, res) => {
-  const student = await studentsService.updateStudent(Number(req.params.id), {
+  const student = await studentsService.updateStudent(req.tenantId, Number(req.params.id), {
     body: req.body,
     file: req.file,
   });
@@ -55,7 +55,7 @@ export const updateStudent = asyncHandler(async (req, res) => {
 });
 
 export const deleteStudent = asyncHandler(async (req, res) => {
-  const student = await studentsService.deleteStudent(Number(req.params.id));
+  const student = await studentsService.deleteStudent(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Student deleted successfully.',
@@ -64,7 +64,7 @@ export const deleteStudent = asyncHandler(async (req, res) => {
 });
 
 export const assignClassToStudent = asyncHandler(async (req, res) => {
-  const assignment = await studentsService.assignClassToStudent(Number(req.params.id), req.body);
+  const assignment = await studentsService.assignClassToStudent(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -74,7 +74,7 @@ export const assignClassToStudent = asyncHandler(async (req, res) => {
 });
 
 export const removeClassAssignment = asyncHandler(async (req, res) => {
-  const assignment = await studentsService.removeClassAssignment(Number(req.params.assignmentId));
+  const assignment = await studentsService.removeClassAssignment(req.tenantId, Number(req.params.assignmentId));
 
   return apiResponse(res, {
     message: 'Student class assignment removed successfully.',

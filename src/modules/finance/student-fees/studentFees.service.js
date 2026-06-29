@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 
 const voucherSelect = {
   id: true,
+  tenantId: true,
   voucherNo: true,
   feeMonth: true,
   feeYear: true,
@@ -25,6 +26,7 @@ const voucherSelect = {
   student: {
     select: {
       id: true,
+      tenantId: true,
       admissionNumber: true,
       fullName: true,
       fatherName: true,
@@ -45,6 +47,16 @@ const voucherSelect = {
   },
 };
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const normalizeDate = (value) => {
   if (!value) return null;
   const date = new Date(value);
@@ -60,12 +72,13 @@ const toAmount = (value) => {
 const makeVoucherNo = ({ studentId, feeMonth, feeYear }) =>
   `FEE-${feeYear}${String(feeMonth).padStart(2, '0')}-${String(studentId).padStart(5, '0')}`;
 
-const buildAssignmentFilter = ({ classId, sectionId, sessionId }) => {
+const buildAssignmentFilter = ({ tenantId, classId, sectionId, sessionId }) => {
   if (!classId && !sectionId && !sessionId) return {};
 
   return {
     assignments: {
       some: {
+        ...(tenantId ? { tenantId } : {}),
         status: 'active',
         ...(classId ? { classId } : {}),
         ...(sectionId ? { sectionId } : {}),
@@ -89,7 +102,8 @@ const buildSearchFilter = (search) => {
 };
 
 export const studentFeesService = {
-  async generateFees(payload) {
+  async generateFees(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const {
       feeMonth,
       feeYear,
@@ -103,8 +117,9 @@ export const studentFeesService = {
 
     const students = await prisma.student.findMany({
       where: {
+        tenantId: resolvedTenantId,
         status: 'active',
-        ...buildAssignmentFilter({ classId, sectionId, sessionId }),
+        ...buildAssignmentFilter({ tenantId: resolvedTenantId, classId, sectionId, sessionId }),
       },
       select: {
         id: true,
@@ -120,6 +135,7 @@ export const studentFeesService = {
 
     const existingVouchers = await prisma.studentFeeVoucher.findMany({
       where: {
+        tenantId: resolvedTenantId,
         feeMonth,
         feeYear,
         studentId: { in: students.map((student) => student.id) },
@@ -150,6 +166,7 @@ export const studentFeesService = {
 
       const data = {
         voucherNo: makeVoucherNo({ studentId: student.id, feeMonth, feeYear }),
+        tenantId: resolvedTenantId,
         studentId: student.id,
         feeMonth,
         feeYear,
@@ -179,15 +196,19 @@ export const studentFeesService = {
     return { generated, skipped, items };
   },
 
-  async getFees(query) {
+  async getFees(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.feeMonth ? { feeMonth: query.feeMonth } : {}),
       ...(query.feeYear ? { feeYear: query.feeYear } : {}),
       ...(query.status ? { status: query.status } : {}),
       student: {
+        tenantId: resolvedTenantId,
         ...buildSearchFilter(query.search),
         ...buildAssignmentFilter({
+          tenantId: resolvedTenantId,
           classId: query.classId,
           sectionId: query.sectionId,
           sessionId: query.sessionId,
@@ -209,15 +230,17 @@ export const studentFeesService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async getFeeById(id) {
-    const voucher = await prisma.studentFeeVoucher.findUnique({ where: { id }, select: voucherSelect });
+  async getFeeById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const voucher = await prisma.studentFeeVoucher.findFirst({ where: { id, tenantId: resolvedTenantId }, select: voucherSelect });
     if (!voucher) throw new AppError('Fee voucher not found.', 404);
     return voucher;
   },
 
-  async getStudentFeeHistory(studentId) {
-    const student = await prisma.student.findUnique({
-      where: { id: studentId },
+  async getStudentFeeHistory(tenantId, studentId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const student = await prisma.student.findFirst({
+      where: { id: studentId, tenantId: resolvedTenantId },
       select: {
         id: true,
         admissionNumber: true,
@@ -241,7 +264,7 @@ export const studentFeesService = {
     if (!student) throw new AppError('Student not found.', 404);
 
     const vouchers = await prisma.studentFeeVoucher.findMany({
-      where: { studentId },
+      where: { studentId, tenantId: resolvedTenantId },
       orderBy: [{ feeYear: 'desc' }, { feeMonth: 'desc' }],
       select: voucherSelect,
     });
@@ -249,8 +272,9 @@ export const studentFeesService = {
     return { student, vouchers };
   },
 
-  async savePayment(id, payload) {
-    const existing = await prisma.studentFeeVoucher.findUnique({ where: { id } });
+  async savePayment(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await prisma.studentFeeVoucher.findFirst({ where: { id, tenantId: resolvedTenantId } });
     if (!existing) throw new AppError('Fee voucher not found.', 404);
 
     const totalAmount = toAmount(existing.totalAmount);

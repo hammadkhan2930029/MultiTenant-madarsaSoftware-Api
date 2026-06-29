@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { attendanceService } from './attendance.service.js';
 
 export const markStudentAttendance = asyncHandler(async (req, res) => {
-  const attendance = await attendanceService.markStudentAttendance(req.body);
+  const attendance = await attendanceService.markStudentAttendance(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const markStudentAttendance = asyncHandler(async (req, res) => {
 });
 
 export const getStudentAttendance = asyncHandler(async (req, res) => {
-  const attendances = await attendanceService.getStudentAttendance(req.query);
+  const attendances = await attendanceService.getStudentAttendance(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Student attendance fetched successfully.',
@@ -22,7 +22,7 @@ export const getStudentAttendance = asyncHandler(async (req, res) => {
 });
 
 export const markTeacherAttendance = asyncHandler(async (req, res) => {
-  const attendance = await attendanceService.markTeacherAttendance(req.body);
+  const attendance = await attendanceService.markTeacherAttendance(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -32,7 +32,7 @@ export const markTeacherAttendance = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherAttendance = asyncHandler(async (req, res) => {
-  const attendances = await attendanceService.getTeacherAttendance(req.query);
+  const attendances = await attendanceService.getTeacherAttendance(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'استاد کی حاضری کامیابی سے لوڈ ہو گئی۔',
@@ -41,7 +41,7 @@ export const getTeacherAttendance = asyncHandler(async (req, res) => {
 });
 
 export const deleteTeacherAttendance = asyncHandler(async (req, res) => {
-  const attendance = await attendanceService.deleteTeacherAttendance(req.query);
+  const attendance = await attendanceService.deleteTeacherAttendance(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'استاد کی حاضری کامیابی سے صاف کر دی گئی۔',

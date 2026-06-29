@@ -2,10 +2,12 @@ import { prisma } from '../../config/prisma.js';
 import { env } from '../../config/env.js';
 import { sendEmail } from '../../utils/smtpMailer.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeTenantId } from '../../utils/tenantGuard.js';
 
 const suggestionTableSql = `
 CREATE TABLE IF NOT EXISTS suggestions (
   id INT NOT NULL AUTO_INCREMENT,
+  tenant_id INT NOT NULL,
   type VARCHAR(100) NOT NULL,
   title VARCHAR(180) NOT NULL,
   priority VARCHAR(50) NOT NULL DEFAULT 'normal',
@@ -20,9 +22,11 @@ CREATE TABLE IF NOT EXISTS suggestions (
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  INDEX suggestions_tenant_id_idx (tenant_id),
   INDEX suggestions_status_idx (status),
   INDEX suggestions_priority_idx (priority),
   INDEX suggestions_adminId_idx (adminId),
+  CONSTRAINT suggestions_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES Tenant(id),
   CONSTRAINT suggestions_adminId_fkey FOREIGN KEY (adminId) REFERENCES admins(id) ON DELETE SET NULL
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 `;
@@ -39,6 +43,7 @@ const ensureSuggestionsTable = () => {
 
 const mapSuggestion = (row) => ({
   id: row.id,
+  tenantId: row.tenant_id ?? row.tenantId,
   type: row.type,
   title: row.title,
   priority: row.priority,
@@ -108,8 +113,9 @@ const markEmailStatus = async ({ id, emailStatus, emailError = null }) => {
 };
 
 export const suggestionsService = {
-  async createSuggestion(payload, admin) {
+  async createSuggestion(tenantId, payload, admin) {
     await ensureSuggestionsTable();
+    const resolvedTenantId = normalizeTenantId(tenantId);
 
     const submitterName = admin?.name || admin?.username || null;
     const submitterEmail = admin?.email || null;
@@ -118,6 +124,7 @@ export const suggestionsService = {
     const [suggestion] = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`
         INSERT INTO suggestions (
+          tenant_id,
           type,
           title,
           priority,
@@ -130,6 +137,7 @@ export const suggestionsService = {
           status
         )
         VALUES (
+          ${resolvedTenantId},
           ${payload.type},
           ${payload.title},
           ${payload.priority || 'normal'},
@@ -168,8 +176,9 @@ export const suggestionsService = {
     return suggestion;
   },
 
-  async getSuggestions(query) {
+  async getSuggestions(tenantId, query) {
     await ensureSuggestionsTable();
+    const resolvedTenantId = normalizeTenantId(tenantId);
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
@@ -177,7 +186,8 @@ export const suggestionsService = {
     const items = await prisma.$queryRaw`
       SELECT *
       FROM suggestions
-      WHERE (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
       ORDER BY createdAt DESC, id DESC
@@ -187,7 +197,8 @@ export const suggestionsService = {
     const totalRows = await prisma.$queryRaw`
       SELECT COUNT(*) AS total
       FROM suggestions
-      WHERE (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
     `;

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
+import { requireAnyPermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import { createUser, getUserById, getUsers, updateUser } from './users.controller.js';
 import {
@@ -13,9 +14,9 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', validate(createUserValidationSchema), createUser);
-router.get('/', validate(listUsersValidationSchema), getUsers);
-router.get('/:id', validate(userIdValidationSchema), getUserById);
-router.patch('/:id', validate(updateUserValidationSchema), updateUser);
+router.post('/', requireAnyPermission('users.create'), validate(createUserValidationSchema), createUser);
+router.get('/', requireAnyPermission('users.view'), validate(listUsersValidationSchema), getUsers);
+router.get('/:id', requireAnyPermission('users.view'), validate(userIdValidationSchema), getUserById);
+router.patch('/:id', requireAnyPermission('users.edit'), validate(updateUserValidationSchema), updateUser);
 
 export { router as usersRoutes };

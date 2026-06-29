@@ -35,6 +35,9 @@ import { suggestionsRoutes } from './modules/suggestions/suggestions.routes.js';
 import { supportRoutes } from './modules/support/support.routes.js';
 import { rolesRoutes } from './modules/roles/roles.routes.js';
 import { usersRoutes } from './modules/users/users.routes.js';
+import { tenantsRoutes } from './modules/tenants/tenants.routes.js';
+import { tenantCurrentRoutes } from './modules/tenant-current/tenantCurrent.routes.js';
+import { tenantResolverMiddleware } from './middlewares/tenant.middleware.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 
@@ -74,6 +77,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/health', healthRoutes);
+app.use('/api', tenantResolverMiddleware);
 app.use('/api/auth', authRoutes);
 app.use('/api/branches', branchesRoutes);
 app.use('/api/classes', classesRoutes);
@@ -102,6 +106,8 @@ app.use('/api/suggestions', suggestionsRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/tenant', tenantCurrentRoutes);
+app.use('/api/tenants', tenantsRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

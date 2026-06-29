@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { parentsService } from './parents.service.js';
 
 export const createParent = asyncHandler(async (req, res) => {
-  const parent = await parentsService.createParent(req.body);
+  const parent = await parentsService.createParent(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createParent = asyncHandler(async (req, res) => {
 });
 
 export const getParents = asyncHandler(async (req, res) => {
-  const parents = await parentsService.getParents(req.query);
+  const parents = await parentsService.getParents(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Parents fetched successfully.',
@@ -22,7 +22,7 @@ export const getParents = asyncHandler(async (req, res) => {
 });
 
 export const getParentById = asyncHandler(async (req, res) => {
-  const parent = await parentsService.getParentById(Number(req.params.id));
+  const parent = await parentsService.getParentById(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Parent fetched successfully.',
@@ -31,7 +31,7 @@ export const getParentById = asyncHandler(async (req, res) => {
 });
 
 export const updateParent = asyncHandler(async (req, res) => {
-  const parent = await parentsService.updateParent(Number(req.params.id), req.body);
+  const parent = await parentsService.updateParent(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     message: 'Parent updated successfully.',
@@ -40,7 +40,7 @@ export const updateParent = asyncHandler(async (req, res) => {
 });
 
 export const deactivateParent = asyncHandler(async (req, res) => {
-  const parent = await parentsService.deactivateParent(Number(req.params.id));
+  const parent = await parentsService.deactivateParent(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Parent deactivated successfully.',

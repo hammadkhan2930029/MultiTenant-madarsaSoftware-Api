@@ -22,6 +22,14 @@ const normalizeId = (id) => {
   return parsedId;
 };
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+  return resolvedTenantId;
+};
+
 const normalizeNumber = (value, fieldName) => {
   const numberValue = Number(value || 0);
   if (!Number.isFinite(numberValue) || numberValue < 0) {
@@ -349,10 +357,10 @@ const validatePaymentPayload = (payload) => {
   };
 };
 
-const ensureUniqueSupplierName = async (supplierName, ignoredId = null) => {
+const ensureUniqueSupplierName = async (tenantId, supplierName, ignoredId = null) => {
   const rows = ignoredId
-    ? await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE supplierName = ${supplierName} AND id <> ${ignoredId} LIMIT 1`
-    : await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE supplierName = ${supplierName} LIMIT 1`;
+    ? await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND supplierName = ${supplierName} AND id <> ${ignoredId} LIMIT 1`
+    : await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND supplierName = ${supplierName} LIMIT 1`;
 
   if (rows.length) throw new AppError('یہ سپلائر پہلے سے موجود ہے۔', 409);
 };
@@ -443,31 +451,34 @@ const mapStockIssue = (issue) => ({
   currentStock: issue.currentStock === undefined ? undefined : toAmount(issue.currentStock),
 });
 
-const getStockIssueRows = async (id) => {
+const getStockIssueRows = async (tenantId, id) => {
   const issueId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT si.*, i.itemName, i.unit, i.currentStock
     FROM store_stock_issues si
     JOIN store_items i ON i.id = si.itemId
-    WHERE si.id = ${issueId} AND si.status = 'active'
+    WHERE si.id = ${issueId}
+      AND si.tenant_id = ${tenantId}
+      AND i.tenant_id = ${tenantId}
+      AND si.status = 'active'
     LIMIT 1
   `;
   if (!rows.length) throw new AppError('اسٹاک اجراء ریکارڈ نہیں ملا۔', 404);
   return mapStockIssue(rows[0]);
 };
 
-const ensureIssueStock = async (tx, itemId, quantity) => {
-  const rows = await tx.$queryRaw`SELECT currentStock FROM store_items WHERE id = ${itemId} AND status = 'active' LIMIT 1`;
+const ensureIssueStock = async (tx, tenantId, itemId, quantity) => {
+  const rows = await tx.$queryRaw`SELECT currentStock FROM store_items WHERE id = ${itemId} AND tenant_id = ${tenantId} AND status = 'active' LIMIT 1`;
   if (!rows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
   if (toAmount(rows[0].currentStock) < quantity) throw new AppError('موجودہ اسٹاک مطلوبہ مقدار سے کم ہے۔', 400);
 };
 
-const applyIssueStockChange = async (tx, itemId, quantity, multiplier) => {
-  if (multiplier < 0) await ensureIssueStock(tx, itemId, quantity);
+const applyIssueStockChange = async (tx, tenantId, itemId, quantity, multiplier) => {
+  if (multiplier < 0) await ensureIssueStock(tx, tenantId, itemId, quantity);
   await tx.$executeRaw`
     UPDATE store_items
     SET currentStock = currentStock + ${quantity * multiplier}, updatedAt = ${new Date()}
-    WHERE id = ${itemId}
+    WHERE id = ${itemId} AND tenant_id = ${tenantId}
   `;
 };
 
@@ -498,14 +509,18 @@ const validateReturnPayload = (payload) => {
   };
 };
 
-const getReturnRows = async (id) => {
+const getReturnRows = async (tenantId, id) => {
   const returnId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT r.*, si.quantity AS issuedQuantity, si.returnedQuantity, i.itemName, i.unit
     FROM store_returns r
     JOIN store_stock_issues si ON si.id = r.stockIssueId
     JOIN store_items i ON i.id = r.itemId
-    WHERE r.id = ${returnId} AND r.status = 'active'
+    WHERE r.id = ${returnId}
+      AND r.tenant_id = ${tenantId}
+      AND si.tenant_id = ${tenantId}
+      AND i.tenant_id = ${tenantId}
+      AND r.status = 'active'
     LIMIT 1
   `;
   if (!rows.length) throw new AppError('واپسی ریکارڈ نہیں ملا۔', 404);
@@ -548,13 +563,16 @@ const validateDamagedStockPayload = (payload) => {
   };
 };
 
-const getDamagedStockRows = async (id) => {
+const getDamagedStockRows = async (tenantId, id) => {
   const damagedId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT ds.*, i.itemName, i.unit, i.currentStock, i.purchasePrice
     FROM store_damaged_stock ds
     JOIN store_items i ON i.id = ds.itemId
-    WHERE ds.id = ${damagedId} AND ds.status = 'active'
+    WHERE ds.id = ${damagedId}
+      AND ds.tenant_id = ${tenantId}
+      AND i.tenant_id = ${tenantId}
+      AND ds.status = 'active'
     LIMIT 1
   `;
   if (!rows.length) throw new AppError('خراب یا گم شدہ اسٹاک ریکارڈ نہیں ملا۔', 404);
@@ -571,13 +589,16 @@ const mapStockAdjustment = (adjustment) => ({
   currentStock: adjustment.currentStock === undefined ? undefined : toAmount(adjustment.currentStock),
 });
 
-const getStockAdjustmentRows = async (id) => {
+const getStockAdjustmentRows = async (tenantId, id) => {
   const adjustmentId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT sa.*, i.itemName, i.unit, i.currentStock
     FROM store_stock_adjustments sa
     JOIN store_items i ON i.id = sa.itemId
-    WHERE sa.id = ${adjustmentId} AND sa.status = 'active'
+    WHERE sa.id = ${adjustmentId}
+      AND sa.tenant_id = ${tenantId}
+      AND i.tenant_id = ${tenantId}
+      AND sa.status = 'active'
     LIMIT 1
   `;
   if (!rows.length) throw new AppError('اسٹاک ایڈجسٹمنٹ ریکارڈ نہیں ملا۔', 404);
@@ -608,25 +629,25 @@ const mapReportRows = (rows) =>
     return nextRow;
   });
 
-const getFinanceHeadId = async (tx, headName = 'Store Purchase', description = 'Store purchase expense') => {
-  const existing = await tx.$queryRaw`SELECT id FROM finance_heads WHERE name = ${headName} LIMIT 1`;
+const getFinanceHeadId = async (tx, tenantId, headName = 'Store Purchase', description = 'Store purchase expense') => {
+  const existing = await tx.$queryRaw`SELECT id FROM finance_heads WHERE tenant_id = ${tenantId} AND name = ${headName} LIMIT 1`;
   if (existing.length) return Number(existing[0].id);
 
   await tx.$executeRaw`
-    INSERT INTO finance_heads (name, type, description, status, createdAt, updatedAt)
-    VALUES (${headName}, 'expense', ${description}, 'active', ${new Date()}, ${new Date()})
+    INSERT INTO finance_heads (tenant_id, name, type, description, status, createdAt, updatedAt)
+    VALUES (${tenantId}, ${headName}, 'expense', ${description}, 'active', ${new Date()}, ${new Date()})
   `;
   const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
   return Number(rows[0].id);
 };
 
 const upsertStoreFinanceExpense = async (tx, data) => {
-  const financeHeadId = await getFinanceHeadId(tx, data.category, data.note);
+  const financeHeadId = await getFinanceHeadId(tx, data.tenantId, data.category, data.note);
   const now = new Date();
   const existing = await tx.$queryRaw`
     SELECT id
     FROM finance_transactions
-    WHERE referenceType = ${data.referenceType} AND referenceId = ${data.referenceId}
+    WHERE tenant_id = ${data.tenantId} AND referenceType = ${data.referenceType} AND referenceId = ${data.referenceId}
     LIMIT 1
   `;
 
@@ -650,15 +671,16 @@ const upsertStoreFinanceExpense = async (tx, data) => {
   }
 
   await tx.$executeRaw`
-    INSERT INTO finance_transactions (financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
-    VALUES (${financeHeadId}, 'expense', ${data.amount}, ${data.date}, ${data.paymentMethod}, ${data.paymentStatus || 'مکمل'}, ${data.slipNo || null}, ${data.title}, ${data.referenceType}, ${data.referenceId}, 'active', ${now}, ${now})
+    INSERT INTO finance_transactions (tenant_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
+    VALUES (${data.tenantId}, ${financeHeadId}, 'expense', ${data.amount}, ${data.date}, ${data.paymentMethod}, ${data.paymentStatus || 'مکمل'}, ${data.slipNo || null}, ${data.title}, ${data.referenceType}, ${data.referenceId}, 'active', ${now}, ${now})
   `;
   const financeRows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
   return Number(financeRows[0].id);
 };
 
-const createPurchaseFinanceTransaction = async (tx, purchaseId, data) =>
+const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data) =>
   upsertStoreFinanceExpense(tx, {
+    tenantId,
     title: `Store purchase${data.invoiceNumber ? ` - ${data.invoiceNumber}` : ''}`,
     category: 'Store Purchase',
     amount: data.totalAmount,
@@ -671,8 +693,9 @@ const createPurchaseFinanceTransaction = async (tx, purchaseId, data) =>
     note: 'Store purchase expense',
   });
 
-const createSupplierPaymentFinanceTransaction = async (tx, supplierId, paymentId, data) =>
+const createSupplierPaymentFinanceTransaction = async (tx, tenantId, supplierId, paymentId, data) =>
   upsertStoreFinanceExpense(tx, {
+    tenantId,
     title: `Store supplier payment - ${supplierId}`,
     category: 'Store Supplier Payment',
     amount: data.amount,
@@ -708,10 +731,10 @@ const normalizeApprovalModule = (moduleType) => {
   return normalized;
 };
 
-const createApprovalLog = async (tx, { moduleType, recordId, status, approvedBy, remarks }) => {
+const createApprovalLog = async (tx, { tenantId, moduleType, recordId, status, approvedBy, remarks }) => {
   await tx.$executeRaw`
-    INSERT INTO store_approval_logs (moduleType, recordId, status, approvedBy, remarks, createdAt)
-    VALUES (${moduleType}, ${recordId}, ${status}, ${approvedBy}, ${remarks}, ${new Date()})
+    INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
+    VALUES (${tenantId}, ${moduleType}, ${recordId}, ${status}, ${approvedBy}, ${remarks}, ${new Date()})
   `;
 };
 
@@ -726,10 +749,10 @@ const escapeHtml = (value) =>
 const formatDate = (value) => (value ? new Date(value).toISOString().slice(0, 10) : '-');
 const formatAmount = (value) => new Intl.NumberFormat('ur-PK', { maximumFractionDigits: 2 }).format(toAmount(value));
 
-const getMadrassaPrintProfile = async (admin) => {
+const getMadrassaPrintProfile = async (tenantId, admin) => {
   const adminId = Number(admin?.id || 0);
   const profileRows = adminId
-    ? await prisma.$queryRaw`SELECT name, branch, city, address, logoUrl FROM madrassa_profiles WHERE adminId = ${adminId} LIMIT 1`
+    ? await prisma.$queryRaw`SELECT name, branch, city, address, logoUrl FROM madrassa_profiles WHERE tenant_id = ${tenantId} AND adminId = ${adminId} LIMIT 1`
     : [];
 
   return profileRows[0] || {
@@ -820,35 +843,38 @@ const stockExportColumns = [
   { label: 'مالیت', value: (row) => formatAmount(row.stockValue || row.currentStock * row.purchasePrice) },
 ];
 
-const getOrCreateSupplier = async (tx, payload) => {
+const getOrCreateSupplier = async (tx, tenantId, payload) => {
   const supplierId = payload.supplierId ? normalizeId(payload.supplierId) : null;
   if (supplierId) {
-    const rows = await tx.$queryRaw`SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE id = ${supplierId} AND status = 'active' LIMIT 1`;
+    const rows = await tx.$queryRaw`SELECT id, tenant_id AS tenantId, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE id = ${supplierId} AND tenant_id = ${tenantId} AND status = 'active' LIMIT 1`;
     if (!rows.length) throw new AppError('سپلائر نہیں ملا۔', 404);
     return mapSupplier(rows[0]);
   }
 
   const supplierName = normalizeText(payload.supplierName);
   if (!supplierName) throw new AppError('سپلائر منتخب یا درج کرنا ضروری ہے۔', 400);
-  const existing = await tx.$queryRaw`SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE supplierName = ${supplierName} LIMIT 1`;
+  const existing = await tx.$queryRaw`SELECT id, tenant_id AS tenantId, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE tenant_id = ${tenantId} AND supplierName = ${supplierName} LIMIT 1`;
   if (existing.length) return mapSupplier(existing[0]);
 
   await tx.$executeRaw`
-    INSERT INTO store_suppliers (supplierName, balance, status, createdAt, updatedAt)
-    VALUES (${supplierName}, 0, 'active', ${new Date()}, ${new Date()})
+    INSERT INTO store_suppliers (tenant_id, supplierName, balance, status, createdAt, updatedAt)
+    VALUES (${tenantId}, ${supplierName}, 0, 'active', ${new Date()}, ${new Date()})
   `;
   const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-  const supplierRows = await tx.$queryRaw`SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE id = ${Number(rows[0].id)} LIMIT 1`;
+  const supplierRows = await tx.$queryRaw`SELECT id, tenant_id AS tenantId, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt FROM store_suppliers WHERE id = ${Number(rows[0].id)} AND tenant_id = ${tenantId} LIMIT 1`;
   return mapSupplier(supplierRows[0]);
 };
 
-const getPurchaseRows = async (id) => {
+const getPurchaseRows = async (tenantId, id) => {
   const purchaseId = normalizeId(id);
   const purchaseRows = await prisma.$queryRaw`
     SELECT p.*, s.supplierName, s.balance AS supplierBalance
     FROM store_purchases p
     JOIN store_suppliers s ON s.id = p.supplierId
-    WHERE p.id = ${purchaseId} AND p.status = 'active'
+    WHERE p.id = ${purchaseId}
+      AND p.tenant_id = ${tenantId}
+      AND s.tenant_id = ${tenantId}
+      AND p.status = 'active'
     LIMIT 1
   `;
   if (!purchaseRows.length) throw new AppError('خریداری ریکارڈ نہیں ملا۔', 404);
@@ -858,21 +884,23 @@ const getPurchaseRows = async (id) => {
     FROM store_purchase_items pi
     JOIN store_items i ON i.id = pi.itemId
     WHERE pi.purchaseId = ${purchaseId}
+      AND pi.tenant_id = ${tenantId}
+      AND i.tenant_id = ${tenantId}
     ORDER BY pi.id ASC
   `;
 
   return mapPurchase(purchaseRows[0], itemRows);
 };
 
-const applyStockChange = async (tx, purchaseItems, multiplier) => {
+const applyStockChange = async (tx, tenantId, purchaseItems, multiplier) => {
   for (const item of purchaseItems) {
-    const itemRows = await tx.$queryRaw`SELECT id FROM store_items WHERE id = ${item.itemId} AND status = 'active' LIMIT 1`;
+    const itemRows = await tx.$queryRaw`SELECT id FROM store_items WHERE id = ${item.itemId} AND tenant_id = ${tenantId} AND status = 'active' LIMIT 1`;
     if (!itemRows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
 
     await tx.$executeRaw`
       UPDATE store_items
       SET currentStock = currentStock + ${item.quantity * multiplier}, updatedAt = ${new Date()}
-      WHERE id = ${item.itemId}
+      WHERE id = ${item.itemId} AND tenant_id = ${tenantId}
     `;
   }
 };
@@ -895,10 +923,10 @@ const validatePurchasePayload = (payload) => {
   };
 };
 
-const ensureUniqueItemCode = async (itemCode, ignoredId = null) => {
+const ensureUniqueItemCode = async (tenantId, itemCode, ignoredId = null) => {
   const rows = ignoredId
-    ? await prisma.$queryRaw`SELECT id FROM store_items WHERE itemCode = ${itemCode} AND id <> ${ignoredId} LIMIT 1`
-    : await prisma.$queryRaw`SELECT id FROM store_items WHERE itemCode = ${itemCode} LIMIT 1`;
+    ? await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${itemCode} AND id <> ${ignoredId} LIMIT 1`
+    : await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${itemCode} LIMIT 1`;
 
   if (rows.length) {
     throw new AppError('یہ آئٹم کوڈ پہلے سے موجود ہے۔', 409);
@@ -906,14 +934,15 @@ const ensureUniqueItemCode = async (itemCode, ignoredId = null) => {
 };
 
 export const storeService = {
-  async getDashboard() {
+  async getDashboard(tenantId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreItemsTable();
     const { startDate, endDate } = getCurrentMonthRange();
 
     const [totalItems, purchaseTotal, monthlyExpense] = await Promise.all([
-      prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_items WHERE status = 'active'`,
-      prisma.$queryRaw`SELECT COALESCE(SUM(totalAmount), 0) AS total FROM store_purchases WHERE status = 'active' AND purchaseDate >= ${startDate} AND purchaseDate < ${endDate}`,
-      this.getMonthlyExpense({ startDate, endDate }),
+      prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_items WHERE tenant_id = ${resolvedTenantId} AND status = 'active'`,
+      prisma.$queryRaw`SELECT COALESCE(SUM(totalAmount), 0) AS total FROM store_purchases WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND purchaseDate >= ${startDate} AND purchaseDate < ${endDate}`,
+      this.getMonthlyExpense(resolvedTenantId, { startDate, endDate }),
     ]);
 
     return {
@@ -923,13 +952,16 @@ export const storeService = {
     };
   },
 
-  async getMonthlyExpense(range = {}) {
+  async getMonthlyExpense(tenantId, range = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { startDate, endDate } = range.startDate && range.endDate ? range : getCurrentMonthRange();
     const rows = await prisma.$queryRaw`
       SELECT COALESCE(SUM(ft.amount), 0) AS total
       FROM finance_transactions ft
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
       WHERE ft.status = 'active'
+        AND ft.tenant_id = ${resolvedTenantId}
+        AND fh.tenant_id = ${resolvedTenantId}
         AND ft.type = 'expense'
         AND ft.transactionDate >= ${startDate}
         AND ft.transactionDate < ${endDate}
@@ -939,7 +971,8 @@ export const storeService = {
     return { total: toAmount(rows?.[0]?.total), startDate, endDate };
   },
 
-  async getUnits(query = {}) {
+  async getUnits(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreUnitsTable();
     const search = normalizeText(query.search);
     const activeOnly = query.activeOnly === true || query.activeOnly === 'true';
@@ -947,7 +980,8 @@ export const storeService = {
     const rows = await prisma.$queryRaw`
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
-      WHERE (${activeOnly} = false OR status = 'active')
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${activeOnly} = false OR status = 'active')
         AND (${search} = '' OR name LIKE ${searchTerm} OR shortName LIKE ${searchTerm})
       ORDER BY name ASC
     `;
@@ -955,45 +989,48 @@ export const storeService = {
     return { items: rows.map(mapStoreUnit), meta: null };
   },
 
-  async getUnitById(id) {
+  async getUnitById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
-      WHERE id = ${unitId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('اکائی نہیں ملی۔', 404);
     return mapStoreUnit(rows[0]);
   },
 
-  async createUnit(payload) {
+  async createUnit(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreUnitsTable();
     const data = validateUnitPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE shortName = ${data.shortName} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ مختصر نام پہلے سے موجود ہے۔', 409);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_units (name, shortName, description, status, createdAt, updatedAt)
-      VALUES (${data.name}, ${data.shortName}, ${data.description}, ${data.status}, ${now}, ${now})
+      INSERT INTO store_units (tenant_id, name, shortName, description, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${data.name}, ${data.shortName}, ${data.description}, ${data.status}, ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
-      WHERE shortName = ${data.shortName}
+      WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName}
       LIMIT 1
     `;
     return mapStoreUnit(rows[0]);
   },
 
-  async updateUnit(id, payload) {
+  async updateUnit(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
-    await this.getUnitById(unitId);
+    await this.getUnitById(resolvedTenantId, unitId);
     const data = validateUnitPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE shortName = ${data.shortName} AND id <> ${unitId} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName} AND id <> ${unitId} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ مختصر نام پہلے سے موجود ہے۔', 409);
 
     await prisma.$executeRaw`
@@ -1003,21 +1040,22 @@ export const storeService = {
           description = ${data.description},
           status = ${data.status},
           updatedAt = ${new Date()}
-      WHERE id = ${unitId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
     `;
-    return this.getUnitById(unitId);
+    return this.getUnitById(resolvedTenantId, unitId);
   },
 
-  async deleteUnit(id) {
+  async deleteUnit(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
-    const unit = await this.getUnitById(unitId);
+    const unit = await this.getUnitById(resolvedTenantId, unitId);
     await ensureStoreItemsTable();
 
     const linkedItems = await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE unit = ${unit.name}
+      WHERE tenant_id = ${resolvedTenantId} AND unit = ${unit.name}
       LIMIT 1
     `;
 
@@ -1027,12 +1065,13 @@ export const storeService = {
 
     await prisma.$executeRaw`
       DELETE FROM store_units
-      WHERE id = ${unitId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
     `;
     return { id: unitId };
   },
 
-  async getCategories(query = {}) {
+  async getCategories(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreCategoriesTable();
     const search = normalizeText(query.search);
     const activeOnly = query.activeOnly === true || query.activeOnly === 'true';
@@ -1040,7 +1079,8 @@ export const storeService = {
     const rows = await prisma.$queryRaw`
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
-      WHERE (${activeOnly} = false OR status = 'active')
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${activeOnly} = false OR status = 'active')
         AND (${search} = '' OR name LIKE ${searchTerm})
       ORDER BY name ASC
     `;
@@ -1048,45 +1088,48 @@ export const storeService = {
     return { items: rows.map(mapStoreCategory), meta: null };
   },
 
-  async getCategoryById(id) {
+  async getCategoryById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
-      WHERE id = ${categoryId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('کیٹیگری نہیں ملی۔', 404);
     return mapStoreCategory(rows[0]);
   },
 
-  async createCategory(payload) {
+  async createCategory(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreCategoriesTable();
     const data = validateCategoryPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE name = ${data.name} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ کیٹیگری پہلے سے موجود ہے۔', 409);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_categories (name, description, status, createdAt, updatedAt)
-      VALUES (${data.name}, ${data.description}, ${data.status}, ${now}, ${now})
+      INSERT INTO store_categories (tenant_id, name, description, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${data.name}, ${data.description}, ${data.status}, ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
-      WHERE name = ${data.name}
+      WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name}
       LIMIT 1
     `;
     return mapStoreCategory(rows[0]);
   },
 
-  async updateCategory(id, payload) {
+  async updateCategory(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
-    await this.getCategoryById(categoryId);
+    await this.getCategoryById(resolvedTenantId, categoryId);
     const data = validateCategoryPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE name = ${data.name} AND id <> ${categoryId} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name} AND id <> ${categoryId} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ کیٹیگری پہلے سے موجود ہے۔', 409);
 
     await prisma.$executeRaw`
@@ -1095,21 +1138,22 @@ export const storeService = {
           description = ${data.description},
           status = ${data.status},
           updatedAt = ${new Date()}
-      WHERE id = ${categoryId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
     `;
-    return this.getCategoryById(categoryId);
+    return this.getCategoryById(resolvedTenantId, categoryId);
   },
 
-  async deleteCategory(id) {
+  async deleteCategory(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
-    const category = await this.getCategoryById(categoryId);
+    const category = await this.getCategoryById(resolvedTenantId, categoryId);
     await ensureStoreItemsTable();
 
     const linkedItems = await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE category = ${category.name}
+      WHERE tenant_id = ${resolvedTenantId} AND category = ${category.name}
       LIMIT 1
     `;
 
@@ -1119,12 +1163,13 @@ export const storeService = {
 
     await prisma.$executeRaw`
       DELETE FROM store_categories
-      WHERE id = ${categoryId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
     `;
     return { id: categoryId };
   },
 
-  async getItems(query = {}) {
+  async getItems(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreItemsTable();
     const search = normalizeText(query.search);
     const category = normalizeText(query.category);
@@ -1136,7 +1181,8 @@ export const storeService = {
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE status = 'active'
+      WHERE tenant_id = ${resolvedTenantId}
+        AND status = 'active'
         AND (${search} = '' OR itemName LIKE ${searchTerm} OR itemCode LIKE ${searchTerm})
         AND (${category} = '' OR category = ${category})
         AND (${lowStockOnly} = false OR (currentStock > 0 AND currentStock <= ${Number.isFinite(lowStockThreshold) ? lowStockThreshold : 5}))
@@ -1147,13 +1193,14 @@ export const storeService = {
     return { items: rows.map(mapItem), meta: null };
   },
 
-  async getItemById(id) {
+  async getItemById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreItemsTable();
     const itemId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE id = ${itemId} AND status = 'active'
+      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
       LIMIT 1
     `;
 
@@ -1161,39 +1208,41 @@ export const storeService = {
     return mapItem(rows[0]);
   },
 
-  async createItem(payload) {
+  async createItem(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const data = validateItemPayload(payload);
-    await ensureUniqueItemCode(data.itemCode);
+    await ensureUniqueItemCode(resolvedTenantId, data.itemCode);
     const now = new Date();
     const columnSet = await getStoreItemColumnSet();
 
     if (columnSet.has('barcode') || columnSet.has('openingStock')) {
       await prisma.$executeRaw`
-        INSERT INTO store_items (itemName, category, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
+        INSERT INTO store_items (tenant_id, itemName, category, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
       `;
     } else {
       await prisma.$executeRaw`
-        INSERT INTO store_items (itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
+        INSERT INTO store_items (tenant_id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
       `;
     }
 
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE itemCode = ${data.itemCode}
+      WHERE tenant_id = ${resolvedTenantId} AND itemCode = ${data.itemCode}
       LIMIT 1
     `;
 
     return mapItem(rows[0]);
   },
 
-  async updateItem(id, payload) {
+  async updateItem(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const itemId = normalizeId(id);
-    await this.getItemById(itemId);
+    await this.getItemById(resolvedTenantId, itemId);
     const data = validateItemPayload(payload);
-    await ensureUniqueItemCode(data.itemCode, itemId);
+    await ensureUniqueItemCode(resolvedTenantId, data.itemCode, itemId);
     const columnSet = await getStoreItemColumnSet();
 
     if (columnSet.has('barcode') || columnSet.has('openingStock')) {
@@ -1208,7 +1257,7 @@ export const storeService = {
             currentStock = ${data.quantity},
             purchasePrice = ${data.purchasePrice},
             updatedAt = ${new Date()}
-        WHERE id = ${itemId}
+        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
       `;
     } else {
       await prisma.$executeRaw`
@@ -1220,70 +1269,75 @@ export const storeService = {
             currentStock = ${data.quantity},
             purchasePrice = ${data.purchasePrice},
             updatedAt = ${new Date()}
-        WHERE id = ${itemId}
+        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
       `;
     }
 
-    return this.getItemById(itemId);
+    return this.getItemById(resolvedTenantId, itemId);
   },
 
-  async deleteItem(id) {
+  async deleteItem(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const itemId = normalizeId(id);
-    await this.getItemById(itemId);
+    await this.getItemById(resolvedTenantId, itemId);
 
     await prisma.$executeRaw`
       UPDATE store_items
       SET status = 'inactive', updatedAt = ${new Date()}
-      WHERE id = ${itemId}
+      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
     `;
 
     return { id: itemId };
   },
 
-  async getSuppliers() {
+  async getSuppliers(tenantId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
       FROM store_suppliers
-      WHERE status = 'active'
+      WHERE tenant_id = ${resolvedTenantId} AND status = 'active'
       ORDER BY supplierName ASC
     `;
     return { items: rows.map(mapSupplier), meta: null };
   },
 
-  async getSupplierById(id) {
+  async getSupplierById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
       FROM store_suppliers
-      WHERE id = ${supplierId} AND status = 'active'
+      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('سپلائر نہیں ملا۔', 404);
     return mapSupplier(rows[0]);
   },
 
-  async createSupplier(payload) {
+  async createSupplier(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const data = validateSupplierPayload(payload);
-    await ensureUniqueSupplierName(data.supplierName);
+    await ensureUniqueSupplierName(resolvedTenantId, data.supplierName);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_suppliers (supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt)
-      VALUES (${data.supplierName}, ${data.mobileNumber}, ${data.address}, ${data.shopName}, ${data.balance}, 'active', ${now}, ${now})
+      INSERT INTO store_suppliers (tenant_id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${data.supplierName}, ${data.mobileNumber}, ${data.address}, ${data.shopName}, ${data.balance}, 'active', ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-    return this.getSupplierById(Number(rows[0].id));
+    return this.getSupplierById(resolvedTenantId, Number(rows[0].id));
   },
 
-  async updateSupplier(id, payload) {
+  async updateSupplier(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId);
     const data = validateSupplierPayload(payload);
-    await ensureUniqueSupplierName(data.supplierName, supplierId);
+    await ensureUniqueSupplierName(resolvedTenantId, data.supplierName, supplierId);
 
     await prisma.$executeRaw`
       UPDATE store_suppliers
@@ -1293,29 +1347,34 @@ export const storeService = {
           shopName = ${data.shopName},
           balance = ${data.balance},
           updatedAt = ${new Date()}
-      WHERE id = ${supplierId}
+      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}
     `;
 
-    return this.getSupplierById(supplierId);
+    return this.getSupplierById(resolvedTenantId, supplierId);
   },
 
-  async deleteSupplier(id) {
+  async deleteSupplier(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(supplierId);
-    await prisma.$executeRaw`UPDATE store_suppliers SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${supplierId}`;
+    await this.getSupplierById(resolvedTenantId, supplierId);
+    await prisma.$executeRaw`UPDATE store_suppliers SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}`;
     return { id: supplierId };
   },
 
-  async getSupplierPurchases(id) {
+  async getSupplierPurchases(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId);
     const rows = await prisma.$queryRaw`
       SELECT p.*, s.supplierName, s.balance AS supplierBalance
       FROM store_purchases p
       JOIN store_suppliers s ON s.id = p.supplierId
-      WHERE p.supplierId = ${supplierId} AND p.status = 'active'
+      WHERE p.supplierId = ${supplierId}
+        AND p.tenant_id = ${resolvedTenantId}
+        AND s.tenant_id = ${resolvedTenantId}
+        AND p.status = 'active'
       ORDER BY p.purchaseDate DESC, p.id DESC
     `;
 
@@ -1326,6 +1385,8 @@ export const storeService = {
         FROM store_purchase_items pi
         JOIN store_items i ON i.id = pi.itemId
         WHERE pi.purchaseId = ${Number(row.id)}
+          AND pi.tenant_id = ${resolvedTenantId}
+          AND i.tenant_id = ${resolvedTenantId}
         ORDER BY pi.id ASC
       `;
       purchases.push(mapPurchase(row, itemRows));
@@ -1334,49 +1395,52 @@ export const storeService = {
     return { items: purchases, meta: null };
   },
 
-  async getSupplierPayments(id) {
+  async getSupplierPayments(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId);
     const rows = await prisma.$queryRaw`
       SELECT id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt
       FROM store_supplier_payments
-      WHERE supplierId = ${supplierId} AND status = 'active'
+      WHERE supplierId = ${supplierId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
       ORDER BY paymentDate DESC, id DESC
     `;
     return { items: rows.map(mapSupplierPayment), meta: null };
   },
 
-  async createSupplierPayment(id, payload) {
+  async createSupplierPayment(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId);
     const data = validatePaymentPayload(payload);
     const now = new Date();
 
     const paymentId = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`
-        INSERT INTO store_supplier_payments (supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt)
-        VALUES (${supplierId}, ${data.amount}, ${data.paymentDate}, ${data.paymentMethod}, ${data.note}, 'active', ${now}, ${now})
+        INSERT INTO store_supplier_payments (tenant_id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${supplierId}, ${data.amount}, ${data.paymentDate}, ${data.paymentMethod}, ${data.note}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const nextPaymentId = Number(rows[0].id);
-      await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${data.amount}, updatedAt = ${now} WHERE id = ${supplierId}`;
-      await createSupplierPaymentFinanceTransaction(tx, supplierId, nextPaymentId, data);
+      await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${data.amount}, updatedAt = ${now} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}`;
+      await createSupplierPaymentFinanceTransaction(tx, resolvedTenantId, supplierId, nextPaymentId, data);
       return nextPaymentId;
     });
 
     const paymentRows = await prisma.$queryRaw`
       SELECT id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt
       FROM store_supplier_payments
-      WHERE id = ${paymentId}
+      WHERE id = ${paymentId} AND tenant_id = ${resolvedTenantId}
       LIMIT 1
     `;
 
-    return paymentRows.length ? mapSupplierPayment(paymentRows[0]) : this.getSupplierPayments(supplierId);
+    return paymentRows.length ? mapSupplierPayment(paymentRows[0]) : this.getSupplierPayments(resolvedTenantId, supplierId);
   },
 
-  async getPurchases(query = {}) {
+  async getPurchases(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const search = normalizeText(query.search);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
@@ -1386,7 +1450,9 @@ export const storeService = {
       SELECT p.*, s.supplierName, s.balance AS supplierBalance
       FROM store_purchases p
       JOIN store_suppliers s ON s.id = p.supplierId
-      WHERE p.status = 'active'
+      WHERE p.tenant_id = ${resolvedTenantId}
+        AND s.tenant_id = ${resolvedTenantId}
+        AND p.status = 'active'
         AND (${search} = '' OR s.supplierName LIKE ${searchTerm} OR p.invoiceNumber LIKE ${searchTerm})
         AND (${supplierId} IS NULL OR p.supplierId = ${supplierId})
         AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate})
@@ -1401,6 +1467,8 @@ export const storeService = {
         FROM store_purchase_items pi
         JOIN store_items i ON i.id = pi.itemId
         WHERE pi.purchaseId = ${Number(row.id)}
+          AND pi.tenant_id = ${resolvedTenantId}
+          AND i.tenant_id = ${resolvedTenantId}
         ORDER BY pi.id ASC
       `;
       purchases.push(mapPurchase(row, itemRows));
@@ -1409,66 +1477,69 @@ export const storeService = {
     return { items: purchases, meta: null };
   },
 
-  async getPurchaseById(id) {
+  async getPurchaseById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
-    return getPurchaseRows(id);
+    return getPurchaseRows(resolvedTenantId, id);
   },
 
-  async createPurchase({ body, file }) {
+  async createPurchase(tenantId, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const data = validatePurchasePayload(body);
     const invoiceImage = buildInvoiceImagePath(file);
 
     return prisma.$transaction(async (tx) => {
-      const supplier = await getOrCreateSupplier(tx, body);
+      const supplier = await getOrCreateSupplier(tx, resolvedTenantId, body);
       const now = new Date();
 
       await tx.$executeRaw`
-        INSERT INTO store_purchases (purchaseDate, supplierId, invoiceNumber, totalAmount, paidAmount, remainingAmount, paymentMethod, invoiceImage, approvalStatus, financeTransactionId, status, createdAt, updatedAt)
-        VALUES (${data.purchaseDate}, ${supplier.id}, ${data.invoiceNumber}, ${data.totalAmount}, ${data.paidAmount}, ${data.remainingAmount}, ${data.paymentMethod}, ${invoiceImage}, ${data.approvalStatus}, NULL, 'active', ${now}, ${now})
+        INSERT INTO store_purchases (tenant_id, purchaseDate, supplierId, invoiceNumber, totalAmount, paidAmount, remainingAmount, paymentMethod, invoiceImage, approvalStatus, financeTransactionId, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.purchaseDate}, ${supplier.id}, ${data.invoiceNumber}, ${data.totalAmount}, ${data.paidAmount}, ${data.remainingAmount}, ${data.paymentMethod}, ${invoiceImage}, ${data.approvalStatus}, NULL, 'active', ${now}, ${now})
       `;
       const purchaseRows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const purchaseId = Number(purchaseRows[0].id);
 
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
       if (data.approvalStatus === 'approved') {
-        const financeTransactionId = await createPurchaseFinanceTransaction(tx, purchaseId, data);
-        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId}`;
-        await applyStockChange(tx, data.items, 1);
-        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${data.remainingAmount}, updatedAt = ${now} WHERE id = ${supplier.id}`;
+        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data);
+        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
+        await applyStockChange(tx, resolvedTenantId, data.items, 1);
+        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${data.remainingAmount}, updatedAt = ${now} WHERE id = ${supplier.id} AND tenant_id = ${resolvedTenantId}`;
       }
 
       return purchaseId;
-    }).then((purchaseId) => getPurchaseRows(purchaseId));
+    }).then((purchaseId) => getPurchaseRows(resolvedTenantId, purchaseId));
   },
 
-  async updatePurchase(id, { body, file }) {
+  async updatePurchase(tenantId, id, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
-    const existing = await getPurchaseRows(purchaseId);
+    const existing = await getPurchaseRows(resolvedTenantId, purchaseId);
     const data = validatePurchasePayload(body);
     const invoiceImage = buildInvoiceImagePath(file) || existing.invoiceImage || null;
 
     return prisma.$transaction(async (tx) => {
-      const supplier = await getOrCreateSupplier(tx, body);
+      const supplier = await getOrCreateSupplier(tx, resolvedTenantId, body);
       const now = new Date();
 
       if (existing.approvalStatus === 'approved') {
-        await applyStockChange(tx, existing.items, -1);
-        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId}`;
+        await applyStockChange(tx, resolvedTenantId, existing.items, -1);
+        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId} AND tenant_id = ${resolvedTenantId}`;
       }
 
-      await tx.$executeRaw`DELETE FROM store_purchase_items WHERE purchaseId = ${purchaseId}`;
+      await tx.$executeRaw`DELETE FROM store_purchase_items WHERE purchaseId = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
@@ -1484,12 +1555,12 @@ export const storeService = {
             invoiceImage = ${invoiceImage},
             approvalStatus = ${data.approvalStatus},
             updatedAt = ${now}
-        WHERE id = ${purchaseId}
+        WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}
       `;
 
       if (data.approvalStatus === 'approved') {
-        await applyStockChange(tx, data.items, 1);
-        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${data.remainingAmount}, updatedAt = ${now} WHERE id = ${supplier.id}`;
+        await applyStockChange(tx, resolvedTenantId, data.items, 1);
+        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${data.remainingAmount}, updatedAt = ${now} WHERE id = ${supplier.id} AND tenant_id = ${resolvedTenantId}`;
       }
 
       if (existing.financeTransactionId && data.approvalStatus === 'approved') {
@@ -1503,41 +1574,43 @@ export const storeService = {
               referenceType = 'store_purchase',
               referenceId = ${purchaseId},
               updatedAt = ${now}
-          WHERE id = ${Number(existing.financeTransactionId)}
+          WHERE id = ${Number(existing.financeTransactionId)} AND tenant_id = ${resolvedTenantId}
         `;
       } else if (!existing.financeTransactionId && data.approvalStatus === 'approved') {
-        const financeTransactionId = await createPurchaseFinanceTransaction(tx, purchaseId, data);
-        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId}`;
+        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data);
+        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       } else if (existing.financeTransactionId && data.approvalStatus !== 'approved') {
-        await tx.$executeRaw`UPDATE finance_transactions SET status = 'inactive', updatedAt = ${now} WHERE id = ${Number(existing.financeTransactionId)}`;
-        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = NULL, updatedAt = ${now} WHERE id = ${purchaseId}`;
+        await tx.$executeRaw`UPDATE finance_transactions SET status = 'inactive', updatedAt = ${now} WHERE id = ${Number(existing.financeTransactionId)} AND tenant_id = ${resolvedTenantId}`;
+        await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = NULL, updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       }
 
       return purchaseId;
-    }).then((updatedId) => getPurchaseRows(updatedId));
+    }).then((updatedId) => getPurchaseRows(resolvedTenantId, updatedId));
   },
 
-  async deletePurchase(id) {
+  async deletePurchase(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
-    const existing = await getPurchaseRows(purchaseId);
+    const existing = await getPurchaseRows(resolvedTenantId, purchaseId);
 
     await prisma.$transaction(async (tx) => {
       const now = new Date();
       if (existing.approvalStatus === 'approved') {
-        await applyStockChange(tx, existing.items, -1);
-        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId}`;
+        await applyStockChange(tx, resolvedTenantId, existing.items, -1);
+        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId} AND tenant_id = ${resolvedTenantId}`;
       }
-      await tx.$executeRaw`UPDATE store_purchases SET status = 'inactive', updatedAt = ${now} WHERE id = ${purchaseId}`;
+      await tx.$executeRaw`UPDATE store_purchases SET status = 'inactive', updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       if (existing.financeTransactionId) {
-        await tx.$executeRaw`UPDATE finance_transactions SET status = 'inactive', updatedAt = ${now} WHERE id = ${Number(existing.financeTransactionId)}`;
+        await tx.$executeRaw`UPDATE finance_transactions SET status = 'inactive', updatedAt = ${now} WHERE id = ${Number(existing.financeTransactionId)} AND tenant_id = ${resolvedTenantId}`;
       }
     });
 
     return { id: purchaseId };
   },
 
-  async getStockIssues(query = {}) {
+  async getStockIssues(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const search = normalizeText(query.search);
     const department = normalizeText(query.department);
     const { fromDate, toDate } = getReportDateRange(query);
@@ -1546,7 +1619,9 @@ export const storeService = {
       SELECT si.*, i.itemName, i.unit, i.currentStock
       FROM store_stock_issues si
       JOIN store_items i ON i.id = si.itemId
-      WHERE si.status = 'active'
+      WHERE si.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND si.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR si.department LIKE ${searchTerm} OR si.receiverName LIKE ${searchTerm})
         AND (${department} = '' OR si.department = ${department})
         AND (${fromDate} IS NULL OR si.issueDate >= ${fromDate})
@@ -1556,44 +1631,47 @@ export const storeService = {
     return { items: rows.map(mapStockIssue), meta: null };
   },
 
-  async getStockIssueById(id) {
-    return getStockIssueRows(id);
+  async getStockIssueById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return getStockIssueRows(resolvedTenantId, id);
   },
 
-  async createStockIssue({ body, file }) {
+  async createStockIssue(tenantId, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const data = validateStockIssuePayload(body);
     const receiverSignature = buildIssueSignaturePath(file);
     const now = new Date();
 
     const issueId = await prisma.$transaction(async (tx) => {
       if (data.approvalStatus === 'approved') {
-        await applyIssueStockChange(tx, data.itemId, data.quantity, -1);
+        await applyIssueStockChange(tx, resolvedTenantId, data.itemId, data.quantity, -1);
       }
 
       await tx.$executeRaw`
-        INSERT INTO store_stock_issues (issueDate, itemId, quantity, returnedQuantity, department, receiverName, purpose, issuedBy, receiverSignature, approvalStatus, status, createdAt, updatedAt)
-        VALUES (${data.issueDate}, ${data.itemId}, ${data.quantity}, 0, ${data.department}, ${data.receiverName}, ${data.purpose}, ${data.issuedBy}, ${receiverSignature}, ${data.approvalStatus}, 'active', ${now}, ${now})
+        INSERT INTO store_stock_issues (tenant_id, issueDate, itemId, quantity, returnedQuantity, department, receiverName, purpose, issuedBy, receiverSignature, approvalStatus, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.issueDate}, ${data.itemId}, ${data.quantity}, 0, ${data.department}, ${data.receiverName}, ${data.purpose}, ${data.issuedBy}, ${receiverSignature}, ${data.approvalStatus}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       return Number(rows[0].id);
     });
 
-    return getStockIssueRows(issueId);
+    return getStockIssueRows(resolvedTenantId, issueId);
   },
 
-  async updateStockIssue(id, { body, file }) {
+  async updateStockIssue(tenantId, id, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(issueId);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId);
     const data = validateStockIssuePayload(body);
     const receiverSignature = buildIssueSignaturePath(file) || existing.receiverSignature || null;
     const now = new Date();
 
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
-        await applyIssueStockChange(tx, existing.itemId, existing.quantity, 1);
+        await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, 1);
       }
       if (data.approvalStatus === 'approved') {
-        await applyIssueStockChange(tx, data.itemId, data.quantity, -1);
+        await applyIssueStockChange(tx, resolvedTenantId, data.itemId, data.quantity, -1);
       }
 
       await tx.$executeRaw`
@@ -1608,52 +1686,56 @@ export const storeService = {
             receiverSignature = ${receiverSignature},
             approvalStatus = ${data.approvalStatus},
             updatedAt = ${now}
-        WHERE id = ${issueId}
+        WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}
       `;
     });
 
-    return getStockIssueRows(issueId);
+    return getStockIssueRows(resolvedTenantId, issueId);
   },
 
-  async deleteStockIssue(id) {
+  async deleteStockIssue(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(issueId);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId);
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
-        await applyIssueStockChange(tx, existing.itemId, existing.quantity, 1);
+        await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, 1);
       }
-      await tx.$executeRaw`UPDATE store_stock_issues SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${issueId}`;
+      await tx.$executeRaw`UPDATE store_stock_issues SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}`;
     });
     return { id: issueId };
   },
 
-  async approveStockIssue(id) {
+  async approveStockIssue(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(issueId);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
     await prisma.$transaction(async (tx) => {
-      await applyIssueStockChange(tx, existing.itemId, existing.quantity, -1);
-      await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${issueId}`;
+      await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, -1);
+      await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getStockIssueRows(issueId);
+    return getStockIssueRows(resolvedTenantId, issueId);
   },
 
-  async rejectStockIssue(id) {
+  async rejectStockIssue(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(issueId);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId);
 
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
-        await applyIssueStockChange(tx, existing.itemId, existing.quantity, 1);
+        await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, 1);
       }
-      await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${issueId}`;
+      await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getStockIssueRows(issueId);
+    return getStockIssueRows(resolvedTenantId, issueId);
   },
 
-  async getReturns(query = {}) {
+  async getReturns(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const search = normalizeText(query.search);
     const searchTerm = `%${search}%`;
     const rows = await prisma.$queryRaw`
@@ -1661,18 +1743,23 @@ export const storeService = {
       FROM store_returns r
       JOIN store_stock_issues si ON si.id = r.stockIssueId
       JOIN store_items i ON i.id = r.itemId
-      WHERE r.status = 'active'
+      WHERE r.tenant_id = ${resolvedTenantId}
+        AND si.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND r.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR si.receiverName LIKE ${searchTerm} OR si.department LIKE ${searchTerm})
       ORDER BY r.createdAt DESC, r.id DESC
     `;
     return { items: rows.map(mapStoreReturn), meta: null };
   },
 
-  async getReturnById(id) {
-    return getReturnRows(id);
+  async getReturnById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return getReturnRows(resolvedTenantId, id);
   },
 
-  async createReturn(payload) {
+  async createReturn(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const data = validateReturnPayload(payload);
     const now = new Date();
 
@@ -1680,7 +1767,7 @@ export const storeService = {
       const issueRows = await tx.$queryRaw`
         SELECT id, itemId, quantity, returnedQuantity, approvalStatus, status
         FROM store_stock_issues
-        WHERE id = ${data.stockIssueId} AND status = 'active'
+        WHERE id = ${data.stockIssueId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
         LIMIT 1
       `;
       if (!issueRows.length) throw new AppError('اسٹاک اجراء ریکارڈ نہیں ملا۔', 404);
@@ -1690,124 +1777,136 @@ export const storeService = {
       if (data.returnQuantity > availableReturn) throw new AppError('واپسی مقدار جاری شدہ باقی مقدار سے زیادہ نہیں ہو سکتی۔', 400);
 
       await tx.$executeRaw`
-        INSERT INTO store_returns (stockIssueId, itemId, returnQuantity, \`condition\`, addToStock, note, status, createdAt, updatedAt)
-        VALUES (${data.stockIssueId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.condition}, ${data.addToStock}, ${data.note}, 'active', ${now}, ${now})
+        INSERT INTO store_returns (tenant_id, stockIssueId, itemId, returnQuantity, \`condition\`, addToStock, note, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.stockIssueId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.condition}, ${data.addToStock}, ${data.note}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const nextReturnId = Number(rows[0].id);
 
-      await tx.$executeRaw`UPDATE store_stock_issues SET returnedQuantity = returnedQuantity + ${data.returnQuantity}, updatedAt = ${now} WHERE id = ${data.stockIssueId}`;
+      await tx.$executeRaw`UPDATE store_stock_issues SET returnedQuantity = returnedQuantity + ${data.returnQuantity}, updatedAt = ${now} WHERE id = ${data.stockIssueId} AND tenant_id = ${resolvedTenantId}`;
 
       if (data.condition === 'good' && data.addToStock) {
-        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock + ${data.returnQuantity}, updatedAt = ${now} WHERE id = ${Number(issue.itemId)}`;
+        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock + ${data.returnQuantity}, updatedAt = ${now} WHERE id = ${Number(issue.itemId)} AND tenant_id = ${resolvedTenantId}`;
       } else {
         await tx.$executeRaw`
-          INSERT INTO store_damaged_stock (returnId, itemId, quantity, note, status, createdAt, updatedAt)
-          VALUES (${nextReturnId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.note}, 'active', ${now}, ${now})
+          INSERT INTO store_damaged_stock (tenant_id, returnId, itemId, quantity, note, status, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${nextReturnId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.note}, 'active', ${now}, ${now})
         `;
       }
 
       return nextReturnId;
     });
 
-    return getReturnRows(returnId);
+    return getReturnRows(resolvedTenantId, returnId);
   },
 
-  async deleteReturn(id) {
+  async deleteReturn(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const returnId = normalizeId(id);
-    const existing = await getReturnRows(returnId);
+    const existing = await getReturnRows(resolvedTenantId, returnId);
     const now = new Date();
 
     await prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`UPDATE store_returns SET status = 'inactive', updatedAt = ${now} WHERE id = ${returnId}`;
-      await tx.$executeRaw`UPDATE store_stock_issues SET returnedQuantity = returnedQuantity - ${existing.returnQuantity}, updatedAt = ${now} WHERE id = ${existing.stockIssueId}`;
+      await tx.$executeRaw`UPDATE store_returns SET status = 'inactive', updatedAt = ${now} WHERE id = ${returnId} AND tenant_id = ${resolvedTenantId}`;
+      await tx.$executeRaw`UPDATE store_stock_issues SET returnedQuantity = returnedQuantity - ${existing.returnQuantity}, updatedAt = ${now} WHERE id = ${existing.stockIssueId} AND tenant_id = ${resolvedTenantId}`;
 
       if (existing.condition === 'good' && existing.addToStock) {
-        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock - ${existing.returnQuantity}, updatedAt = ${now} WHERE id = ${existing.itemId}`;
+        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock - ${existing.returnQuantity}, updatedAt = ${now} WHERE id = ${existing.itemId} AND tenant_id = ${resolvedTenantId}`;
       } else {
-        await tx.$executeRaw`UPDATE store_damaged_stock SET status = 'inactive', updatedAt = ${now} WHERE returnId = ${returnId}`;
+        await tx.$executeRaw`UPDATE store_damaged_stock SET status = 'inactive', updatedAt = ${now} WHERE returnId = ${returnId} AND tenant_id = ${resolvedTenantId}`;
       }
     });
 
     return { id: returnId };
   },
 
-  async getDamagedStock(query = {}) {
+  async getDamagedStock(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const search = normalizeText(query.search);
     const searchTerm = `%${search}%`;
     const rows = await prisma.$queryRaw`
       SELECT ds.*, i.itemName, i.unit, i.currentStock, i.purchasePrice
       FROM store_damaged_stock ds
       JOIN store_items i ON i.id = ds.itemId
-      WHERE ds.status = 'active'
+      WHERE ds.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND ds.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR ds.reason LIKE ${searchTerm} OR ds.responsiblePerson LIKE ${searchTerm})
       ORDER BY ds.date DESC, ds.id DESC
     `;
     return { items: rows.map(mapDamagedStock), meta: null };
   },
 
-  async getDamagedStockById(id) {
-    return getDamagedStockRows(id);
+  async getDamagedStockById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return getDamagedStockRows(resolvedTenantId, id);
   },
 
-  async createDamagedStock(payload) {
+  async createDamagedStock(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const data = validateDamagedStockPayload(payload);
-    const itemRows = await prisma.$queryRaw`SELECT id, purchasePrice FROM store_items WHERE id = ${data.itemId} AND status = 'active' LIMIT 1`;
+    const itemRows = await prisma.$queryRaw`SELECT id, purchasePrice FROM store_items WHERE id = ${data.itemId} AND tenant_id = ${resolvedTenantId} AND status = 'active' LIMIT 1`;
     if (!itemRows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
     const amountLoss = toAmount(itemRows[0].purchasePrice) * data.quantity;
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_damaged_stock (returnId, itemId, quantity, reason, date, responsiblePerson, amountLoss, approvalStatus, note, status, createdAt, updatedAt)
-      VALUES (NULL, ${data.itemId}, ${data.quantity}, ${data.reason}, ${data.date}, ${data.responsiblePerson}, ${amountLoss}, 'pending', ${data.note}, 'active', ${now}, ${now})
+      INSERT INTO store_damaged_stock (tenant_id, returnId, itemId, quantity, reason, date, responsiblePerson, amountLoss, approvalStatus, note, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, NULL, ${data.itemId}, ${data.quantity}, ${data.reason}, ${data.date}, ${data.responsiblePerson}, ${amountLoss}, 'pending', ${data.note}, 'active', ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-    return getDamagedStockRows(Number(rows[0].id));
+    return getDamagedStockRows(resolvedTenantId, Number(rows[0].id));
   },
 
-  async approveDamagedStock(id) {
+  async approveDamagedStock(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(damagedId);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
     await prisma.$transaction(async (tx) => {
-      await ensureIssueStock(tx, existing.itemId, existing.quantity);
-      await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock - ${existing.quantity}, updatedAt = ${new Date()} WHERE id = ${existing.itemId}`;
-      await tx.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${damagedId}`;
+      await ensureIssueStock(tx, resolvedTenantId, existing.itemId, existing.quantity);
+      await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock - ${existing.quantity}, updatedAt = ${new Date()} WHERE id = ${existing.itemId} AND tenant_id = ${resolvedTenantId}`;
+      await tx.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getDamagedStockRows(damagedId);
+    return getDamagedStockRows(resolvedTenantId, damagedId);
   },
 
-  async rejectDamagedStock(id) {
+  async rejectDamagedStock(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(damagedId);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
     if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
-    await prisma.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${damagedId}`;
-    return getDamagedStockRows(damagedId);
+    await prisma.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
+    return getDamagedStockRows(resolvedTenantId, damagedId);
   },
 
-  async deleteDamagedStock(id) {
+  async deleteDamagedStock(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(damagedId);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
 
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved' && !existing.returnId) {
-        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock + ${existing.quantity}, updatedAt = ${new Date()} WHERE id = ${existing.itemId}`;
+        await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock + ${existing.quantity}, updatedAt = ${new Date()} WHERE id = ${existing.itemId} AND tenant_id = ${resolvedTenantId}`;
       }
-      await tx.$executeRaw`UPDATE store_damaged_stock SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${damagedId}`;
+      await tx.$executeRaw`UPDATE store_damaged_stock SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
     });
 
     return { id: damagedId };
   },
 
-  async getApprovals() {
+  async getApprovals(tenantId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const purchaseRows = await prisma.$queryRaw`
       SELECT p.id, p.purchaseDate, p.invoiceNumber, p.totalAmount, p.paidAmount, p.remainingAmount, p.paymentMethod, p.approvalStatus, p.createdAt,
              s.supplierName
       FROM store_purchases p
       JOIN store_suppliers s ON s.id = p.supplierId
-      WHERE p.status = 'active' AND p.approvalStatus = 'pending'
+      WHERE p.tenant_id = ${resolvedTenantId}
+        AND s.tenant_id = ${resolvedTenantId}
+        AND p.status = 'active' AND p.approvalStatus = 'pending'
       ORDER BY p.createdAt DESC, p.id DESC
     `;
 
@@ -1816,7 +1915,9 @@ export const storeService = {
              i.itemName, i.unit, i.currentStock
       FROM store_stock_issues si
       JOIN store_items i ON i.id = si.itemId
-      WHERE si.status = 'active' AND si.approvalStatus = 'pending'
+      WHERE si.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND si.status = 'active' AND si.approvalStatus = 'pending'
       ORDER BY si.createdAt DESC, si.id DESC
     `;
 
@@ -1825,7 +1926,9 @@ export const storeService = {
              i.itemName, i.unit, i.currentStock
       FROM store_damaged_stock ds
       JOIN store_items i ON i.id = ds.itemId
-      WHERE ds.status = 'active' AND ds.approvalStatus = 'pending'
+      WHERE ds.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND ds.status = 'active' AND ds.approvalStatus = 'pending'
       ORDER BY ds.createdAt DESC, ds.id DESC
     `;
 
@@ -1834,7 +1937,9 @@ export const storeService = {
              i.itemName, i.unit, i.currentStock
       FROM store_stock_adjustments sa
       JOIN store_items i ON i.id = sa.itemId
-      WHERE sa.status = 'active' AND sa.approvalStatus = 'pending'
+      WHERE sa.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND sa.status = 'active' AND sa.approvalStatus = 'pending'
       ORDER BY sa.createdAt DESC, sa.id DESC
     `;
 
@@ -1852,55 +1957,56 @@ export const storeService = {
     };
   },
 
-  async approveApproval({ moduleType, id, remarks, admin }) {
+  async approveApproval({ tenantId, moduleType, id, remarks, admin }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedModule = normalizeApprovalModule(moduleType);
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
 
     if (normalizedModule === 'purchase') {
-      const existing = await getPurchaseRows(recordId);
+      const existing = await getPurchaseRows(resolvedTenantId, recordId);
       if (existing.approvalStatus === 'approved') return existing;
       if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
       await prisma.$transaction(async (tx) => {
         const now = new Date();
-        const financeTransactionId = existing.financeTransactionId ? Number(existing.financeTransactionId) : await createPurchaseFinanceTransaction(tx, recordId, existing);
-        await applyStockChange(tx, existing.items, 1);
-        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId}`;
-        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'approved', financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${recordId}`;
-        await createApprovalLog(tx, { moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
+        const financeTransactionId = existing.financeTransactionId ? Number(existing.financeTransactionId) : await createPurchaseFinanceTransaction(tx, resolvedTenantId, recordId, existing);
+        await applyStockChange(tx, resolvedTenantId, existing.items, 1);
+        await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId} AND tenant_id = ${resolvedTenantId}`;
+        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'approved', financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+        await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
       });
 
-      return getPurchaseRows(recordId);
+      return getPurchaseRows(resolvedTenantId, recordId);
     }
 
     if (normalizedModule === 'stock-out') {
-      const existing = await getStockIssueRows(recordId);
-      const result = await this.approveStockIssue(recordId);
+      const existing = await getStockIssueRows(resolvedTenantId, recordId);
+      const result = await this.approveStockIssue(resolvedTenantId, recordId);
       await prisma.$executeRaw`
-        INSERT INTO store_approval_logs (moduleType, recordId, status, approvedBy, remarks, createdAt)
-        VALUES (${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
+        INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
+        VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
       return existing.approvalStatus === 'approved' ? existing : result;
     }
 
     if (normalizedModule === 'damage') {
-      const existing = await getDamagedStockRows(recordId);
-      const result = await this.approveDamagedStock(recordId);
+      const existing = await getDamagedStockRows(resolvedTenantId, recordId);
+      const result = await this.approveDamagedStock(resolvedTenantId, recordId);
       await prisma.$executeRaw`
-        INSERT INTO store_approval_logs (moduleType, recordId, status, approvedBy, remarks, createdAt)
-        VALUES (${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
+        INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
+        VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
       return existing.approvalStatus === 'approved' ? existing : result;
     }
 
-    const adjustment = await getStockAdjustmentRows(recordId);
+    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId);
     if (adjustment.approvalStatus === 'approved') return adjustment;
     if (adjustment.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
     await prisma.$transaction(async (tx) => {
-      const itemRows = await tx.$queryRaw`SELECT currentStock FROM store_items WHERE id = ${adjustment.itemId} AND status = 'active' LIMIT 1`;
+      const itemRows = await tx.$queryRaw`SELECT currentStock FROM store_items WHERE id = ${adjustment.itemId} AND tenant_id = ${resolvedTenantId} AND status = 'active' LIMIT 1`;
       if (!itemRows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
 
       const previousStock = toAmount(itemRows[0].currentStock);
@@ -1913,72 +2019,74 @@ export const storeService = {
       }
       if (adjustment.adjustmentType === 'set') adjustedStock = adjustment.quantity;
 
-      await tx.$executeRaw`UPDATE store_items SET currentStock = ${adjustedStock}, updatedAt = ${new Date()} WHERE id = ${adjustment.itemId}`;
+      await tx.$executeRaw`UPDATE store_items SET currentStock = ${adjustedStock}, updatedAt = ${new Date()} WHERE id = ${adjustment.itemId} AND tenant_id = ${resolvedTenantId}`;
       await tx.$executeRaw`
         UPDATE store_stock_adjustments
         SET previousStock = ${previousStock}, adjustedStock = ${adjustedStock}, approvalStatus = 'approved', updatedAt = ${new Date()}
-        WHERE id = ${recordId}
+        WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}
       `;
-      await createApprovalLog(tx, { moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
+      await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
     });
 
-    return getStockAdjustmentRows(recordId);
+    return getStockAdjustmentRows(resolvedTenantId, recordId);
   },
 
-  async rejectApproval({ moduleType, id, remarks, admin }) {
+  async rejectApproval({ tenantId, moduleType, id, remarks, admin }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedModule = normalizeApprovalModule(moduleType);
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
 
     if (normalizedModule === 'purchase') {
-      const existing = await getPurchaseRows(recordId);
+      const existing = await getPurchaseRows(resolvedTenantId, recordId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
 
       await prisma.$transaction(async (tx) => {
-        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId}`;
-        await createApprovalLog(tx, { moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
+        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+        await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
       });
 
-      return getPurchaseRows(recordId);
+      return getPurchaseRows(resolvedTenantId, recordId);
     }
 
     if (normalizedModule === 'stock-out') {
-      const existing = await getStockIssueRows(recordId);
+      const existing = await getStockIssueRows(resolvedTenantId, recordId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
-      const result = await this.rejectStockIssue(recordId);
+      const result = await this.rejectStockIssue(resolvedTenantId, recordId);
       await prisma.$executeRaw`
-        INSERT INTO store_approval_logs (moduleType, recordId, status, approvedBy, remarks, createdAt)
-        VALUES (${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
+        INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
+        VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
       return result;
     }
 
     if (normalizedModule === 'damage') {
-      const existing = await getDamagedStockRows(recordId);
+      const existing = await getDamagedStockRows(resolvedTenantId, recordId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
-      const result = await this.rejectDamagedStock(recordId);
+      const result = await this.rejectDamagedStock(resolvedTenantId, recordId);
       await prisma.$executeRaw`
-        INSERT INTO store_approval_logs (moduleType, recordId, status, approvedBy, remarks, createdAt)
-        VALUES (${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
+        INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
+        VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
       return result;
     }
 
-    const adjustment = await getStockAdjustmentRows(recordId);
+    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId);
     if (adjustment.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
 
     await prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`UPDATE store_stock_adjustments SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId}`;
-      await createApprovalLog(tx, { moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
+      await tx.$executeRaw`UPDATE store_stock_adjustments SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+      await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
     });
 
-    return getStockAdjustmentRows(recordId);
+    return getStockAdjustmentRows(resolvedTenantId, recordId);
   },
 
-  async exportPurchases({ query = {}, format = 'html', admin = null }) {
-    const profile = await getMadrassaPrintProfile(admin);
-    const result = await this.getPurchases(query);
+  async exportPurchases({ tenantId, query = {}, format = 'html', admin = null }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
+    const result = await this.getPurchases(resolvedTenantId, query);
     const rows = result.items || [];
 
     if (format === 'csv') {
@@ -1996,9 +2104,10 @@ export const storeService = {
     });
   },
 
-  async exportStockReport({ query = {}, format = 'html', admin = null }) {
-    const profile = await getMadrassaPrintProfile(admin);
-    const result = await this.getDailyStockReport(query);
+  async exportStockReport({ tenantId, query = {}, format = 'html', admin = null }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
+    const result = await this.getDailyStockReport(resolvedTenantId, query);
     const rows = result.items || [];
 
     if (format === 'csv') {
@@ -2016,9 +2125,10 @@ export const storeService = {
     });
   },
 
-  async getPurchaseInvoiceHtml(id, admin = null) {
-    const profile = await getMadrassaPrintProfile(admin);
-    const purchase = await getPurchaseRows(id);
+  async getPurchaseInvoiceHtml(tenantId, id, admin = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
+    const purchase = await getPurchaseRows(resolvedTenantId, id);
     const columns = [
       { label: 'شے', value: (row) => row.itemName || '-' },
       { label: 'کوڈ', value: (row) => row.itemCode || '-' },
@@ -2038,9 +2148,10 @@ export const storeService = {
     });
   },
 
-  async getIssueSlipHtml(id, admin = null) {
-    const profile = await getMadrassaPrintProfile(admin);
-    const issue = await getStockIssueRows(id);
+  async getIssueSlipHtml(tenantId, id, admin = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
+    const issue = await getStockIssueRows(resolvedTenantId, id);
     const rows = [
       { label: 'تاریخ', value: formatDate(issue.issueDate) },
       { label: 'شے', value: issue.itemName || '-' },
@@ -2066,13 +2177,15 @@ export const storeService = {
     });
   },
 
-  async getDailyStockReport(query = {}) {
+  async getDailyStockReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice,
              (currentStock * purchasePrice) AS stockValue
       FROM store_items
-      WHERE status = 'active'
+      WHERE tenant_id = ${resolvedTenantId}
+        AND status = 'active'
         AND (${category} = '' OR category = ${category})
       ORDER BY itemName ASC
     `;
@@ -2080,7 +2193,8 @@ export const storeService = {
     return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.stockValue, 0) } };
   },
 
-  async getMonthlyStockReport(query = {}) {
+  async getMonthlyStockReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT monthLabel,
@@ -2092,22 +2206,22 @@ export const storeService = {
         SELECT DATE_FORMAT(p.purchaseDate, '%Y-%m') AS monthLabel, SUM(pi.quantity) AS purchaseQuantity, 0 AS issueQuantity, 0 AS returnQuantity, 0 AS damagedQuantity
         FROM store_purchases p
         JOIN store_purchase_items pi ON pi.purchaseId = p.id
-        WHERE p.status = 'active' AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate}) AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
+        WHERE p.tenant_id = ${resolvedTenantId} AND pi.tenant_id = ${resolvedTenantId} AND p.status = 'active' AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate}) AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
         GROUP BY DATE_FORMAT(p.purchaseDate, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(issueDate, '%Y-%m') AS monthLabel, 0, SUM(quantity), 0, 0
         FROM store_stock_issues
-        WHERE status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR issueDate >= ${fromDate}) AND (${toDate} IS NULL OR issueDate <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR issueDate >= ${fromDate}) AND (${toDate} IS NULL OR issueDate <= ${toDate})
         GROUP BY DATE_FORMAT(issueDate, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(createdAt, '%Y-%m') AS monthLabel, 0, 0, SUM(returnQuantity), 0
         FROM store_returns
-        WHERE status = 'active' AND (${fromDate} IS NULL OR createdAt >= ${fromDate}) AND (${toDate} IS NULL OR createdAt <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND (${fromDate} IS NULL OR createdAt >= ${fromDate}) AND (${toDate} IS NULL OR createdAt <= ${toDate})
         GROUP BY DATE_FORMAT(createdAt, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(date, '%Y-%m') AS monthLabel, 0, 0, 0, SUM(quantity)
         FROM store_damaged_stock
-        WHERE status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR date >= ${fromDate}) AND (${toDate} IS NULL OR date <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR date >= ${fromDate}) AND (${toDate} IS NULL OR date <= ${toDate})
         GROUP BY DATE_FORMAT(date, '%Y-%m')
       ) monthly
       GROUP BY monthLabel
@@ -2116,14 +2230,17 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getPurchaseReport(query = {}) {
+  async getPurchaseReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { fromDate, toDate } = getReportDateRange(query);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
     const rows = await prisma.$queryRaw`
       SELECT p.id, p.purchaseDate, p.invoiceNumber, s.supplierName, p.totalAmount, p.paidAmount, p.remainingAmount, p.paymentMethod, p.approvalStatus
       FROM store_purchases p
       JOIN store_suppliers s ON s.id = p.supplierId
-      WHERE p.status = 'active'
+      WHERE p.tenant_id = ${resolvedTenantId}
+        AND s.tenant_id = ${resolvedTenantId}
+        AND p.status = 'active'
         AND (${supplierId} IS NULL OR p.supplierId = ${supplierId})
         AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate})
         AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
@@ -2133,28 +2250,32 @@ export const storeService = {
     return { items, summary: { totalAmount: items.reduce((sum, item) => sum + item.totalAmount, 0), paidAmount: items.reduce((sum, item) => sum + item.paidAmount, 0), remainingAmount: items.reduce((sum, item) => sum + item.remainingAmount, 0) } };
   },
 
-  async getSupplierReport(query = {}) {
+  async getSupplierReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const rows = await prisma.$queryRaw`
       SELECT s.id, s.supplierName, s.mobileNumber, s.shopName, s.balance,
              COALESCE(SUM(p.totalAmount), 0) AS totalPurchase,
              COALESCE(SUM(p.paidAmount), 0) AS totalPaid
       FROM store_suppliers s
-      LEFT JOIN store_purchases p ON p.supplierId = s.id AND p.status = 'active'
-      WHERE s.status = 'active'
+      LEFT JOIN store_purchases p ON p.supplierId = s.id AND p.tenant_id = ${resolvedTenantId} AND p.status = 'active'
+      WHERE s.tenant_id = ${resolvedTenantId} AND s.status = 'active'
       GROUP BY s.id, s.supplierName, s.mobileNumber, s.shopName, s.balance
       ORDER BY s.supplierName ASC
     `;
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getStockIssueReport(query = {}) {
+  async getStockIssueReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { fromDate, toDate } = getReportDateRange(query);
     const department = normalizeText(query.department);
     const rows = await prisma.$queryRaw`
       SELECT si.id, si.issueDate, i.itemName, si.quantity, si.returnedQuantity, si.department, si.receiverName, si.issuedBy, si.approvalStatus
       FROM store_stock_issues si
       JOIN store_items i ON i.id = si.itemId
-      WHERE si.status = 'active'
+      WHERE si.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND si.status = 'active'
         AND (${department} = '' OR si.department = ${department})
         AND (${fromDate} IS NULL OR si.issueDate >= ${fromDate})
         AND (${toDate} IS NULL OR si.issueDate <= ${toDate})
@@ -2163,12 +2284,14 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getDepartmentWiseReport(query = {}) {
+  async getDepartmentWiseReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT department, COUNT(*) AS totalIssues, SUM(quantity) AS totalQuantity
       FROM store_stock_issues
-      WHERE status = 'active'
+      WHERE tenant_id = ${resolvedTenantId}
+        AND status = 'active'
         AND approvalStatus = 'approved'
         AND (${fromDate} IS NULL OR issueDate >= ${fromDate})
         AND (${toDate} IS NULL OR issueDate <= ${toDate})
@@ -2178,13 +2301,15 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getLowStockReport(query = {}) {
+  async getLowStockReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const limit = Number(query.limit || 10);
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, (currentStock * purchasePrice) AS stockValue
       FROM store_items
-      WHERE status = 'active'
+      WHERE tenant_id = ${resolvedTenantId}
+        AND status = 'active'
         AND currentStock <= ${Number.isFinite(limit) ? limit : 10}
         AND (${category} = '' OR category = ${category})
       ORDER BY currentStock ASC, itemName ASC
@@ -2192,13 +2317,16 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getDamagedStockReport(query = {}) {
+  async getDamagedStockReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT ds.id, ds.date, i.itemName, ds.quantity, ds.reason, ds.responsiblePerson, ds.amountLoss, ds.approvalStatus
       FROM store_damaged_stock ds
       JOIN store_items i ON i.id = ds.itemId
-      WHERE ds.status = 'active'
+      WHERE ds.tenant_id = ${resolvedTenantId}
+        AND i.tenant_id = ${resolvedTenantId}
+        AND ds.status = 'active'
         AND (${fromDate} IS NULL OR ds.date >= ${fromDate})
         AND (${toDate} IS NULL OR ds.date <= ${toDate})
       ORDER BY ds.date DESC, ds.id DESC
@@ -2207,19 +2335,21 @@ export const storeService = {
     return { items, summary: { amountLoss: items.reduce((sum, item) => sum + item.amountLoss, 0) } };
   },
 
-  async getStoreValueReport(query = {}) {
+  async getStoreValueReport(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, unit, currentStock, purchasePrice, (currentStock * purchasePrice) AS totalValue
       FROM store_items
-      WHERE status = 'active' AND (${category} = '' OR category = ${category})
+      WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND (${category} = '' OR category = ${category})
       ORDER BY totalValue DESC
     `;
     const items = mapReportRows(rows);
     return { items, summary: { totalValue: items.reduce((sum, item) => sum + item.totalValue, 0) } };
   },
 
-  async getItemLedgerReport(itemId, query = {}) {
+  async getItemLedgerReport(tenantId, itemId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedItemId = normalizeId(itemId);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
@@ -2229,19 +2359,19 @@ export const storeService = {
         FROM store_purchase_items pi
         JOIN store_purchases p ON p.id = pi.purchaseId
         JOIN store_suppliers s ON s.id = p.supplierId
-        WHERE pi.itemId = ${normalizedItemId} AND p.status = 'active'
+        WHERE pi.itemId = ${normalizedItemId} AND pi.tenant_id = ${resolvedTenantId} AND p.tenant_id = ${resolvedTenantId} AND s.tenant_id = ${resolvedTenantId} AND p.status = 'active'
         UNION ALL
         SELECT si.issueDate, 'issue', CAST(si.id AS CHAR), 0, si.quantity, si.department
         FROM store_stock_issues si
-        WHERE si.itemId = ${normalizedItemId} AND si.status = 'active' AND si.approvalStatus = 'approved'
+        WHERE si.itemId = ${normalizedItemId} AND si.tenant_id = ${resolvedTenantId} AND si.status = 'active' AND si.approvalStatus = 'approved'
         UNION ALL
         SELECT r.createdAt, 'return', CAST(r.id AS CHAR), CASE WHEN r.condition = 'good' AND r.addToStock = true THEN r.returnQuantity ELSE 0 END, 0, r.note
         FROM store_returns r
-        WHERE r.itemId = ${normalizedItemId} AND r.status = 'active'
+        WHERE r.itemId = ${normalizedItemId} AND r.tenant_id = ${resolvedTenantId} AND r.status = 'active'
         UNION ALL
         SELECT ds.date, 'damaged', CAST(ds.id AS CHAR), 0, ds.quantity, ds.reason
         FROM store_damaged_stock ds
-        WHERE ds.itemId = ${normalizedItemId} AND ds.status = 'active' AND ds.approvalStatus = 'approved' AND ds.returnId IS NULL
+        WHERE ds.itemId = ${normalizedItemId} AND ds.tenant_id = ${resolvedTenantId} AND ds.status = 'active' AND ds.approvalStatus = 'approved' AND ds.returnId IS NULL
       ) ledger
       WHERE (${fromDate} IS NULL OR ledgerDate >= ${fromDate}) AND (${toDate} IS NULL OR ledgerDate <= ${toDate})
       ORDER BY ledgerDate ASC
@@ -2254,3 +2384,4 @@ export const storeService = {
     return { items, summary: { balanceQuantity } };
   },
 };
+

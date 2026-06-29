@@ -2,8 +2,19 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const teacherScheduleSelect = {
   id: true,
+  tenantId: true,
   subjects: true,
   days: true,
   startTime: true,
@@ -11,18 +22,18 @@ const teacherScheduleSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  teacher: { select: { id: true, fullName: true, phone: true, subject: true } },
+  teacher: { select: { id: true, tenantId: true, fullName: true, phone: true, subject: true } },
   session: { select: { id: true, name: true, startDate: true, endDate: true } },
   class: { select: { id: true, name: true } },
   section: { select: { id: true, name: true } },
 };
 
-const ensureTeacherScheduleReferences = async ({ teacherId, sessionId, classId, sectionId }) => {
+const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId, classId, sectionId }) => {
   const [teacher, session, academicClass, section] = await Promise.all([
-    prisma.teacher.findUnique({ where: { id: teacherId } }),
+    prisma.teacher.findFirst({ where: { id: teacherId, tenantId } }),
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findUnique({ where: { id: classId } }),
-    prisma.section.findUnique({ where: { id: sectionId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
   ]);
 
   if (!teacher || teacher.status !== 'active') {
@@ -47,11 +58,13 @@ const ensureTeacherScheduleReferences = async ({ teacherId, sessionId, classId, 
 };
 
 export const teacherSchedulesService = {
-  async createTeacherSchedule(payload) {
-    await ensureTeacherScheduleReferences(payload);
+  async createTeacherSchedule(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureTeacherScheduleReferences(resolvedTenantId, payload);
 
     return prisma.teacherSchedule.create({
       data: {
+        tenantId: resolvedTenantId,
         teacherId: payload.teacherId,
         sessionId: payload.sessionId,
         classId: payload.classId,
@@ -66,9 +79,14 @@ export const teacherSchedulesService = {
     });
   },
 
-  async getTeacherSchedules(query) {
+  async getTeacherSchedules(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      teacher: { tenantId: resolvedTenantId },
+      class: { tenantId: resolvedTenantId },
+      section: { tenantId: resolvedTenantId },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
@@ -93,8 +111,17 @@ export const teacherSchedulesService = {
     };
   },
 
-  async deleteTeacherSchedule(id) {
-    const schedule = await prisma.teacherSchedule.findUnique({ where: { id } });
+  async deleteTeacherSchedule(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const schedule = await prisma.teacherSchedule.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+        teacher: { tenantId: resolvedTenantId },
+        class: { tenantId: resolvedTenantId },
+        section: { tenantId: resolvedTenantId },
+      },
+    });
 
     if (!schedule) {
       throw new AppError('شیڈول نہیں ملا۔', 404);

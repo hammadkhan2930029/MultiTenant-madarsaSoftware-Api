@@ -9,6 +9,8 @@
     "start": "node src/server.js",
     "seed": "node scripts/seed.js",
     "seed:permissions": "node scripts/seed-role-permissions.js",
+    "tenant:default": "node scripts/ensure-default-tenant.js",
+    "test:tenants": "node scripts/test-two-tenants.js",
     "smoke:test": "node scripts/smoke-test.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { schedulesService } from './schedules.service.js';
 
 export const createSchedule = asyncHandler(async (req, res) => {
-  const schedule = await schedulesService.createSchedule(req.body);
+  const schedule = await schedulesService.createSchedule(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSchedule = asyncHandler(async (req, res) => {
 });
 
 export const getSchedules = asyncHandler(async (req, res) => {
-  const schedules = await schedulesService.getSchedules(req.query);
+  const schedules = await schedulesService.getSchedules(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Schedules fetched successfully.',
@@ -22,7 +22,7 @@ export const getSchedules = asyncHandler(async (req, res) => {
 });
 
 export const updateSchedule = asyncHandler(async (req, res) => {
-  const schedule = await schedulesService.updateSchedule(Number(req.params.id), req.body);
+  const schedule = await schedulesService.updateSchedule(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     message: 'Schedule updated successfully.',
@@ -31,7 +31,7 @@ export const updateSchedule = asyncHandler(async (req, res) => {
 });
 
 export const deleteSchedule = asyncHandler(async (req, res) => {
-  const schedule = await schedulesService.deleteSchedule(Number(req.params.id));
+  const schedule = await schedulesService.deleteSchedule(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Schedule removed successfully.',

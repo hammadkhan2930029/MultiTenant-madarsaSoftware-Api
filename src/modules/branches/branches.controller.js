@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { branchesService } from './branches.service.js';
 
 export const createBranch = asyncHandler(async (req, res) => {
-  const branch = await branchesService.createBranch(req.body);
+  const branch = await branchesService.createBranch(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createBranch = asyncHandler(async (req, res) => {
 });
 
 export const getBranches = asyncHandler(async (req, res) => {
-  const branches = await branchesService.getBranches(req.query);
+  const branches = await branchesService.getBranches(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Branches fetched successfully.',
@@ -22,7 +22,7 @@ export const getBranches = asyncHandler(async (req, res) => {
 });
 
 export const getBranchById = asyncHandler(async (req, res) => {
-  const branch = await branchesService.getBranchById(Number(req.params.id));
+  const branch = await branchesService.getBranchById(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Branch fetched successfully.',
@@ -31,7 +31,7 @@ export const getBranchById = asyncHandler(async (req, res) => {
 });
 
 export const updateBranch = asyncHandler(async (req, res) => {
-  const branch = await branchesService.updateBranch(Number(req.params.id), req.body);
+  const branch = await branchesService.updateBranch(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     message: 'Branch updated successfully.',
@@ -40,7 +40,7 @@ export const updateBranch = asyncHandler(async (req, res) => {
 });
 
 export const deleteBranch = asyncHandler(async (req, res) => {
-  const branch = await branchesService.deleteBranch(Number(req.params.id));
+  const branch = await branchesService.deleteBranch(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Branch deleted successfully.',

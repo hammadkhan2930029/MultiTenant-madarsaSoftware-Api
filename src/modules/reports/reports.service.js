@@ -1,5 +1,16 @@
 import { prisma } from '../../config/prisma.js';
+import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
 
 const normalizeDate = (value) => {
   const date = new Date(value);
@@ -17,11 +28,12 @@ const buildDateRangeFilter = (fromDate, toDate, fieldName) =>
       }
     : {};
 
-const buildStudentAssignmentFilter = (query) =>
+const buildStudentAssignmentFilter = (tenantId, query) =>
   query.branchId || query.classId || query.sectionId || query.sessionId
     ? {
         assignments: {
           some: {
+            tenantId,
             status: 'active',
             ...(query.branchId ? { branchId: query.branchId } : {}),
             ...(query.classId ? { classId: query.classId } : {}),
@@ -55,9 +67,11 @@ const studentReportSelect = {
 };
 
 export const reportsService = {
-  async getStudentsReport(query) {
+  async getStudentsReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -68,7 +82,7 @@ export const reportsService = {
           }
         : {}),
       ...(query.status ? { status: query.status } : {}),
-      ...buildStudentAssignmentFilter(query),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -88,11 +102,14 @@ export const reportsService = {
     };
   },
 
-  async getAttendanceReport(query) {
+  async getAttendanceReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     if (query.type === 'teacher') {
       const where = {
+        teacher: { tenantId: resolvedTenantId },
+        branch: { tenantId: resolvedTenantId },
         ...(query.status ? { status: query.status } : {}),
         ...(query.branchId ? { branchId: query.branchId } : {}),
         ...buildDateRangeFilter(query.fromDate, query.toDate, 'date'),
@@ -124,6 +141,10 @@ export const reportsService = {
     }
 
     const where = {
+      student: { tenantId: resolvedTenantId },
+      branch: { tenantId: resolvedTenantId },
+      class: { tenantId: resolvedTenantId },
+      section: { tenantId: resolvedTenantId },
       ...(query.status ? { status: query.status } : {}),
       ...(query.branchId ? { branchId: query.branchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
@@ -160,11 +181,13 @@ export const reportsService = {
     };
   },
 
-  async getHifzProgressReport(query) {
+  async getHifzProgressReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const studentWhere = {
+      tenantId: resolvedTenantId,
       ...(query.studentId ? { id: query.studentId } : {}),
-      ...buildStudentAssignmentFilter(query),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query),
     };
 
     const [students, totalItems] = await Promise.all([
@@ -188,34 +211,38 @@ export const reportsService = {
             },
           },
           hifzDailyEntries: {
-            ...(query.fromDate || query.toDate
-              ? { where: buildDateRangeFilter(query.fromDate, query.toDate, 'date') }
-              : {}),
+            where: {
+              tenantId: resolvedTenantId,
+              ...(query.fromDate || query.toDate ? buildDateRangeFilter(query.fromDate, query.toDate, 'date') : {}),
+            },
             orderBy: { date: 'desc' },
             take: 1,
             select: { date: true, performanceStatus: true, sabq: true, manzil: true },
           },
           hifzWeeklyEntries: {
-            ...(query.fromDate || query.toDate
-              ? {
-                  where: {
+            where: {
+              tenantId: resolvedTenantId,
+              ...(query.fromDate || query.toDate
+                ? {
                     AND: [
                       ...(query.fromDate ? [{ weekEndDate: { gte: normalizeDate(query.fromDate) } }] : []),
                       ...(query.toDate ? [{ weekStartDate: { lte: normalizeDate(query.toDate) } }] : []),
                     ],
-                  },
-                }
-              : {}),
+                  }
+                : {}),
+            },
             orderBy: { weekStartDate: 'desc' },
             take: 1,
             select: { weekStartDate: true, weekEndDate: true, performanceStatus: true, siparaFrom: true, siparaTo: true },
           },
           hifzMonthlyEntries: {
+            where: { tenantId: resolvedTenantId },
             orderBy: [{ year: 'desc' }, { month: 'desc' }],
             take: 1,
             select: { month: true, year: true, performanceStatus: true, totalRecitation: true },
           },
           hifzSiparaEntries: {
+            where: { tenantId: resolvedTenantId },
             orderBy: { siparaNumber: 'desc' },
             take: 1,
             select: { siparaNumber: true, performanceStatus: true, totalDays: true, quality: true },
@@ -231,9 +258,11 @@ export const reportsService = {
     };
   },
 
-  async getFundCollectionsReport(query) {
+  async getFundCollectionsReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.status ? { status: query.status } : {}),
       ...(query.paymentMode ? { paymentMode: query.paymentMode } : {}),
       ...(query.donationType ? { donationType: query.donationType } : {}),
@@ -288,9 +317,12 @@ export const reportsService = {
     };
   },
 
-  async getSalaryReport(query) {
+  async getSalaryReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      teacher: { tenantId: resolvedTenantId },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.salaryMonth ? { salaryMonth: query.salaryMonth } : {}),
@@ -328,13 +360,15 @@ export const reportsService = {
     };
   },
 
-  async getMonthlyFinanceSummaryReport(query) {
+  async getMonthlyFinanceSummaryReport(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const whereFromDate = query.fromDate ? normalizeDate(query.fromDate) : undefined;
     const whereToDate = query.toDate ? normalizeDate(query.toDate) : undefined;
 
     const [fundCollections, salaryEntries] = await Promise.all([
       prisma.fundCollection.findMany({
         where: {
+          tenantId: resolvedTenantId,
           status: 'active',
           ...buildDateRangeFilter(whereFromDate, whereToDate, 'paymentDate'),
         },
@@ -342,6 +376,8 @@ export const reportsService = {
       }),
       prisma.salaryEntry.findMany({
         where: {
+          tenantId: resolvedTenantId,
+          teacher: { tenantId: resolvedTenantId },
           status: 'active',
           ...buildDateRangeFilter(whereFromDate, whereToDate, 'paymentDate'),
         },

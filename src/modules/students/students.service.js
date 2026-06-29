@@ -6,6 +6,15 @@ const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : n
 const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
 const DEFAULT_ADMISSION_NUMBER = '0001';
 
+const normalizeTenantId = (tenantId) => {
+  const normalizedTenantId = Number(tenantId);
+  if (!Number.isInteger(normalizedTenantId) || normalizedTenantId <= 0) {
+    throw new AppError('Tenant context is required for students.', 403);
+  }
+
+  return normalizedTenantId;
+};
+
 const parseAdmissionNumber = (value) => {
   const text = String(value || '').trim();
   const match = text.match(/^(.*?)(\d+)$/);
@@ -33,8 +42,10 @@ const buildNextAdmissionNumber = (students = []) => {
   return `${highest.prefix}${String(highest.number + 1).padStart(highest.width, '0')}`;
 };
 
-const getNextAdmissionNumber = async (tx = prisma) => {
+const getNextAdmissionNumber = async (tenantId, tx = prisma) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
   const students = await tx.student.findMany({
+    where: { tenantId: resolvedTenantId },
     select: { admissionNumber: true },
   });
 
@@ -43,6 +54,7 @@ const getNextAdmissionNumber = async (tx = prisma) => {
 
 const studentSelect = {
   id: true,
+  tenantId: true,
   admissionNumber: true,
   admissionDate: true,
   admissionFee: true,
@@ -111,11 +123,11 @@ const studentSelect = {
 const optionalString = (value) => (value ? value : null);
 const optionalDecimal = (value) => (value === undefined || value === null || value === '' ? null : value);
 
-const ensureAssignmentReferences = async ({ branchId, classId, sectionId, sessionId }) => {
+const ensureAssignmentReferences = async (tenantId, { branchId, classId, sectionId, sessionId }) => {
   const [branch, academicClass, section, session] = await Promise.all([
-    prisma.branch.findUnique({ where: { id: branchId } }),
-    prisma.academicClass.findUnique({ where: { id: classId } }),
-    prisma.section.findUnique({ where: { id: sectionId } }),
+    prisma.branch.findFirst({ where: { id: branchId, tenantId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
   ]);
 
@@ -135,17 +147,20 @@ const ensureAssignmentReferences = async ({ branchId, classId, sectionId, sessio
   return { branch, academicClass, section, session };
 };
 
-const upsertStudentParents = async (tx, studentId, parents = []) => {
+const upsertStudentParents = async (tx, tenantId, studentId, parents = []) => {
   await tx.studentParent.deleteMany({
-    where: { studentId },
+    where: { studentId, tenantId },
   });
 
   for (const parentItem of parents) {
     let parentId = parentItem.parentId;
 
     if (parentId) {
-      const existingParent = await tx.parent.findUnique({
-        where: { id: parentId },
+      const existingParent = await tx.parent.findFirst({
+        where: {
+          id: parentId,
+          tenantId,
+        },
       });
 
       if (!existingParent) {
@@ -171,6 +186,7 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
           ? await tx.parent.findFirst({
               where: {
                 AND: [
+                  { tenantId },
                   { fullName: parentItem.fullName },
                   {
                     OR: [
@@ -188,6 +204,7 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
       } else {
         const parent = await tx.parent.create({
           data: {
+            tenantId,
             fullName: parentItem.fullName,
             familyNumber: optionalString(parentItem.familyNumber),
             phone: optionalString(parentItem.phone),
@@ -217,6 +234,7 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
 
     await tx.studentParent.create({
       data: {
+        tenantId,
         studentId,
         parentId,
         relationship: parentItem.relationship,
@@ -227,22 +245,27 @@ const upsertStudentParents = async (tx, studentId, parents = []) => {
 };
 
 export const studentsService = {
-  async getNextAdmissionNumber() {
-    return { admissionNumber: await getNextAdmissionNumber() };
+  async getNextAdmissionNumber(tenantId) {
+    return { admissionNumber: await getNextAdmissionNumber(tenantId) };
   },
 
-  async createStudent({ body, file }) {
-    const existingStudent = await prisma.student.findUnique({
-      where: { admissionNumber: body.admissionNumber },
+  async createStudent(tenantId, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingStudent = await prisma.student.findFirst({
+      where: {
+        tenantId: resolvedTenantId,
+        admissionNumber: body.admissionNumber,
+      },
     });
 
     if (existingStudent) {
-      body.admissionNumber = await getNextAdmissionNumber();
+      body.admissionNumber = await getNextAdmissionNumber(resolvedTenantId);
     }
 
     const student = await prisma.$transaction(async (tx) => {
       const createdStudent = await tx.student.create({
         data: {
+          tenantId: resolvedTenantId,
           admissionNumber: body.admissionNumber,
           admissionDate: body.admissionDate || null,
           admissionFee: optionalDecimal(body.admissionFee),
@@ -275,7 +298,7 @@ export const studentsService = {
       });
 
       if (Array.isArray(body.parents) && body.parents.length > 0) {
-        await upsertStudentParents(tx, createdStudent.id, body.parents);
+        await upsertStudentParents(tx, resolvedTenantId, createdStudent.id, body.parents);
       }
 
       return tx.student.findUnique({
@@ -287,10 +310,12 @@ export const studentsService = {
     return student;
   },
 
-  async getStudents(query) {
+  async getStudents(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -307,6 +332,7 @@ export const studentsService = {
         ? {
             assignments: {
               some: {
+                tenantId: resolvedTenantId,
                 status: 'active',
                 ...(query.branchId ? { branchId: query.branchId } : {}),
                 ...(query.classId ? { classId: query.classId } : {}),
@@ -335,9 +361,13 @@ export const studentsService = {
     };
   },
 
-  async getStudentById(id) {
-    const student = await prisma.student.findUnique({
-      where: { id },
+  async getStudentById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const student = await prisma.student.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
       select: studentSelect,
     });
 
@@ -348,9 +378,13 @@ export const studentsService = {
     return student;
   },
 
-  async updateStudent(id, { body, file }) {
-    const existingStudent = await prisma.student.findUnique({
-      where: { id },
+  async updateStudent(tenantId, id, { body, file }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingStudent = await prisma.student.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
     });
 
     if (!existingStudent) {
@@ -360,6 +394,7 @@ export const studentsService = {
     const duplicateStudent = await prisma.student.findFirst({
       where: {
         id: { not: id },
+        tenantId: resolvedTenantId,
         admissionNumber: body.admissionNumber,
       },
     });
@@ -405,7 +440,7 @@ export const studentsService = {
       });
 
       if (Array.isArray(body.parents)) {
-        await upsertStudentParents(tx, id, body.parents);
+        await upsertStudentParents(tx, resolvedTenantId, id, body.parents);
       }
 
       return tx.student.findUnique({
@@ -417,9 +452,13 @@ export const studentsService = {
     return student;
   },
 
-  async deleteStudent(id) {
-    const existingStudent = await prisma.student.findUnique({
-      where: { id },
+  async deleteStudent(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingStudent = await prisma.student.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
     });
 
     if (!existingStudent) {
@@ -445,16 +484,20 @@ export const studentsService = {
     });
   },
 
-  async assignClassToStudent(studentId, payload) {
-    const student = await prisma.student.findUnique({
-      where: { id: studentId },
+  async assignClassToStudent(tenantId, studentId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const student = await prisma.student.findFirst({
+      where: {
+        id: studentId,
+        tenantId: resolvedTenantId,
+      },
     });
 
     if (!student) {
       throw new AppError('Student not found.', 404);
     }
 
-    await ensureAssignmentReferences(payload);
+    await ensureAssignmentReferences(resolvedTenantId, payload);
 
     return prisma.$transaction(async (tx) => {
       await tx.studentClassAssignment.updateMany({
@@ -470,6 +513,7 @@ export const studentsService = {
       const assignment = await tx.studentClassAssignment.create({
         data: {
           studentId,
+          tenantId: resolvedTenantId,
           branchId: payload.branchId,
           classId: payload.classId,
           sectionId: payload.sectionId,
@@ -490,12 +534,18 @@ export const studentsService = {
     });
   },
 
-  async removeClassAssignment(assignmentId) {
+  async removeClassAssignment(tenantId, assignmentId) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const assignment = await prisma.studentClassAssignment.findUnique({
       where: { id: assignmentId },
+      include: {
+        student: {
+          select: { tenantId: true },
+        },
+      },
     });
 
-    if (!assignment) {
+    if (!assignment || assignment.tenantId !== resolvedTenantId || assignment.student?.tenantId !== resolvedTenantId) {
       throw new AppError('Class assignment not found.', 404);
     }
 

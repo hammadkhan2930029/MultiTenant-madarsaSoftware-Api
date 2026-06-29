@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { subjectsService } from './subjects.service.js';
 
 export const createSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.createSubject(req.body);
+  const result = await subjectsService.createSubject(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSubject = asyncHandler(async (req, res) => {
 });
 
 export const getSubjects = asyncHandler(async (req, res) => {
-  const result = await subjectsService.getSubjects(req.query);
+  const result = await subjectsService.getSubjects(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Subjects fetched successfully.',
@@ -22,7 +22,7 @@ export const getSubjects = asyncHandler(async (req, res) => {
 });
 
 export const getSubjectById = asyncHandler(async (req, res) => {
-  const result = await subjectsService.getSubjectById(req.params.id);
+  const result = await subjectsService.getSubjectById(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Subject fetched successfully.',
@@ -31,7 +31,7 @@ export const getSubjectById = asyncHandler(async (req, res) => {
 });
 
 export const updateSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.updateSubject(req.params.id, req.body);
+  const result = await subjectsService.updateSubject(req.tenantId, req.params.id, req.body);
 
   return apiResponse(res, {
     message: 'Subject updated successfully.',
@@ -40,7 +40,7 @@ export const updateSubject = asyncHandler(async (req, res) => {
 });
 
 export const deleteSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.deleteSubject(req.params.id);
+  const result = await subjectsService.deleteSubject(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Subject deleted successfully.',

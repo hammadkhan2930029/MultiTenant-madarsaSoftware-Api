@@ -18,6 +18,12 @@ for (const key of requiredEnvVars) {
   }
 }
 
+const parseCsv = (value = '') =>
+  value
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+
 export const env = {
   port: Number(process.env.PORT),
   nodeEnv: process.env.NODE_ENV,
@@ -26,6 +32,10 @@ export const env = {
   appOrigins: process.env.APP_ORIGIN.split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),
+  tenantBaseDomains: parseCsv(process.env.TENANT_BASE_DOMAINS || 'localhost,lvh.me,localtest.me'),
+  tenantSystemHosts: parseCsv(process.env.TENANT_SYSTEM_HOSTS || 'localhost,127.0.0.1,::1'),
+  tenantSystemSubdomains: parseCsv(process.env.TENANT_SYSTEM_SUBDOMAINS || 'api,app,admin,www,demoapi'),
+  defaultTenantCode: process.env.DEFAULT_TENANT_CODE || 'default',
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,

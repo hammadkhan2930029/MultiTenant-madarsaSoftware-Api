@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { examSchedulesService } from './exam-schedules.service.js';
 
 export const createExamSchedule = asyncHandler(async (req, res) => {
-  const schedule = await examSchedulesService.createExamSchedule(req.body);
+  const schedule = await examSchedulesService.createExamSchedule(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createExamSchedule = asyncHandler(async (req, res) => {
 });
 
 export const getExamSchedules = asyncHandler(async (req, res) => {
-  const schedules = await examSchedulesService.getExamSchedules(req.query);
+  const schedules = await examSchedulesService.getExamSchedules(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Exam schedules fetched successfully.',
@@ -22,7 +22,7 @@ export const getExamSchedules = asyncHandler(async (req, res) => {
 });
 
 export const updateExamSchedule = asyncHandler(async (req, res) => {
-  const schedule = await examSchedulesService.updateExamSchedule(Number(req.params.id), req.body);
+  const schedule = await examSchedulesService.updateExamSchedule(req.tenantId, Number(req.params.id), req.body);
 
   return apiResponse(res, {
     message: 'Exam schedule updated successfully.',
@@ -31,7 +31,7 @@ export const updateExamSchedule = asyncHandler(async (req, res) => {
 });
 
 export const deleteExamSchedule = asyncHandler(async (req, res) => {
-  const schedule = await examSchedulesService.deleteExamSchedule(Number(req.params.id));
+  const schedule = await examSchedulesService.deleteExamSchedule(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'Exam schedule removed successfully.',

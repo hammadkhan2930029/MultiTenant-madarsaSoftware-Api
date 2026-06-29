@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 
 const manualSelect = {
   id: true,
+  tenantId: true,
   type: true,
   category: true,
   description: true,
@@ -14,6 +15,16 @@ const manualSelect = {
   createdAt: true,
   updatedAt: true,
   createdBy: { select: { id: true, name: true, username: true } },
+};
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
 };
 
 const normalizeStartDate = (value) => {
@@ -185,16 +196,17 @@ const summarize = (items) => {
   };
 };
 
-const fetchFinancialRows = async (query) => {
+const fetchFinancialRows = async (tenantId, query) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
   const range = getEffectiveDateRange(query);
   const [manual, transactions, funds, salaries, fees] = await Promise.all([
     prisma.financialRecord.findMany({
-      where: { status: 'active', ...buildDateWhere('date', range) },
+      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('date', range) },
       orderBy: { date: 'desc' },
       select: manualSelect,
     }),
     prisma.financeTransaction.findMany({
-      where: { status: 'active', ...buildDateWhere('transactionDate', range) },
+      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('transactionDate', range) },
       orderBy: { transactionDate: 'desc' },
       select: {
         id: true,
@@ -210,7 +222,7 @@ const fetchFinancialRows = async (query) => {
       },
     }),
     prisma.fundCollection.findMany({
-      where: { status: 'active', ...buildDateWhere('paymentDate', range) },
+      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('paymentDate', range) },
       orderBy: { paymentDate: 'desc' },
       select: {
         id: true,
@@ -228,7 +240,7 @@ const fetchFinancialRows = async (query) => {
       },
     }),
     prisma.salaryEntry.findMany({
-      where: { status: 'active', ...buildDateWhere('paymentDate', range) },
+      where: { tenantId: resolvedTenantId, status: 'active', teacher: { tenantId: resolvedTenantId }, ...buildDateWhere('paymentDate', range) },
       orderBy: { paymentDate: 'desc' },
       select: {
         id: true,
@@ -244,8 +256,10 @@ const fetchFinancialRows = async (query) => {
     }),
     prisma.studentFeeVoucher.findMany({
       where: {
+        tenantId: resolvedTenantId,
         status: { in: ['paid', 'partial'] },
         paidAmount: { gt: 0 },
+        student: { tenantId: resolvedTenantId },
         ...buildDateWhere('paidDate', range),
       },
       orderBy: [{ paidDate: 'desc' }, { updatedAt: 'desc' }],
@@ -274,9 +288,9 @@ const fetchFinancialRows = async (query) => {
 };
 
 export const financialService = {
-  async list(query) {
+  async list(tenantId, query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const filteredItems = applyCommonFilters(await fetchFinancialRows(query), query);
+    const filteredItems = applyCommonFilters(await fetchFinancialRows(tenantId, query), query);
     const items = filteredItems.slice(skip, skip + limit);
 
     return {
@@ -293,14 +307,16 @@ export const financialService = {
     };
   },
 
-  async summary(query) {
-    return summarize(applyCommonFilters(await fetchFinancialRows(query), query));
+  async summary(tenantId, query) {
+    return summarize(applyCommonFilters(await fetchFinancialRows(tenantId, query), query));
   },
 
-  async create(payload, admin) {
+  async create(tenantId, payload, admin) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     return mapManualRecord(
       await prisma.financialRecord.create({
         data: {
+          tenantId: resolvedTenantId,
           type: payload.type,
           category: payload.category,
           description: payload.description || null,
@@ -314,8 +330,9 @@ export const financialService = {
     );
   },
 
-  async update(id, payload) {
-    const existing = await prisma.financialRecord.findUnique({ where: { id } });
+  async update(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId } });
     if (!existing) throw new AppError('Financial record not found.', 404);
 
     return mapManualRecord(
@@ -334,8 +351,9 @@ export const financialService = {
     );
   },
 
-  async remove(id) {
-    const existing = await prisma.financialRecord.findUnique({ where: { id } });
+  async remove(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId } });
     if (!existing) throw new AppError('Financial record not found.', 404);
     return mapManualRecord(await prisma.financialRecord.update({ where: { id }, data: { status: 'inactive' }, select: manualSelect }));
   },

@@ -2,10 +2,12 @@ import { prisma } from '../../config/prisma.js';
 import { env } from '../../config/env.js';
 import { sendEmail } from '../../utils/smtpMailer.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeTenantId } from '../../utils/tenantGuard.js';
 
 const supportRequestTableSql = `
 CREATE TABLE IF NOT EXISTS support_requests (
   id INT NOT NULL AUTO_INCREMENT,
+  tenant_id INT NOT NULL,
   topic VARCHAR(120) NOT NULL,
   priority VARCHAR(50) NOT NULL DEFAULT 'normal',
   message TEXT NOT NULL,
@@ -19,9 +21,11 @@ CREATE TABLE IF NOT EXISTS support_requests (
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  INDEX support_requests_tenant_id_idx (tenant_id),
   INDEX support_requests_status_idx (status),
   INDEX support_requests_priority_idx (priority),
   INDEX support_requests_adminId_idx (adminId),
+  CONSTRAINT support_requests_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES Tenant(id),
   CONSTRAINT support_requests_adminId_fkey FOREIGN KEY (adminId) REFERENCES admins(id) ON DELETE SET NULL
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 `;
@@ -38,6 +42,7 @@ const ensureSupportRequestTable = () => {
 
 const mapSupportRequest = (row) => ({
   id: row.id,
+  tenantId: row.tenant_id ?? row.tenantId,
   topic: row.topic,
   priority: row.priority,
   message: row.message,
@@ -105,8 +110,9 @@ const markEmailStatus = async ({ id, emailStatus, emailError = null }) => {
 };
 
 export const supportService = {
-  async createSupportRequest(payload, admin) {
+  async createSupportRequest(tenantId, payload, admin) {
     await ensureSupportRequestTable();
+    const resolvedTenantId = normalizeTenantId(tenantId);
 
     const submitterName = admin?.name || admin?.username || null;
     const submitterEmail = admin?.email || null;
@@ -115,6 +121,7 @@ export const supportService = {
     const [supportRequest] = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`
         INSERT INTO support_requests (
+          tenant_id,
           topic,
           priority,
           message,
@@ -126,6 +133,7 @@ export const supportService = {
           status
         )
         VALUES (
+          ${resolvedTenantId},
           ${payload.topic},
           ${payload.priority || 'normal'},
           ${payload.message},
@@ -163,8 +171,9 @@ export const supportService = {
     return supportRequest;
   },
 
-  async getSupportRequests(query) {
+  async getSupportRequests(tenantId, query) {
     await ensureSupportRequestTable();
+    const resolvedTenantId = normalizeTenantId(tenantId);
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
@@ -172,7 +181,8 @@ export const supportService = {
     const items = await prisma.$queryRaw`
       SELECT *
       FROM support_requests
-      WHERE (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
       ORDER BY createdAt DESC, id DESC
@@ -182,7 +192,8 @@ export const supportService = {
     const totalRows = await prisma.$queryRaw`
       SELECT COUNT(*) AS total
       FROM support_requests
-      WHERE (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
+      WHERE tenant_id = ${resolvedTenantId}
+        AND (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
     `;

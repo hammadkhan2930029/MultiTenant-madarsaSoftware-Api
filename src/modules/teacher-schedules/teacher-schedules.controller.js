@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { teacherSchedulesService } from './teacher-schedules.service.js';
 
 export const createTeacherSchedule = asyncHandler(async (req, res) => {
-  const schedule = await teacherSchedulesService.createTeacherSchedule(req.body);
+  const schedule = await teacherSchedulesService.createTeacherSchedule(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createTeacherSchedule = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherSchedules = asyncHandler(async (req, res) => {
-  const schedules = await teacherSchedulesService.getTeacherSchedules(req.query);
+  const schedules = await teacherSchedulesService.getTeacherSchedules(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'اساتذہ کے شیڈول کامیابی سے لوڈ ہو گئے۔',
@@ -22,7 +22,7 @@ export const getTeacherSchedules = asyncHandler(async (req, res) => {
 });
 
 export const deleteTeacherSchedule = asyncHandler(async (req, res) => {
-  const schedule = await teacherSchedulesService.deleteTeacherSchedule(Number(req.params.id));
+  const schedule = await teacherSchedulesService.deleteTeacherSchedule(req.tenantId, Number(req.params.id));
 
   return apiResponse(res, {
     message: 'استاد کا شیڈول کامیابی سے ختم کر دیا گیا۔',

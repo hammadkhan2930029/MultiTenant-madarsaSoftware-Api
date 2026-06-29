@@ -1,9 +1,11 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { findTenantRecordOrThrow, normalizeTenantId } from '../../../utils/tenantGuard.js';
 
 const select = {
   id: true,
+  tenantId: true,
   studentId: true,
   weekLabel: true,
   className: true,
@@ -27,7 +29,7 @@ const select = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  student: { select: { id: true, admissionNumber: true, fullName: true } },
+  student: { select: { id: true, tenantId: true, admissionNumber: true, fullName: true } },
 };
 
 const nullableFields = [
@@ -54,9 +56,10 @@ const normalizeDate = (value) => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
-const ensureStudent = async (studentId) => {
-  const student = await prisma.student.findUnique({ where: { id: studentId } });
-  if (!student) throw new AppError('طالب علم نہیں ملا۔', 404);
+
+const ensureStudent = async (tenantId, studentId) => {
+  const student = await prisma.student.findFirst({ where: { id: studentId, tenantId } });
+  if (!student) throw new AppError('Student not found.', 404);
 };
 
 const normalizePayload = (payload) => {
@@ -71,22 +74,37 @@ const normalizePayload = (payload) => {
   return data;
 };
 
+const notFoundMessage = 'Weekly hifz entry not found.';
+
 export const weeklyHifzService = {
-  async createEntry(payload) {
-    await ensureStudent(payload.studentId);
+  async createEntry(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureStudent(resolvedTenantId, payload.studentId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const data = normalizePayload(payload);
+
     return prisma.hifzWeeklyEntry.upsert({
-      where: { studentId_weekStartDate_weekEndDate: { studentId: payload.studentId, weekStartDate, weekEndDate } },
-      create: { ...data, weekStartDate, weekEndDate },
-      update: { ...data, weekStartDate, weekEndDate },
+      where: {
+        tenantId_studentId_weekStartDate_weekEndDate: {
+          tenantId: resolvedTenantId,
+          studentId: payload.studentId,
+          weekStartDate,
+          weekEndDate,
+        },
+      },
+      create: { ...data, tenantId: resolvedTenantId, weekStartDate, weekEndDate },
+      update: { ...data, tenantId: resolvedTenantId, weekStartDate, weekEndDate },
       select,
     });
   },
-  async getEntries(query) {
+
+  async getEntries(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      student: { tenantId: resolvedTenantId },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.date
         ? {
@@ -105,30 +123,31 @@ export const weeklyHifzService = {
     ]);
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
-  async getEntryById(id) {
-    const entry = await prisma.hifzWeeklyEntry.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
-    return entry;
+
+  async getEntryById(tenantId, id) {
+    return findTenantRecordOrThrow(prisma.hifzWeeklyEntry, tenantId, { id }, { select, message: notFoundMessage });
   },
-  async updateEntry(id, payload) {
-    const existing = await prisma.hifzWeeklyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
-    await ensureStudent(payload.studentId);
+
+  async updateEntry(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await findTenantRecordOrThrow(prisma.hifzWeeklyEntry, resolvedTenantId, { id }, { message: notFoundMessage });
+    await ensureStudent(resolvedTenantId, payload.studentId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const duplicate = await prisma.hifzWeeklyEntry.findFirst({
-      where: { id: { not: id }, studentId: payload.studentId, weekStartDate, weekEndDate },
+      where: { tenantId: resolvedTenantId, id: { not: id }, studentId: payload.studentId, weekStartDate, weekEndDate },
     });
-    if (duplicate) throw new AppError('اس طالب علم کا اس ہفتے کا جائزہ پہلے سے موجود ہے۔', 409);
+    if (duplicate) throw new AppError('Weekly hifz entry already exists for this student and week.', 409);
+
     return prisma.hifzWeeklyEntry.update({
       where: { id },
-      data: { ...normalizePayload(payload), weekStartDate, weekEndDate },
+      data: { ...normalizePayload(payload), tenantId: resolvedTenantId, weekStartDate, weekEndDate },
       select,
     });
   },
-  async deactivateEntry(id) {
-    const existing = await prisma.hifzWeeklyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('ہفتہ وار جائزے کی انٹری نہیں ملی۔', 404);
+
+  async deactivateEntry(tenantId, id) {
+    await findTenantRecordOrThrow(prisma.hifzWeeklyEntry, tenantId, { id }, { message: notFoundMessage });
     return prisma.hifzWeeklyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

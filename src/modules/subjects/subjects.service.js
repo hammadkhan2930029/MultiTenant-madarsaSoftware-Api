@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const subjectSelect = {
   id: true,
+  tenantId: true,
   name: true,
   detail: true,
   status: true,
@@ -11,10 +12,34 @@ const subjectSelect = {
   updatedAt: true,
 };
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
+const getTenantSubject = async (tenantId, id) => {
+  const subject = await prisma.subject.findFirst({
+    where: { id: Number(id), tenantId },
+    select: subjectSelect,
+  });
+
+  if (!subject) {
+    throw new AppError('Subject not found.', 404);
+  }
+
+  return subject;
+};
+
 export const subjectsService = {
-  async createSubject(payload) {
-    const existingSubject = await prisma.subject.findUnique({
-      where: { name: payload.name },
+  async createSubject(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingSubject = await prisma.subject.findFirst({
+      where: { tenantId: resolvedTenantId, name: payload.name },
     });
 
     if (existingSubject) {
@@ -23,6 +48,7 @@ export const subjectsService = {
 
     return prisma.subject.create({
       data: {
+        tenantId: resolvedTenantId,
         name: payload.name,
         detail: payload.detail || null,
         status: payload.status || 'active',
@@ -31,10 +57,12 @@ export const subjectsService = {
     });
   },
 
-  async getSubjects(query) {
+  async getSubjects(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -63,30 +91,18 @@ export const subjectsService = {
     };
   },
 
-  async getSubjectById(id) {
-    const subject = await prisma.subject.findUnique({
-      where: { id: Number(id) },
-      select: subjectSelect,
-    });
-
-    if (!subject) {
-      throw new AppError('Subject not found.', 404);
-    }
-
-    return subject;
+  async getSubjectById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return getTenantSubject(resolvedTenantId, id);
   },
 
-  async updateSubject(id, payload) {
-    const existingSubject = await prisma.subject.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!existingSubject) {
-      throw new AppError('Subject not found.', 404);
-    }
+  async updateSubject(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingSubject = await getTenantSubject(resolvedTenantId, id);
 
     const duplicateSubject = await prisma.subject.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         id: { not: Number(id) },
         name: payload.name,
       },
@@ -107,14 +123,9 @@ export const subjectsService = {
     });
   },
 
-  async deleteSubject(id) {
-    const existingSubject = await prisma.subject.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!existingSubject) {
-      throw new AppError('Subject not found.', 404);
-    }
+  async deleteSubject(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await getTenantSubject(resolvedTenantId, id);
 
     return prisma.subject.delete({
       where: { id: Number(id) },

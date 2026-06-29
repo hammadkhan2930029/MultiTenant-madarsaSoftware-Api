@@ -1,9 +1,11 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { findTenantRecordOrThrow, normalizeTenantId } from '../../../utils/tenantGuard.js';
 
 const select = {
   id: true,
+  tenantId: true,
   studentId: true,
   date: true,
   sabq: true,
@@ -42,7 +44,7 @@ const select = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  student: { select: { id: true, admissionNumber: true, fullName: true } },
+  student: { select: { id: true, tenantId: true, admissionNumber: true, fullName: true } },
 };
 
 const nullableFields = [
@@ -86,9 +88,9 @@ const normalizeDate = (value) => {
   return date;
 };
 
-const ensureStudent = async (studentId) => {
-  const student = await prisma.student.findUnique({ where: { id: studentId } });
-  if (!student) throw new AppError('طالب علم نہیں ملا۔', 404);
+const ensureStudent = async (tenantId, studentId) => {
+  const student = await prisma.student.findFirst({ where: { id: studentId, tenantId } });
+  if (!student) throw new AppError('Student not found.', 404);
 };
 
 const normalizePayload = (payload) => {
@@ -103,22 +105,29 @@ const normalizePayload = (payload) => {
   return data;
 };
 
+const notFoundMessage = 'Daily hifz entry not found.';
+
 export const dailyHifzService = {
-  async createEntry(payload) {
-    await ensureStudent(payload.studentId);
+  async createEntry(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureStudent(resolvedTenantId, payload.studentId);
     const date = normalizeDate(payload.date);
     const data = normalizePayload(payload);
+
     return prisma.hifzDailyEntry.upsert({
-      where: { studentId_date: { studentId: payload.studentId, date } },
-      create: { ...data, date },
-      update: { ...data, date },
+      where: { tenantId_studentId_date: { tenantId: resolvedTenantId, studentId: payload.studentId, date } },
+      create: { ...data, tenantId: resolvedTenantId, date },
+      update: { ...data, tenantId: resolvedTenantId, date },
       select,
     });
   },
 
-  async getEntries(query) {
+  async getEntries(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      student: { tenantId: resolvedTenantId },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.date ? { date: normalizeDate(query.date) } : {}),
       ...(query.performanceStatus ? { performanceStatus: query.performanceStatus } : {}),
@@ -131,30 +140,29 @@ export const dailyHifzService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async getEntryById(id) {
-    const entry = await prisma.hifzDailyEntry.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
-    return entry;
+  async getEntryById(tenantId, id) {
+    return findTenantRecordOrThrow(prisma.hifzDailyEntry, tenantId, { id }, { select, message: notFoundMessage });
   },
 
-  async updateEntry(id, payload) {
-    const existing = await prisma.hifzDailyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
-    await ensureStudent(payload.studentId);
+  async updateEntry(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await findTenantRecordOrThrow(prisma.hifzDailyEntry, resolvedTenantId, { id }, { message: notFoundMessage });
+    await ensureStudent(resolvedTenantId, payload.studentId);
+    const date = normalizeDate(payload.date);
     const duplicate = await prisma.hifzDailyEntry.findFirst({
-      where: { id: { not: id }, studentId: payload.studentId, date: normalizeDate(payload.date) },
+      where: { tenantId: resolvedTenantId, id: { not: id }, studentId: payload.studentId, date },
     });
-    if (duplicate) throw new AppError('اس طالب علم کا اس تاریخ کا یومیہ جائزہ پہلے سے موجود ہے۔', 409);
+    if (duplicate) throw new AppError('Daily hifz entry already exists for this student and date.', 409);
+
     return prisma.hifzDailyEntry.update({
       where: { id },
-      data: { ...normalizePayload(payload), date: normalizeDate(payload.date) },
+      data: { ...normalizePayload(payload), tenantId: resolvedTenantId, date },
       select,
     });
   },
 
-  async deactivateEntry(id) {
-    const existing = await prisma.hifzDailyEntry.findUnique({ where: { id } });
-    if (!existing) throw new AppError('یومیہ جائزے کی انٹری نہیں ملی۔', 404);
+  async deactivateEntry(tenantId, id) {
+    await findTenantRecordOrThrow(prisma.hifzDailyEntry, tenantId, { id }, { message: notFoundMessage });
     return prisma.hifzDailyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

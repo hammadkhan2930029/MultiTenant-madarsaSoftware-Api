@@ -8,6 +8,7 @@ const UNKNOWN_DEFAULT_EXAM_NAME = '??????? ????';
 
 const examResultSelect = {
   id: true,
+  tenantId: true,
   examName: true,
   totalMarks: true,
   obtainedMarks: true,
@@ -18,23 +19,34 @@ const examResultSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  student: { select: { id: true, fullName: true, fatherName: true, admissionNumber: true } },
+  student: { select: { id: true, tenantId: true, fullName: true, fatherName: true, admissionNumber: true } },
   session: { select: { id: true, name: true } },
-  class: { select: { id: true, name: true } },
-  section: { select: { id: true, name: true } },
+  class: { select: { id: true, tenantId: true, name: true } },
+  section: { select: { id: true, tenantId: true, name: true } },
   subjects: {
     orderBy: { id: 'asc' },
     select: {
       id: true,
+      tenantId: true,
       totalMarks: true,
       obtainedMarks: true,
       percentage: true,
       gradeTitle: true,
       gradeCode: true,
       status: true,
-      subject: { select: { id: true, name: true } },
+      subject: { select: { id: true, tenantId: true, name: true } },
     },
   },
+};
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
 };
 
 const toNumber = (value) => Number(value || 0);
@@ -63,18 +75,18 @@ const formatExamResult = (result) => ({
   })),
 });
 
-const ensureReferences = async ({ studentId, sessionId, classId, sectionId, subjects }) => {
+const ensureReferences = async (tenantId, { studentId, sessionId, classId, sectionId, subjects }) => {
   const subjectIds = [...new Set(subjects.map((subject) => subject.subjectId))];
   if (subjectIds.length !== subjects.length) {
     throw new AppError('Duplicate subjects are not allowed in the same result.', 400);
   }
 
   const [student, session, academicClass, section, dbSubjects] = await Promise.all([
-    prisma.student.findUnique({ where: { id: studentId } }),
+    prisma.student.findFirst({ where: { id: studentId, tenantId } }),
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findUnique({ where: { id: classId } }),
-    sectionId ? prisma.section.findUnique({ where: { id: sectionId } }) : Promise.resolve(null),
-    prisma.subject.findMany({ where: { id: { in: subjectIds }, status: 'active' }, select: { id: true } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    sectionId ? prisma.section.findFirst({ where: { id: sectionId, tenantId } }) : Promise.resolve(null),
+    prisma.subject.findMany({ where: { id: { in: subjectIds }, tenantId, status: 'active' }, select: { id: true } }),
   ]);
 
   if (!student || student.status !== 'active') throw new AppError('Active student not found.', 404);
@@ -86,6 +98,7 @@ const ensureReferences = async ({ studentId, sessionId, classId, sectionId, subj
 
   const assignment = await prisma.studentClassAssignment.findFirst({
     where: {
+      tenantId,
       studentId,
       sessionId,
       classId,
@@ -99,9 +112,9 @@ const ensureReferences = async ({ studentId, sessionId, classId, sectionId, subj
   }
 };
 
-const buildCalculatedResult = async (payload) => {
+const buildCalculatedResult = async (tenantId, payload) => {
   const grades = await prisma.resultGrade.findMany({
-    where: { status: 'active' },
+    where: { tenantId, status: 'active' },
     orderBy: { fromPercent: 'desc' },
   });
 
@@ -137,8 +150,9 @@ const buildCalculatedResult = async (payload) => {
   };
 };
 
-const writeResult = async (tx, existingResultId, payload, calculated) => {
+const writeResult = async (tx, tenantId, existingResultId, payload, calculated) => {
   const data = {
+    tenantId,
     studentId: payload.studentId,
     sessionId: payload.sessionId,
     classId: payload.classId,
@@ -157,9 +171,10 @@ const writeResult = async (tx, existingResultId, payload, calculated) => {
     ? await tx.examResult.update({ where: { id: existingResultId }, data, select: { id: true } })
     : await tx.examResult.create({ data, select: { id: true } });
 
-  await tx.examResultSubject.deleteMany({ where: { examResultId: result.id } });
+  await tx.examResultSubject.deleteMany({ where: { examResultId: result.id, tenantId } });
   await tx.examResultSubject.createMany({
     data: calculated.subjects.map((subject) => ({
+      tenantId,
       examResultId: result.id,
       subjectId: subject.subjectId,
       totalMarks: subject.totalMarks,
@@ -171,18 +186,20 @@ const writeResult = async (tx, existingResultId, payload, calculated) => {
     })),
   });
 
-  return tx.examResult.findUnique({ where: { id: result.id }, select: examResultSelect });
+  return tx.examResult.findFirst({ where: { id: result.id, tenantId }, select: examResultSelect });
 };
 
 export const examResultsService = {
-  async saveExamResult(payload, id = null) {
-    await ensureReferences(payload);
-    const calculated = await buildCalculatedResult(payload);
+  async saveExamResult(tenantId, payload, id = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureReferences(resolvedTenantId, payload);
+    const calculated = await buildCalculatedResult(resolvedTenantId, payload);
 
     const existingResult = id
-      ? await prisma.examResult.findUnique({ where: { id: Number(id) } })
+      ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId } })
       : await prisma.examResult.findFirst({
           where: {
+            tenantId: resolvedTenantId,
             studentId: payload.studentId,
             sessionId: payload.sessionId,
             classId: payload.classId,
@@ -195,17 +212,21 @@ export const examResultsService = {
       throw new AppError('Exam result not found.', 404);
     }
 
-    const result = await prisma.$transaction((tx) => writeResult(tx, existingResult?.id || null, payload, calculated));
+    const result = await prisma.$transaction((tx) => writeResult(tx, resolvedTenantId, existingResult?.id || null, payload, calculated));
     return formatExamResult(result);
   },
 
-  async getExamResults(query) {
+  async getExamResults(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
+      student: { tenantId: resolvedTenantId },
+      class: { tenantId: resolvedTenantId },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
-      ...(query.sectionId ? { sectionId: query.sectionId } : {}),
+      ...(query.sectionId ? { sectionId: query.sectionId, section: { tenantId: resolvedTenantId } } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
         ? {
@@ -236,19 +257,26 @@ export const examResultsService = {
     };
   },
 
-  async getExamResultById(id) {
-    const result = await prisma.examResult.findUnique({ where: { id: Number(id) }, select: examResultSelect });
+  async getExamResultById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const result = await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId }, select: examResultSelect });
     if (!result) throw new AppError('Exam result not found.', 404);
     return formatExamResult(result);
   },
 
-  async findStudentExamResult(studentId, query) {
+  async findStudentExamResult(tenantId, studentId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const student = await prisma.student.findFirst({ where: { id: Number(studentId), tenantId: resolvedTenantId }, select: { id: true } });
+    if (!student) throw new AppError('Student not found.', 404);
+
     const result = await prisma.examResult.findFirst({
       where: {
+        tenantId: resolvedTenantId,
         studentId: Number(studentId),
+        student: { tenantId: resolvedTenantId },
         ...(query.sessionId ? { sessionId: query.sessionId } : {}),
-        ...(query.classId ? { classId: query.classId } : {}),
-        ...(query.sectionId ? { sectionId: query.sectionId } : {}),
+        ...(query.classId ? { classId: query.classId, class: { tenantId: resolvedTenantId } } : {}),
+        ...(query.sectionId ? { sectionId: query.sectionId, section: { tenantId: resolvedTenantId } } : {}),
         ...(query.examName
           ? { examName: query.examName }
           : { examName: { in: [DEFAULT_EXAM_NAME, LEGACY_DEFAULT_EXAM_NAME, UNKNOWN_DEFAULT_EXAM_NAME] } }),
@@ -261,8 +289,9 @@ export const examResultsService = {
     return result ? formatExamResult(result) : null;
   },
 
-  async deleteExamResult(id) {
-    const existingResult = await prisma.examResult.findUnique({ where: { id: Number(id) } });
+  async deleteExamResult(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingResult = await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId } });
     if (!existingResult) throw new AppError('Exam result not found.', 404);
 
     const result = await prisma.examResult.update({

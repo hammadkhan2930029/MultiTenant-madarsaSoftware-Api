@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const resultGradeSelect = {
   id: true,
+  tenantId: true,
   title: true,
   code: true,
   fromPercent: true,
@@ -13,8 +14,19 @@ const resultGradeSelect = {
   updatedAt: true,
 };
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const formatResultGrade = (grade) => ({
   id: grade.id,
+  tenantId: grade.tenantId,
   title: grade.title,
   code: grade.code || '',
   from: grade.fromPercent,
@@ -24,9 +36,10 @@ const formatResultGrade = (grade) => ({
   updatedAt: grade.updatedAt,
 });
 
-const ensureNoOverlap = async ({ from, to, excludeId }) => {
+const ensureNoOverlap = async (tenantId, { from, to, excludeId }) => {
   const overlappingGrade = await prisma.resultGrade.findFirst({
     where: {
+      tenantId,
       status: 'active',
       ...(excludeId ? { id: { not: Number(excludeId) } } : {}),
       fromPercent: { lte: to },
@@ -40,7 +53,8 @@ const ensureNoOverlap = async ({ from, to, excludeId }) => {
   }
 };
 
-const buildData = (payload) => ({
+const buildData = (tenantId, payload) => ({
+  tenantId,
   title: payload.title,
   code: payload.code || null,
   fromPercent: payload.from,
@@ -48,22 +62,38 @@ const buildData = (payload) => ({
   status: payload.status || 'active',
 });
 
+const getTenantResultGrade = async (tenantId, id) => {
+  const result = await prisma.resultGrade.findFirst({
+    where: { id: Number(id), tenantId },
+    select: resultGradeSelect,
+  });
+
+  if (!result) {
+    throw new AppError('Result grade not found.', 404);
+  }
+
+  return result;
+};
+
 export const resultGradesService = {
-  async createResultGrade(payload) {
-    await ensureNoOverlap({ from: payload.from, to: payload.to });
+  async createResultGrade(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureNoOverlap(resolvedTenantId, { from: payload.from, to: payload.to });
 
     const result = await prisma.resultGrade.create({
-      data: buildData(payload),
+      data: buildData(resolvedTenantId, payload),
       select: resultGradeSelect,
     });
 
     return formatResultGrade(result);
   },
 
-  async getResultGrades(query) {
+  async getResultGrades(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.search
         ? {
             OR: [
@@ -92,49 +122,31 @@ export const resultGradesService = {
     };
   },
 
-  async getResultGradeById(id) {
-    const result = await prisma.resultGrade.findUnique({
-      where: { id: Number(id) },
-      select: resultGradeSelect,
-    });
-
-    if (!result) {
-      throw new AppError('Result grade not found.', 404);
-    }
-
-    return formatResultGrade(result);
+  async getResultGradeById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return formatResultGrade(await getTenantResultGrade(resolvedTenantId, id));
   },
 
-  async updateResultGrade(id, payload) {
-    const existingGrade = await prisma.resultGrade.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!existingGrade) {
-      throw new AppError('Result grade not found.', 404);
-    }
+  async updateResultGrade(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existingGrade = await getTenantResultGrade(resolvedTenantId, id);
 
     if ((payload.status || existingGrade.status) === 'active') {
-      await ensureNoOverlap({ from: payload.from, to: payload.to, excludeId: id });
+      await ensureNoOverlap(resolvedTenantId, { from: payload.from, to: payload.to, excludeId: id });
     }
 
     const result = await prisma.resultGrade.update({
       where: { id: Number(id) },
-      data: buildData(payload),
+      data: buildData(resolvedTenantId, payload),
       select: resultGradeSelect,
     });
 
     return formatResultGrade(result);
   },
 
-  async deleteResultGrade(id) {
-    const existingGrade = await prisma.resultGrade.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!existingGrade) {
-      throw new AppError('Result grade not found.', 404);
-    }
+  async deleteResultGrade(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await getTenantResultGrade(resolvedTenantId, id);
 
     const result = await prisma.resultGrade.delete({
       where: { id: Number(id) },

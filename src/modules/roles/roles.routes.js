@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
+import { requireAnyPermission, requireSuperAdmin } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   assignRolePermissions,
@@ -20,14 +21,14 @@ import {
 
 const router = Router();
 
-router.use(authMiddleware);
+router.use(authMiddleware, requireSuperAdmin);
 
-router.post('/', validate(createRoleValidationSchema), createRole);
-router.get('/', validate(listRolesValidationSchema), getRoles);
-router.get('/permissions', getPermissions);
-router.get('/:id', validate(roleIdValidationSchema), getRoleById);
-router.patch('/:id', validate(updateRoleValidationSchema), updateRole);
-router.delete('/:id', validate(roleIdValidationSchema), deleteRole);
-router.put('/:id/permissions', validate(assignRolePermissionsValidationSchema), assignRolePermissions);
+router.post('/', requireAnyPermission('roles.create'), validate(createRoleValidationSchema), createRole);
+router.get('/', requireAnyPermission('roles.view'), validate(listRolesValidationSchema), getRoles);
+router.get('/permissions', requireAnyPermission('roles.view', 'roles.create', 'roles.edit'), getPermissions);
+router.get('/:id', requireAnyPermission('roles.view'), validate(roleIdValidationSchema), getRoleById);
+router.patch('/:id', requireAnyPermission('roles.edit'), validate(updateRoleValidationSchema), updateRole);
+router.delete('/:id', requireAnyPermission('roles.delete'), validate(roleIdValidationSchema), deleteRole);
+router.put('/:id/permissions', requireAnyPermission('roles.edit'), validate(assignRolePermissionsValidationSchema), assignRolePermissions);
 
 export { router as rolesRoutes };

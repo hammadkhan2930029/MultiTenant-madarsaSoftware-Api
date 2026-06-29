@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { resultGradesService } from './result-grades.service.js';
 
 export const createResultGrade = asyncHandler(async (req, res) => {
-  const result = await resultGradesService.createResultGrade(req.body);
+  const result = await resultGradesService.createResultGrade(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createResultGrade = asyncHandler(async (req, res) => {
 });
 
 export const getResultGrades = asyncHandler(async (req, res) => {
-  const result = await resultGradesService.getResultGrades(req.query);
+  const result = await resultGradesService.getResultGrades(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Result grades fetched successfully.',
@@ -22,7 +22,7 @@ export const getResultGrades = asyncHandler(async (req, res) => {
 });
 
 export const getResultGradeById = asyncHandler(async (req, res) => {
-  const result = await resultGradesService.getResultGradeById(req.params.id);
+  const result = await resultGradesService.getResultGradeById(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Result grade fetched successfully.',
@@ -31,7 +31,7 @@ export const getResultGradeById = asyncHandler(async (req, res) => {
 });
 
 export const updateResultGrade = asyncHandler(async (req, res) => {
-  const result = await resultGradesService.updateResultGrade(req.params.id, req.body);
+  const result = await resultGradesService.updateResultGrade(req.tenantId, req.params.id, req.body);
 
   return apiResponse(res, {
     message: 'Result grade updated successfully.',
@@ -40,7 +40,7 @@ export const updateResultGrade = asyncHandler(async (req, res) => {
 });
 
 export const deleteResultGrade = asyncHandler(async (req, res) => {
-  const result = await resultGradesService.deleteResultGrade(req.params.id);
+  const result = await resultGradesService.deleteResultGrade(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Result grade deleted successfully.',

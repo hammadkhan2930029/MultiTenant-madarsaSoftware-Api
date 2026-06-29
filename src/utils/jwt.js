@@ -6,7 +6,8 @@ export const generateAdminToken = (admin) =>
     {
       adminId: admin.id,
       username: admin.username,
-      role: admin.role,
+      role: admin.roleDetails?.roleName || admin.roleDetails?.role_name || admin.assignedRole?.roleName || admin.assignedRole?.role_name || admin.role,
+      tenantId: admin.tenantId || admin.tenant_id || null,
     },
     env.jwtSecret,
     {

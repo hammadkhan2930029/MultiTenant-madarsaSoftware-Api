@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 
 const select = {
   id: true,
+  tenantId: true,
   financeHeadId: true,
   type: true,
   amount: true,
@@ -15,12 +16,22 @@ const select = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  financeHead: { select: { id: true, name: true, type: true } },
+  financeHead: { select: { id: true, tenantId: true, name: true, type: true } },
+};
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
 };
 
 const normalizeDate = (value) => {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) throw new AppError('تاریخ ضروری ہے۔', 400);
+  if (Number.isNaN(date.getTime())) throw new AppError('Date is required.', 400);
   date.setHours(0, 0, 0, 0);
   return date;
 };
@@ -38,23 +49,28 @@ const toAmount = (value) => {
 
 const normalizeText = (value) => String(value || '').trim();
 
-const ensureHead = async ({ financeHeadId, type }) => {
-  const head = await prisma.financeHead.findUnique({ where: { id: financeHeadId } });
-  if (!head) throw new AppError('مالیاتی مد نہیں ملی۔', 404);
-  if (head.status !== 'active') throw new AppError('منتخب مالیاتی مد فعال نہیں ہے۔', 400);
-  if (head.type !== type) throw new AppError('منتخب مالیاتی مد آمدن/خرچ کی قسم سے مطابقت نہیں رکھتی۔', 400);
+const ensureHead = async (tenantId, { financeHeadId, type }) => {
+  const head = await prisma.financeHead.findFirst({ where: { id: financeHeadId, tenantId } });
+  if (!head) throw new AppError('Finance head not found.', 404);
+  if (head.status !== 'active') throw new AppError('Selected finance head is inactive.', 400);
+  if (head.type !== type) throw new AppError('Selected finance head does not match income/expense type.', 400);
 };
 
-const getOrCreateExpenseHead = async (category) => {
+const getOrCreateExpenseHead = async (tenantId, category) => {
   const headName = normalizeText(category);
-  if (!headName) throw new AppError('خرچ کی کیٹیگری ضروری ہے۔', 400);
+  if (!headName) throw new AppError('Expense category is required.', 400);
 
-  const existing = await prisma.$queryRaw`SELECT id FROM finance_heads WHERE name = ${headName} LIMIT 1`;
+  const existing = await prisma.$queryRaw`
+    SELECT id
+    FROM finance_heads
+    WHERE tenant_id = ${tenantId} AND name = ${headName}
+    LIMIT 1
+  `;
   if (existing.length) return Number(existing[0].id);
 
   await prisma.$executeRaw`
-    INSERT INTO finance_heads (name, type, description, status, createdAt, updatedAt)
-    VALUES (${headName}, 'expense', ${headName}, 'active', ${new Date()}, ${new Date()})
+    INSERT INTO finance_heads (tenant_id, name, type, description, status, createdAt, updatedAt)
+    VALUES (${tenantId}, ${headName}, 'expense', ${headName}, 'active', ${new Date()}, ${new Date()})
   `;
   const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
   return Number(rows[0].id);
@@ -62,6 +78,7 @@ const getOrCreateExpenseHead = async (category) => {
 
 const mapExpense = (row) => ({
   id: Number(row.id),
+  tenantId: row.tenant_id === null || row.tenant_id === undefined ? null : Number(row.tenant_id),
   title: row.details,
   category: row.category,
   amount: toAmount(row.amount),
@@ -76,9 +93,10 @@ const mapExpense = (row) => ({
 });
 
 export const transactionsService = {
-  async createExpense(payload) {
+  async createExpense(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const title = normalizeText(payload.title);
-    const category = normalizeText(payload.category) || 'عام اخراجات';
+    const category = normalizeText(payload.category) || 'General Expenses';
     const amount = toAmount(payload.amount);
     const date = normalizeDate(payload.date);
     const paymentMethod = normalizeText(payload.paymentMethod) || null;
@@ -86,13 +104,20 @@ export const transactionsService = {
     const referenceId = payload.referenceId ? Number(payload.referenceId) : null;
     const note = normalizeText(payload.note) || null;
 
-    if (!title) throw new AppError('خرچ کا عنوان ضروری ہے۔', 400);
-    if (amount <= 0) throw new AppError('رقم صفر سے زیادہ ہونی چاہیے۔', 400);
-    if (referenceId && (!Number.isInteger(referenceId) || referenceId <= 0)) throw new AppError('حوالہ درست نہیں ہے۔', 400);
+    if (!title) throw new AppError('Expense title is required.', 400);
+    if (amount <= 0) throw new AppError('Amount must be greater than zero.', 400);
+    if (referenceId && (!Number.isInteger(referenceId) || referenceId <= 0)) throw new AppError('Invalid reference.', 400);
 
-    const financeHeadId = await getOrCreateExpenseHead(category);
+    const financeHeadId = await getOrCreateExpenseHead(resolvedTenantId, category);
     const existing = referenceType && referenceId
-      ? await prisma.$queryRaw`SELECT id FROM finance_transactions WHERE referenceType = ${referenceType} AND referenceId = ${referenceId} LIMIT 1`
+      ? await prisma.$queryRaw`
+          SELECT id
+          FROM finance_transactions
+          WHERE tenant_id = ${resolvedTenantId}
+            AND referenceType = ${referenceType}
+            AND referenceId = ${referenceId}
+          LIMIT 1
+        `
       : [];
 
     if (existing.length) {
@@ -109,38 +134,43 @@ export const transactionsService = {
             details = ${title},
             status = 'active',
             updatedAt = ${new Date()}
-        WHERE id = ${id}
+        WHERE id = ${id} AND tenant_id = ${resolvedTenantId}
       `;
-      return this.getExpenseById(id);
+      return this.getExpenseById(resolvedTenantId, id);
     }
 
     await prisma.$executeRaw`
-      INSERT INTO finance_transactions (financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
-      VALUES (${financeHeadId}, 'expense', ${amount}, ${date}, ${paymentMethod}, 'مکمل', ${note}, ${title}, ${referenceType}, ${referenceId}, 'active', ${new Date()}, ${new Date()})
+      INSERT INTO finance_transactions (tenant_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${financeHeadId}, 'expense', ${amount}, ${date}, ${paymentMethod}, 'مکمل', ${note}, ${title}, ${referenceType}, ${referenceId}, 'active', ${new Date()}, ${new Date()})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-    return this.getExpenseById(Number(rows[0].id));
+    return this.getExpenseById(resolvedTenantId, Number(rows[0].id));
   },
 
-  async getExpenseById(id) {
+  async getExpenseById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const rows = await prisma.$queryRaw`
       SELECT ft.*, fh.name AS category
       FROM finance_transactions ft
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
-      WHERE ft.id = ${id} AND ft.type = 'expense'
+      WHERE ft.id = ${id}
+        AND ft.tenant_id = ${resolvedTenantId}
+        AND ft.type = 'expense'
       LIMIT 1
     `;
-    if (!rows.length) throw new AppError('خرچ کا ریکارڈ نہیں ملا۔', 404);
+    if (!rows.length) throw new AppError('Expense record not found.', 404);
     return mapExpense(rows[0]);
   },
 
-  async getExpenses(query = {}) {
+  async getExpenses(tenantId, query = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
       SELECT ft.*, fh.name AS category
       FROM finance_transactions ft
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
-      WHERE ft.type = 'expense'
+      WHERE ft.tenant_id = ${resolvedTenantId}
+        AND ft.type = 'expense'
         AND ft.status = 'active'
         AND (${category} = '' OR fh.name = ${category})
       ORDER BY ft.transactionDate DESC, ft.id DESC
@@ -148,11 +178,14 @@ export const transactionsService = {
     return { items: rows.map(mapExpense), meta: null };
   },
 
-  async createEntry(payload) {
-    await ensureHead(payload);
+  async createEntry(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureHead(resolvedTenantId, payload);
+
     return prisma.financeTransaction.create({
       data: {
         ...payload,
+        tenantId: resolvedTenantId,
         transactionDate: normalizeDate(payload.transactionDate),
         paymentMode: payload.paymentMode || null,
         paymentStatus: payload.paymentStatus || null,
@@ -163,9 +196,11 @@ export const transactionsService = {
     });
   },
 
-  async getEntries(query) {
+  async getEntries(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.financeHeadId ? { financeHeadId: query.financeHeadId } : {}),
       ...(query.type ? { type: query.type } : {}),
       ...(query.search
@@ -196,10 +231,12 @@ export const transactionsService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async updateEntry(id, payload) {
-    const existing = await prisma.financeTransaction.findUnique({ where: { id } });
-    if (!existing) throw new AppError('مالیاتی ریکارڈ نہیں ملا۔', 404);
-    await ensureHead(payload);
+  async updateEntry(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    if (!existing) throw new AppError('Finance record not found.', 404);
+    await ensureHead(resolvedTenantId, payload);
+
     return prisma.financeTransaction.update({
       where: { id },
       data: {
@@ -215,9 +252,11 @@ export const transactionsService = {
     });
   },
 
-  async deactivateEntry(id) {
-    const existing = await prisma.financeTransaction.findUnique({ where: { id } });
-    if (!existing) throw new AppError('مالیاتی ریکارڈ نہیں ملا۔', 404);
+  async deactivateEntry(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    if (!existing) throw new AppError('Finance record not found.', 404);
+
     return prisma.financeTransaction.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

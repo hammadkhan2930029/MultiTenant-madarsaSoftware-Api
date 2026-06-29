@@ -4,6 +4,7 @@ import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js
 
 const select = {
   id: true,
+  tenantId: true,
   collectionGroupId: true,
   donorName: true,
   careOf: true,
@@ -22,6 +23,16 @@ const select = {
   updatedAt: true,
 };
 
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  if (!Number.isInteger(resolvedTenantId) || resolvedTenantId <= 0) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  return resolvedTenantId;
+};
+
 const normalizeDate = (value) => {
   const date = new Date(value);
   date.setHours(0, 0, 0, 0);
@@ -34,16 +45,39 @@ const normalizeEndDate = (value) => {
   return date;
 };
 
+const getTenantFundCollection = async (tenantId, id) => {
+  const entry = await prisma.fundCollection.findFirst({
+    where: { id, tenantId },
+    select,
+  });
+
+  if (!entry) {
+    throw new AppError('Fund collection record not found.', 404);
+  }
+
+  return entry;
+};
+
 export const fundCollectionsService = {
-  async createEntry(payload) {
+  async createEntry(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+
     return prisma.fundCollection.create({
-      data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null },
+      data: {
+        ...payload,
+        tenantId: resolvedTenantId,
+        paymentDate: normalizeDate(payload.paymentDate),
+        remarks: payload.remarks || null,
+      },
       select,
     });
   },
-  async getEntries(query) {
+
+  async getEntries(tenantId, query) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
+      tenantId: resolvedTenantId,
       ...(query.paymentMode ? { paymentMode: query.paymentMode } : {}),
       ...(query.donationType ? { donationType: query.donationType } : {}),
       ...(query.donationSubType ? { donationSubType: query.donationSubType } : {}),
@@ -75,29 +109,40 @@ export const fundCollectionsService = {
         : {}),
       ...(query.status ? { status: query.status } : {}),
     };
+
     const [items, totalItems] = await Promise.all([
       prisma.fundCollection.findMany({ where, skip, take: limit, orderBy: { paymentDate: 'desc' }, select }),
       prisma.fundCollection.count({ where }),
     ]);
+
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
-  async getEntryById(id) {
-    const entry = await prisma.fundCollection.findUnique({ where: { id }, select });
-    if (!entry) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
-    return entry;
+
+  async getEntryById(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    return getTenantFundCollection(resolvedTenantId, id);
   },
-  async updateEntry(id, payload) {
-    const existing = await prisma.fundCollection.findUnique({ where: { id } });
-    if (!existing) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
+
+  async updateEntry(tenantId, id, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const existing = await getTenantFundCollection(resolvedTenantId, id);
+
     return prisma.fundCollection.update({
       where: { id },
-      data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
+      data: {
+        ...payload,
+        paymentDate: normalizeDate(payload.paymentDate),
+        remarks: payload.remarks || null,
+        status: payload.status || existing.status,
+      },
       select,
     });
   },
-  async deactivateEntry(id) {
-    const existing = await prisma.fundCollection.findUnique({ where: { id } });
-    if (!existing) throw new AppError('فنڈ وصولی کا ریکارڈ نہیں ملا۔', 404);
+
+  async deactivateEntry(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    await getTenantFundCollection(resolvedTenantId, id);
+
     return prisma.fundCollection.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

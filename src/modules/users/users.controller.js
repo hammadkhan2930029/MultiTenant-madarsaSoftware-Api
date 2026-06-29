@@ -13,7 +13,7 @@ export const createUser = asyncHandler(async (req, res) => {
 });
 
 export const getUsers = asyncHandler(async (req, res) => {
-  const result = await usersService.getUsers(req.query);
+  const result = await usersService.getUsers(req.query, req.auth);
 
   return apiResponse(res, {
     message: 'Users fetched successfully.',
@@ -22,7 +22,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 });
 
 export const getUserById = asyncHandler(async (req, res) => {
-  const result = await usersService.getUserById(req.params.id);
+  const result = await usersService.getUserById(req.params.id, req.auth);
 
   return apiResponse(res, {
     message: 'User fetched successfully.',
@@ -31,7 +31,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  const result = await usersService.updateUser(req.params.id, req.body);
+  const result = await usersService.updateUser(req.params.id, req.body, req.auth);
 
   return apiResponse(res, {
     message: 'User updated successfully.',

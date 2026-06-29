@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { examResultsService } from './exam-results.service.js';
 
 export const saveExamResult = asyncHandler(async (req, res) => {
-  const result = await examResultsService.saveExamResult(req.body);
+  const result = await examResultsService.saveExamResult(req.tenantId, req.body);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const saveExamResult = asyncHandler(async (req, res) => {
 });
 
 export const getExamResults = asyncHandler(async (req, res) => {
-  const result = await examResultsService.getExamResults(req.query);
+  const result = await examResultsService.getExamResults(req.tenantId, req.query);
 
   return apiResponse(res, {
     message: 'Exam results fetched successfully.',
@@ -22,7 +22,7 @@ export const getExamResults = asyncHandler(async (req, res) => {
 });
 
 export const getExamResultById = asyncHandler(async (req, res) => {
-  const result = await examResultsService.getExamResultById(req.params.id);
+  const result = await examResultsService.getExamResultById(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Exam result fetched successfully.',
@@ -31,7 +31,7 @@ export const getExamResultById = asyncHandler(async (req, res) => {
 });
 
 export const findStudentExamResult = asyncHandler(async (req, res) => {
-  const result = await examResultsService.findStudentExamResult(req.params.studentId, req.query);
+  const result = await examResultsService.findStudentExamResult(req.tenantId, req.params.studentId, req.query);
 
   return apiResponse(res, {
     message: 'Student exam result fetched successfully.',
@@ -40,7 +40,7 @@ export const findStudentExamResult = asyncHandler(async (req, res) => {
 });
 
 export const updateExamResult = asyncHandler(async (req, res) => {
-  const result = await examResultsService.saveExamResult(req.body, req.params.id);
+  const result = await examResultsService.saveExamResult(req.tenantId, req.body, req.params.id);
 
   return apiResponse(res, {
     message: 'Exam result updated successfully.',
@@ -49,7 +49,7 @@ export const updateExamResult = asyncHandler(async (req, res) => {
 });
 
 export const deleteExamResult = asyncHandler(async (req, res) => {
-  const result = await examResultsService.deleteExamResult(req.params.id);
+  const result = await examResultsService.deleteExamResult(req.tenantId, req.params.id);
 
   return apiResponse(res, {
     message: 'Exam result deleted successfully.',
