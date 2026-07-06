@@ -63,6 +63,8 @@ model Tenant {
   studentAttendances  StudentAttendance[]      @relation("TenantStudentAttendances")
   teacherAttendances  TeacherAttendance[]      @relation("TenantTeacherAttendances")
   salaryIncrements    TeacherSalaryIncrement[] @relation("TenantTeacherSalaryIncrements")
+
+  @@map("tenants")
 }
 
 model Admin {
