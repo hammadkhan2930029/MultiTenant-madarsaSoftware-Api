@@ -45,10 +45,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const allowedOrigins = new Set(env.appOrigins);
+const allowedOrigins = new Set(
+  env.appOrigins.map((origin) => origin.trim().replace(/\/$/, '').toLowerCase())
+);
 const corsOptions = {
+  
   origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) {
+    const requestOrigin = origin?.trim().replace(/\/$/, '').toLowerCase();
+    if (!origin || allowedOrigins.has(requestOrigin)) {
       return callback(null, true);
     }
 
