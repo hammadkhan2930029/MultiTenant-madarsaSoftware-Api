@@ -1,0 +1,9 @@
+
+> madarsa-backend-server@1.0.0 dev
+> node --watch src/server.js
+
+Restarting 'src/server.js'
+Madarsa Management System API is running on port 5002
+[0mGET / [32m200[0m 5.807 ms - 95[0m
+Restarting 'src/server.js'
+Madarsa Management System API is running on port 5002

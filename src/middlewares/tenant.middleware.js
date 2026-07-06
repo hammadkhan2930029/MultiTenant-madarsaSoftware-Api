@@ -5,6 +5,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { normalizeDomainName } from '../utils/domain.js';
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
+const RESERVED_SYSTEM_SUBDOMAINS = new Set(['app', 'api', 'appapi', 'www']);
 
 const stripPort = (hostname) => {
   if (!hostname || hostname.includes('::')) return hostname;
@@ -20,7 +21,9 @@ const isSystemHost = (hostname) => (
   isLocalHost(hostname) || env.tenantSystemHosts.includes(hostname)
 );
 
-const isSystemSubdomain = (subdomain) => env.tenantSystemSubdomains.includes(subdomain);
+const isSystemSubdomain = (subdomain) => (
+  RESERVED_SYSTEM_SUBDOMAINS.has(subdomain) || env.tenantSystemSubdomains.includes(subdomain)
+);
 
 const isTenantCurrentRequest = (req) => req.originalUrl?.startsWith('/api/tenant/current');
 
@@ -33,6 +36,11 @@ const logTenantCurrentDebug = (req, payload = {}) => {
     appOrigin: env.appOrigin,
     ...payload,
   });
+};
+
+const resolveRequestHostname = (req) => {
+  const sourceHost = req.headers.origin || req.headers.referer || req.hostname;
+  return normalizeHostname(sourceHost);
 };
 
 const resolveHostContext = (hostname) => {
@@ -110,6 +118,10 @@ const findTenantByHostname = async (hostname) => {
     where: { tenantCode: env.defaultTenantCode },
   });
 
+  if (hostContext.source === 'subdomain' && hostContext.subdomain) {
+    return { tenant: null, ...hostContext };
+  }
+
   return {
     tenant: defaultTenant,
     ...hostContext,
@@ -118,7 +130,7 @@ const findTenantByHostname = async (hostname) => {
 };
 
 export const tenantResolverMiddleware = asyncHandler(async (req, _res, next) => {
-  const hostname = normalizeHostname(req.hostname);
+  const hostname = resolveRequestHostname(req);
   let result;
 
   try {
