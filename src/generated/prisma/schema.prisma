@@ -64,7 +64,7 @@ model Tenant {
   teacherAttendances  TeacherAttendance[]      @relation("TenantTeacherAttendances")
   salaryIncrements    TeacherSalaryIncrement[] @relation("TenantTeacherSalaryIncrements")
 
-  @@map("tenants")
+  @@map("tenant")
 }
 
 model Admin {
