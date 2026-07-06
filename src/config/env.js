@@ -24,14 +24,18 @@ const parseCsv = (value = '') =>
     .map((item) => item.trim().toLowerCase())
     .filter(Boolean);
 
+const parseOrigins = (value = '') =>
+  value
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 export const env = {
   port: Number(process.env.PORT),
   nodeEnv: process.env.NODE_ENV,
   appName: process.env.APP_NAME,
   appOrigin: process.env.APP_ORIGIN,
-  appOrigins: process.env.APP_ORIGIN.split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean),
+  appOrigins: parseOrigins(process.env.APP_ORIGIN),
   tenantBaseDomains: parseCsv(process.env.TENANT_BASE_DOMAINS || 'localhost,lvh.me,localtest.me'),
   tenantSystemHosts: parseCsv(process.env.TENANT_SYSTEM_HOSTS || 'localhost,127.0.0.1,::1'),
   tenantSystemSubdomains: parseCsv(process.env.TENANT_SYSTEM_SUBDOMAINS || 'api,app,admin,www,demoapi'),

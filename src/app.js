@@ -46,19 +46,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const allowedOrigins = new Set(env.appOrigins);
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) {
+      return callback(null, true);
+    }
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin)) {
-        return callback(null, true);
-      }
+    const error = new Error(`CORS blocked for origin: ${origin}`);
+    error.statusCode = 403;
+    return callback(error);
+  },
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
-    },
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },

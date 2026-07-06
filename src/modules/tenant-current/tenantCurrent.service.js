@@ -39,13 +39,28 @@ const mapCurrentTenantBranding = (tenant) => {
 
 export const tenantCurrentService = {
   async getCurrentTenantBranding(tenantId) {
-    const tenant = await prisma.tenant.findFirst({
-      where: {
-        id: tenantId,
-        status: 'active',
-      },
-      include: { profile: true },
-    });
+    if (!tenantId) {
+      throw new AppError('Tenant could not be resolved for this request.', 400);
+    }
+
+    let tenant;
+
+    try {
+      tenant = await prisma.tenant.findFirst({
+        where: {
+          id: tenantId,
+          status: 'active',
+        },
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error('[tenant/current] database query error', {
+        tenantId,
+        message: error.message,
+        code: error.code,
+      });
+      throw new AppError('Unable to fetch current tenant branding.', 500);
+    }
 
     if (!tenant) {
       throw new AppError('Tenant not found for this domain.', 404);

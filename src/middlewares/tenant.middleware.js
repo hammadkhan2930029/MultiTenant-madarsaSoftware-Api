@@ -22,6 +22,19 @@ const isSystemHost = (hostname) => (
 
 const isSystemSubdomain = (subdomain) => env.tenantSystemSubdomains.includes(subdomain);
 
+const isTenantCurrentRequest = (req) => req.originalUrl?.startsWith('/api/tenant/current');
+
+const logTenantCurrentDebug = (req, payload = {}) => {
+  if (!isTenantCurrentRequest(req)) return;
+
+  console.info('[tenant/current]', {
+    hostname: req.hostname,
+    origin: req.headers.origin || null,
+    appOrigin: env.appOrigin,
+    ...payload,
+  });
+};
+
 const resolveHostContext = (hostname) => {
   if (isSystemHost(hostname)) {
     return { source: 'system', subdomain: null, baseDomain: null };
@@ -58,9 +71,10 @@ const findTenantByHostname = async (hostname) => {
   }
 
   const hostContext = resolveHostContext(hostname);
+  let tenant = null;
 
   if (hostContext.source === 'system') {
-    const tenant = await prisma.tenant.findUnique({
+    tenant = await prisma.tenant.findUnique({
       where: { tenantCode: env.defaultTenantCode },
     });
 
@@ -68,25 +82,63 @@ const findTenantByHostname = async (hostname) => {
   }
 
   if (hostContext.source === 'subdomain') {
-    const tenant = await prisma.tenant.findUnique({
-      where: { subdomain: hostContext.subdomain },
+    tenant = await prisma.tenant.findFirst({
+      where: {
+        OR: [
+          { subdomain: hostContext.subdomain },
+          { tenantCode: hostContext.subdomain },
+        ],
+      },
     });
 
-    return { tenant, ...hostContext };
+    if (tenant) {
+      return { tenant, ...hostContext };
+    }
+  } else {
+    tenant = await prisma.tenant.findFirst({
+      where: {
+        customDomain: hostname,
+      },
+    });
+
+    if (tenant) {
+      return { tenant, ...hostContext };
+    }
   }
 
-  const tenant = await prisma.tenant.findFirst({
-    where: {
-      customDomain: hostname,
-    },
+  const defaultTenant = await prisma.tenant.findUnique({
+    where: { tenantCode: env.defaultTenantCode },
   });
 
-  return { tenant, ...hostContext };
+  return {
+    tenant: defaultTenant,
+    ...hostContext,
+    fallbackToDefault: Boolean(defaultTenant),
+  };
 };
 
 export const tenantResolverMiddleware = asyncHandler(async (req, _res, next) => {
   const hostname = normalizeHostname(req.hostname);
-  const { tenant, source, subdomain, baseDomain } = await findTenantByHostname(hostname);
+  let result;
+
+  try {
+    result = await findTenantByHostname(hostname);
+  } catch (error) {
+    logTenantCurrentDebug(req, {
+      resolvedTenantCode: null,
+      databaseQueryError: error.message,
+    });
+    throw error;
+  }
+
+  const { tenant, source, subdomain, baseDomain, fallbackToDefault = false } = result;
+
+  logTenantCurrentDebug(req, {
+    resolvedTenantCode: tenant?.tenantCode || null,
+    hostSource: source,
+    subdomain: subdomain || null,
+    fallbackToDefault,
+  });
 
   if (!tenant) {
     const message = source === 'subdomain'
@@ -106,7 +158,8 @@ export const tenantResolverMiddleware = asyncHandler(async (req, _res, next) => 
     source,
     subdomain: subdomain || null,
     baseDomain: baseDomain || null,
-    isSystemHost: source === 'system',
+    isSystemHost: source === 'system' || fallbackToDefault,
+    fallbackToDefault,
   };
   next();
 });
