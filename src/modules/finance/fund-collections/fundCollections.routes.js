@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../../middlewares/authorization.middleware.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import {
   createFundCollection,
@@ -17,10 +18,10 @@ import {
 
 const router = Router();
 router.use(authMiddleware);
-router.post('/', validate(createFundCollectionValidationSchema), createFundCollection);
-router.get('/', validate(listFundCollectionsValidationSchema), getFundCollections);
-router.get('/:id', validate(fundCollectionIdValidationSchema), getFundCollectionById);
-router.put('/:id', validate(updateFundCollectionValidationSchema), updateFundCollection);
-router.patch('/:id/deactivate', validate(fundCollectionIdValidationSchema), deactivateFundCollection);
+router.post('/', requirePermission('fees.create'), validate(createFundCollectionValidationSchema), createFundCollection);
+router.get('/', requirePermission('fees.view'), validate(listFundCollectionsValidationSchema), getFundCollections);
+router.get('/:id', requirePermission('fees.view'), validate(fundCollectionIdValidationSchema), getFundCollectionById);
+router.put('/:id', requirePermission('fees.update'), validate(updateFundCollectionValidationSchema), updateFundCollection);
+router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(fundCollectionIdValidationSchema), deactivateFundCollection);
 
 export { router as fundCollectionsRoutes };

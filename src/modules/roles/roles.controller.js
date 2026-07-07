@@ -1,9 +1,15 @@
 import { apiResponse } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { auditService } from '../security/index.js';
 import { rolesService } from './roles.service.js';
 
+const buildRequester = (req) => ({
+  ...req.auth,
+  audit: auditService.buildRequestAuditContext(req),
+});
+
 export const createRole = asyncHandler(async (req, res) => {
-  const result = await rolesService.createRole(req.body, req.admin);
+  const result = await rolesService.createRole(req.body, buildRequester(req));
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +19,7 @@ export const createRole = asyncHandler(async (req, res) => {
 });
 
 export const getRoles = asyncHandler(async (req, res) => {
-  const result = await rolesService.getRoles(req.query);
+  const result = await rolesService.getRoles(req.query, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Roles fetched successfully.',
@@ -31,7 +37,7 @@ export const getPermissions = asyncHandler(async (_req, res) => {
 });
 
 export const getRoleById = asyncHandler(async (req, res) => {
-  const result = await rolesService.getRoleById(req.params.id);
+  const result = await rolesService.getRoleById(req.params.id, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Role fetched successfully.',
@@ -39,8 +45,17 @@ export const getRoleById = asyncHandler(async (req, res) => {
   });
 });
 
+export const getRolePermissions = asyncHandler(async (req, res) => {
+  const result = await rolesService.getRolePermissionsById(req.params.id, buildRequester(req));
+
+  return apiResponse(res, {
+    message: 'Role permissions fetched successfully.',
+    data: result,
+  });
+});
+
 export const updateRole = asyncHandler(async (req, res) => {
-  const result = await rolesService.updateRole(req.params.id, req.body);
+  const result = await rolesService.updateRole(req.params.id, req.body, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Role updated successfully.',
@@ -49,7 +64,7 @@ export const updateRole = asyncHandler(async (req, res) => {
 });
 
 export const deleteRole = asyncHandler(async (req, res) => {
-  const result = await rolesService.deleteRole(req.params.id);
+  const result = await rolesService.deleteRole(req.params.id, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Role deleted successfully.',
@@ -58,7 +73,7 @@ export const deleteRole = asyncHandler(async (req, res) => {
 });
 
 export const assignRolePermissions = asyncHandler(async (req, res) => {
-  const result = await rolesService.assignPermissionsToRole(req.params.id, req.body);
+  const result = await rolesService.assignPermissionsToRole(req.params.id, req.body, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Role permissions updated successfully.',

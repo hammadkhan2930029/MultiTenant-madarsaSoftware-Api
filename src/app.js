@@ -33,6 +33,7 @@ import { examResultsRoutes } from './modules/exam-results/exam-results.routes.js
 import { storeRoutes } from './modules/store/store.routes.js';
 import { suggestionsRoutes } from './modules/suggestions/suggestions.routes.js';
 import { supportRoutes } from './modules/support/support.routes.js';
+import { permissionsRoutes } from './modules/permissions/permissions.routes.js';
 import { rolesRoutes } from './modules/roles/roles.routes.js';
 import { usersRoutes } from './modules/users/users.routes.js';
 import { tenantsRoutes } from './modules/tenants/tenants.routes.js';
@@ -111,6 +112,7 @@ app.use('/api/exam-results', examResultsRoutes);
 app.use('/api/store', storeRoutes);
 app.use('/api/suggestions', suggestionsRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/permissions', permissionsRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/tenant', tenantCurrentRoutes);

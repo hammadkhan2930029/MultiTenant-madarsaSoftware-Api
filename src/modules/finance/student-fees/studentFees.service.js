@@ -186,7 +186,7 @@ export const studentFeesService = {
       };
 
       const voucher = existing
-        ? await prisma.studentFeeVoucher.update({ where: { id: existing.id }, data, select: voucherSelect })
+        ? await prisma.studentFeeVoucher.update({ where: { id: existing.id, tenantId: resolvedTenantId }, data, select: voucherSelect })
         : await prisma.studentFeeVoucher.create({ data, select: voucherSelect });
 
       generated += 1;
@@ -283,7 +283,7 @@ export const studentFeesService = {
     const status = dueAmount <= 0 ? 'paid' : paidAmount > 0 ? 'partial' : 'unpaid';
 
     return prisma.studentFeeVoucher.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         paidAmount,
         dueAmount,

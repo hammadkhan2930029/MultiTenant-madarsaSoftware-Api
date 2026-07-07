@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { auditService } from '../security/index.js';
 
 const SYSTEM_SUPER_ADMIN_ROLE = 'super_admin';
 
@@ -8,9 +9,14 @@ const toNumber = (value) => (value === null || value === undefined ? null : Numb
 
 const mapRole = (row) => ({
   id: Number(row.id),
+  tenantId: toNumber(row.tenant_id),
+  name: row.role_name,
   roleName: row.role_name,
   description: row.description,
+  status: row.status || 'active',
+  isSystemRole: Boolean(row.is_system_role),
   createdBy: toNumber(row.created_by),
+  updatedBy: toNumber(row.updated_by),
   createdAt: row.created_at,
   updatedAt: row.updated_at,
   assignedUsers: row.assigned_users === undefined ? undefined : Number(row.assigned_users),
@@ -20,45 +26,103 @@ const mapPermission = (row) => ({
   id: Number(row.id),
   permissionKey: row.permission_key,
   permissionName: row.permission_name,
+  displayLabel: row.display_label,
+  description: row.description,
   pagePath: row.page_path,
   moduleName: row.module_name,
+  action: row.action,
+  sortOrder: row.sort_order === undefined ? undefined : Number(row.sort_order),
   createdAt: row.created_at,
 });
 
 const normalizeRoleName = (roleName) => String(roleName || '').trim();
+const normalizeOptionalTenantId = (tenantId) => (
+  tenantId === null || tenantId === undefined || tenantId === '' ? null : Number(tenantId)
+);
+
+const resolveRoleTenantId = (payload = {}, requester = {}) => {
+  if (requester?.isSuperAdmin) {
+    return normalizeOptionalTenantId(payload.tenantId);
+  }
+
+  const tenantId = normalizeOptionalTenantId(requester?.tenantId);
+  if (!tenantId) {
+    throw new AppError('Tenant context is required for tenant roles.', 403);
+  }
+
+  return tenantId;
+};
+
+const assertCanAccessRole = (role, requester = {}) => {
+  if (requester?.isSuperAdmin) return;
+
+  const roleTenantId = normalizeOptionalTenantId(role?.tenant_id);
+  const requestTenantId = normalizeOptionalTenantId(requester?.tenantId);
+
+  if (!roleTenantId || roleTenantId !== requestTenantId) {
+    throw new AppError('Role not found.', 404);
+  }
+};
+
+const buildRoleScopeWhere = (query = {}, requester = {}) => {
+  if (!requester?.isSuperAdmin) {
+    return {
+      sql: 'r.tenant_id = ?',
+      values: [normalizeOptionalTenantId(requester?.tenantId)],
+    };
+  }
+
+  if (query.scope === 'global') {
+    return { sql: 'r.tenant_id IS NULL', values: [] };
+  }
+
+  const queryTenantId = normalizeOptionalTenantId(query.tenantId);
+  if (query.scope === 'tenant' || queryTenantId) {
+    return { sql: 'r.tenant_id = ?', values: [queryTenantId] };
+  }
+
+  return { sql: '1 = 1', values: [] };
+};
 
 const getRoleRowById = async (client, id) => {
   const rows = await client.$queryRaw`
     SELECT
       r.id,
+      r.tenant_id,
       r.role_name,
       r.description,
+      r.status,
+      r.is_system_role,
       r.created_by,
+      r.updated_by,
       r.created_at,
       r.updated_at,
       COUNT(a.id) AS assigned_users
     FROM roles r
     LEFT JOIN admins a ON a.role_id = r.id
     WHERE r.id = ${id}
-    GROUP BY r.id, r.role_name, r.description, r.created_by, r.created_at, r.updated_at
+    GROUP BY r.id, r.tenant_id, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
     LIMIT 1
   `;
 
   return rows[0] || null;
 };
 
-const getRoleByName = async (client, roleName, excludeId = null) => {
+const getRoleByName = async (client, roleName, tenantId, excludeId = null) => {
   const rows = excludeId
     ? await client.$queryRaw`
-        SELECT id, role_name
+        SELECT id, tenant_id, role_name
         FROM roles
-        WHERE role_name = ${roleName} AND id <> ${excludeId}
+        WHERE role_name = ${roleName}
+          AND tenant_id <=> ${tenantId}
+          AND id <> ${excludeId}
         LIMIT 1
       `
     : await client.$queryRaw`
-        SELECT id, role_name
+        SELECT id, tenant_id, role_name
         FROM roles
         WHERE role_name = ${roleName}
+          AND tenant_id <=> ${tenantId}
         LIMIT 1
       `;
 
@@ -66,6 +130,9 @@ const getRoleByName = async (client, roleName, excludeId = null) => {
 };
 
 const getRolePermissions = async (client, roleId) => {
+  const role = await getRoleRowById(client, roleId);
+  const roleTenantId = normalizeOptionalTenantId(role?.tenant_id);
+
   const rows = await client.$queryRaw`
     SELECT
       p.id,
@@ -77,6 +144,7 @@ const getRolePermissions = async (client, roleId) => {
     FROM role_permissions rp
     INNER JOIN permissions p ON p.id = rp.permission_id
     WHERE rp.role_id = ${roleId}
+      AND rp.tenant_id <=> ${roleTenantId}
     ORDER BY p.module_name ASC, p.permission_key ASC
   `;
 
@@ -157,15 +225,19 @@ const resolvePermissionIds = async (client, payload = {}) => {
 };
 
 const replaceRolePermissions = async (client, roleId, permissionIds) => {
+  const role = await assertRoleExists(client, roleId);
+  const roleTenantId = normalizeOptionalTenantId(role.tenant_id);
+
   await client.$executeRaw`
     DELETE FROM role_permissions
     WHERE role_id = ${roleId}
+      AND tenant_id <=> ${roleTenantId}
   `;
 
   for (const permissionId of permissionIds) {
     await client.$executeRaw`
-      INSERT INTO role_permissions (role_id, permission_id)
-      VALUES (${roleId}, ${permissionId})
+      INSERT INTO role_permissions (tenant_id, role_id, permission_id)
+      VALUES (${roleTenantId}, ${roleId}, ${permissionId})
     `;
   }
 };
@@ -186,6 +258,30 @@ const assertSystemRoleCanBeChanged = (role) => {
   }
 };
 
+const assertSystemRoleCanBeRenamed = (role, payload = {}) => {
+  if (!payload.roleName && !payload.name) return;
+
+  if (Boolean(role.is_system_role)) {
+    throw new AppError('System role name cannot be changed.', 403);
+  }
+};
+
+const assertSystemRoleCanBeDeleted = (role) => {
+  assertSystemRoleCanBeChanged(role);
+
+  if (Boolean(role.is_system_role)) {
+    throw new AppError('System roles cannot be deleted.', 403);
+  }
+};
+
+const assertPermissionsCanBeChanged = (role, requester = {}) => {
+  assertSystemRoleCanBeChanged(role);
+
+  if (!requester?.isSuperAdmin && Boolean(role.is_system_role)) {
+    throw new AppError('System role permissions cannot be changed by tenant admins.', 403);
+  }
+};
+
 const buildRoleResponse = async (client, id) => {
   const role = await assertRoleExists(client, id);
   const permissions = await getRolePermissions(client, id);
@@ -196,21 +292,49 @@ const buildRoleResponse = async (client, id) => {
   };
 };
 
+const hasPermissionPayload = (payload = {}) => (
+  Object.prototype.hasOwnProperty.call(payload, 'permissions') ||
+  Object.prototype.hasOwnProperty.call(payload, 'permissionIds') ||
+  Object.prototype.hasOwnProperty.call(payload, 'permissionKeys')
+);
+
+const logRoleAudit = (client, requester = {}, entry = {}) => auditService.recordAuditLog(client, {
+  tenantId: entry.tenantId,
+  actorUserId: requester?.admin?.id || null,
+  module: 'roles',
+  targetType: 'role',
+  ipAddress: requester?.audit?.ipAddress || null,
+  userAgent: requester?.audit?.userAgent || null,
+  ...entry,
+});
+
 export const rolesService = {
   async getPermissions() {
     const rows = await prisma.$queryRaw`
-      SELECT id, permission_key, permission_name, page_path, module_name, created_at
+      SELECT
+        id,
+        permission_key,
+        permission_name,
+        display_label,
+        description,
+        page_path,
+        module_name,
+        action,
+        sort_order,
+        created_at
       FROM permissions
-      ORDER BY module_name ASC, permission_key ASC
+      ORDER BY module_name ASC, sort_order ASC, permission_key ASC
     `;
 
     return rows.map(mapPermission);
   },
 
-  async createRole(payload, admin) {
-    const roleName = normalizeRoleName(payload.roleName);
+  async createRole(payload, requester = {}) {
+    const roleName = normalizeRoleName(payload.roleName || payload.name);
+    const roleTenantId = resolveRoleTenantId(payload, requester);
+    const actorId = requester?.admin?.id || null;
 
-    const existingRole = await getRoleByName(prisma, roleName);
+    const existingRole = await getRoleByName(prisma, roleName, roleTenantId);
     if (existingRole) {
       throw new AppError('Role with the same name already exists.', 409);
     }
@@ -219,48 +343,77 @@ export const rolesService = {
       const permissionIds = await resolvePermissionIds(tx, payload);
 
       await tx.$executeRaw`
-        INSERT INTO roles (role_name, description, created_by)
-        VALUES (${roleName}, ${payload.description || null}, ${admin?.id || null})
+        INSERT INTO roles (tenant_id, role_name, description, status, is_system_role, created_by, updated_by)
+        VALUES (${roleTenantId}, ${roleName}, ${payload.description || null}, ${payload.status || 'active'}, false, ${actorId}, ${actorId})
       `;
 
-      const createdRole = await getRoleByName(tx, roleName);
+      const createdRole = await getRoleByName(tx, roleName, roleTenantId);
 
       await replaceRolePermissions(tx, Number(createdRole.id), permissionIds);
 
-      return buildRoleResponse(tx, Number(createdRole.id));
+      const createdResponse = await buildRoleResponse(tx, Number(createdRole.id));
+      await logRoleAudit(tx, requester, {
+        tenantId: createdResponse.tenantId,
+        action: 'role.created',
+        targetId: createdResponse.id,
+        oldValue: null,
+        newValue: createdResponse,
+      });
+
+      if (permissionIds.length) {
+        await logRoleAudit(tx, requester, {
+          tenantId: createdResponse.tenantId,
+          action: 'role.permissions.updated',
+          targetId: createdResponse.id,
+          oldValue: { permissions: [] },
+          newValue: { permissions: createdResponse.permissions },
+        });
+      }
+
+      return createdResponse;
     });
   },
 
-  async getRoles(query) {
+  async getRoles(query, requester = {}) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search || null;
+    const status = query.status || null;
+    const scope = buildRoleScopeWhere(query, requester);
 
-    const items = await prisma.$queryRaw`
+    const items = await prisma.$queryRawUnsafe(`
       SELECT
         r.id,
+        r.tenant_id,
         r.role_name,
         r.description,
+        r.status,
+        r.is_system_role,
         r.created_by,
+        r.updated_by,
         r.created_at,
         r.updated_at,
         COUNT(a.id) AS assigned_users
       FROM roles r
       LEFT JOIN admins a ON a.role_id = r.id
-      WHERE ${search} IS NULL
-        OR r.role_name LIKE CONCAT('%', ${search}, '%')
-        OR r.description LIKE CONCAT('%', ${search}, '%')
-      GROUP BY r.id, r.role_name, r.description, r.created_by, r.created_at, r.updated_at
-      ORDER BY r.created_at DESC
-      LIMIT ${limit} OFFSET ${skip}
-    `;
+      WHERE ${scope.sql}
+        AND (? IS NULL OR r.status = ?)
+        AND (? IS NULL
+          OR r.role_name LIKE CONCAT('%', ?, '%')
+          OR r.description LIKE CONCAT('%', ?, '%'))
+      GROUP BY r.id, r.tenant_id, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
+      ORDER BY r.is_system_role DESC, r.created_at DESC
+      LIMIT ? OFFSET ?
+    `, ...scope.values, status, status, search, search, search, limit, skip);
 
-    const totalRows = await prisma.$queryRaw`
+    const totalRows = await prisma.$queryRawUnsafe(`
       SELECT COUNT(*) AS total
       FROM roles r
-      WHERE ${search} IS NULL
-        OR r.role_name LIKE CONCAT('%', ${search}, '%')
-        OR r.description LIKE CONCAT('%', ${search}, '%')
-    `;
+      WHERE ${scope.sql}
+        AND (? IS NULL OR r.status = ?)
+        AND (? IS NULL
+          OR r.role_name LIKE CONCAT('%', ?, '%')
+          OR r.description LIKE CONCAT('%', ?, '%'))
+    `, ...scope.values, status, status, search, search, search);
 
     return {
       items: items.map(mapRole),
@@ -268,19 +421,36 @@ export const rolesService = {
     };
   },
 
-  async getRoleById(id) {
+  async getRoleById(id, requester = {}) {
+    const role = await assertRoleExists(prisma, id);
+    assertCanAccessRole(role, requester);
     return buildRoleResponse(prisma, id);
   },
 
-  async updateRole(id, payload) {
+  async getRolePermissionsById(id, requester = {}) {
+    const role = await assertRoleExists(prisma, id);
+    assertCanAccessRole(role, requester);
+    return {
+      role: mapRole(role),
+      permissions: await getRolePermissions(prisma, id),
+    };
+  },
+
+  async updateRole(id, payload, requester = {}) {
     return prisma.$transaction(async (tx) => {
       const existingRole = await assertRoleExists(tx, id);
+      assertCanAccessRole(existingRole, requester);
       assertSystemRoleCanBeChanged(existingRole);
+      assertSystemRoleCanBeRenamed(existingRole, payload);
+      const oldResponse = await buildRoleResponse(tx, id);
 
-      const nextRoleName = payload.roleName ? normalizeRoleName(payload.roleName) : existingRole.role_name;
+      const nextRoleName = payload.roleName || payload.name ? normalizeRoleName(payload.roleName || payload.name) : existingRole.role_name;
+      const roleTenantId = normalizeOptionalTenantId(existingRole.tenant_id);
+      const nextStatus = payload.status || existingRole.status || 'active';
+      const actorId = requester?.admin?.id || null;
 
-      if (payload.roleName) {
-        const duplicateRole = await getRoleByName(tx, nextRoleName, id);
+      if (payload.roleName || payload.name) {
+        const duplicateRole = await getRoleByName(tx, nextRoleName, roleTenantId, id);
         if (duplicateRole) {
           throw new AppError('Another role with the same name already exists.', 409);
         }
@@ -291,27 +461,46 @@ export const rolesService = {
         SET
           role_name = ${nextRoleName},
           description = ${payload.description === undefined ? existingRole.description : payload.description || null},
+          status = ${nextStatus},
+          updated_by = ${actorId},
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
       `;
 
-      if (
-        Object.prototype.hasOwnProperty.call(payload, 'permissions') ||
-        Object.prototype.hasOwnProperty.call(payload, 'permissionIds') ||
-        Object.prototype.hasOwnProperty.call(payload, 'permissionKeys')
-      ) {
+      if (hasPermissionPayload(payload)) {
         const permissionIds = await resolvePermissionIds(tx, payload);
         await replaceRolePermissions(tx, id, permissionIds);
       }
 
-      return buildRoleResponse(tx, id);
+      const updatedResponse = await buildRoleResponse(tx, id);
+      await logRoleAudit(tx, requester, {
+        tenantId: updatedResponse.tenantId,
+        action: nextStatus === 'inactive' && oldResponse.status !== 'inactive' ? 'role.deactivated' : 'role.updated',
+        targetId: updatedResponse.id,
+        oldValue: oldResponse,
+        newValue: updatedResponse,
+      });
+
+      if (hasPermissionPayload(payload)) {
+        await logRoleAudit(tx, requester, {
+          tenantId: updatedResponse.tenantId,
+          action: 'role.permissions.updated',
+          targetId: updatedResponse.id,
+          oldValue: { permissions: oldResponse.permissions },
+          newValue: { permissions: updatedResponse.permissions },
+        });
+      }
+
+      return updatedResponse;
     });
   },
 
-  async deleteRole(id) {
+  async deleteRole(id, requester = {}) {
     return prisma.$transaction(async (tx) => {
       const existingRole = await assertRoleExists(tx, id);
-      assertSystemRoleCanBeChanged(existingRole);
+      assertCanAccessRole(existingRole, requester);
+      assertSystemRoleCanBeDeleted(existingRole);
+      const oldResponse = await buildRoleResponse(tx, id);
 
       const assignedRows = await tx.$queryRaw`
         SELECT COUNT(*) AS total
@@ -329,19 +518,38 @@ export const rolesService = {
         WHERE id = ${id}
       `;
 
+      await logRoleAudit(tx, requester, {
+        tenantId: normalizeOptionalTenantId(existingRole.tenant_id),
+        action: 'role.deleted',
+        targetId: Number(existingRole.id),
+        oldValue: oldResponse,
+        newValue: null,
+      });
+
       return mapRole(existingRole);
     });
   },
 
-  async assignPermissionsToRole(id, payload) {
+  async assignPermissionsToRole(id, payload, requester = {}) {
     return prisma.$transaction(async (tx) => {
       const existingRole = await assertRoleExists(tx, id);
-      assertSystemRoleCanBeChanged(existingRole);
+      assertCanAccessRole(existingRole, requester);
+      assertPermissionsCanBeChanged(existingRole, requester);
+      const oldResponse = await buildRoleResponse(tx, id);
 
       const permissionIds = await resolvePermissionIds(tx, payload);
       await replaceRolePermissions(tx, id, permissionIds);
 
-      return buildRoleResponse(tx, id);
+      const updatedResponse = await buildRoleResponse(tx, id);
+      await logRoleAudit(tx, requester, {
+        tenantId: updatedResponse.tenantId,
+        action: 'role.permissions.updated',
+        targetId: updatedResponse.id,
+        oldValue: { permissions: oldResponse.permissions },
+        newValue: { permissions: updatedResponse.permissions },
+      });
+
+      return updatedResponse;
     });
   },
 };

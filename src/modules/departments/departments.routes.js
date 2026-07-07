@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createDepartment,
@@ -19,10 +20,10 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', validate(createDepartmentValidationSchema), createDepartment);
-router.get('/', validate(listDepartmentsValidationSchema), getDepartments);
-router.get('/:id', validate(departmentIdValidationSchema), getDepartmentById);
-router.patch('/:id', validate(updateDepartmentValidationSchema), updateDepartment);
-router.delete('/:id', validate(departmentIdValidationSchema), deleteDepartment);
+router.post('/', requirePermission('settings.update'), validate(createDepartmentValidationSchema), createDepartment);
+router.get('/', requirePermission('settings.view'), validate(listDepartmentsValidationSchema), getDepartments);
+router.get('/:id', requirePermission('settings.view'), validate(departmentIdValidationSchema), getDepartmentById);
+router.patch('/:id', requirePermission('settings.update'), validate(updateDepartmentValidationSchema), updateDepartment);
+router.delete('/:id', requirePermission('settings.update'), validate(departmentIdValidationSchema), deleteDepartment);
 
 export { router as departmentsRoutes };

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../../middlewares/authorization.middleware.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import {
   createHead,
@@ -18,10 +19,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.post('/', validate(createHeadValidationSchema), createHead);
-router.get('/', validate(listHeadsValidationSchema), getHeads);
-router.get('/:id', validate(headIdValidationSchema), getHeadById);
-router.put('/:id', validate(updateHeadValidationSchema), updateHead);
-router.patch('/:id/deactivate', validate(headIdValidationSchema), deactivateHead);
+router.post('/', requirePermission('fees.create'), validate(createHeadValidationSchema), createHead);
+router.get('/', requirePermission('fees.view'), validate(listHeadsValidationSchema), getHeads);
+router.get('/:id', requirePermission('fees.view'), validate(headIdValidationSchema), getHeadById);
+router.put('/:id', requirePermission('fees.update'), validate(updateHeadValidationSchema), updateHead);
+router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(headIdValidationSchema), deactivateHead);
 
 export { router as headsRoutes };

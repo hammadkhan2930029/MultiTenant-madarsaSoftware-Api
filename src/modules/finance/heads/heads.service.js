@@ -95,7 +95,7 @@ export const headsService = {
     }
 
     return prisma.financeHead.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { ...payload, description: payload.description || null },
       select,
     });
@@ -105,6 +105,6 @@ export const headsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await getTenantHead(resolvedTenantId, id);
 
-    return prisma.financeHead.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.financeHead.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },
 };

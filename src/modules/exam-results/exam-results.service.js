@@ -168,7 +168,7 @@ const writeResult = async (tx, tenantId, existingResultId, payload, calculated) 
   };
 
   const result = existingResultId
-    ? await tx.examResult.update({ where: { id: existingResultId }, data, select: { id: true } })
+    ? await tx.examResult.update({ where: { id: existingResultId, tenantId }, data, select: { id: true } })
     : await tx.examResult.create({ data, select: { id: true } });
 
   await tx.examResultSubject.deleteMany({ where: { examResultId: result.id, tenantId } });
@@ -295,7 +295,7 @@ export const examResultsService = {
     if (!existingResult) throw new AppError('Exam result not found.', 404);
 
     const result = await prisma.examResult.update({
-      where: { id: Number(id) },
+      where: { id: Number(id), tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: examResultSelect,
     });

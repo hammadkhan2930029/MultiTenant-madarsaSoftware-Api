@@ -149,7 +149,7 @@ export const sectionsService = {
     }
 
     return prisma.section.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         name: payload.name,
         classId: payload.classId,
@@ -190,7 +190,7 @@ export const sectionsService = {
     }
 
     return prisma.section.delete({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       select: sectionSelect,
     });
   },

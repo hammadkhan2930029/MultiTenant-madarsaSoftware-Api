@@ -128,7 +128,7 @@ export const fundCollectionsService = {
     const existing = await getTenantFundCollection(resolvedTenantId, id);
 
     return prisma.fundCollection.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         ...payload,
         paymentDate: normalizeDate(payload.paymentDate),
@@ -143,6 +143,6 @@ export const fundCollectionsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await getTenantFundCollection(resolvedTenantId, id);
 
-    return prisma.fundCollection.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.fundCollection.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },
 };

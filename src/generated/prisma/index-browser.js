@@ -137,6 +137,7 @@ exports.Prisma.AdminScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  phone: 'phone',
   username: 'username',
   password: 'password',
   role: 'role',
@@ -148,11 +149,30 @@ exports.Prisma.AdminScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  actorUserId: 'actorUserId',
+  action: 'action',
+  module: 'module',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
   roleName: 'roleName',
   description: 'description',
+  status: 'status',
+  isSystemRole: 'isSystemRole',
   createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -161,13 +181,18 @@ exports.Prisma.PermissionScalarFieldEnum = {
   id: 'id',
   permissionKey: 'permissionKey',
   permissionName: 'permissionName',
+  displayLabel: 'displayLabel',
+  description: 'description',
   pagePath: 'pagePath',
   moduleName: 'moduleName',
+  action: 'action',
+  sortOrder: 'sortOrder',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.RolePermissionScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
   roleId: 'roleId',
   permissionId: 'permissionId',
   createdAt: 'createdAt'
@@ -941,6 +966,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
@@ -961,22 +991,46 @@ exports.Prisma.TenantOrderByRelevanceFieldEnum = {
 exports.Prisma.AdminOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
+  phone: 'phone',
   username: 'username',
   password: 'password',
   role: 'role',
   status: 'status'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
+  action: 'action',
+  module: 'module',
+  targetType: 'targetType',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+};
+
 exports.Prisma.RoleOrderByRelevanceFieldEnum = {
   roleName: 'roleName',
-  description: 'description'
+  description: 'description',
+  status: 'status'
 };
 
 exports.Prisma.PermissionOrderByRelevanceFieldEnum = {
   permissionKey: 'permissionKey',
   permissionName: 'permissionName',
+  displayLabel: 'displayLabel',
+  description: 'description',
   pagePath: 'pagePath',
-  moduleName: 'moduleName'
+  moduleName: 'moduleName',
+  action: 'action'
 };
 
 exports.Prisma.MadrassaProfileOrderByRelevanceFieldEnum = {
@@ -1071,17 +1125,6 @@ exports.Prisma.SectionOrderByRelevanceFieldEnum = {
 exports.Prisma.AcademicSessionOrderByRelevanceFieldEnum = {
   name: 'name',
   status: 'status'
-};
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
 };
 
 exports.Prisma.StudentScheduleOrderByRelevanceFieldEnum = {
@@ -1411,6 +1454,7 @@ exports.Prisma.StoreStockAdjustmentOrderByRelevanceFieldEnum = {
 exports.Prisma.ModelName = {
   Tenant: 'Tenant',
   Admin: 'Admin',
+  AuditLog: 'AuditLog',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',

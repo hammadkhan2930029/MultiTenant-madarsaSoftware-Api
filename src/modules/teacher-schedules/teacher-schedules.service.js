@@ -128,7 +128,7 @@ export const teacherSchedulesService = {
     }
 
     return prisma.teacherSchedule.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: teacherScheduleSelect,
     });

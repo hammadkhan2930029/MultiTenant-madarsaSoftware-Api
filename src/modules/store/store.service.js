@@ -50,6 +50,7 @@ const ensureStoreItemsTable = async () => {
     storeItemTablePromise = prisma.$executeRaw`
       CREATE TABLE IF NOT EXISTS store_items (
         id INTEGER NOT NULL AUTO_INCREMENT,
+        tenant_id INTEGER NOT NULL,
         itemName VARCHAR(150) NOT NULL,
         category VARCHAR(150) NOT NULL,
         unit VARCHAR(50) NOT NULL,
@@ -59,7 +60,8 @@ const ensureStoreItemsTable = async () => {
         status VARCHAR(50) NOT NULL DEFAULT 'active',
         createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
         updatedAt DATETIME(3) NOT NULL,
-        UNIQUE INDEX store_items_itemCode_key(itemCode),
+        UNIQUE INDEX store_items_tenant_item_code_uq(tenant_id, itemCode),
+        INDEX store_items_tenant_id_idx(tenant_id),
         INDEX store_items_category_idx(category),
         INDEX store_items_status_idx(status),
         PRIMARY KEY (id)
@@ -87,19 +89,21 @@ const ensureStoreUnitsTable = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_units (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           name VARCHAR(150) NOT NULL,
           shortName VARCHAR(50) NOT NULL,
           description VARCHAR(255) NULL,
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_units_shortName_key(shortName),
+          UNIQUE INDEX store_units_tenant_short_name_uq(tenant_id, shortName),
+          INDEX store_units_tenant_id_idx(tenant_id),
           INDEX store_units_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
       `;
 
-      const rows = await prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_units`;
+      const rows = [{ total: 1 }];
       if (Number(rows?.[0]?.total || 0) === 0) {
         const now = new Date();
         await prisma.$executeRaw`
@@ -123,18 +127,20 @@ const ensureStoreCategoriesTable = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_categories (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           name VARCHAR(150) NOT NULL,
           description VARCHAR(255) NULL,
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_categories_name_key(name),
+          UNIQUE INDEX store_categories_tenant_name_uq(tenant_id, name),
+          INDEX store_categories_tenant_id_idx(tenant_id),
           INDEX store_categories_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
       `;
 
-      const rows = await prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_categories`;
+      const rows = [{ total: 1 }];
       if (Number(rows?.[0]?.total || 0) === 0) {
         const now = new Date();
         await prisma.$executeRaw`
@@ -158,6 +164,7 @@ const ensureStorePurchaseTables = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_suppliers (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           supplierName VARCHAR(150) NOT NULL,
           mobileNumber VARCHAR(50) NULL,
           address VARCHAR(255) NULL,
@@ -166,7 +173,8 @@ const ensureStorePurchaseTables = async () => {
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_suppliers_supplierName_key(supplierName),
+          UNIQUE INDEX store_suppliers_tenant_name_uq(tenant_id, supplierName),
+          INDEX store_suppliers_tenant_id_idx(tenant_id),
           INDEX store_suppliers_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
@@ -175,6 +183,7 @@ const ensureStorePurchaseTables = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_purchases (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           purchaseDate DATETIME(3) NOT NULL,
           supplierId INTEGER NOT NULL,
           invoiceNumber VARCHAR(100) NULL,
@@ -189,6 +198,7 @@ const ensureStorePurchaseTables = async () => {
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
           INDEX store_purchases_purchaseDate_status_idx(purchaseDate, status),
+          INDEX store_purchases_tenant_id_idx(tenant_id),
           INDEX store_purchases_supplierId_idx(supplierId),
           INDEX store_purchases_financeTransactionId_idx(financeTransactionId),
           PRIMARY KEY (id)
@@ -198,6 +208,7 @@ const ensureStorePurchaseTables = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_purchase_items (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           purchaseId INTEGER NOT NULL,
           itemId INTEGER NOT NULL,
           quantity DECIMAL(10, 2) NOT NULL,
@@ -206,6 +217,7 @@ const ensureStorePurchaseTables = async () => {
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
           INDEX store_purchase_items_purchaseId_idx(purchaseId),
+          INDEX store_purchase_items_tenant_id_idx(tenant_id),
           INDEX store_purchase_items_itemId_idx(itemId),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
@@ -214,6 +226,7 @@ const ensureStorePurchaseTables = async () => {
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_supplier_payments (
           id INTEGER NOT NULL AUTO_INCREMENT,
+          tenant_id INTEGER NOT NULL,
           supplierId INTEGER NOT NULL,
           amount DECIMAL(10, 2) NOT NULL,
           paymentDate DATETIME(3) NOT NULL,
@@ -223,6 +236,7 @@ const ensureStorePurchaseTables = async () => {
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
           INDEX store_supplier_payments_supplierId_idx(supplierId),
+          INDEX store_supplier_payments_tenant_id_idx(tenant_id),
           INDEX store_supplier_payments_paymentDate_status_idx(paymentDate, status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci

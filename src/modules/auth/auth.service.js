@@ -41,6 +41,38 @@ const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
   status: 'active',
 });
 
+const buildRoleResponse = (role) => {
+  if (!role) return null;
+
+  return {
+    id: role.id || null,
+    tenantId: role.tenantId ?? role.tenant_id ?? null,
+    name: role.roleName || role.role_name || null,
+    roleName: role.roleName || role.role_name || null,
+    description: role.description || null,
+    status: role.status || 'active',
+    isSystemRole: Boolean(role.isSystemRole ?? role.is_system_role),
+  };
+};
+
+const assertLoginRoleIsActive = (access, admin) => {
+  if (!access.role?.id) {
+    throw new AppError('Assigned role is not valid. Please contact support.', 403);
+  }
+
+  if (access.role.status && access.role.status !== 'active') {
+    throw new AppError('Assigned role is inactive. Please contact support.', 403);
+  }
+
+  const adminTenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
+  const roleTenantId = normalizeTenantId(access.role.tenantId ?? access.role.tenant_id);
+  const isGlobalSuperAdmin = (admin.role === 'super_admin' || access.role.roleName === 'super_admin') && adminTenantId === null;
+
+  if (!isGlobalSuperAdmin && roleTenantId !== adminTenantId) {
+    throw new AppError('Assigned role is not valid for this tenant. Please contact support.', 403);
+  }
+};
+
 const canManageMadrassaProfile = async (admin) => {
   if (admin.role === 'super_admin' || admin.role === 'admin') return true;
 
@@ -51,17 +83,20 @@ const canManageMadrassaProfile = async (admin) => {
 
 const buildAdminAuthPayload = async (admin) => {
   const access = await getAdminRoleAndPermissions(admin);
+  assertLoginRoleIsActive(access, admin);
+  const roleDetails = buildRoleResponse(access.role);
 
   return {
     id: admin.id,
     name: admin.name,
     email: admin.email,
+    phone: admin.phone || null,
     username: admin.username,
     role: admin.role,
     tenantId: admin.tenantId || admin.tenant_id || null,
     ownerAdminId: admin.ownerAdminId || admin.owner_admin_id || null,
-    roleId: access.role?.id || null,
-    roleDetails: access.role,
+    roleId: roleDetails?.id || null,
+    roleDetails,
     permissions: access.permissionKeys,
     status: admin.status,
     createdAt: admin.createdAt,
@@ -113,7 +148,7 @@ const findGlobalSuperAdminByIdentity = (identity) =>
 export const authService = {
   async getAuthenticatedAdminById(adminId) {
     const rows = await prisma.$queryRaw`
-      SELECT id, name, email, username, role, tenant_id, role_id, owner_admin_id, status, createdAt, updatedAt
+      SELECT id, name, email, phone, username, role, tenant_id, role_id, owner_admin_id, status, createdAt, updatedAt
       FROM admins
       WHERE id = ${adminId}
       LIMIT 1
@@ -126,6 +161,7 @@ export const authService = {
       id: Number(admin.id),
       name: admin.name,
       email: admin.email,
+      phone: admin.phone,
       username: admin.username,
       role: admin.role,
       tenantId: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
@@ -186,12 +222,28 @@ export const authService = {
     }
 
     const adminPayload = await buildAdminAuthPayload(admin);
+    const userPayload = {
+      id: adminPayload.id,
+      name: adminPayload.name,
+      email: adminPayload.email,
+      phone: adminPayload.phone,
+      username: adminPayload.username,
+      tenantId: adminPayload.tenantId,
+      ownerAdminId: adminPayload.ownerAdminId,
+      role: adminPayload.roleDetails,
+      roleName: adminPayload.role,
+      roleId: adminPayload.roleId,
+      permissions: adminPayload.permissions,
+      status: adminPayload.status,
+      createdAt: adminPayload.createdAt,
+      updatedAt: adminPayload.updatedAt,
+    };
     const token = generateAdminToken(adminPayload);
 
     return {
       token,
       admin: adminPayload,
-      user: adminPayload,
+      user: userPayload,
       role: adminPayload.roleDetails,
       permissions: adminPayload.permissions,
     };

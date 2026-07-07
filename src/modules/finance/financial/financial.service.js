@@ -337,7 +337,7 @@ export const financialService = {
 
     return mapManualRecord(
       await prisma.financialRecord.update({
-        where: { id },
+        where: { id, tenantId: resolvedTenantId },
         data: {
           type: payload.type,
           category: payload.category,
@@ -355,6 +355,6 @@ export const financialService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId } });
     if (!existing) throw new AppError('Financial record not found.', 404);
-    return mapManualRecord(await prisma.financialRecord.update({ where: { id }, data: { status: 'inactive' }, select: manualSelect }));
+    return mapManualRecord(await prisma.financialRecord.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select: manualSelect }));
   },
 };

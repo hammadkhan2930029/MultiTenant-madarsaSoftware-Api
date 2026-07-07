@@ -113,7 +113,7 @@ export const subjectsService = {
     }
 
     return prisma.subject.update({
-      where: { id: Number(id) },
+      where: { id: Number(id), tenantId: resolvedTenantId },
       data: {
         name: payload.name,
         detail: payload.detail || null,
@@ -128,7 +128,7 @@ export const subjectsService = {
     await getTenantSubject(resolvedTenantId, id);
 
     return prisma.subject.delete({
-      where: { id: Number(id) },
+      where: { id: Number(id), tenantId: resolvedTenantId },
       select: subjectSelect,
     });
   },

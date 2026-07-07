@@ -297,14 +297,14 @@ export const attendanceService = {
       return null;
     }
 
-    return prisma.teacherAttendance.delete({
+    await prisma.teacherAttendance.deleteMany({
       where: {
-        teacherId_date: {
-          teacherId: query.teacherId,
-          date: attendanceDate,
-        },
+        teacherId: query.teacherId,
+        date: attendanceDate,
+        tenantId: resolvedTenantId,
       },
-      select: teacherAttendanceSelect,
     });
+
+    return existingAttendance;
   },
 };

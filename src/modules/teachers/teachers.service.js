@@ -332,7 +332,7 @@ export const teachersService = {
 
     const [increment] = await prisma.$transaction(async (tx) => {
       await tx.teacher.update({
-        where: { id },
+        where: { id, tenantId: resolvedTenantId },
         data: { basicSalary: newSalary },
         select: { id: true },
       });
@@ -404,7 +404,7 @@ export const teachersService = {
     }
 
     return prisma.teacher.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         staffType: optionalString(body.staffType) || existingTeacher.staffType,
         fullName: body.fullName,
@@ -452,7 +452,7 @@ export const teachersService = {
     }
 
     return prisma.teacher.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { status },
       select: teacherSelect,
     });
@@ -481,7 +481,7 @@ export const teachersService = {
     }
 
     return prisma.teacher.delete({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       select: teacherSelect,
     });
   },

@@ -115,7 +115,7 @@ export const schedulesService = {
     await ensureScheduleReferences(resolvedTenantId, payload);
 
     return prisma.studentSchedule.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         sessionId: payload.sessionId,
         tenantId: resolvedTenantId,
@@ -142,7 +142,7 @@ export const schedulesService = {
     }
 
     return prisma.studentSchedule.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: scheduleSelect,
     });

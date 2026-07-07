@@ -107,7 +107,7 @@ export const parentsService = {
 
     if (!createdParent.familyNumber) {
       await prisma.parent.update({
-        where: { id: createdParent.id },
+        where: { id: createdParent.id, tenantId: resolvedTenantId },
         data: {
           familyNumber: generateFamilyNumber(createdParent.id),
         },
@@ -199,7 +199,7 @@ export const parentsService = {
     }
 
     return prisma.parent.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         fullName: payload.fullName,
         familyNumber: payload.familyNumber || existingParent.familyNumber,
@@ -232,7 +232,7 @@ export const parentsService = {
     }
 
     return prisma.parent.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: parentSelect,
     });

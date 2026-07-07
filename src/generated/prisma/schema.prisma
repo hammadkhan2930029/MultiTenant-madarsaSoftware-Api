@@ -20,6 +20,8 @@ model Tenant {
   createdAt           DateTime                 @default(now())
   updatedAt           DateTime                 @updatedAt
   admins              Admin[]                  @relation("TenantAdmins")
+  roles               Role[]                   @relation("TenantRoles")
+  rolePermissions     RolePermission[]         @relation("TenantRolePermissions")
   profile             MadrassaProfile?         @relation("TenantMadrassaProfile")
   students            Student[]                @relation("TenantStudents")
   parents             Parent[]                 @relation("TenantParents")
@@ -71,6 +73,7 @@ model Admin {
   id               Int                      @id @default(autoincrement())
   name             String                   @db.VarChar(150)
   email            String                   @db.VarChar(150)
+  phone            String?                  @db.VarChar(50)
   username         String                   @db.VarChar(100)
   password         String                   @db.VarChar(255)
   role             String                   @default("admin") @db.VarChar(50)
@@ -85,11 +88,13 @@ model Admin {
   ownerAdmin       Admin?                   @relation("AdminMadrassaOwner", fields: [ownerAdminId], references: [id], onDelete: SetNull)
   ownedUsers       Admin[]                  @relation("AdminMadrassaOwner")
   createdRoles     Role[]                   @relation("RoleCreatedBy")
+  updatedRoles     Role[]                   @relation("RoleUpdatedBy")
   madrassaProfile  MadrassaProfile?
   financialRecords FinancialRecord[]
   suggestions      Suggestion[]
   supportRequests  SupportRequest[]
   salaryIncrements TeacherSalaryIncrement[]
+  auditLogs        AuditLog[]               @relation("AdminAuditLogs")
 
   @@unique([tenantId, email])
   @@unique([tenantId, username])
@@ -99,18 +104,52 @@ model Admin {
   @@map("admins")
 }
 
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  tenantId    Int?     @map("tenant_id")
+  actorUserId Int?     @map("actor_user_id")
+  action      String   @db.VarChar(100)
+  module      String   @db.VarChar(100)
+  targetType  String   @map("target_type") @db.VarChar(100)
+  targetId    Int?     @map("target_id")
+  oldValue    Json?    @map("old_value")
+  newValue    Json?    @map("new_value")
+  ipAddress   String?  @map("ip_address") @db.VarChar(100)
+  userAgent   String?  @map("user_agent") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  actor       Admin?   @relation("AdminAuditLogs", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([actorUserId])
+  @@index([module, action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
 model Role {
   id              Int              @id @default(autoincrement())
-  roleName        String           @unique @map("role_name") @db.VarChar(100)
+  tenantId        Int?             @map("tenant_id")
+  roleName        String           @map("role_name") @db.VarChar(100)
   description     String?          @db.VarChar(255)
+  status          String           @default("active") @db.VarChar(50)
+  isSystemRole    Boolean          @default(false) @map("is_system_role")
   createdBy       Int?             @map("created_by")
+  updatedBy       Int?             @map("updated_by")
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
+  tenant          Tenant?          @relation("TenantRoles", fields: [tenantId], references: [id], onDelete: Cascade)
   creator         Admin?           @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater         Admin?           @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
   admins          Admin[]          @relation("AdminAssignedRole")
   rolePermissions RolePermission[]
 
+  @@unique([tenantId, roleName])
+  @@index([tenantId])
+  @@index([status])
+  @@index([isSystemRole])
   @@index([createdBy])
+  @@index([updatedBy])
   @@map("roles")
 }
 
@@ -118,24 +157,32 @@ model Permission {
   id              Int              @id @default(autoincrement())
   permissionKey   String           @unique @map("permission_key") @db.VarChar(150)
   permissionName  String           @map("permission_name") @db.VarChar(150)
+  displayLabel    String?          @map("display_label") @db.VarChar(150)
+  description     String?          @db.VarChar(255)
   pagePath        String?          @map("page_path") @db.VarChar(255)
   moduleName      String           @map("module_name") @db.VarChar(100)
+  action          String?          @db.VarChar(50)
+  sortOrder       Int              @default(0) @map("sort_order")
   createdAt       DateTime         @default(now()) @map("created_at")
   rolePermissions RolePermission[]
 
   @@index([moduleName])
+  @@index([moduleName, action])
   @@map("permissions")
 }
 
 model RolePermission {
   id           Int        @id @default(autoincrement())
+  tenantId     Int?       @map("tenant_id")
   roleId       Int        @map("role_id")
   permissionId Int        @map("permission_id")
   createdAt    DateTime   @default(now()) @map("created_at")
+  tenant       Tenant?    @relation("TenantRolePermissions", fields: [tenantId], references: [id], onDelete: Cascade)
   role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@unique([roleId, permissionId])
+  @@index([tenantId])
   @@index([permissionId])
   @@map("role_permissions")
 }
@@ -163,6 +210,7 @@ model MadrassaProfile {
   @@map("madrassa_profiles")
 }
 
+/// Intentionally global master data shared by all tenants.
 model City {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(150)
@@ -224,6 +272,7 @@ model SupportRequest {
   @@map("support_requests")
 }
 
+/// Intentionally global master data shared by all tenants.
 model Shift {
   id        Int       @id @default(autoincrement())
   name      String    @unique @db.VarChar(150)
@@ -238,6 +287,7 @@ model Shift {
   @@map("shifts")
 }
 
+/// Intentionally global master data shared by all tenants.
 model Department {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(150)
@@ -251,6 +301,7 @@ model Department {
   @@map("departments")
 }
 
+/// Intentionally global master data shared by all tenants.
 model Qualification {
   id        Int      @id @default(autoincrement())
   title     String   @unique @db.VarChar(150)
@@ -345,6 +396,7 @@ model Section {
   @@map("sections")
 }
 
+/// Intentionally global master data shared by all tenants.
 model AcademicSession {
   id               Int                      @id @default(autoincrement())
   name             String                   @unique @db.VarChar(150)

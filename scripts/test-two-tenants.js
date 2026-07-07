@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../src/config/prisma.js';
 import { authService } from '../src/modules/auth/auth.service.js';
+import { seedDefaultTenantRoles } from '../src/modules/roles/tenantRoleSeeder.service.js';
 import { studentsService } from '../src/modules/students/students.service.js';
 
 const PASSWORD = 'Prompt24@123';
@@ -38,13 +39,10 @@ const assert = (condition, name, details = '') => {
   pass(name, details);
 };
 
-const getAdminRole = async () => {
-  const role = await prisma.role.findUnique({
-    where: { roleName: 'admin' },
-    select: { id: true, roleName: true },
-  });
-
-  return role || null;
+const getAdminRole = async (tenant) => {
+  const roles = await seedDefaultTenantRoles(prisma, tenant.id);
+  const role = roles.admin;
+  return role ? { id: role.id, roleName: role.roleName } : null;
 };
 
 const upsertTenant = async ({ tenantCode, name, subdomain }) => {
@@ -172,11 +170,11 @@ const loginForTenant = (tenant) =>
   );
 
 const run = async () => {
-  const adminRole = await getAdminRole();
   const setup = [];
 
   for (const tenantSeed of tenants) {
     const tenant = await upsertTenant(tenantSeed);
+    const adminRole = await getAdminRole(tenant);
     const admin = await upsertTenantAdmin(tenant, adminRole);
     setup.push({ tenant, admin });
   }

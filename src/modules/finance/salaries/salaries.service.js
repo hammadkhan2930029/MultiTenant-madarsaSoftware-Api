@@ -110,7 +110,7 @@ export const salariesService = {
     });
     if (duplicate) throw new AppError('Another salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
       select,
     });
@@ -119,6 +119,6 @@ export const salariesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, teacher: { tenantId: resolvedTenantId } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
-    return prisma.salaryEntry.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.salaryEntry.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },
 };

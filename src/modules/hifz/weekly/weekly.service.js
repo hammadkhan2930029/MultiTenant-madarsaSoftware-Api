@@ -140,7 +140,7 @@ export const weeklyHifzService = {
     if (duplicate) throw new AppError('Weekly hifz entry already exists for this student and week.', 409);
 
     return prisma.hifzWeeklyEntry.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { ...normalizePayload(payload), tenantId: resolvedTenantId, weekStartDate, weekEndDate },
       select,
     });
@@ -148,6 +148,6 @@ export const weeklyHifzService = {
 
   async deactivateEntry(tenantId, id) {
     await findTenantRecordOrThrow(prisma.hifzWeeklyEntry, tenantId, { id }, { message: notFoundMessage });
-    return prisma.hifzWeeklyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.hifzWeeklyEntry.update({ where: { id, tenantId: normalizeTenantId(tenantId) }, data: { status: 'inactive' }, select });
   },
 };

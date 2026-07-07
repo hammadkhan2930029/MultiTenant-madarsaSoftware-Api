@@ -46,7 +46,7 @@ const ensureDefaultBranch = async (tenantId) => {
 
   if (existingBranch) {
     return prisma.branch.update({
-      where: { id: existingBranch.id },
+      where: { id: existingBranch.id, tenantId },
       data: defaultBranchData,
       select: branchSelect,
     });
@@ -170,7 +170,7 @@ export const branchesService = {
     }
 
     return prisma.branch.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         name: payload.name,
         code: payload.code || null,
@@ -223,7 +223,7 @@ export const branchesService = {
     }
 
     return prisma.branch.delete({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       select: branchSelect,
     });
   },

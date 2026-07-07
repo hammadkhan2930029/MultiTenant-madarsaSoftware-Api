@@ -14,6 +14,14 @@ const roles = [
     description: 'Finance, fees, salary, and reports access.',
   },
   {
+    roleName: 'receptionist',
+    description: 'Front desk admissions and visitor handling role.',
+  },
+  {
+    roleName: 'read_only',
+    description: 'Read-only access for allowed pages.',
+  },
+  {
     roleName: 'teacher',
     description: 'Limited teaching, attendance, hifz, and exam access.',
   },
@@ -198,12 +206,30 @@ const getFirstAdminId = async () => {
 
 const seedRoles = async (createdBy) => {
   for (const role of roles) {
+    const existing = await prisma.$queryRaw`
+      SELECT id
+      FROM roles
+      WHERE tenant_id IS NULL
+        AND role_name = ${role.roleName}
+      LIMIT 1
+    `;
+
+    if (existing[0]) {
+      await prisma.$executeRaw`
+        UPDATE roles
+        SET description = ${role.description},
+            status = 'active',
+            is_system_role = true,
+            updated_by = ${createdBy},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${Number(existing[0].id)}
+      `;
+      continue;
+    }
+
     await prisma.$executeRaw`
-      INSERT INTO roles (role_name, description, created_by)
-      VALUES (${role.roleName}, ${role.description}, ${createdBy})
-      ON DUPLICATE KEY UPDATE
-        description = VALUES(description),
-        updated_at = CURRENT_TIMESTAMP
+      INSERT INTO roles (tenant_id, role_name, description, status, is_system_role, created_by, updated_by)
+      VALUES (NULL, ${role.roleName}, ${role.description}, 'active', true, ${createdBy}, ${createdBy})
     `;
   }
 };
@@ -223,18 +249,19 @@ const seedPermissions = async () => {
 
 const assignSuperAdminPermissions = async () => {
   await prisma.$executeRaw`
-    INSERT IGNORE INTO role_permissions (role_id, permission_id)
-    SELECT roles.id, permissions.id
+    INSERT IGNORE INTO role_permissions (tenant_id, role_id, permission_id)
+    SELECT roles.tenant_id, roles.id, permissions.id
     FROM roles
     CROSS JOIN permissions
-    WHERE roles.role_name = 'super_admin'
+    WHERE roles.tenant_id IS NULL
+      AND roles.role_name = 'super_admin'
   `;
 };
 
 const assignExistingAdmins = async () => {
   await prisma.$executeRaw`
     UPDATE admins
-    SET role_id = (SELECT id FROM roles WHERE role_name = 'super_admin' LIMIT 1)
+    SET role_id = (SELECT id FROM roles WHERE tenant_id IS NULL AND role_name = 'super_admin' LIMIT 1)
     WHERE role_id IS NULL
   `;
 };

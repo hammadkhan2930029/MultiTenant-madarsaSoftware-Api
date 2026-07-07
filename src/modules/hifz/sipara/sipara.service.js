@@ -110,7 +110,7 @@ export const siparaHifzService = {
     if (duplicate) throw new AppError('Sipara jaiza for this student and sipara already exists.', 409);
 
     return prisma.hifzSiparaEntry.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: buildData(payload, resolvedTenantId),
       select,
     });
@@ -118,6 +118,6 @@ export const siparaHifzService = {
 
   async deactivateEntry(tenantId, id) {
     await findTenantRecordOrThrow(prisma.hifzSiparaEntry, tenantId, { id }, { message: notFoundMessage });
-    return prisma.hifzSiparaEntry.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.hifzSiparaEntry.update({ where: { id, tenantId: normalizeTenantId(tenantId) }, data: { status: 'inactive' }, select });
   },
 };

@@ -1,9 +1,15 @@
 import { apiResponse } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { auditService } from '../security/index.js';
 import { usersService } from './users.service.js';
 
+const buildRequester = (req) => ({
+  ...req.auth,
+  audit: auditService.buildRequestAuditContext(req),
+});
+
 export const createUser = asyncHandler(async (req, res) => {
-  const result = await usersService.createUser(req.body, req.admin);
+  const result = await usersService.createUser(req.body, buildRequester(req));
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +19,7 @@ export const createUser = asyncHandler(async (req, res) => {
 });
 
 export const getUsers = asyncHandler(async (req, res) => {
-  const result = await usersService.getUsers(req.query, req.auth);
+  const result = await usersService.getUsers(req.query, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Users fetched successfully.',
@@ -22,7 +28,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 });
 
 export const getUserById = asyncHandler(async (req, res) => {
-  const result = await usersService.getUserById(req.params.id, req.auth);
+  const result = await usersService.getUserById(req.params.id, buildRequester(req));
 
   return apiResponse(res, {
     message: 'User fetched successfully.',
@@ -31,10 +37,28 @@ export const getUserById = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  const result = await usersService.updateUser(req.params.id, req.body, req.auth);
+  const result = await usersService.updateUser(req.params.id, req.body, buildRequester(req));
 
   return apiResponse(res, {
     message: 'User updated successfully.',
+    data: result,
+  });
+});
+
+export const deactivateUser = asyncHandler(async (req, res) => {
+  const result = await usersService.deactivateUser(req.params.id, buildRequester(req));
+
+  return apiResponse(res, {
+    message: 'User deactivated successfully.',
+    data: result,
+  });
+});
+
+export const assignUserRole = asyncHandler(async (req, res) => {
+  const result = await usersService.assignRole(req.params.id, req.body, buildRequester(req));
+
+  return apiResponse(res, {
+    message: 'User role updated successfully.',
     data: result,
   });
 });

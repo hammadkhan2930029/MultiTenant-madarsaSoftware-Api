@@ -136,7 +136,7 @@ export const resultGradesService = {
     }
 
     const result = await prisma.resultGrade.update({
-      where: { id: Number(id) },
+      where: { id: Number(id), tenantId: resolvedTenantId },
       data: buildData(resolvedTenantId, payload),
       select: resultGradeSelect,
     });
@@ -149,7 +149,7 @@ export const resultGradesService = {
     await getTenantResultGrade(resolvedTenantId, id);
 
     const result = await prisma.resultGrade.delete({
-      where: { id: Number(id) },
+      where: { id: Number(id), tenantId: resolvedTenantId },
       select: resultGradeSelect,
     });
 

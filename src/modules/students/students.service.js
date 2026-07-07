@@ -405,7 +405,7 @@ export const studentsService = {
 
     const student = await prisma.$transaction(async (tx) => {
       await tx.student.update({
-        where: { id },
+        where: { id, tenantId: resolvedTenantId },
         data: {
           admissionNumber: body.admissionNumber,
           admissionDate: body.admissionDate || null,
@@ -468,6 +468,7 @@ export const studentsService = {
     return prisma.$transaction(async (tx) => {
       await tx.studentClassAssignment.updateMany({
         where: {
+          tenantId: resolvedTenantId,
           studentId: id,
           status: 'active',
         },
@@ -477,7 +478,7 @@ export const studentsService = {
       });
 
       return tx.student.update({
-        where: { id },
+        where: { id, tenantId: resolvedTenantId },
         data: { status: 'inactive' },
         select: studentSelect,
       });
@@ -502,6 +503,7 @@ export const studentsService = {
     return prisma.$transaction(async (tx) => {
       await tx.studentClassAssignment.updateMany({
         where: {
+          tenantId: resolvedTenantId,
           studentId,
           status: 'active',
         },
@@ -550,7 +552,7 @@ export const studentsService = {
     }
 
     return prisma.studentClassAssignment.update({
-      where: { id: assignmentId },
+      where: { id: assignmentId, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: {
         id: true,

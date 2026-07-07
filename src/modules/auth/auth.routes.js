@@ -16,6 +16,7 @@ import {
   updateMadrassaProfileValidationSchema,
 } from './auth.validation.js';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../middlewares/authorization.middleware.js';
 
 const router = Router();
 
@@ -27,10 +28,11 @@ router.post(
   changePassword
 );
 router.get('/me', authMiddleware, validate(currentAdminValidationSchema), getCurrentAdminProfile);
-router.get('/profile', authMiddleware, validate(madrassaProfileValidationSchema), getMadrassaProfile);
+router.get('/profile', authMiddleware, requirePermission('settings.view'), validate(madrassaProfileValidationSchema), getMadrassaProfile);
 router.put(
   '/profile',
   authMiddleware,
+  requirePermission('settings.update'),
   madrassaProfileImageUpload.single('logo'),
   validate(updateMadrassaProfileValidationSchema),
   updateMadrassaProfile

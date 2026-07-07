@@ -157,7 +157,7 @@ export const examSchedulesService = {
     await ensureExamScheduleReferences(resolvedTenantId, payload);
 
     return prisma.examSchedule.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         examName: payload.examName,
         sessionId: payload.sessionId,
@@ -181,7 +181,7 @@ export const examSchedulesService = {
     await getTenantExamSchedule(resolvedTenantId, id);
 
     return prisma.examSchedule.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
       select: examScheduleSelect,
     });

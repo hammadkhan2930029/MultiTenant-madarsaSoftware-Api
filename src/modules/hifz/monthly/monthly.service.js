@@ -86,7 +86,7 @@ export const monthlyHifzService = {
     if (duplicate) throw new AppError('Monthly jaiza for this student and month already exists.', 409);
 
     return prisma.hifzMonthlyEntry.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: buildData(payload, resolvedTenantId),
       select,
     });
@@ -94,6 +94,6 @@ export const monthlyHifzService = {
 
   async deactivateEntry(tenantId, id) {
     await findTenantRecordOrThrow(prisma.hifzMonthlyEntry, tenantId, { id }, { message: notFoundMessage });
-    return prisma.hifzMonthlyEntry.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.hifzMonthlyEntry.update({ where: { id, tenantId: normalizeTenantId(tenantId) }, data: { status: 'inactive' }, select });
   },
 };

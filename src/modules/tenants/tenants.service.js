@@ -4,6 +4,7 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { normalizeDomainName } from '../../utils/domain.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { seedDefaultTenantRoles } from '../roles/tenantRoleSeeder.service.js';
 
 const mapTenant = (tenant) => ({
   id: tenant.id,
@@ -108,15 +109,6 @@ const assertOwnerExists = async (ownerAdminId) => {
   }
 };
 
-const getTenantAdminRole = async (client = prisma) => {
-  const role = await client.role.findUnique({
-    where: { roleName: 'admin' },
-    select: { id: true, roleName: true },
-  });
-
-  return role || null;
-};
-
 export const tenantsService = {
   async createTenant(payload) {
     const subdomain = emptyToNull(payload.subdomain);
@@ -130,7 +122,6 @@ export const tenantsService = {
 
     try {
       return await prisma.$transaction(async (tx) => {
-        const adminRole = await getTenantAdminRole(tx);
         const hashedPassword = await bcrypt.hash(adminPayload.password, 12);
 
         const tenant = await tx.tenant.create({
@@ -142,6 +133,8 @@ export const tenantsService = {
             status: payload.status || 'active',
           },
         });
+        const seededRoles = await seedDefaultTenantRoles(tx, tenant.id);
+        const adminRole = seededRoles.admin;
 
         const tenantAdmin = await tx.admin.create({
           data: {
@@ -160,6 +153,17 @@ export const tenantsService = {
           where: { id: tenant.id },
           data: { ownerAdminId: tenantAdmin.id },
         });
+
+        if (adminRole?.id) {
+          await tx.$executeRaw`
+            UPDATE roles
+            SET
+              created_by = COALESCE(created_by, ${tenantAdmin.id}),
+              updated_by = ${tenantAdmin.id}
+            WHERE tenant_id = ${tenant.id}
+              AND role_name IN ('admin', 'teacher', 'accountant', 'receptionist', 'read_only')
+          `;
+        }
 
         const madrassaProfile = await tx.madrassaProfile.create({
           data: {

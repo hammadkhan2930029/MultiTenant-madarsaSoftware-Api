@@ -158,7 +158,7 @@ export const classesService = {
     }
 
     return prisma.academicClass.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         name: payload.name,
         branchId: payload.branchId,
@@ -201,7 +201,7 @@ export const classesService = {
     }
 
     return prisma.academicClass.delete({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       select: classSelect,
     });
   },

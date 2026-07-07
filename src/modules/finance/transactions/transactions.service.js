@@ -238,7 +238,7 @@ export const transactionsService = {
     await ensureHead(resolvedTenantId, payload);
 
     return prisma.financeTransaction.update({
-      where: { id },
+      where: { id, tenantId: resolvedTenantId },
       data: {
         ...payload,
         transactionDate: normalizeDate(payload.transactionDate),
@@ -257,6 +257,6 @@ export const transactionsService = {
     const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId } });
     if (!existing) throw new AppError('Finance record not found.', 404);
 
-    return prisma.financeTransaction.update({ where: { id }, data: { status: 'inactive' }, select });
+    return prisma.financeTransaction.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },
 };
