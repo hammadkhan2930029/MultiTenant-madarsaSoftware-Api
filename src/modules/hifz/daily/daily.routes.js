@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../../middlewares/authorization.middleware.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import {
   createDailyEntry,
@@ -18,10 +19,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.post('/', validate(createDailyValidationSchema), createDailyEntry);
-router.get('/', validate(listDailyValidationSchema), getDailyEntries);
-router.get('/:id', validate(dailyIdValidationSchema), getDailyEntryById);
-router.put('/:id', validate(updateDailyValidationSchema), updateDailyEntry);
-router.patch('/:id/deactivate', validate(dailyIdValidationSchema), deactivateDailyEntry);
+router.post('/', requirePermission('hifz.daily.create'), validate(createDailyValidationSchema), createDailyEntry);
+router.get('/', requirePermission('hifz.daily.view'), validate(listDailyValidationSchema), getDailyEntries);
+router.get('/:id', requirePermission('hifz.daily.view'), validate(dailyIdValidationSchema), getDailyEntryById);
+router.put('/:id', requirePermission('hifz.daily.create'), validate(updateDailyValidationSchema), updateDailyEntry);
+router.patch('/:id/deactivate', requirePermission('hifz.daily.create'), validate(dailyIdValidationSchema), deactivateDailyEntry);
 
 export { router as dailyHifzRoutes };

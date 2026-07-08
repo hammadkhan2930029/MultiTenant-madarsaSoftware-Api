@@ -1,11 +1,11 @@
 export const TENANT_ADMIN_BYPASS_BLOCKED_PREFIXES = ['tenant_management.', 'tenants.'];
 
 export const MODULE_PERMISSION_MAP = {
-  branches: 'class_management',
-  classes: 'class_management',
-  sections: 'class_management',
-  sessions: 'class_management',
-  subjects: 'class_management',
+  branches: 'branches',
+  classes: 'classes',
+  sections: 'sections',
+  sessions: 'settings',
+  subjects: 'subjects',
   students: 'students',
   parents: 'parents',
   attendance: 'attendance',
@@ -18,7 +18,7 @@ export const MODULE_PERMISSION_MAP = {
   departments: 'settings',
   qualifications: 'settings',
   shifts: 'settings',
-  schedules: 'class_management',
+  schedules: 'schedules',
   'teacher-schedules': 'teachers',
   'exam-schedules': 'exams',
   'exam-results': 'exams',

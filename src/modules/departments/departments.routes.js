@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { requirePermission } from '../../middlewares/authorization.middleware.js';
+import { requireAnyPermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createDepartment,
@@ -20,10 +20,10 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', requirePermission('settings.update'), validate(createDepartmentValidationSchema), createDepartment);
-router.get('/', requirePermission('settings.view'), validate(listDepartmentsValidationSchema), getDepartments);
-router.get('/:id', requirePermission('settings.view'), validate(departmentIdValidationSchema), getDepartmentById);
-router.patch('/:id', requirePermission('settings.update'), validate(updateDepartmentValidationSchema), updateDepartment);
-router.delete('/:id', requirePermission('settings.update'), validate(departmentIdValidationSchema), deleteDepartment);
+router.post('/', requireAnyPermission('settings.departments.create', 'settings.update', 'settings.edit'), validate(createDepartmentValidationSchema), createDepartment);
+router.get('/', requireAnyPermission('settings.departments.view', 'settings.view'), validate(listDepartmentsValidationSchema), getDepartments);
+router.get('/:id', requireAnyPermission('settings.departments.view', 'settings.view'), validate(departmentIdValidationSchema), getDepartmentById);
+router.patch('/:id', requireAnyPermission('settings.departments.update', 'settings.update', 'settings.edit'), validate(updateDepartmentValidationSchema), updateDepartment);
+router.delete('/:id', requireAnyPermission('settings.departments.delete', 'settings.update', 'settings.edit'), validate(departmentIdValidationSchema), deleteDepartment);
 
 export { router as departmentsRoutes };

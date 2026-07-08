@@ -46,9 +46,19 @@ const getRequiredPermissionForRequest = (req) => {
   if (req.originalUrl.startsWith('/api/teachers') && /\/increments(\/|$)/i.test(req.originalUrl)) {
     return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
   }
+  if (req.originalUrl.startsWith('/api/teacher-schedules')) {
+    return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
+  }
   if (req.originalUrl.startsWith('/api/attendance')) {
     if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') return 'attendance.mark';
     return action === 'view' ? 'attendance.view' : `attendance.${action}`;
+  }
+  if (req.originalUrl.startsWith('/api/hifz/')) {
+    const [, , hifzSegment] = req.originalUrl.split('/').filter(Boolean);
+    const hifzModule = hifzSegment === 'sipara' ? 'para' : hifzSegment;
+    if (['daily', 'weekly', 'monthly', 'para'].includes(hifzModule)) {
+      return action === 'view' ? `hifz.${hifzModule}.view` : `hifz.${hifzModule}.create`;
+    }
   }
   if (req.originalUrl.startsWith('/api/finance/student-fees')) {
     if (req.method === 'PATCH' && /\/payment(\/|$)/i.test(req.originalUrl)) return 'fees.create';
@@ -64,9 +74,18 @@ const getRequiredPermissionForRequest = (req) => {
   if (req.originalUrl.startsWith('/api/financial')) {
     return action === 'view' ? 'fees.view' : `fees.${action}`;
   }
+  if (req.originalUrl.startsWith('/api/store/approvals') || /\/(approve|reject)(\/|$)/i.test(req.originalUrl)) {
+    return 'store.approve';
+  }
+  if (req.originalUrl.startsWith('/api/store/export')) return 'store.export';
+  if (req.originalUrl.startsWith('/api/store/print')) return 'store.print';
+  if (req.originalUrl.startsWith('/api/store/reports')) return 'store.reports';
   if (moduleName === 'reports') return 'reports.view';
   if (moduleName === 'settings') {
     return action === 'view' ? 'settings.view' : 'settings.update';
+  }
+  if (['schedules', 'subjects'].includes(moduleName) && action === 'update') {
+    return `${moduleName}.edit`;
   }
   if (moduleName === 'support' && action !== 'view') return 'support.create';
   if (moduleName === 'suggestions' && action !== 'view') return 'suggestions.create';

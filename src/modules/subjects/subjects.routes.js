@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
+import { requirePermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createSubject,
@@ -19,10 +20,10 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', validate(createSubjectValidationSchema), createSubject);
-router.get('/', validate(listSubjectsValidationSchema), getSubjects);
-router.get('/:id', validate(subjectIdValidationSchema), getSubjectById);
-router.patch('/:id', validate(updateSubjectValidationSchema), updateSubject);
-router.delete('/:id', validate(subjectIdValidationSchema), deleteSubject);
+router.post('/', requirePermission('subjects.create'), validate(createSubjectValidationSchema), createSubject);
+router.get('/', requirePermission('subjects.view'), validate(listSubjectsValidationSchema), getSubjects);
+router.get('/:id', requirePermission('subjects.view'), validate(subjectIdValidationSchema), getSubjectById);
+router.patch('/:id', requirePermission('subjects.edit'), validate(updateSubjectValidationSchema), updateSubject);
+router.delete('/:id', requirePermission('subjects.delete'), validate(subjectIdValidationSchema), deleteSubject);
 
 export { router as subjectsRoutes };

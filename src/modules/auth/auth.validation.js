@@ -59,9 +59,9 @@ const optionalStringField = (max, message) =>
 const madrassaProfileBodySchema = z.object({
   name: z.string().trim().min(2, 'Profile name is required.').max(150, 'Profile name is too long.'),
   email: z.string().trim().email('Please enter a valid email address.').max(150, 'Email is too long.'),
-  phone1: optionalStringField(50, 'Primary phone is too long.'),
+  phone1: z.string().trim().min(1, 'Primary phone number is required.').max(50, 'Primary phone is too long.'),
   phone2: optionalStringField(50, 'Secondary phone is too long.'),
-  address: optionalStringField(255, 'Address is too long.'),
+  address: z.string().trim().min(1, 'Complete address is required.').max(255, 'Address is too long.'),
   branch: optionalStringField(150, 'Branch is too long.'),
   city: optionalStringField(150, 'City is too long.'),
   familyNoSeq: optionalStringField(100, 'Family sequence number is too long.'),
