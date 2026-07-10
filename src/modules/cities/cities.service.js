@@ -118,6 +118,15 @@ export const citiesService = {
       throw new AppError('City is already inactive.', 400);
     }
 
+    const profileUsingCity = await prisma.madrassaProfile.findFirst({
+      where: { city: existingCity.name },
+      select: { id: true },
+    });
+
+    if (profileUsingCity) {
+      throw new AppError('This city cannot be deleted because it is used in profile settings.', 400);
+    }
+
     return prisma.city.update({
       where: { id },
       data: {

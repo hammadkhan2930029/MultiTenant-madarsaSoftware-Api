@@ -47,3 +47,12 @@ export const deactivateParent = asyncHandler(async (req, res) => {
     data: parent,
   });
 });
+
+export const deleteParent = asyncHandler(async (req, res) => {
+  const parent = await parentsService.deleteParent(req.tenantId, Number(req.params.id));
+
+  return apiResponse(res, {
+    message: 'Parent deleted successfully.',
+    data: parent,
+  });
+});

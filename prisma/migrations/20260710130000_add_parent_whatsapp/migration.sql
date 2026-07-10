@@ -1,0 +1,2 @@
+ALTER TABLE `parents`
+  ADD COLUMN IF NOT EXISTS `whatsapp` VARCHAR(50) NULL;

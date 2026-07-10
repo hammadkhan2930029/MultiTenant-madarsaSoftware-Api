@@ -8,6 +8,7 @@ import {
   getParentById,
   updateParent,
   deactivateParent,
+  deleteParent,
 } from './parents.controller.js';
 import {
   createParentValidationSchema,
@@ -23,7 +24,8 @@ router.use(authMiddleware);
 router.post('/', requirePermission('parents.create'), validate(createParentValidationSchema), createParent);
 router.get('/', requirePermission('parents.view'), validate(listParentsValidationSchema), getParents);
 router.get('/:id', requirePermission('parents.view'), validate(parentIdValidationSchema), getParentById);
-router.put('/:id', requirePermission('parents.update'), validate(updateParentValidationSchema), updateParent);
+router.put('/:id', requirePermission('parents.edit'), validate(updateParentValidationSchema), updateParent);
 router.patch('/:id/deactivate', requirePermission('parents.delete'), validate(parentIdValidationSchema), deactivateParent);
+router.delete('/:id', requirePermission('parents.delete'), validate(parentIdValidationSchema), deleteParent);
 
 export { router as parentsRoutes };

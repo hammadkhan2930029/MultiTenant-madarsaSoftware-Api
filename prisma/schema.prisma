@@ -621,6 +621,7 @@ model Parent {
   fullName     String          @db.VarChar(150)
   familyNumber String?         @db.VarChar(100)
   phone        String?         @db.VarChar(50)
+  whatsapp     String?         @db.VarChar(50)
   email        String?         @db.VarChar(150)
   cnic         String?         @db.VarChar(50)
   occupation   String?         @db.VarChar(150)

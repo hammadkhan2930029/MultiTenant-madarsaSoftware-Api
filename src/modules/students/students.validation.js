@@ -21,6 +21,7 @@ const parentLinkSchema = z.object({
   relationship: z.string().trim().min(2, 'Relationship is required.').max(50, 'Relationship is too long.'),
   isPrimary: z.coerce.boolean().optional(),
   phone: optionalStringField(50, 'Parent phone is too long.'),
+  whatsapp: optionalStringField(50, 'Parent WhatsApp number is too long.'),
   email: z
     .union([z.string().trim().email('Please enter a valid parent email.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
@@ -31,7 +32,7 @@ const parentLinkSchema = z.object({
 });
 
 const studentBodySchema = z.object({
-  admissionNumber: z.string().trim().min(2, 'Admission number is required.').max(100, 'Admission number is too long.'),
+  admissionNumber: optionalStringField(100, 'Admission number is too long.'),
   admissionDate: optionalDateField,
   admissionFee: optionalNumberField('Admission fee must be a valid amount.'),
   fullName: z.string().trim().min(2, 'Student full name is required.').max(150, 'Student full name is too long.'),

@@ -1,9 +1,9 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
+import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
-const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
 const DEFAULT_ADMISSION_NUMBER = '0001';
 
 const normalizeTenantId = (tenantId) => {
@@ -28,28 +28,39 @@ const parseAdmissionNumber = (value) => {
   };
 };
 
-const buildNextAdmissionNumber = (students = []) => {
+const formatSequencedAdmissionNumber = ({ prefix, number, width }) =>
+  `${prefix}${String(number).padStart(width, '0')}`;
+
+const buildNextAdmissionNumber = (students = [], seed = DEFAULT_ADMISSION_NUMBER) => {
+  const parsedSeed = parseAdmissionNumber(seed) || parseAdmissionNumber(DEFAULT_ADMISSION_NUMBER);
   const highest = students
     .map((student) => parseAdmissionNumber(student?.admissionNumber))
-    .filter(Boolean)
+    .filter((item) => item && item.prefix === parsedSeed.prefix)
     .reduce((currentHighest, item) => {
       if (!currentHighest || item.number > currentHighest.number) return item;
       return currentHighest;
     }, null);
 
-  if (!highest) return DEFAULT_ADMISSION_NUMBER;
+  if (!highest) return formatSequencedAdmissionNumber(parsedSeed);
 
-  return `${highest.prefix}${String(highest.number + 1).padStart(highest.width, '0')}`;
+  return formatSequencedAdmissionNumber({
+    ...highest,
+    number: highest.number + 1,
+  });
 };
 
 const getNextAdmissionNumber = async (tenantId, tx = prisma) => {
   const resolvedTenantId = normalizeTenantId(tenantId);
+  const profile = await tx.madrassaProfile.findUnique({
+    where: { tenantId: resolvedTenantId },
+    select: { regNo: true },
+  });
   const students = await tx.student.findMany({
     where: { tenantId: resolvedTenantId },
     select: { admissionNumber: true },
   });
 
-  return buildNextAdmissionNumber(students);
+  return buildNextAdmissionNumber(students, profile?.regNo || DEFAULT_ADMISSION_NUMBER);
 };
 
 const studentSelect = {
@@ -97,6 +108,7 @@ const studentSelect = {
           fullName: true,
           familyNumber: true,
           phone: true,
+          whatsapp: true,
           email: true,
           cnic: true,
           occupation: true,
@@ -172,11 +184,12 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = []) => {
         data: {
           fullName: parentItem.fullName || existingParent.fullName,
           familyNumber: optionalString(parentItem.familyNumber) || existingParent.familyNumber,
-          phone: optionalString(parentItem.phone),
-          email: optionalString(parentItem.email),
-          cnic: optionalString(parentItem.cnic),
-          occupation: optionalString(parentItem.occupation),
-          address: optionalString(parentItem.address),
+          phone: optionalString(parentItem.phone) || existingParent.phone,
+          whatsapp: optionalString(parentItem.whatsapp) || existingParent.whatsapp,
+          email: optionalString(parentItem.email) || existingParent.email,
+          cnic: optionalString(parentItem.cnic) || existingParent.cnic,
+          occupation: optionalString(parentItem.occupation) || existingParent.occupation,
+          address: optionalString(parentItem.address) || existingParent.address,
           status: parentItem.status || existingParent.status,
         },
       });
@@ -202,12 +215,15 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = []) => {
       if (duplicateParent) {
         parentId = duplicateParent.id;
       } else {
+        const familyNumber = optionalString(parentItem.familyNumber) || (await getNextFamilyNumber(tenantId, tx));
+
         const parent = await tx.parent.create({
           data: {
             tenantId,
             fullName: parentItem.fullName,
-            familyNumber: optionalString(parentItem.familyNumber),
+            familyNumber,
             phone: optionalString(parentItem.phone),
+            whatsapp: optionalString(parentItem.whatsapp),
             email: optionalString(parentItem.email),
             cnic: optionalString(parentItem.cnic),
             occupation: optionalString(parentItem.occupation),
@@ -215,18 +231,8 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = []) => {
           },
           select: {
             id: true,
-            familyNumber: true,
           },
         });
-
-        if (!parent.familyNumber) {
-          await tx.parent.update({
-            where: { id: parent.id },
-            data: {
-              familyNumber: generateFamilyNumber(parent.id),
-            },
-          });
-        }
 
         parentId = parent.id;
       }
@@ -251,6 +257,8 @@ export const studentsService = {
 
   async createStudent(tenantId, { body, file }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    body.admissionNumber = optionalString(body.admissionNumber) || (await getNextAdmissionNumber(resolvedTenantId));
+
     const existingStudent = await prisma.student.findFirst({
       where: {
         tenantId: resolvedTenantId,
@@ -395,7 +403,7 @@ export const studentsService = {
       where: {
         id: { not: id },
         tenantId: resolvedTenantId,
-        admissionNumber: body.admissionNumber,
+        admissionNumber: body.admissionNumber || existingStudent.admissionNumber,
       },
     });
 
@@ -407,7 +415,7 @@ export const studentsService = {
       await tx.student.update({
         where: { id, tenantId: resolvedTenantId },
         data: {
-          admissionNumber: body.admissionNumber,
+          admissionNumber: body.admissionNumber || existingStudent.admissionNumber,
           admissionDate: body.admissionDate || null,
           admissionFee: optionalDecimal(body.admissionFee),
           fullName: body.fullName,

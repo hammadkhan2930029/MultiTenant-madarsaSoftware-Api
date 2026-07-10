@@ -317,7 +317,7 @@ export const authService = {
     }
 
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await this.getMadrassaProfile(admin, resolvedTenantId);
+    const existingProfile = await this.getMadrassaProfile(admin, resolvedTenantId);
 
     return prisma.madrassaProfile.update({
       where: { tenantId: resolvedTenantId },
@@ -331,7 +331,7 @@ export const authService = {
         city: emptyToNull(payload.city),
         familyNoSeq: emptyToNull(payload.familyNoSeq),
         regNo: emptyToNull(payload.regNo),
-        logoUrl: file ? buildLogoUrl(file) : emptyToNull(payload.logoUrl),
+        logoUrl: file ? buildLogoUrl(file) : emptyToNull(payload.logoUrl) || existingProfile.logoUrl,
         status: payload.status || 'active',
       },
       select: madrassaProfileSelect,

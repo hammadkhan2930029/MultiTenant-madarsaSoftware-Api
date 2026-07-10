@@ -87,6 +87,9 @@ const getRequiredPermissionForRequest = (req) => {
   if (['schedules', 'subjects'].includes(moduleName) && action === 'update') {
     return `${moduleName}.edit`;
   }
+  if (moduleName === 'parents' && action === 'update') {
+    return 'parents.edit';
+  }
   if (moduleName === 'support' && action !== 'view') return 'support.create';
   if (moduleName === 'suggestions' && action !== 'view') return 'suggestions.create';
 

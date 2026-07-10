@@ -5,16 +5,20 @@ const optionalStringField = (max, message) =>
     value === '' ? undefined : value
   );
 
+const requiredStringField = (min, max, requiredMessage, maxMessage) =>
+  z.string().trim().min(min, requiredMessage).max(max, maxMessage);
+
 const parentBodySchema = z.object({
   fullName: z.string().trim().min(2, 'Parent full name is required.').max(150, 'Parent full name is too long.'),
   familyNumber: optionalStringField(100, 'Family number is too long.'),
-  phone: optionalStringField(50, 'Phone is too long.'),
+  phone: requiredStringField(1, 50, 'Phone number is required.', 'Phone is too long.'),
+  whatsapp: optionalStringField(50, 'WhatsApp number is too long.'),
   email: z
     .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
   cnic: optionalStringField(50, 'CNIC is too long.'),
   occupation: optionalStringField(150, 'Occupation is too long.'),
-  address: optionalStringField(255, 'Address is too long.'),
+  address: requiredStringField(1, 255, 'Address is required.', 'Address is too long.'),
 });
 
 export const createParentValidationSchema = z.object({

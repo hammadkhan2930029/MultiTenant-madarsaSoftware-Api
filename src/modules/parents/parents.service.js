@@ -1,5 +1,6 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
+import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 
 const parentSelect = {
@@ -8,6 +9,7 @@ const parentSelect = {
   fullName: true,
   familyNumber: true,
   phone: true,
+  whatsapp: true,
   email: true,
   cnic: true,
   occupation: true,
@@ -30,8 +32,6 @@ const parentSelect = {
     },
   },
 };
-
-const generateFamilyNumber = (id) => `F-${String(id).padStart(4, '0')}`;
 
 const normalizeTenantId = (tenantId) => {
   const normalizedTenantId = Number(tenantId);
@@ -76,7 +76,9 @@ const buildDuplicateParentWhere = (tenantId, payload, excludeId) => ({
 export const parentsService = {
   async createParent(tenantId, payload) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureFamilyNumberUnique(resolvedTenantId, payload.familyNumber);
+    const familyNumber = payload.familyNumber || (await getNextFamilyNumber(resolvedTenantId));
+
+    await ensureFamilyNumberUnique(resolvedTenantId, familyNumber);
 
     if (payload.phone || payload.email) {
       const duplicateParent = await prisma.parent.findFirst({
@@ -92,8 +94,9 @@ export const parentsService = {
       data: {
         tenantId: resolvedTenantId,
         fullName: payload.fullName,
-        familyNumber: payload.familyNumber || null,
+        familyNumber,
         phone: payload.phone || null,
+        whatsapp: payload.whatsapp || null,
         email: payload.email || null,
         cnic: payload.cnic || null,
         occupation: payload.occupation || null,
@@ -104,15 +107,6 @@ export const parentsService = {
         familyNumber: true,
       },
     });
-
-    if (!createdParent.familyNumber) {
-      await prisma.parent.update({
-        where: { id: createdParent.id, tenantId: resolvedTenantId },
-        data: {
-          familyNumber: generateFamilyNumber(createdParent.id),
-        },
-      });
-    }
 
     return prisma.parent.findUnique({
       where: { id: createdParent.id },
@@ -204,6 +198,7 @@ export const parentsService = {
         fullName: payload.fullName,
         familyNumber: payload.familyNumber || existingParent.familyNumber,
         phone: payload.phone || null,
+        whatsapp: payload.whatsapp || null,
         email: payload.email || null,
         cnic: payload.cnic || null,
         occupation: payload.occupation || null,
@@ -234,6 +229,37 @@ export const parentsService = {
     return prisma.parent.update({
       where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
+      select: parentSelect,
+    });
+  },
+
+  async deleteParent(tenantId, id) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const parent = await prisma.parent.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+      },
+      select: {
+        id: true,
+        _count: {
+          select: {
+            students: true,
+          },
+        },
+      },
+    });
+
+    if (!parent) {
+      throw new AppError('Parent not found.', 404);
+    }
+
+    if ((parent._count?.students || 0) > 0) {
+      throw new AppError('This parent cannot be deleted because linked students exist.', 400);
+    }
+
+    return prisma.parent.delete({
+      where: { id, tenantId: resolvedTenantId },
       select: parentSelect,
     });
   },
