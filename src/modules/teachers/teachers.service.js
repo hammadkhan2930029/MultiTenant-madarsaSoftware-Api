@@ -42,9 +42,47 @@ CREATE TABLE IF NOT EXISTS teacher_salary_increments (
 
 let teacherIncrementTablePromise = null;
 
+const ensureTeacherIncrementTenantColumn = async () => {
+  const columns = await prisma.$queryRaw`
+    SHOW COLUMNS FROM teacher_salary_increments LIKE 'tenant_id'
+  `;
+
+  if (columns.length) return;
+
+  await prisma.$executeRawUnsafe(`
+    ALTER TABLE teacher_salary_increments
+    ADD COLUMN tenant_id INT NULL AFTER id
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    UPDATE teacher_salary_increments increment
+    INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+    SET increment.tenant_id = teacher.tenant_id
+    WHERE increment.tenant_id IS NULL
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    ALTER TABLE teacher_salary_increments
+    MODIFY tenant_id INT NOT NULL
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    CREATE INDEX teacher_salary_increments_tenant_id_idx
+    ON teacher_salary_increments (tenant_id)
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    ALTER TABLE teacher_salary_increments
+    ADD CONSTRAINT teacher_salary_increments_tenant_id_fkey
+    FOREIGN KEY (tenant_id) REFERENCES Tenant(id)
+  `);
+};
+
 const ensureTeacherIncrementTable = () => {
   if (!teacherIncrementTablePromise) {
-    teacherIncrementTablePromise = prisma.$executeRawUnsafe(teacherIncrementTableSql);
+    teacherIncrementTablePromise = prisma
+      .$executeRawUnsafe(teacherIncrementTableSql)
+      .then(() => ensureTeacherIncrementTenantColumn());
   }
 
   return teacherIncrementTablePromise;

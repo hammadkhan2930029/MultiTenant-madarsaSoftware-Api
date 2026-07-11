@@ -30,8 +30,8 @@ router.use(authMiddleware);
 
 router.post('/', requirePermission('teachers.create'), teacherImageUpload.single('image'), validate(createTeacherValidationSchema), createTeacher);
 router.get('/', requirePermission('teachers.view'), validate(listTeachersValidationSchema), getTeachers);
-router.get('/increments', requirePermission('teachers.view'), validate(listTeacherIncrementsValidationSchema), getAllTeacherIncrements);
-router.get('/:id/increments', requirePermission('teachers.view'), validate(teacherIdValidationSchema), getTeacherIncrements);
+router.get('/increments', requirePermission('teachers.view', 'teachers.salary_increments.view'), validate(listTeacherIncrementsValidationSchema), getAllTeacherIncrements);
+router.get('/:id/increments', requirePermission('teachers.view', 'teachers.salary_increments.view'), validate(teacherIdValidationSchema), getTeacherIncrements);
 router.post('/:id/increments', requirePermission('teachers.update'), validate(teacherIncrementValidationSchema), createTeacherIncrement);
 router.get('/:id', requirePermission('teachers.view'), validate(teacherIdValidationSchema), getTeacherById);
 router.put('/:id', requirePermission('teachers.update'), teacherImageUpload.single('image'), validate(updateTeacherValidationSchema), updateTeacher);

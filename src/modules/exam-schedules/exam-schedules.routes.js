@@ -15,7 +15,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.post('/', requirePermission('exams.create'), validate(createExamScheduleValidationSchema), createExamSchedule);
-router.get('/', requirePermission('exams.view'), validate(listExamSchedulesValidationSchema), getExamSchedules);
+router.get('/', requirePermission(['exams.view', 'exam_results.create']), validate(listExamSchedulesValidationSchema), getExamSchedules);
 router.put('/:id', requirePermission('exams.update'), validate(updateExamScheduleValidationSchema), updateExamSchedule);
 router.delete('/:id', requirePermission('exams.delete'), validate(examScheduleIdValidationSchema), deleteExamSchedule);
 

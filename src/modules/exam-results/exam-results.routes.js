@@ -22,11 +22,11 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', requirePermission('exams.create'), validate(saveExamResultValidationSchema), saveExamResult);
-router.get('/', requirePermission('exams.view'), validate(listExamResultsValidationSchema), getExamResults);
-router.get('/student/:studentId', requirePermission('exams.view'), validate(findStudentExamResultValidationSchema), findStudentExamResult);
-router.get('/:id', requirePermission('exams.view'), validate(examResultIdValidationSchema), getExamResultById);
-router.put('/:id', requirePermission('exams.update'), validate(updateExamResultValidationSchema), updateExamResult);
+router.post('/', requirePermission('exam_results.create'), validate(saveExamResultValidationSchema), saveExamResult);
+router.get('/', requirePermission('exam_results.view'), validate(listExamResultsValidationSchema), getExamResults);
+router.get('/student/:studentId', requirePermission('exam_results.view'), validate(findStudentExamResultValidationSchema), findStudentExamResult);
+router.get('/:id', requirePermission('exam_results.view'), validate(examResultIdValidationSchema), getExamResultById);
+router.put('/:id', requirePermission('exam_results.create'), validate(updateExamResultValidationSchema), updateExamResult);
 router.delete('/:id', requirePermission('exams.delete'), validate(examResultIdValidationSchema), deleteExamResult);
 
 export { router as examResultsRoutes };

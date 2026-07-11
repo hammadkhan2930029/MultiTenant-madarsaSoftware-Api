@@ -44,10 +44,18 @@ const getRequiredPermissionForRequest = (req) => {
     return 'students.update';
   }
   if (req.originalUrl.startsWith('/api/teachers') && /\/increments(\/|$)/i.test(req.originalUrl)) {
-    return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
+    return req.method === 'GET' ? ['teachers.view', 'teachers.salary_increments.view'] : 'teachers.update';
   }
   if (req.originalUrl.startsWith('/api/teacher-schedules')) {
     return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
+  }
+  if (req.originalUrl.startsWith('/api/exam-results')) {
+    if (req.method === 'GET') return 'exam_results.view';
+    if (req.method === 'DELETE') return 'exams.delete';
+    return 'exam_results.create';
+  }
+  if (req.originalUrl.startsWith('/api/exam-schedules') && req.method === 'GET') {
+    return ['exams.view', 'exam_results.create'];
   }
   if (req.originalUrl.startsWith('/api/attendance')) {
     if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') return 'attendance.mark';
