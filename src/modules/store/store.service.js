@@ -45,6 +45,14 @@ let storeUnitTablePromise = null;
 let storeCategoryTablePromise = null;
 let storePurchaseTablePromise = null;
 
+const DEFAULT_STORE_UNITS = [
+  { name: 'عدد', shortName: 'piece', description: 'گنتی کی اکائی' },
+  { name: 'کلوگرام', shortName: 'kg', description: 'وزن کی اکائی' },
+  { name: 'لیٹر', shortName: 'liter', description: 'مائع کی اکائی' },
+  { name: 'میٹر', shortName: 'meter', description: 'لمبائی کی اکائی' },
+  { name: 'درجن', shortName: 'dozen', description: 'درجن کی اکائی' },
+];
+
 const ensureStoreItemsTable = async () => {
   if (!storeItemTablePromise) {
     storeItemTablePromise = prisma.$executeRaw`
@@ -112,22 +120,30 @@ const ensureStoreUnitsTable = async () => {
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
       `;
 
-      const rows = [{ total: 1 }];
-      if (Number(rows?.[0]?.total || 0) === 0) {
-        const now = new Date();
-        await prisma.$executeRaw`
-          INSERT INTO store_units (name, shortName, description, status, createdAt, updatedAt)
-          VALUES
-            ('عدد', 'piece', 'گنتی کی اکائی', 'active', ${now}, ${now}),
-            ('کلوگرام', 'kg', 'وزن کی اکائی', 'active', ${now}, ${now}),
-            ('لیٹر', 'liter', 'مائع کی اکائی', 'active', ${now}, ${now}),
-            ('میٹر', 'meter', 'لمبائی کی اکائی', 'active', ${now}, ${now}),
-            ('درجن', 'dozen', 'درجن کی اکائی', 'active', ${now}, ${now})
-        `;
-      }
     })();
   }
   await storeUnitTablePromise;
+};
+
+const ensureDefaultStoreUnitsForTenant = async (tenantId) => {
+  await ensureStoreUnitsTable();
+  const rows = await prisma.$queryRaw`
+    SELECT COUNT(*) AS total
+    FROM store_units
+    WHERE tenant_id = ${tenantId}
+  `;
+
+  if (Number(rows?.[0]?.total || 0) > 0) {
+    return;
+  }
+
+  const now = new Date();
+  for (const unit of DEFAULT_STORE_UNITS) {
+    await prisma.$executeRaw`
+      INSERT INTO store_units (tenant_id, name, shortName, description, status, createdAt, updatedAt)
+      VALUES (${tenantId}, ${unit.name}, ${unit.shortName}, ${unit.description}, 'active', ${now}, ${now})
+    `;
+  }
 };
 
 const ensureStoreCategoriesTable = async () => {
@@ -1093,7 +1109,7 @@ const ensureUniqueItemNameInCategory = async (tenantId, itemName, categoryName, 
 };
 
 const getDefaultStoreUnit = async (tenantId) => {
-  await ensureStoreUnitsTable();
+  await ensureDefaultStoreUnitsForTenant(tenantId);
   const rows = await prisma.$queryRaw`
     SELECT shortName
     FROM store_units
