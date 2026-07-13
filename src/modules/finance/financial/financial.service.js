@@ -185,7 +185,36 @@ const applyCommonFilters = (items, query) =>
     return typeOk && matchesSearch(item, query.search);
   });
 
-const summarize = (items) => {
+const getOutstandingSummary = async (tenantId) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
+  const [receivable, payable] = await Promise.all([
+    prisma.studentFeeVoucher.aggregate({
+      where: {
+        tenantId: resolvedTenantId,
+        status: { in: ['unpaid', 'partial'] },
+        dueAmount: { gt: 0 },
+        student: { tenantId: resolvedTenantId },
+      },
+      _sum: { dueAmount: true },
+    }),
+    prisma.storePurchase.aggregate({
+      where: {
+        tenantId: resolvedTenantId,
+        status: 'active',
+        approvalStatus: 'approved',
+        remainingAmount: { gt: 0 },
+      },
+      _sum: { remainingAmount: true },
+    }),
+  ]);
+
+  return {
+    receivableAmount: toAmount(receivable._sum.dueAmount),
+    payableAmount: toAmount(payable._sum.remainingAmount),
+  };
+};
+
+const summarize = (items, outstanding = {}) => {
   const totalAmdan = items.filter((item) => item.type === 'amdan').reduce((sum, item) => sum + item.amount, 0);
   const totalKharch = items.filter((item) => item.type === 'kharch').reduce((sum, item) => sum + item.amount, 0);
   return {
@@ -193,6 +222,8 @@ const summarize = (items) => {
     totalKharch,
     remainingBalance: totalAmdan - totalKharch,
     totalTransactions: items.length,
+    payableAmount: toAmount(outstanding.payableAmount),
+    receivableAmount: toAmount(outstanding.receivableAmount),
   };
 };
 
@@ -291,11 +322,12 @@ export const financialService = {
   async list(tenantId, query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const filteredItems = applyCommonFilters(await fetchFinancialRows(tenantId, query), query);
+    const outstanding = await getOutstandingSummary(tenantId);
     const items = filteredItems.slice(skip, skip + limit);
 
     return {
       items,
-      summary: summarize(filteredItems),
+      summary: summarize(filteredItems, outstanding),
       meta: buildPaginationMeta({ totalItems: filteredItems.length, page, limit }),
       filters: {
         fromDate: query.fromDate || null,
@@ -308,7 +340,11 @@ export const financialService = {
   },
 
   async summary(tenantId, query) {
-    return summarize(applyCommonFilters(await fetchFinancialRows(tenantId, query), query));
+    const [items, outstanding] = await Promise.all([
+      fetchFinancialRows(tenantId, query),
+      getOutstandingSummary(tenantId),
+    ]);
+    return summarize(applyCommonFilters(items, query), outstanding);
   },
 
   async create(tenantId, payload, admin) {

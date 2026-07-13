@@ -74,6 +74,7 @@ app.use(
 );
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/fonts', express.static(path.join(__dirname, '../public/fonts')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

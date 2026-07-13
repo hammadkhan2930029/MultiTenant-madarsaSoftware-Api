@@ -13,6 +13,8 @@ const select = {
   paymentStatus: true,
   slipNo: true,
   details: true,
+  referenceType: true,
+  referenceId: true,
   status: true,
   createdAt: true,
   updatedAt: true,

@@ -1066,6 +1066,7 @@ model StoreItem {
   tenantId         Int                    @map("tenant_id")
   itemName         String                 @db.VarChar(150)
   category         String                 @db.VarChar(150)
+  description      String?                @db.VarChar(255)
   unit             String                 @db.VarChar(50)
   itemCode         String                 @db.VarChar(100)
   currentStock     Decimal                @default(0) @db.Decimal(10, 2)
@@ -1193,6 +1194,7 @@ model StorePurchaseItem {
   tenantId   Int           @map("tenant_id")
   purchaseId Int
   itemId     Int
+  unitId     Int?
   quantity   Decimal       @db.Decimal(10, 2)
   rate       Decimal       @db.Decimal(10, 2)
   total      Decimal       @db.Decimal(10, 2)
@@ -1205,6 +1207,7 @@ model StorePurchaseItem {
   @@index([tenantId])
   @@index([purchaseId])
   @@index([itemId])
+  @@index([unitId])
   @@map("store_purchase_items")
 }
 

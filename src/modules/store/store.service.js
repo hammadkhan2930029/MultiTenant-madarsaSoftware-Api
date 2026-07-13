@@ -53,6 +53,7 @@ const ensureStoreItemsTable = async () => {
         tenant_id INTEGER NOT NULL,
         itemName VARCHAR(150) NOT NULL,
         category VARCHAR(150) NOT NULL,
+        description VARCHAR(255) NULL,
         unit VARCHAR(50) NOT NULL,
         itemCode VARCHAR(100) NOT NULL,
         currentStock DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -81,6 +82,14 @@ const getStoreItemColumnSet = async () => {
     `.then((rows) => new Set(rows.map((row) => row.columnName || row.COLUMN_NAME).filter(Boolean)));
   }
   return storeItemColumnSetPromise;
+};
+
+const ensureStoreItemDescriptionColumn = async () => {
+  const columnSet = await getStoreItemColumnSet();
+  if (!columnSet.has('description')) {
+    await prisma.$executeRaw`ALTER TABLE store_items ADD COLUMN description VARCHAR(255) NULL`;
+    storeItemColumnSetPromise = null;
+  }
 };
 
 const ensureStoreUnitsTable = async () => {
@@ -158,6 +167,7 @@ const ensureStoreCategoriesTable = async () => {
 
 const ensureStorePurchaseTables = async () => {
   await ensureStoreItemsTable();
+  await ensureStoreUnitsTable();
 
   if (!storePurchaseTablePromise) {
     storePurchaseTablePromise = (async () => {
@@ -211,6 +221,7 @@ const ensureStorePurchaseTables = async () => {
           tenant_id INTEGER NOT NULL,
           purchaseId INTEGER NOT NULL,
           itemId INTEGER NOT NULL,
+          unitId INTEGER NULL,
           quantity DECIMAL(10, 2) NOT NULL,
           rate DECIMAL(10, 2) NOT NULL,
           total DECIMAL(10, 2) NOT NULL,
@@ -219,9 +230,30 @@ const ensureStorePurchaseTables = async () => {
           INDEX store_purchase_items_purchaseId_idx(purchaseId),
           INDEX store_purchase_items_tenant_id_idx(tenant_id),
           INDEX store_purchase_items_itemId_idx(itemId),
+          INDEX store_purchase_items_unitId_idx(unitId),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
       `;
+
+      const purchaseItemColumns = await prisma.$queryRaw`
+        SELECT COLUMN_NAME AS columnName
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'store_purchase_items'
+      `;
+      const purchaseItemColumnSet = new Set(purchaseItemColumns.map((row) => row.columnName || row.COLUMN_NAME).filter(Boolean));
+      if (!purchaseItemColumnSet.has('unitId')) {
+        await prisma.$executeRaw`ALTER TABLE store_purchase_items ADD COLUMN unitId INTEGER NULL AFTER itemId`;
+      }
+
+      const purchaseItemIndexes = await prisma.$queryRaw`
+        SELECT INDEX_NAME AS indexName
+        FROM INFORMATION_SCHEMA.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'store_purchase_items'
+      `;
+      const purchaseItemIndexSet = new Set(purchaseItemIndexes.map((row) => row.indexName || row.INDEX_NAME).filter(Boolean));
+      if (!purchaseItemIndexSet.has('store_purchase_items_unitId_idx')) {
+        await prisma.$executeRaw`ALTER TABLE store_purchase_items ADD INDEX store_purchase_items_unitId_idx(unitId)`;
+      }
 
       await prisma.$executeRaw`
         CREATE TABLE IF NOT EXISTS store_supplier_payments (
@@ -301,24 +333,29 @@ const normalizeApprovalStatus = (value, fallback = 'approved') => {
 const validateItemPayload = (payload) => {
   const itemName = normalizeText(payload.itemName);
   const category = normalizeText(payload.category);
+  const description = normalizeText(payload.description) || null;
   const unit = normalizeText(payload.unit);
   const itemCode = normalizeText(payload.itemCode);
 
   if (!itemName) throw new AppError('شے کا نام ضروری ہے۔', 400);
   if (!category) throw new AppError('کیٹیگری ضروری ہے۔', 400);
-  if (!unit) throw new AppError('اکائی ضروری ہے۔', 400);
-  if (!itemCode) throw new AppError('آئٹم کوڈ ضروری ہے۔', 400);
 
-  const quantity = normalizeNumber(payload.quantity, 'مقدار');
-  const purchasePrice = normalizeNumber(payload.purchasePrice, 'خریداری قیمت');
+  const quantity = payload.quantity === undefined || payload.quantity === null || payload.quantity === ''
+    ? 0
+    : normalizeNumber(payload.quantity, 'مقدار');
+  const purchasePrice = payload.purchasePrice === undefined || payload.purchasePrice === null || payload.purchasePrice === ''
+    ? 0
+    : normalizeNumber(payload.purchasePrice, 'خریداری قیمت');
 
   return {
     itemName,
     category,
+    description,
     unit,
     itemCode,
     quantity,
     purchasePrice,
+    status: normalizeStatus(payload.status),
   };
 };
 
@@ -384,9 +421,12 @@ const mapPurchaseItem = (item) => ({
   id: Number(item.id),
   purchaseId: Number(item.purchaseId),
   itemId: Number(item.itemId),
+  unitId: item.unitId === null || item.unitId === undefined ? null : Number(item.unitId),
   quantity: toAmount(item.quantity),
   rate: toAmount(item.rate),
+  unitPrice: toAmount(item.unitPrice === undefined ? item.rate : item.unitPrice),
   total: toAmount(item.total),
+  totalAmount: toAmount(item.totalAmount === undefined ? item.total : item.totalAmount),
 });
 
 const mapPurchase = (purchase, items = []) => ({
@@ -406,20 +446,71 @@ const normalizePurchaseDate = (value) => {
   return date;
 };
 
-const parseItemsPayload = (items) => {
+const resolvePurchaseUnitId = async (tenantId, itemId, value) => {
+  if (value !== undefined && value !== null && value !== '') {
+    const unitId = normalizeId(value);
+    const unitRows = await prisma.$queryRaw`
+      SELECT id
+      FROM store_units
+      WHERE id = ${unitId} AND tenant_id = ${tenantId} AND status = 'active'
+      LIMIT 1
+    `;
+    if (!unitRows.length) throw new AppError('منتخب اکائی نہیں ملی یا غیر فعال ہے۔', 404);
+    return unitId;
+  }
+
+  const fallbackRows = await prisma.$queryRaw`
+    SELECT u.id
+    FROM store_items i
+    JOIN store_units u
+      ON u.tenant_id = i.tenant_id
+      AND u.status = 'active'
+      AND (u.name = i.unit OR u.shortName = i.unit)
+    WHERE i.id = ${itemId} AND i.tenant_id = ${tenantId}
+    LIMIT 1
+  `;
+  if (fallbackRows.length) return Number(fallbackRows[0].id);
+
+  const firstActiveUnit = await prisma.$queryRaw`
+    SELECT id
+    FROM store_units
+    WHERE tenant_id = ${tenantId} AND status = 'active'
+    ORDER BY id ASC
+    LIMIT 1
+  `;
+  if (firstActiveUnit.length) return Number(firstActiveUnit[0].id);
+
+  throw new AppError('اکائی منتخب کرنا ضروری ہے۔', 400);
+};
+
+const parseItemsPayload = async (tenantId, items) => {
   const parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
   if (!Array.isArray(parsedItems) || parsedItems.length === 0) {
     throw new AppError('کم از کم ایک شے شامل کرنا ضروری ہے۔', 400);
   }
 
-  return parsedItems.map((item) => {
+  const parsedRows = [];
+  for (const item of parsedItems) {
     const itemId = normalizeId(item.itemId);
     const quantity = normalizeNumber(item.quantity, 'مقدار');
-    const rate = normalizeNumber(item.rate, 'ریٹ');
+    const unitPriceValue = item.unitPrice === undefined || item.unitPrice === null || item.unitPrice === '' ? item.rate : item.unitPrice;
+    const rate = normalizeNumber(unitPriceValue, 'فی اکائی رقم');
     if (quantity <= 0) throw new AppError('مقدار صفر سے زیادہ ہونی چاہیے۔', 400);
+    const itemRows = await prisma.$queryRaw`
+      SELECT id
+      FROM store_items
+      WHERE id = ${itemId} AND tenant_id = ${tenantId} AND status = 'active'
+      LIMIT 1
+    `;
+    if (!itemRows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
+
+    const unitId = await resolvePurchaseUnitId(tenantId, itemId, item.unitId);
+
     const total = quantity * rate;
-    return { itemId, quantity, rate, total };
-  });
+    parsedRows.push({ itemId, unitId, quantity, rate, unitPrice: rate, total });
+  }
+
+  return parsedRows;
 };
 
 const buildInvoiceImagePath = (file) => (file ? `/uploads/store-invoices/${file.filename}` : null);
@@ -679,7 +770,7 @@ const upsertStoreFinanceExpense = async (tx, data) => {
           details = ${data.title},
           status = 'active',
           updatedAt = ${now}
-      WHERE id = ${transactionId}
+      WHERE id = ${transactionId} AND tenant_id = ${data.tenantId}
     `;
     return transactionId;
   }
@@ -695,8 +786,8 @@ const upsertStoreFinanceExpense = async (tx, data) => {
 const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data) =>
   upsertStoreFinanceExpense(tx, {
     tenantId,
-    title: `Store purchase${data.invoiceNumber ? ` - ${data.invoiceNumber}` : ''}`,
-    category: 'Store Purchase',
+    title: `خریداری${data.invoiceNumber ? ` - ${data.invoiceNumber}` : ''}`,
+    category: 'خریداری',
     amount: data.totalAmount,
     paymentMethod: data.paymentMethod,
     paymentStatus: data.remainingAmount > 0 ? 'جزوی' : 'مکمل',
@@ -704,7 +795,7 @@ const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data) 
     referenceType: 'store_purchase',
     referenceId: purchaseId,
     date: data.purchaseDate,
-    note: 'Store purchase expense',
+    note: 'اسٹور خریداری کا خرچ',
   });
 
 const createSupplierPaymentFinanceTransaction = async (tx, tenantId, supplierId, paymentId, data) =>
@@ -765,12 +856,26 @@ const formatAmount = (value) => new Intl.NumberFormat('ur-PK', { maximumFraction
 
 const getMadrassaPrintProfile = async (tenantId, admin) => {
   const adminId = Number(admin?.id || 0);
-  const profileRows = adminId
-    ? await prisma.$queryRaw`SELECT name, branch, city, address, logoUrl FROM madrassa_profiles WHERE tenant_id = ${tenantId} AND adminId = ${adminId} LIMIT 1`
-    : [];
+  const profileRows = await prisma.$queryRaw`
+    SELECT name, branch, city, address, logoUrl
+    FROM madrassa_profiles
+    WHERE tenant_id = ${tenantId}
+      AND status = 'active'
+    ORDER BY CASE WHEN adminId = ${adminId} THEN 0 ELSE 1 END, id DESC
+    LIMIT 1
+  `;
 
-  return profileRows[0] || {
-    name: 'جامعہ صفہ الاسلامیہ',
+  if (profileRows[0]) return profileRows[0];
+
+  const tenantRows = await prisma.$queryRaw`
+    SELECT name
+    FROM tenant
+    WHERE id = ${tenantId}
+    LIMIT 1
+  `;
+
+  return {
+    name: tenantRows[0]?.name || 'مدرسہ',
     branch: '',
     city: '',
     address: '',
@@ -793,24 +898,31 @@ const buildPrintHtml = ({ profile, title, subtitle = '', columns = [], rows = []
   <meta charset="utf-8" />
   <title>${escapeHtml(title)}</title>
   <style>
-    body { margin: 0; background: #f8fafc; color: #111827; font-family: "Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif; }
+    @font-face {
+      font-family: "Jameel Noori Nastaleeq";
+      src: url("/fonts/JameelNooriNastaleeq.ttf") format("truetype");
+      font-weight: 400 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    body { margin: 0; background: #f8fafc; color: #111827; font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Urdu Typesetting", "Segoe UI", Tahoma, Arial, sans-serif; }
     .page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; padding: 18mm; box-sizing: border-box; }
     .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #00d094; padding-bottom: 14px; gap: 18px; }
     .brand { text-align: center; flex: 1; }
-    .brand h1 { margin: 0; font-size: 26px; font-weight: 900; }
-    .brand p { margin: 4px 0 0; font-size: 12px; color: #475569; }
+    .brand h1 { margin: 0; font-size: 30px; font-weight: 900; }
+    .brand p { margin: 4px 0 0; font-size: 14px; color: #475569; }
     .logo { width: 70px; height: 70px; object-fit: contain; }
-    .meta { font-size: 12px; color: #334155; line-height: 1.9; min-width: 120px; }
+    .meta { font-size: 13px; color: #334155; line-height: 1.9; min-width: 120px; }
     .title { margin: 22px 0 14px; text-align: center; }
-    .title h2 { display: inline-block; margin: 0; border: 1px solid #00d094; border-radius: 999px; padding: 8px 26px; font-size: 18px; }
-    .title p { margin: 8px 0 0; color: #64748b; font-size: 12px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+    .title h2 { display: inline-block; margin: 0; border: 1px solid #00d094; border-radius: 999px; padding: 8px 26px; font-size: 21px; }
+    .title p { margin: 8px 0 0; color: #64748b; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
     th { background: #ecfdf5; color: #065f46; font-weight: 900; }
     th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: right; vertical-align: top; }
-    .summary { margin-top: 14px; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-weight: 800; }
+    .summary { margin-top: 14px; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px; font-size: 14px; font-weight: 800; }
     .signatures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 52px; text-align: center; }
-    .signatures div { border-top: 1px solid #334155; padding-top: 8px; font-size: 12px; }
-    .footer { margin-top: 28px; text-align: center; color: #64748b; font-size: 11px; }
+    .signatures div { border-top: 1px solid #334155; padding-top: 8px; font-size: 13px; }
+    .footer { margin-top: 28px; text-align: center; color: #64748b; font-size: 12px; }
     @media print { body { background: #fff; } .page { margin: 0; width: auto; min-height: auto; box-shadow: none; } }
   </style>
 </head>
@@ -853,7 +965,7 @@ const stockExportColumns = [
   { label: 'کیٹیگری', value: (row) => row.category || '-' },
   { label: 'اکائی', value: (row) => row.unit || '-' },
   { label: 'موجودہ اسٹاک', value: (row) => formatAmount(row.currentStock) },
-  { label: 'خریداری قیمت', value: (row) => formatAmount(row.purchasePrice) },
+  { label: 'فی اکائی قیمت', value: (row) => `روپے ${formatAmount(row.purchasePrice)}${row.unit ? ` فی ${row.unit}` : ''}` },
   { label: 'مالیت', value: (row) => formatAmount(row.stockValue || row.currentStock * row.purchasePrice) },
 ];
 
@@ -894,9 +1006,10 @@ const getPurchaseRows = async (tenantId, id) => {
   if (!purchaseRows.length) throw new AppError('خریداری ریکارڈ نہیں ملا۔', 404);
 
   const itemRows = await prisma.$queryRaw`
-    SELECT pi.*, i.itemName, i.unit, i.itemCode
+    SELECT pi.*, i.itemName, i.unit, i.itemCode, u.name AS unitName, u.shortName AS unitShortName
     FROM store_purchase_items pi
     JOIN store_items i ON i.id = pi.itemId
+    LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${tenantId}
     WHERE pi.purchaseId = ${purchaseId}
       AND pi.tenant_id = ${tenantId}
       AND i.tenant_id = ${tenantId}
@@ -919,8 +1032,8 @@ const applyStockChange = async (tx, tenantId, purchaseItems, multiplier) => {
   }
 };
 
-const validatePurchasePayload = (payload) => {
-  const items = parseItemsPayload(payload.items);
+const validatePurchasePayload = async (tenantId, payload) => {
+  const items = await parseItemsPayload(tenantId, payload.items);
   const totalAmount = items.reduce((sum, item) => sum + item.total, 0);
   const paidAmount = normalizeNumber(payload.paidAmount, 'ادا شدہ رقم');
   if (paidAmount > totalAmount) throw new AppError('ادا شدہ رقم کل رقم سے زیادہ نہیں ہو سکتی۔', 400);
@@ -945,6 +1058,80 @@ const ensureUniqueItemCode = async (tenantId, itemCode, ignoredId = null) => {
   if (rows.length) {
     throw new AppError('یہ آئٹم کوڈ پہلے سے موجود ہے۔', 409);
   }
+};
+
+const ensureActiveStoreCategory = async (tenantId, categoryName) => {
+  await ensureStoreCategoriesTable();
+  const rows = await prisma.$queryRaw`
+    SELECT id, name, status
+    FROM store_categories
+    WHERE tenant_id = ${tenantId} AND name = ${categoryName}
+    LIMIT 1
+  `;
+
+  if (!rows.length) throw new AppError('کیٹیگری نہیں ملی۔', 404);
+  if (rows[0].status !== 'active') throw new AppError('غیر فعال کیٹیگری میں نئی شے نہیں بنائی جا سکتی۔', 400);
+  return rows[0];
+};
+
+const ensureUniqueItemNameInCategory = async (tenantId, itemName, categoryName, ignoredId = null) => {
+  const rows = ignoredId
+    ? await prisma.$queryRaw`
+      SELECT id
+      FROM store_items
+      WHERE tenant_id = ${tenantId} AND itemName = ${itemName} AND category = ${categoryName} AND id <> ${ignoredId}
+      LIMIT 1
+    `
+    : await prisma.$queryRaw`
+      SELECT id
+      FROM store_items
+      WHERE tenant_id = ${tenantId} AND itemName = ${itemName} AND category = ${categoryName}
+      LIMIT 1
+    `;
+
+  if (rows.length) throw new AppError('اسی کیٹیگری میں یہ شے پہلے سے موجود ہے۔', 409);
+};
+
+const getDefaultStoreUnit = async (tenantId) => {
+  await ensureStoreUnitsTable();
+  const rows = await prisma.$queryRaw`
+    SELECT shortName
+    FROM store_units
+    WHERE tenant_id = ${tenantId} AND status = 'active'
+    ORDER BY id ASC
+    LIMIT 1
+  `;
+  return rows[0]?.shortName || 'piece';
+};
+
+const generateItemCode = async (tenantId) => {
+  let code = '';
+  let isUnique = false;
+  while (!isUnique) {
+    code = `ITEM-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const rows = await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${code} LIMIT 1`;
+    isUnique = rows.length === 0;
+  }
+  return code;
+};
+
+const getItemDependencyCount = async (tenantId, itemId) => {
+  await ensureStorePurchaseTables();
+  const [purchaseItems, stockIssues, returns, damagedStocks, stockAdjustments] = await Promise.all([
+    prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_purchase_items WHERE tenant_id = ${tenantId} AND itemId = ${itemId}`,
+    prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_stock_issues WHERE tenant_id = ${tenantId} AND itemId = ${itemId}`,
+    prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_returns WHERE tenant_id = ${tenantId} AND itemId = ${itemId}`,
+    prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_damaged_stock WHERE tenant_id = ${tenantId} AND itemId = ${itemId}`,
+    prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_stock_adjustments WHERE tenant_id = ${tenantId} AND itemId = ${itemId}`,
+  ]);
+
+  return [
+    purchaseItems,
+    stockIssues,
+    returns,
+    damagedStocks,
+    stockAdjustments,
+  ].reduce((total, rows) => total + Number(rows?.[0]?.total || 0), 0);
 };
 
 export const storeService = {
@@ -1185,18 +1372,22 @@ export const storeService = {
   async getItems(tenantId, query = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreItemsTable();
+    await ensureStoreItemDescriptionColumn();
     const search = normalizeText(query.search);
     const category = normalizeText(query.category);
+    const status = normalizeText(query.status);
+    const includeInactive = query.includeInactive === true || query.includeInactive === 'true';
     const lowStockOnly = query.lowStock === true || query.lowStock === 'true';
     const outOfStockOnly = query.outOfStock === true || query.outOfStock === 'true';
     const lowStockThreshold = Number(query.lowStockThreshold || 5);
     const searchTerm = `%${search}%`;
 
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
+      SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
       WHERE tenant_id = ${resolvedTenantId}
-        AND status = 'active'
+        AND (${includeInactive} = true OR status = 'active')
+        AND (${status} = '' OR status = ${status})
         AND (${search} = '' OR itemName LIKE ${searchTerm} OR itemCode LIKE ${searchTerm})
         AND (${category} = '' OR category = ${category})
         AND (${lowStockOnly} = false OR (currentStock > 0 AND currentStock <= ${Number.isFinite(lowStockThreshold) ? lowStockThreshold : 5}))
@@ -1210,11 +1401,12 @@ export const storeService = {
   async getItemById(tenantId, id) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStoreItemsTable();
+    await ensureStoreItemDescriptionColumn();
     const itemId = normalizeId(id);
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
+      SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
+      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
       LIMIT 1
     `;
 
@@ -1224,25 +1416,30 @@ export const storeService = {
 
   async createItem(tenantId, payload) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    await ensureStoreItemDescriptionColumn();
     const data = validateItemPayload(payload);
+    await ensureActiveStoreCategory(resolvedTenantId, data.category);
+    await ensureUniqueItemNameInCategory(resolvedTenantId, data.itemName, data.category);
+    data.unit = data.unit || await getDefaultStoreUnit(resolvedTenantId);
+    data.itemCode = data.itemCode || await generateItemCode(resolvedTenantId);
     await ensureUniqueItemCode(resolvedTenantId, data.itemCode);
     const now = new Date();
     const columnSet = await getStoreItemColumnSet();
 
     if (columnSet.has('barcode') || columnSet.has('openingStock')) {
       await prisma.$executeRaw`
-        INSERT INTO store_items (tenant_id, itemName, category, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
+        INSERT INTO store_items (tenant_id, itemName, category, description, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
       `;
     } else {
       await prisma.$executeRaw`
-        INSERT INTO store_items (tenant_id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, 'active', ${now}, ${now})
+        INSERT INTO store_items (tenant_id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
       `;
     }
 
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
+      SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
       WHERE tenant_id = ${resolvedTenantId} AND itemCode = ${data.itemCode}
       LIMIT 1
@@ -1254,8 +1451,15 @@ export const storeService = {
   async updateItem(tenantId, id, payload) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const itemId = normalizeId(id);
-    await this.getItemById(resolvedTenantId, itemId);
+    await ensureStoreItemDescriptionColumn();
+    const existingItem = await this.getItemById(resolvedTenantId, itemId);
     const data = validateItemPayload(payload);
+    await ensureActiveStoreCategory(resolvedTenantId, data.category);
+    await ensureUniqueItemNameInCategory(resolvedTenantId, data.itemName, data.category, itemId);
+    data.unit = data.unit || existingItem.unit || await getDefaultStoreUnit(resolvedTenantId);
+    data.itemCode = data.itemCode || existingItem.itemCode || await generateItemCode(resolvedTenantId);
+    data.quantity = payload.quantity === undefined || payload.quantity === null || payload.quantity === '' ? existingItem.currentStock : data.quantity;
+    data.purchasePrice = payload.purchasePrice === undefined || payload.purchasePrice === null || payload.purchasePrice === '' ? existingItem.purchasePrice : data.purchasePrice;
     await ensureUniqueItemCode(resolvedTenantId, data.itemCode, itemId);
     const columnSet = await getStoreItemColumnSet();
 
@@ -1264,12 +1468,14 @@ export const storeService = {
         UPDATE store_items
         SET itemName = ${data.itemName},
             category = ${data.category},
+            description = ${data.description},
             unit = ${data.unit},
             itemCode = ${data.itemCode},
             barcode = NULL,
             openingStock = ${data.quantity},
             currentStock = ${data.quantity},
             purchasePrice = ${data.purchasePrice},
+            status = ${data.status},
             updatedAt = ${new Date()}
         WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
       `;
@@ -1278,10 +1484,12 @@ export const storeService = {
         UPDATE store_items
         SET itemName = ${data.itemName},
             category = ${data.category},
+            description = ${data.description},
             unit = ${data.unit},
             itemCode = ${data.itemCode},
             currentStock = ${data.quantity},
             purchasePrice = ${data.purchasePrice},
+            status = ${data.status},
             updatedAt = ${new Date()}
         WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
       `;
@@ -1294,6 +1502,7 @@ export const storeService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const itemId = normalizeId(id);
     await this.getItemById(resolvedTenantId, itemId);
+    const dependencyCount = await getItemDependencyCount(resolvedTenantId, itemId);
 
     await prisma.$executeRaw`
       UPDATE store_items
@@ -1301,7 +1510,7 @@ export const storeService = {
       WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
     `;
 
-    return { id: itemId };
+    return { id: itemId, deleted: false, softDeleted: true, dependencyCount };
   },
 
   async getSuppliers(tenantId) {
@@ -1395,9 +1604,10 @@ export const storeService = {
     const purchases = [];
     for (const row of rows) {
       const itemRows = await prisma.$queryRaw`
-        SELECT pi.*, i.itemName, i.unit, i.itemCode
+        SELECT pi.*, i.itemName, i.unit, i.itemCode, u.name AS unitName, u.shortName AS unitShortName
         FROM store_purchase_items pi
         JOIN store_items i ON i.id = pi.itemId
+        LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${resolvedTenantId}
         WHERE pi.purchaseId = ${Number(row.id)}
           AND pi.tenant_id = ${resolvedTenantId}
           AND i.tenant_id = ${resolvedTenantId}
@@ -1477,9 +1687,10 @@ export const storeService = {
     const purchases = [];
     for (const row of rows) {
       const itemRows = await prisma.$queryRaw`
-        SELECT pi.*, i.itemName, i.unit, i.itemCode
+        SELECT pi.*, i.itemName, i.unit, i.itemCode, u.name AS unitName, u.shortName AS unitShortName
         FROM store_purchase_items pi
         JOIN store_items i ON i.id = pi.itemId
+        LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${resolvedTenantId}
         WHERE pi.purchaseId = ${Number(row.id)}
           AND pi.tenant_id = ${resolvedTenantId}
           AND i.tenant_id = ${resolvedTenantId}
@@ -1500,7 +1711,7 @@ export const storeService = {
   async createPurchase(tenantId, { body, file }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
-    const data = validatePurchasePayload(body);
+    const data = await validatePurchasePayload(resolvedTenantId, body);
     const invoiceImage = buildInvoiceImagePath(file);
 
     return prisma.$transaction(async (tx) => {
@@ -1516,8 +1727,8 @@ export const storeService = {
 
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
@@ -1537,7 +1748,7 @@ export const storeService = {
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
     const existing = await getPurchaseRows(resolvedTenantId, purchaseId);
-    const data = validatePurchasePayload(body);
+    const data = await validatePurchasePayload(resolvedTenantId, body);
     const invoiceImage = buildInvoiceImagePath(file) || existing.invoiceImage || null;
 
     return prisma.$transaction(async (tx) => {
@@ -1552,8 +1763,8 @@ export const storeService = {
       await tx.$executeRaw`DELETE FROM store_purchase_items WHERE purchaseId = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
@@ -2195,13 +2406,27 @@ export const storeService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice,
-             (currentStock * purchasePrice) AS stockValue
-      FROM store_items
-      WHERE tenant_id = ${resolvedTenantId}
-        AND status = 'active'
-        AND (${category} = '' OR category = ${category})
-      ORDER BY itemName ASC
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, i.currentStock,
+             COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
+             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
+      FROM store_items i
+      LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
+        SELECT pi.id
+        FROM store_purchase_items pi
+        JOIN store_purchases p ON p.id = pi.purchaseId
+        WHERE pi.itemId = i.id
+          AND pi.tenant_id = ${resolvedTenantId}
+          AND p.tenant_id = ${resolvedTenantId}
+          AND p.status = 'active'
+          AND p.approvalStatus = 'approved'
+        ORDER BY p.purchaseDate DESC, pi.id DESC
+        LIMIT 1
+      )
+      LEFT JOIN store_units u ON u.id = latest_purchase.unitId AND u.tenant_id = ${resolvedTenantId}
+      WHERE i.tenant_id = ${resolvedTenantId}
+        AND i.status = 'active'
+        AND (${category} = '' OR i.category = ${category})
+      ORDER BY i.itemName ASC
     `;
     const items = mapReportRows(rows);
     return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.stockValue, 0) } };
@@ -2320,15 +2545,31 @@ export const storeService = {
     const category = normalizeText(query.category);
     const limit = Number(query.limit || 10);
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, itemCode, currentStock, purchasePrice, (currentStock * purchasePrice) AS stockValue
-      FROM store_items
-      WHERE tenant_id = ${resolvedTenantId}
-        AND status = 'active'
-        AND currentStock <= ${Number.isFinite(limit) ? limit : 10}
-        AND (${category} = '' OR category = ${category})
-      ORDER BY currentStock ASC, itemName ASC
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, i.currentStock,
+             COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
+             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
+      FROM store_items i
+      LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
+        SELECT pi.id
+        FROM store_purchase_items pi
+        JOIN store_purchases p ON p.id = pi.purchaseId
+        WHERE pi.itemId = i.id
+          AND pi.tenant_id = ${resolvedTenantId}
+          AND p.tenant_id = ${resolvedTenantId}
+          AND p.status = 'active'
+          AND p.approvalStatus = 'approved'
+        ORDER BY p.purchaseDate DESC, pi.id DESC
+        LIMIT 1
+      )
+      LEFT JOIN store_units u ON u.id = latest_purchase.unitId AND u.tenant_id = ${resolvedTenantId}
+      WHERE i.tenant_id = ${resolvedTenantId}
+        AND i.status = 'active'
+        AND i.currentStock <= ${Number.isFinite(limit) ? limit : 10}
+        AND (${category} = '' OR i.category = ${category})
+      ORDER BY i.currentStock ASC, i.itemName ASC
     `;
-    return { items: mapReportRows(rows), summary: null };
+    const items = mapReportRows(rows);
+    return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.stockValue, 0) } };
   },
 
   async getDamagedStockReport(tenantId, query = {}) {
@@ -2353,13 +2594,28 @@ export const storeService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
-      SELECT id, itemName, category, unit, currentStock, purchasePrice, (currentStock * purchasePrice) AS totalValue
-      FROM store_items
-      WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND (${category} = '' OR category = ${category})
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.currentStock,
+             COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
+             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS totalValue
+      FROM store_items i
+      LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
+        SELECT pi.id
+        FROM store_purchase_items pi
+        JOIN store_purchases p ON p.id = pi.purchaseId
+        WHERE pi.itemId = i.id
+          AND pi.tenant_id = ${resolvedTenantId}
+          AND p.tenant_id = ${resolvedTenantId}
+          AND p.status = 'active'
+          AND p.approvalStatus = 'approved'
+        ORDER BY p.purchaseDate DESC, pi.id DESC
+        LIMIT 1
+      )
+      LEFT JOIN store_units u ON u.id = latest_purchase.unitId AND u.tenant_id = ${resolvedTenantId}
+      WHERE i.tenant_id = ${resolvedTenantId} AND i.status = 'active' AND (${category} = '' OR i.category = ${category})
       ORDER BY totalValue DESC
     `;
     const items = mapReportRows(rows);
-    return { items, summary: { totalValue: items.reduce((sum, item) => sum + item.totalValue, 0) } };
+    return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.totalValue, 0) } };
   },
 
   async getItemLedgerReport(tenantId, itemId, query = {}) {
