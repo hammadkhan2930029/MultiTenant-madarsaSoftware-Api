@@ -34,8 +34,17 @@ const normalizeDate = (value) => {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
-const ensureStudent = async (tenantId, studentId) => {
-  const student = await prisma.student.findFirst({ where: { id: studentId, tenantId } });
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
+  if (!branchId) return {};
+  return { OR: [{ branchId }, { assignments: { some: { tenantId, branchId, status: 'active' } } }] };
+};
+
+const ensureStudent = async (tenantId, studentId, branchId = null) => {
+  const student = await prisma.student.findFirst({
+    where: { id: studentId, tenantId, ...buildStudentBranchVisibilityWhere(tenantId, branchId) },
+  });
   if (!student) throw new AppError('Student not found.', 404);
 };
 
@@ -52,9 +61,10 @@ const buildData = (payload, tenantId) => ({
 const notFoundMessage = 'Sipara jaiza entry not found.';
 
 export const siparaHifzService = {
-  async createEntry(tenantId, payload) {
+  async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureStudent(resolvedTenantId, payload.studentId);
+    const branchId = getScopedBranchId(branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
 
     return prisma.hifzSiparaEntry.upsert({
       where: {
@@ -70,12 +80,13 @@ export const siparaHifzService = {
     });
   },
 
-  async getEntries(tenantId, query) {
+  async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
     const where = {
       tenantId: resolvedTenantId,
-      student: { tenantId: resolvedTenantId },
+      student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.siparaNumber ? { siparaNumber: query.siparaNumber } : {}),
       ...(query.date
@@ -96,14 +107,21 @@ export const siparaHifzService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async getEntryById(tenantId, id) {
-    return findTenantRecordOrThrow(prisma.hifzSiparaEntry, tenantId, { id }, { select, message: notFoundMessage });
+  async getEntryById(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
+    const entry = await prisma.hifzSiparaEntry.findFirst({
+      where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) } },
+      select,
+    });
+    if (!entry) throw new AppError(notFoundMessage, 404);
+    return entry;
   },
 
-  async updateEntry(tenantId, id, payload) {
+  async updateEntry(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await findTenantRecordOrThrow(prisma.hifzSiparaEntry, resolvedTenantId, { id }, { message: notFoundMessage });
-    await ensureStudent(resolvedTenantId, payload.studentId);
+    await this.getEntryById(resolvedTenantId, id, branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, getScopedBranchId(branchScope));
     const duplicate = await prisma.hifzSiparaEntry.findFirst({
       where: { tenantId: resolvedTenantId, id: { not: id }, studentId: payload.studentId, siparaNumber: payload.siparaNumber },
     });
@@ -116,8 +134,8 @@ export const siparaHifzService = {
     });
   },
 
-  async deactivateEntry(tenantId, id) {
-    await findTenantRecordOrThrow(prisma.hifzSiparaEntry, tenantId, { id }, { message: notFoundMessage });
+  async deactivateEntry(tenantId, id, branchScope = null) {
+    await this.getEntryById(tenantId, id, branchScope);
     return prisma.hifzSiparaEntry.update({ where: { id, tenantId: normalizeTenantId(tenantId) }, data: { status: 'inactive' }, select });
   },
 };

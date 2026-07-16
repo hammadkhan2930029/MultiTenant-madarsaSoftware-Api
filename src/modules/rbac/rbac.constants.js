@@ -28,4 +28,5 @@ export const MODULE_PERMISSION_MAP = {
   support: 'support',
   roles: 'roles',
   users: 'users',
+  'audit-logs': 'audit',
 };

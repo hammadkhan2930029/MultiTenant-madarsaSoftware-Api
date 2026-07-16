@@ -6,6 +6,7 @@ export const createTeacher = asyncHandler(async (req, res) => {
   const teacher = await teachersService.createTeacher(req.tenantId, {
     body: req.body,
     file: req.file,
+    branchScope: req.branchScope,
   });
 
   return apiResponse(res, {
@@ -16,7 +17,7 @@ export const createTeacher = asyncHandler(async (req, res) => {
 });
 
 export const getTeachers = asyncHandler(async (req, res) => {
-  const teachers = await teachersService.getTeachers(req.tenantId, req.query);
+  const teachers = await teachersService.getTeachers(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'اساتذہ کامیابی سے لوڈ ہو گئے۔',
@@ -25,7 +26,7 @@ export const getTeachers = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherById = asyncHandler(async (req, res) => {
-  const teacher = await teachersService.getTeacherById(req.tenantId, Number(req.params.id));
+  const teacher = await teachersService.getTeacherById(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'استاد کی تفصیل کامیابی سے لوڈ ہو گئی۔',
@@ -34,7 +35,7 @@ export const getTeacherById = asyncHandler(async (req, res) => {
 });
 
 export const getAllTeacherIncrements = asyncHandler(async (req, res) => {
-  const result = await teachersService.getAllTeacherIncrements(req.tenantId, req.query);
+  const result = await teachersService.getAllTeacherIncrements(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Teacher increments fetched successfully.',
@@ -43,7 +44,7 @@ export const getAllTeacherIncrements = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherIncrements = asyncHandler(async (req, res) => {
-  const increments = await teachersService.getTeacherIncrements(req.tenantId, Number(req.params.id));
+  const increments = await teachersService.getTeacherIncrements(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'Teacher increments fetched successfully.',
@@ -52,7 +53,7 @@ export const getTeacherIncrements = asyncHandler(async (req, res) => {
 });
 
 export const createTeacherIncrement = asyncHandler(async (req, res) => {
-  const result = await teachersService.createTeacherIncrement(req.tenantId, Number(req.params.id), req.body, req.admin);
+  const result = await teachersService.createTeacherIncrement(req.tenantId, Number(req.params.id), req.body, req.admin, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -65,6 +66,7 @@ export const updateTeacher = asyncHandler(async (req, res) => {
   const teacher = await teachersService.updateTeacher(req.tenantId, Number(req.params.id), {
     body: req.body,
     file: req.file,
+    branchScope: req.branchScope,
   });
 
   return apiResponse(res, {
@@ -74,7 +76,7 @@ export const updateTeacher = asyncHandler(async (req, res) => {
 });
 
 export const updateTeacherStatus = asyncHandler(async (req, res) => {
-  const teacher = await teachersService.updateTeacherStatus(req.tenantId, Number(req.params.id), req.body.status);
+  const teacher = await teachersService.updateTeacherStatus(req.tenantId, Number(req.params.id), req.body.status, req.branchScope);
 
   return apiResponse(res, {
     message: 'استاد کی حالت کامیابی سے تبدیل ہو گئی۔',
@@ -83,7 +85,7 @@ export const updateTeacherStatus = asyncHandler(async (req, res) => {
 });
 
 export const deleteTeacher = asyncHandler(async (req, res) => {
-  const teacher = await teachersService.deleteTeacher(req.tenantId, Number(req.params.id));
+  const teacher = await teachersService.deleteTeacher(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'استاد کامیابی سے حذف کر دیا گیا۔',

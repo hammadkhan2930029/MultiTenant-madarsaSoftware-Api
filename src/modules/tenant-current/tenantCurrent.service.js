@@ -13,6 +13,8 @@ const mapCurrentTenantBranding = (tenant) => {
       subdomain: tenant.subdomain,
       customDomain: tenant.customDomain,
       status: tenant.status,
+      branchEnabled: tenant.branchEnabled,
+      branchLimit: tenant.branchLimit,
     },
     madrassa: profile
       ? {
@@ -32,7 +34,10 @@ const mapCurrentTenantBranding = (tenant) => {
       name: displayName,
       logoUrl: profile?.logoUrl || null,
       theme: {},
-      settings: {},
+      settings: {
+        branchEnabled: tenant.branchEnabled,
+        branchLimit: tenant.branchLimit,
+      },
     },
   };
 };

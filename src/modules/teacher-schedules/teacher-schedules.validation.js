@@ -25,6 +25,7 @@ export const listTeacherSchedulesValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     teacherId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     sessionId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),

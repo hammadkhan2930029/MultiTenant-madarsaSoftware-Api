@@ -28,11 +28,15 @@ const teacherScheduleSelect = {
   section: { select: { id: true, name: true } },
 };
 
-const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId, classId, sectionId }) => {
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId, classId, sectionId }, branchId = null) => {
   const [teacher, session, academicClass, section] = await Promise.all([
-    prisma.teacher.findFirst({ where: { id: teacherId, tenantId } }),
+    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchId ? { branchId } : {}) } }),
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.academicClass.findFirst({
+      where: { id: classId, tenantId, ...(branchId ? { branchId } : {}), branch: { status: 'active' } },
+    }),
     prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
   ]);
 
@@ -55,12 +59,15 @@ const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId,
   if (section.classId !== classId) {
     throw new AppError('یہ سیکشن منتخب کلاس سے متعلق نہیں ہے۔', 400);
   }
+  if (teacher.branchId && teacher.branchId !== academicClass.branchId) {
+    throw new AppError('Selected teacher does not belong to the selected class branch.', 400);
+  }
 };
 
 export const teacherSchedulesService = {
-  async createTeacherSchedule(tenantId, payload) {
+  async createTeacherSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureTeacherScheduleReferences(resolvedTenantId, payload);
+    await ensureTeacherScheduleReferences(resolvedTenantId, payload, getScopedBranchId(branchScope));
 
     return prisma.teacherSchedule.create({
       data: {
@@ -79,13 +86,14 @@ export const teacherSchedulesService = {
     });
   },
 
-  async getTeacherSchedules(tenantId, query) {
+  async getTeacherSchedules(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
     const where = {
       tenantId: resolvedTenantId,
-      teacher: { tenantId: resolvedTenantId },
-      class: { tenantId: resolvedTenantId },
+      teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+      class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       section: { tenantId: resolvedTenantId },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
@@ -111,14 +119,15 @@ export const teacherSchedulesService = {
     };
   },
 
-  async deleteTeacherSchedule(tenantId, id) {
+  async deleteTeacherSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const schedule = await prisma.teacherSchedule.findFirst({
       where: {
         id,
         tenantId: resolvedTenantId,
-        teacher: { tenantId: resolvedTenantId },
-        class: { tenantId: resolvedTenantId },
+        teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+        class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         section: { tenantId: resolvedTenantId },
       },
     });

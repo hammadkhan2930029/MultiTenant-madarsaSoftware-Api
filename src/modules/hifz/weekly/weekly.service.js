@@ -57,8 +57,17 @@ const normalizeDate = (value) => {
   return date;
 };
 
-const ensureStudent = async (tenantId, studentId) => {
-  const student = await prisma.student.findFirst({ where: { id: studentId, tenantId } });
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
+  if (!branchId) return {};
+  return { OR: [{ branchId }, { assignments: { some: { tenantId, branchId, status: 'active' } } }] };
+};
+
+const ensureStudent = async (tenantId, studentId, branchId = null) => {
+  const student = await prisma.student.findFirst({
+    where: { id: studentId, tenantId, ...buildStudentBranchVisibilityWhere(tenantId, branchId) },
+  });
   if (!student) throw new AppError('Student not found.', 404);
 };
 
@@ -77,9 +86,10 @@ const normalizePayload = (payload) => {
 const notFoundMessage = 'Weekly hifz entry not found.';
 
 export const weeklyHifzService = {
-  async createEntry(tenantId, payload) {
+  async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureStudent(resolvedTenantId, payload.studentId);
+    const branchId = getScopedBranchId(branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const data = normalizePayload(payload);
@@ -99,12 +109,13 @@ export const weeklyHifzService = {
     });
   },
 
-  async getEntries(tenantId, query) {
+  async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
     const where = {
       tenantId: resolvedTenantId,
-      student: { tenantId: resolvedTenantId },
+      student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.date
         ? {
@@ -124,14 +135,21 @@ export const weeklyHifzService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async getEntryById(tenantId, id) {
-    return findTenantRecordOrThrow(prisma.hifzWeeklyEntry, tenantId, { id }, { select, message: notFoundMessage });
+  async getEntryById(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
+    const entry = await prisma.hifzWeeklyEntry.findFirst({
+      where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) } },
+      select,
+    });
+    if (!entry) throw new AppError(notFoundMessage, 404);
+    return entry;
   },
 
-  async updateEntry(tenantId, id, payload) {
+  async updateEntry(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await findTenantRecordOrThrow(prisma.hifzWeeklyEntry, resolvedTenantId, { id }, { message: notFoundMessage });
-    await ensureStudent(resolvedTenantId, payload.studentId);
+    await this.getEntryById(resolvedTenantId, id, branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, getScopedBranchId(branchScope));
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const duplicate = await prisma.hifzWeeklyEntry.findFirst({
@@ -146,8 +164,8 @@ export const weeklyHifzService = {
     });
   },
 
-  async deactivateEntry(tenantId, id) {
-    await findTenantRecordOrThrow(prisma.hifzWeeklyEntry, tenantId, { id }, { message: notFoundMessage });
+  async deactivateEntry(tenantId, id, branchScope = null) {
+    await this.getEntryById(tenantId, id, branchScope);
     return prisma.hifzWeeklyEntry.update({ where: { id, tenantId: normalizeTenantId(tenantId) }, data: { status: 'inactive' }, select });
   },
 };

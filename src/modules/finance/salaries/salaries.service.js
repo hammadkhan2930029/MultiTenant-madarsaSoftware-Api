@@ -1,6 +1,7 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { branchScopeService } from '../../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -15,6 +16,7 @@ const normalizeTenantId = (tenantId) => {
 const select = {
   id: true,
   tenantId: true,
+  branchId: true,
   amount: true,
   salaryMonth: true,
   salaryYear: true,
@@ -33,9 +35,19 @@ const normalizeDate = (value) => {
   return date;
 };
 
-const ensureReferences = async (tenantId, { teacherId, financeHeadId }) => {
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
+
+const ensureReferences = async (tenantId, { teacherId, financeHeadId }, branchId = null) => {
   const [teacher, head] = await Promise.all([
-    prisma.teacher.findFirst({ where: { id: teacherId, tenantId } }),
+    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchId ? { branchId } : {}) } }),
     prisma.financeHead.findFirst({ where: { id: financeHeadId, tenantId } }),
   ]);
   if (!teacher) throw new AppError('Teacher not found.', 404);
@@ -44,9 +56,10 @@ const ensureReferences = async (tenantId, { teacherId, financeHeadId }) => {
 };
 
 export const salariesService = {
-  async createEntry(tenantId, payload) {
+  async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureReferences(resolvedTenantId, payload);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
+    await ensureReferences(resolvedTenantId, payload, branchId);
     const duplicate = await prisma.salaryEntry.findFirst({
       where: {
         teacherId: payload.teacherId,
@@ -54,20 +67,23 @@ export const salariesService = {
         salaryMonth: payload.salaryMonth,
         salaryYear: payload.salaryYear,
         teacher: { tenantId: resolvedTenantId },
+        ...(branchId ? { branchId } : {}),
       },
     });
     if (duplicate) throw new AppError('Salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.create({
-      data: { ...payload, tenantId: resolvedTenantId, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null },
+      data: { ...payload, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null },
       select,
     });
   },
-  async getEntries(tenantId, query) {
+  async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
-      teacher: { tenantId: resolvedTenantId },
+      ...(branchId ? { branchId } : {}),
+      teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.salaryMonth ? { salaryMonth: query.salaryMonth } : {}),
       ...(query.salaryYear ? { salaryYear: query.salaryYear } : {}),
@@ -87,17 +103,19 @@ export const salariesService = {
     ]);
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
-  async getEntryById(tenantId, id) {
+  async getEntryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const entry = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, teacher: { tenantId: resolvedTenantId } }, select });
+    const branchId = getScopedBranchId(branchScope);
+    const entry = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } }, select });
     if (!entry) throw new AppError('Salary entry not found.', 404);
     return entry;
   },
-  async updateEntry(tenantId, id, payload) {
+  async updateEntry(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, teacher: { tenantId: resolvedTenantId } } });
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
+    const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
-    await ensureReferences(resolvedTenantId, payload);
+    await ensureReferences(resolvedTenantId, payload, branchId);
     const duplicate = await prisma.salaryEntry.findFirst({
       where: {
         id: { not: id },
@@ -106,18 +124,20 @@ export const salariesService = {
         salaryMonth: payload.salaryMonth,
         salaryYear: payload.salaryYear,
         teacher: { tenantId: resolvedTenantId },
+        ...(branchId ? { branchId } : {}),
       },
     });
     if (duplicate) throw new AppError('Another salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.update({
       where: { id, tenantId: resolvedTenantId },
-      data: { ...payload, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
+      data: { ...payload, branchId, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
       select,
     });
   },
-  async deactivateEntry(tenantId, id) {
+  async deactivateEntry(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, teacher: { tenantId: resolvedTenantId } } });
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
     return prisma.salaryEntry.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },

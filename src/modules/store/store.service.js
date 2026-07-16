@@ -1,5 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
+import { auditService, branchScopeService } from '../security/index.js';
 
 const getCurrentMonthRange = () => {
   const now = new Date();
@@ -39,6 +41,29 @@ const normalizeNumber = (value, fieldName) => {
 };
 
 const normalizeText = (value) => String(value || '').trim();
+
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
+
+const recordStoreAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: entry.tenantId,
+  actorUserId: auditContext.actorUserId || null,
+  branchId: entry.branchId || auditContext.branchId || null,
+  roleId: auditContext.roleId || null,
+  module: 'store',
+  targetType: entry.targetType || 'store_record',
+  targetId: entry.targetId,
+  ipAddress: auditContext.ipAddress || null,
+  userAgent: auditContext.userAgent || null,
+  ...entry,
+});
 let storeItemTablePromise = null;
 let storeItemColumnSetPromise = null;
 let storeUnitTablePromise = null;
@@ -210,6 +235,7 @@ const ensureStorePurchaseTables = async () => {
         CREATE TABLE IF NOT EXISTS store_purchases (
           id INTEGER NOT NULL AUTO_INCREMENT,
           tenant_id INTEGER NOT NULL,
+          branch_id INTEGER NULL,
           purchaseDate DATETIME(3) NOT NULL,
           supplierId INTEGER NOT NULL,
           invoiceNumber VARCHAR(100) NULL,
@@ -224,6 +250,8 @@ const ensureStorePurchaseTables = async () => {
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
           INDEX store_purchases_purchaseDate_status_idx(purchaseDate, status),
+          INDEX store_purchases_branch_id_idx(branch_id),
+          INDEX store_purchases_tenant_id_branch_id_idx(tenant_id, branch_id),
           INDEX store_purchases_tenant_id_idx(tenant_id),
           INDEX store_purchases_supplierId_idx(supplierId),
           INDEX store_purchases_financeTransactionId_idx(financeTransactionId),
@@ -235,6 +263,7 @@ const ensureStorePurchaseTables = async () => {
         CREATE TABLE IF NOT EXISTS store_purchase_items (
           id INTEGER NOT NULL AUTO_INCREMENT,
           tenant_id INTEGER NOT NULL,
+          branch_id INTEGER NULL,
           purchaseId INTEGER NOT NULL,
           itemId INTEGER NOT NULL,
           unitId INTEGER NULL,
@@ -244,6 +273,8 @@ const ensureStorePurchaseTables = async () => {
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
           INDEX store_purchase_items_purchaseId_idx(purchaseId),
+          INDEX store_purchase_items_branch_id_idx(branch_id),
+          INDEX store_purchase_items_tenant_id_branch_id_idx(tenant_id, branch_id),
           INDEX store_purchase_items_tenant_id_idx(tenant_id),
           INDEX store_purchase_items_itemId_idx(itemId),
           INDEX store_purchase_items_unitId_idx(unitId),
@@ -572,7 +603,7 @@ const mapStockIssue = (issue) => ({
   currentStock: issue.currentStock === undefined ? undefined : toAmount(issue.currentStock),
 });
 
-const getStockIssueRows = async (tenantId, id) => {
+const getStockIssueRows = async (tenantId, id, branchId = null) => {
   const issueId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT si.*, i.itemName, i.unit, i.currentStock
@@ -580,6 +611,7 @@ const getStockIssueRows = async (tenantId, id) => {
     JOIN store_items i ON i.id = si.itemId
     WHERE si.id = ${issueId}
       AND si.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR si.branch_id = ${branchId})
       AND i.tenant_id = ${tenantId}
       AND si.status = 'active'
     LIMIT 1
@@ -630,7 +662,7 @@ const validateReturnPayload = (payload) => {
   };
 };
 
-const getReturnRows = async (tenantId, id) => {
+const getReturnRows = async (tenantId, id, branchId = null) => {
   const returnId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT r.*, si.quantity AS issuedQuantity, si.returnedQuantity, i.itemName, i.unit
@@ -639,7 +671,9 @@ const getReturnRows = async (tenantId, id) => {
     JOIN store_items i ON i.id = r.itemId
     WHERE r.id = ${returnId}
       AND r.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR r.branch_id = ${branchId})
       AND si.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR si.branch_id = ${branchId})
       AND i.tenant_id = ${tenantId}
       AND r.status = 'active'
     LIMIT 1
@@ -684,7 +718,7 @@ const validateDamagedStockPayload = (payload) => {
   };
 };
 
-const getDamagedStockRows = async (tenantId, id) => {
+const getDamagedStockRows = async (tenantId, id, branchId = null) => {
   const damagedId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT ds.*, i.itemName, i.unit, i.currentStock, i.purchasePrice
@@ -692,6 +726,7 @@ const getDamagedStockRows = async (tenantId, id) => {
     JOIN store_items i ON i.id = ds.itemId
     WHERE ds.id = ${damagedId}
       AND ds.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR ds.branch_id = ${branchId})
       AND i.tenant_id = ${tenantId}
       AND ds.status = 'active'
     LIMIT 1
@@ -710,7 +745,7 @@ const mapStockAdjustment = (adjustment) => ({
   currentStock: adjustment.currentStock === undefined ? undefined : toAmount(adjustment.currentStock),
 });
 
-const getStockAdjustmentRows = async (tenantId, id) => {
+const getStockAdjustmentRows = async (tenantId, id, branchId = null) => {
   const adjustmentId = normalizeId(id);
   const rows = await prisma.$queryRaw`
     SELECT sa.*, i.itemName, i.unit, i.currentStock
@@ -718,6 +753,7 @@ const getStockAdjustmentRows = async (tenantId, id) => {
     JOIN store_items i ON i.id = sa.itemId
     WHERE sa.id = ${adjustmentId}
       AND sa.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR sa.branch_id = ${branchId})
       AND i.tenant_id = ${tenantId}
       AND sa.status = 'active'
     LIMIT 1
@@ -737,6 +773,65 @@ const getReportDateRange = (query = {}) => {
 };
 
 const reportNumber = (value) => toAmount(value);
+
+const getBranchStockQuantitySql = (tenantId, branchId) => {
+  if (!branchId) return Prisma.sql`i.currentStock`;
+
+  return Prisma.sql`
+    (
+      COALESCE((
+        SELECT SUM(pi.quantity)
+        FROM store_purchase_items pi
+        JOIN store_purchases p ON p.id = pi.purchaseId
+        WHERE pi.itemId = i.id
+          AND pi.tenant_id = ${tenantId}
+          AND p.tenant_id = ${tenantId}
+          AND pi.branch_id = ${branchId}
+          AND p.branch_id = ${branchId}
+          AND p.status = 'active'
+          AND p.approvalStatus = 'approved'
+      ), 0)
+      - COALESCE((
+        SELECT SUM(si.quantity)
+        FROM store_stock_issues si
+        WHERE si.itemId = i.id
+          AND si.tenant_id = ${tenantId}
+          AND si.branch_id = ${branchId}
+          AND si.status = 'active'
+          AND si.approvalStatus = 'approved'
+      ), 0)
+      + COALESCE((
+        SELECT SUM(r.returnQuantity)
+        FROM store_returns r
+        WHERE r.itemId = i.id
+          AND r.tenant_id = ${tenantId}
+          AND r.branch_id = ${branchId}
+          AND r.status = 'active'
+          AND r.condition = 'good'
+          AND r.addToStock = true
+      ), 0)
+      - COALESCE((
+        SELECT SUM(ds.quantity)
+        FROM store_damaged_stock ds
+        WHERE ds.itemId = i.id
+          AND ds.tenant_id = ${tenantId}
+          AND ds.branch_id = ${branchId}
+          AND ds.status = 'active'
+          AND ds.approvalStatus = 'approved'
+          AND ds.returnId IS NULL
+      ), 0)
+      + COALESCE((
+        SELECT SUM(sa.adjustedStock - sa.previousStock)
+        FROM store_stock_adjustments sa
+        WHERE sa.itemId = i.id
+          AND sa.tenant_id = ${tenantId}
+          AND sa.branch_id = ${branchId}
+          AND sa.status = 'active'
+          AND sa.approvalStatus = 'approved'
+      ), 0)
+    )
+  `;
+};
 
 const mapReportRows = (rows) =>
   rows.map((row) => {
@@ -769,6 +864,7 @@ const upsertStoreFinanceExpense = async (tx, data) => {
     SELECT id
     FROM finance_transactions
     WHERE tenant_id = ${data.tenantId} AND referenceType = ${data.referenceType} AND referenceId = ${data.referenceId}
+      AND (${data.branchId || null} IS NULL OR branch_id = ${data.branchId || null})
     LIMIT 1
   `;
 
@@ -777,6 +873,7 @@ const upsertStoreFinanceExpense = async (tx, data) => {
     await tx.$executeRaw`
       UPDATE finance_transactions
       SET financeHeadId = ${financeHeadId},
+          branch_id = ${data.branchId || null},
           type = 'expense',
           amount = ${data.amount},
           transactionDate = ${data.date},
@@ -792,16 +889,17 @@ const upsertStoreFinanceExpense = async (tx, data) => {
   }
 
   await tx.$executeRaw`
-    INSERT INTO finance_transactions (tenant_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
-    VALUES (${data.tenantId}, ${financeHeadId}, 'expense', ${data.amount}, ${data.date}, ${data.paymentMethod}, ${data.paymentStatus || 'مکمل'}, ${data.slipNo || null}, ${data.title}, ${data.referenceType}, ${data.referenceId}, 'active', ${now}, ${now})
+    INSERT INTO finance_transactions (tenant_id, branch_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
+    VALUES (${data.tenantId}, ${data.branchId || null}, ${financeHeadId}, 'expense', ${data.amount}, ${data.date}, ${data.paymentMethod}, ${data.paymentStatus || 'مکمل'}, ${data.slipNo || null}, ${data.title}, ${data.referenceType}, ${data.referenceId}, 'active', ${now}, ${now})
   `;
   const financeRows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
   return Number(financeRows[0].id);
 };
 
-const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data) =>
+const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data, branchId = null) =>
   upsertStoreFinanceExpense(tx, {
     tenantId,
+    branchId,
     title: `خریداری${data.invoiceNumber ? ` - ${data.invoiceNumber}` : ''}`,
     category: 'خریداری',
     amount: data.totalAmount,
@@ -814,9 +912,10 @@ const createPurchaseFinanceTransaction = async (tx, tenantId, purchaseId, data) 
     note: 'اسٹور خریداری کا خرچ',
   });
 
-const createSupplierPaymentFinanceTransaction = async (tx, tenantId, supplierId, paymentId, data) =>
+const createSupplierPaymentFinanceTransaction = async (tx, tenantId, supplierId, paymentId, data, branchId = null) =>
   upsertStoreFinanceExpense(tx, {
     tenantId,
+    branchId,
     title: `Store supplier payment - ${supplierId}`,
     category: 'Store Supplier Payment',
     amount: data.amount,
@@ -1007,7 +1106,7 @@ const getOrCreateSupplier = async (tx, tenantId, payload) => {
   return mapSupplier(supplierRows[0]);
 };
 
-const getPurchaseRows = async (tenantId, id) => {
+const getPurchaseRows = async (tenantId, id, branchId = null) => {
   const purchaseId = normalizeId(id);
   const purchaseRows = await prisma.$queryRaw`
     SELECT p.*, s.supplierName, s.balance AS supplierBalance
@@ -1016,6 +1115,7 @@ const getPurchaseRows = async (tenantId, id) => {
     WHERE p.id = ${purchaseId}
       AND p.tenant_id = ${tenantId}
       AND s.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR p.branch_id = ${branchId})
       AND p.status = 'active'
     LIMIT 1
   `;
@@ -1028,6 +1128,7 @@ const getPurchaseRows = async (tenantId, id) => {
     LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${tenantId}
     WHERE pi.purchaseId = ${purchaseId}
       AND pi.tenant_id = ${tenantId}
+      AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
       AND i.tenant_id = ${tenantId}
     ORDER BY pi.id ASC
   `;
@@ -1151,15 +1252,16 @@ const getItemDependencyCount = async (tenantId, itemId) => {
 };
 
 export const storeService = {
-  async getDashboard(tenantId) {
+  async getDashboard(tenantId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     await ensureStoreItemsTable();
     const { startDate, endDate } = getCurrentMonthRange();
 
     const [totalItems, purchaseTotal, monthlyExpense] = await Promise.all([
       prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_items WHERE tenant_id = ${resolvedTenantId} AND status = 'active'`,
-      prisma.$queryRaw`SELECT COALESCE(SUM(totalAmount), 0) AS total FROM store_purchases WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND purchaseDate >= ${startDate} AND purchaseDate < ${endDate}`,
-      this.getMonthlyExpense(resolvedTenantId, { startDate, endDate }),
+      prisma.$queryRaw`SELECT COALESCE(SUM(totalAmount), 0) AS total FROM store_purchases WHERE tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active' AND purchaseDate >= ${startDate} AND purchaseDate < ${endDate}`,
+      this.getMonthlyExpense(resolvedTenantId, { startDate, endDate }, branchScope),
     ]);
 
     return {
@@ -1169,8 +1271,9 @@ export const storeService = {
     };
   },
 
-  async getMonthlyExpense(tenantId, range = {}) {
+  async getMonthlyExpense(tenantId, range = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const { startDate, endDate } = range.startDate && range.endDate ? range : getCurrentMonthRange();
     const rows = await prisma.$queryRaw`
       SELECT COALESCE(SUM(ft.amount), 0) AS total
@@ -1178,6 +1281,7 @@ export const storeService = {
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
       WHERE ft.status = 'active'
         AND ft.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ft.branch_id = ${branchId})
         AND fh.tenant_id = ${resolvedTenantId}
         AND ft.type = 'expense'
         AND ft.transactionDate >= ${startDate}
@@ -1601,8 +1705,9 @@ export const storeService = {
     return { id: supplierId };
   },
 
-  async getSupplierPurchases(tenantId, id) {
+  async getSupplierPurchases(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(resolvedTenantId, supplierId);
@@ -1613,6 +1718,7 @@ export const storeService = {
       WHERE p.supplierId = ${supplierId}
         AND p.tenant_id = ${resolvedTenantId}
         AND s.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR p.branch_id = ${branchId})
         AND p.status = 'active'
       ORDER BY p.purchaseDate DESC, p.id DESC
     `;
@@ -1626,6 +1732,7 @@ export const storeService = {
         LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${resolvedTenantId}
         WHERE pi.purchaseId = ${Number(row.id)}
           AND pi.tenant_id = ${resolvedTenantId}
+          AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
           AND i.tenant_id = ${resolvedTenantId}
         ORDER BY pi.id ASC
       `;
@@ -1635,22 +1742,24 @@ export const storeService = {
     return { items: purchases, meta: null };
   },
 
-  async getSupplierPayments(tenantId, id) {
+  async getSupplierPayments(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(resolvedTenantId, supplierId);
     const rows = await prisma.$queryRaw`
       SELECT id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt
       FROM store_supplier_payments
-      WHERE supplierId = ${supplierId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
+      WHERE supplierId = ${supplierId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active'
       ORDER BY paymentDate DESC, id DESC
     `;
     return { items: rows.map(mapSupplierPayment), meta: null };
   },
 
-  async createSupplierPayment(tenantId, id, payload) {
+  async createSupplierPayment(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(resolvedTenantId, supplierId);
@@ -1659,28 +1768,29 @@ export const storeService = {
 
     const paymentId = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`
-        INSERT INTO store_supplier_payments (tenant_id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${supplierId}, ${data.amount}, ${data.paymentDate}, ${data.paymentMethod}, ${data.note}, 'active', ${now}, ${now})
+        INSERT INTO store_supplier_payments (tenant_id, branch_id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${supplierId}, ${data.amount}, ${data.paymentDate}, ${data.paymentMethod}, ${data.note}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const nextPaymentId = Number(rows[0].id);
       await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${data.amount}, updatedAt = ${now} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}`;
-      await createSupplierPaymentFinanceTransaction(tx, resolvedTenantId, supplierId, nextPaymentId, data);
+      await createSupplierPaymentFinanceTransaction(tx, resolvedTenantId, supplierId, nextPaymentId, data, branchId);
       return nextPaymentId;
     });
 
     const paymentRows = await prisma.$queryRaw`
       SELECT id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt
       FROM store_supplier_payments
-      WHERE id = ${paymentId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${paymentId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId})
       LIMIT 1
     `;
 
-    return paymentRows.length ? mapSupplierPayment(paymentRows[0]) : this.getSupplierPayments(resolvedTenantId, supplierId);
+    return paymentRows.length ? mapSupplierPayment(paymentRows[0]) : this.getSupplierPayments(resolvedTenantId, supplierId, branchScope);
   },
 
-  async getPurchases(tenantId, query = {}) {
+  async getPurchases(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     await ensureStorePurchaseTables();
     const search = normalizeText(query.search);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
@@ -1692,6 +1802,7 @@ export const storeService = {
       JOIN store_suppliers s ON s.id = p.supplierId
       WHERE p.tenant_id = ${resolvedTenantId}
         AND s.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR p.branch_id = ${branchId})
         AND p.status = 'active'
         AND (${search} = '' OR s.supplierName LIKE ${searchTerm} OR p.invoiceNumber LIKE ${searchTerm})
         AND (${supplierId} IS NULL OR p.supplierId = ${supplierId})
@@ -1709,6 +1820,7 @@ export const storeService = {
         LEFT JOIN store_units u ON u.id = pi.unitId AND u.tenant_id = ${resolvedTenantId}
         WHERE pi.purchaseId = ${Number(row.id)}
           AND pi.tenant_id = ${resolvedTenantId}
+          AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
           AND i.tenant_id = ${resolvedTenantId}
         ORDER BY pi.id ASC
       `;
@@ -1718,14 +1830,15 @@ export const storeService = {
     return { items: purchases, meta: null };
   },
 
-  async getPurchaseById(tenantId, id) {
+  async getPurchaseById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
-    return getPurchaseRows(resolvedTenantId, id);
+    return getPurchaseRows(resolvedTenantId, id, getScopedBranchId(branchScope));
   },
 
-  async createPurchase(tenantId, { body, file }) {
+  async createPurchase(tenantId, { body, file }, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, body, branchScope);
     await ensureStorePurchaseTables();
     const data = await validatePurchasePayload(resolvedTenantId, body);
     const invoiceImage = buildInvoiceImagePath(file);
@@ -1735,35 +1848,36 @@ export const storeService = {
       const now = new Date();
 
       await tx.$executeRaw`
-        INSERT INTO store_purchases (tenant_id, purchaseDate, supplierId, invoiceNumber, totalAmount, paidAmount, remainingAmount, paymentMethod, invoiceImage, approvalStatus, financeTransactionId, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.purchaseDate}, ${supplier.id}, ${data.invoiceNumber}, ${data.totalAmount}, ${data.paidAmount}, ${data.remainingAmount}, ${data.paymentMethod}, ${invoiceImage}, ${data.approvalStatus}, NULL, 'active', ${now}, ${now})
+        INSERT INTO store_purchases (tenant_id, branch_id, purchaseDate, supplierId, invoiceNumber, totalAmount, paidAmount, remainingAmount, paymentMethod, invoiceImage, approvalStatus, financeTransactionId, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${data.purchaseDate}, ${supplier.id}, ${data.invoiceNumber}, ${data.totalAmount}, ${data.paidAmount}, ${data.remainingAmount}, ${data.paymentMethod}, ${invoiceImage}, ${data.approvalStatus}, NULL, 'active', ${now}, ${now})
       `;
       const purchaseRows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const purchaseId = Number(purchaseRows[0].id);
 
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, branch_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${branchId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
       if (data.approvalStatus === 'approved') {
-        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data);
+        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data, branchId);
         await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
         await applyStockChange(tx, resolvedTenantId, data.items, 1);
         await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${data.remainingAmount}, updatedAt = ${now} WHERE id = ${supplier.id} AND tenant_id = ${resolvedTenantId}`;
       }
 
       return purchaseId;
-    }).then((purchaseId) => getPurchaseRows(resolvedTenantId, purchaseId));
+    }).then((purchaseId) => getPurchaseRows(resolvedTenantId, purchaseId, branchId));
   },
 
-  async updatePurchase(tenantId, id, { body, file }) {
+  async updatePurchase(tenantId, id, { body, file }, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, body, branchScope);
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
-    const existing = await getPurchaseRows(resolvedTenantId, purchaseId);
+    const existing = await getPurchaseRows(resolvedTenantId, purchaseId, branchId);
     const data = await validatePurchasePayload(resolvedTenantId, body);
     const invoiceImage = buildInvoiceImagePath(file) || existing.invoiceImage || null;
 
@@ -1779,14 +1893,15 @@ export const storeService = {
       await tx.$executeRaw`DELETE FROM store_purchase_items WHERE purchaseId = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       for (const item of data.items) {
         await tx.$executeRaw`
-          INSERT INTO store_purchase_items (tenant_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
-          VALUES (${resolvedTenantId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
+          INSERT INTO store_purchase_items (tenant_id, branch_id, purchaseId, itemId, unitId, quantity, rate, total, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${branchId}, ${purchaseId}, ${item.itemId}, ${item.unitId}, ${item.quantity}, ${item.rate}, ${item.total}, ${now}, ${now})
         `;
       }
 
       await tx.$executeRaw`
         UPDATE store_purchases
         SET purchaseDate = ${data.purchaseDate},
+            branch_id = ${branchId},
             supplierId = ${supplier.id},
             invoiceNumber = ${data.invoiceNumber},
             totalAmount = ${data.totalAmount},
@@ -1818,7 +1933,7 @@ export const storeService = {
           WHERE id = ${Number(existing.financeTransactionId)} AND tenant_id = ${resolvedTenantId}
         `;
       } else if (!existing.financeTransactionId && data.approvalStatus === 'approved') {
-        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data);
+        const financeTransactionId = await createPurchaseFinanceTransaction(tx, resolvedTenantId, purchaseId, data, branchId);
         await tx.$executeRaw`UPDATE store_purchases SET financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${purchaseId} AND tenant_id = ${resolvedTenantId}`;
       } else if (existing.financeTransactionId && data.approvalStatus !== 'approved') {
         await tx.$executeRaw`UPDATE finance_transactions SET status = 'inactive', updatedAt = ${now} WHERE id = ${Number(existing.financeTransactionId)} AND tenant_id = ${resolvedTenantId}`;
@@ -1826,14 +1941,15 @@ export const storeService = {
       }
 
       return purchaseId;
-    }).then((updatedId) => getPurchaseRows(resolvedTenantId, updatedId));
+    }).then((updatedId) => getPurchaseRows(resolvedTenantId, updatedId, branchId));
   },
 
-  async deletePurchase(tenantId, id) {
+  async deletePurchase(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
-    const existing = await getPurchaseRows(resolvedTenantId, purchaseId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getPurchaseRows(resolvedTenantId, purchaseId, branchId);
 
     await prisma.$transaction(async (tx) => {
       const now = new Date();
@@ -1850,8 +1966,9 @@ export const storeService = {
     return { id: purchaseId };
   },
 
-  async getStockIssues(tenantId, query = {}) {
+  async getStockIssues(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const search = normalizeText(query.search);
     const department = normalizeText(query.department);
     const { fromDate, toDate } = getReportDateRange(query);
@@ -1862,6 +1979,7 @@ export const storeService = {
       JOIN store_items i ON i.id = si.itemId
       WHERE si.tenant_id = ${resolvedTenantId}
         AND i.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR si.branch_id = ${branchId})
         AND si.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR si.department LIKE ${searchTerm} OR si.receiverName LIKE ${searchTerm})
         AND (${department} = '' OR si.department = ${department})
@@ -1872,13 +1990,14 @@ export const storeService = {
     return { items: rows.map(mapStockIssue), meta: null };
   },
 
-  async getStockIssueById(tenantId, id) {
+  async getStockIssueById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getStockIssueRows(resolvedTenantId, id);
+    return getStockIssueRows(resolvedTenantId, id, getScopedBranchId(branchScope));
   },
 
-  async createStockIssue(tenantId, { body, file }) {
+  async createStockIssue(tenantId, { body, file }, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, body, branchScope);
     const data = validateStockIssuePayload(body);
     const receiverSignature = buildIssueSignaturePath(file);
     const now = new Date();
@@ -1889,20 +2008,21 @@ export const storeService = {
       }
 
       await tx.$executeRaw`
-        INSERT INTO store_stock_issues (tenant_id, issueDate, itemId, quantity, returnedQuantity, department, receiverName, purpose, issuedBy, receiverSignature, approvalStatus, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.issueDate}, ${data.itemId}, ${data.quantity}, 0, ${data.department}, ${data.receiverName}, ${data.purpose}, ${data.issuedBy}, ${receiverSignature}, ${data.approvalStatus}, 'active', ${now}, ${now})
+        INSERT INTO store_stock_issues (tenant_id, branch_id, issueDate, itemId, quantity, returnedQuantity, department, receiverName, purpose, issuedBy, receiverSignature, approvalStatus, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${data.issueDate}, ${data.itemId}, ${data.quantity}, 0, ${data.department}, ${data.receiverName}, ${data.purpose}, ${data.issuedBy}, ${receiverSignature}, ${data.approvalStatus}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       return Number(rows[0].id);
     });
 
-    return getStockIssueRows(resolvedTenantId, issueId);
+    return getStockIssueRows(resolvedTenantId, issueId, branchId);
   },
 
-  async updateStockIssue(tenantId, id, { body, file }) {
+  async updateStockIssue(tenantId, id, { body, file }, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, body, branchScope);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(resolvedTenantId, issueId);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
     const data = validateStockIssuePayload(body);
     const receiverSignature = buildIssueSignaturePath(file) || existing.receiverSignature || null;
     const now = new Date();
@@ -1918,6 +2038,7 @@ export const storeService = {
       await tx.$executeRaw`
         UPDATE store_stock_issues
         SET issueDate = ${data.issueDate},
+            branch_id = ${branchId},
             itemId = ${data.itemId},
             quantity = ${data.quantity},
             department = ${data.department},
@@ -1931,13 +2052,14 @@ export const storeService = {
       `;
     });
 
-    return getStockIssueRows(resolvedTenantId, issueId);
+    return getStockIssueRows(resolvedTenantId, issueId, branchId);
   },
 
-  async deleteStockIssue(tenantId, id) {
+  async deleteStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(resolvedTenantId, issueId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
         await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, 1);
@@ -1947,10 +2069,11 @@ export const storeService = {
     return { id: issueId };
   },
 
-  async approveStockIssue(tenantId, id) {
+  async approveStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(resolvedTenantId, issueId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
@@ -1958,13 +2081,14 @@ export const storeService = {
       await applyIssueStockChange(tx, resolvedTenantId, existing.itemId, existing.quantity, -1);
       await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getStockIssueRows(resolvedTenantId, issueId);
+    return getStockIssueRows(resolvedTenantId, issueId, branchId);
   },
 
-  async rejectStockIssue(tenantId, id) {
+  async rejectStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const existing = await getStockIssueRows(resolvedTenantId, issueId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
 
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
@@ -1972,11 +2096,12 @@ export const storeService = {
       }
       await tx.$executeRaw`UPDATE store_stock_issues SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${issueId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getStockIssueRows(resolvedTenantId, issueId);
+    return getStockIssueRows(resolvedTenantId, issueId, branchId);
   },
 
-  async getReturns(tenantId, query = {}) {
+  async getReturns(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const search = normalizeText(query.search);
     const searchTerm = `%${search}%`;
     const rows = await prisma.$queryRaw`
@@ -1985,7 +2110,9 @@ export const storeService = {
       JOIN store_stock_issues si ON si.id = r.stockIssueId
       JOIN store_items i ON i.id = r.itemId
       WHERE r.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR r.branch_id = ${branchId})
         AND si.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR si.branch_id = ${branchId})
         AND i.tenant_id = ${resolvedTenantId}
         AND r.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR si.receiverName LIKE ${searchTerm} OR si.department LIKE ${searchTerm})
@@ -1994,13 +2121,14 @@ export const storeService = {
     return { items: rows.map(mapStoreReturn), meta: null };
   },
 
-  async getReturnById(tenantId, id) {
+  async getReturnById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getReturnRows(resolvedTenantId, id);
+    return getReturnRows(resolvedTenantId, id, getScopedBranchId(branchScope));
   },
 
-  async createReturn(tenantId, payload) {
+  async createReturn(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const data = validateReturnPayload(payload);
     const now = new Date();
 
@@ -2008,7 +2136,7 @@ export const storeService = {
       const issueRows = await tx.$queryRaw`
         SELECT id, itemId, quantity, returnedQuantity, approvalStatus, status
         FROM store_stock_issues
-        WHERE id = ${data.stockIssueId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
+        WHERE id = ${data.stockIssueId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active'
         LIMIT 1
       `;
       if (!issueRows.length) throw new AppError('اسٹاک اجراء ریکارڈ نہیں ملا۔', 404);
@@ -2018,8 +2146,8 @@ export const storeService = {
       if (data.returnQuantity > availableReturn) throw new AppError('واپسی مقدار جاری شدہ باقی مقدار سے زیادہ نہیں ہو سکتی۔', 400);
 
       await tx.$executeRaw`
-        INSERT INTO store_returns (tenant_id, stockIssueId, itemId, returnQuantity, \`condition\`, addToStock, note, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.stockIssueId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.condition}, ${data.addToStock}, ${data.note}, 'active', ${now}, ${now})
+        INSERT INTO store_returns (tenant_id, branch_id, stockIssueId, itemId, returnQuantity, \`condition\`, addToStock, note, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${data.stockIssueId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.condition}, ${data.addToStock}, ${data.note}, 'active', ${now}, ${now})
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const nextReturnId = Number(rows[0].id);
@@ -2030,21 +2158,22 @@ export const storeService = {
         await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock + ${data.returnQuantity}, updatedAt = ${now} WHERE id = ${Number(issue.itemId)} AND tenant_id = ${resolvedTenantId}`;
       } else {
         await tx.$executeRaw`
-          INSERT INTO store_damaged_stock (tenant_id, returnId, itemId, quantity, note, status, createdAt, updatedAt)
-          VALUES (${resolvedTenantId}, ${nextReturnId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.note}, 'active', ${now}, ${now})
+          INSERT INTO store_damaged_stock (tenant_id, branch_id, returnId, itemId, quantity, note, status, createdAt, updatedAt)
+          VALUES (${resolvedTenantId}, ${branchId}, ${nextReturnId}, ${Number(issue.itemId)}, ${data.returnQuantity}, ${data.note}, 'active', ${now}, ${now})
         `;
       }
 
       return nextReturnId;
     });
 
-    return getReturnRows(resolvedTenantId, returnId);
+    return getReturnRows(resolvedTenantId, returnId, branchId);
   },
 
-  async deleteReturn(tenantId, id) {
+  async deleteReturn(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const returnId = normalizeId(id);
-    const existing = await getReturnRows(resolvedTenantId, returnId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getReturnRows(resolvedTenantId, returnId, branchId);
     const now = new Date();
 
     await prisma.$transaction(async (tx) => {
@@ -2061,8 +2190,9 @@ export const storeService = {
     return { id: returnId };
   },
 
-  async getDamagedStock(tenantId, query = {}) {
+  async getDamagedStock(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const search = normalizeText(query.search);
     const searchTerm = `%${search}%`;
     const rows = await prisma.$queryRaw`
@@ -2070,6 +2200,7 @@ export const storeService = {
       FROM store_damaged_stock ds
       JOIN store_items i ON i.id = ds.itemId
       WHERE ds.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ds.branch_id = ${branchId})
         AND i.tenant_id = ${resolvedTenantId}
         AND ds.status = 'active'
         AND (${search} = '' OR i.itemName LIKE ${searchTerm} OR ds.reason LIKE ${searchTerm} OR ds.responsiblePerson LIKE ${searchTerm})
@@ -2078,13 +2209,14 @@ export const storeService = {
     return { items: rows.map(mapDamagedStock), meta: null };
   },
 
-  async getDamagedStockById(tenantId, id) {
+  async getDamagedStockById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getDamagedStockRows(resolvedTenantId, id);
+    return getDamagedStockRows(resolvedTenantId, id, getScopedBranchId(branchScope));
   },
 
-  async createDamagedStock(tenantId, payload) {
+  async createDamagedStock(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const data = validateDamagedStockPayload(payload);
     const itemRows = await prisma.$queryRaw`SELECT id, purchasePrice FROM store_items WHERE id = ${data.itemId} AND tenant_id = ${resolvedTenantId} AND status = 'active' LIMIT 1`;
     if (!itemRows.length) throw new AppError('منتخب شے نہیں ملی۔', 404);
@@ -2092,17 +2224,18 @@ export const storeService = {
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_damaged_stock (tenant_id, returnId, itemId, quantity, reason, date, responsiblePerson, amountLoss, approvalStatus, note, status, createdAt, updatedAt)
-      VALUES (${resolvedTenantId}, NULL, ${data.itemId}, ${data.quantity}, ${data.reason}, ${data.date}, ${data.responsiblePerson}, ${amountLoss}, 'pending', ${data.note}, 'active', ${now}, ${now})
+      INSERT INTO store_damaged_stock (tenant_id, branch_id, returnId, itemId, quantity, reason, date, responsiblePerson, amountLoss, approvalStatus, note, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${branchId}, NULL, ${data.itemId}, ${data.quantity}, ${data.reason}, ${data.date}, ${data.responsiblePerson}, ${amountLoss}, 'pending', ${data.note}, 'active', ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
     return getDamagedStockRows(resolvedTenantId, Number(rows[0].id));
   },
 
-  async approveDamagedStock(tenantId, id) {
+  async approveDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
@@ -2111,22 +2244,24 @@ export const storeService = {
       await tx.$executeRaw`UPDATE store_items SET currentStock = currentStock - ${existing.quantity}, updatedAt = ${new Date()} WHERE id = ${existing.itemId} AND tenant_id = ${resolvedTenantId}`;
       await tx.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'approved', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
     });
-    return getDamagedStockRows(resolvedTenantId, damagedId);
+    return getDamagedStockRows(resolvedTenantId, damagedId, branchId);
   },
 
-  async rejectDamagedStock(tenantId, id) {
+  async rejectDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
     if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
     await prisma.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
-    return getDamagedStockRows(resolvedTenantId, damagedId);
+    return getDamagedStockRows(resolvedTenantId, damagedId, branchId);
   },
 
-  async deleteDamagedStock(tenantId, id) {
+  async deleteDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const existing = await getDamagedStockRows(resolvedTenantId, damagedId);
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
 
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved' && !existing.returnId) {
@@ -2138,14 +2273,16 @@ export const storeService = {
     return { id: damagedId };
   },
 
-  async getApprovals(tenantId) {
+  async getApprovals(tenantId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const purchaseRows = await prisma.$queryRaw`
       SELECT p.id, p.purchaseDate, p.invoiceNumber, p.totalAmount, p.paidAmount, p.remainingAmount, p.paymentMethod, p.approvalStatus, p.createdAt,
              s.supplierName
       FROM store_purchases p
       JOIN store_suppliers s ON s.id = p.supplierId
       WHERE p.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR p.branch_id = ${branchId})
         AND s.tenant_id = ${resolvedTenantId}
         AND p.status = 'active' AND p.approvalStatus = 'pending'
       ORDER BY p.createdAt DESC, p.id DESC
@@ -2157,6 +2294,7 @@ export const storeService = {
       FROM store_stock_issues si
       JOIN store_items i ON i.id = si.itemId
       WHERE si.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR si.branch_id = ${branchId})
         AND i.tenant_id = ${resolvedTenantId}
         AND si.status = 'active' AND si.approvalStatus = 'pending'
       ORDER BY si.createdAt DESC, si.id DESC
@@ -2168,6 +2306,7 @@ export const storeService = {
       FROM store_damaged_stock ds
       JOIN store_items i ON i.id = ds.itemId
       WHERE ds.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ds.branch_id = ${branchId})
         AND i.tenant_id = ${resolvedTenantId}
         AND ds.status = 'active' AND ds.approvalStatus = 'pending'
       ORDER BY ds.createdAt DESC, ds.id DESC
@@ -2179,6 +2318,7 @@ export const storeService = {
       FROM store_stock_adjustments sa
       JOIN store_items i ON i.id = sa.itemId
       WHERE sa.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR sa.branch_id = ${branchId})
         AND i.tenant_id = ${resolvedTenantId}
         AND sa.status = 'active' AND sa.approvalStatus = 'pending'
       ORDER BY sa.createdAt DESC, sa.id DESC
@@ -2198,51 +2338,82 @@ export const storeService = {
     };
   },
 
-  async approveApproval({ tenantId, moduleType, id, remarks, admin }) {
+  async approveApproval({ tenantId, moduleType, id, remarks, admin, branchScope = null, auditContext = {} }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedModule = normalizeApprovalModule(moduleType);
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
+    const branchId = getScopedBranchId(branchScope);
 
     if (normalizedModule === 'purchase') {
-      const existing = await getPurchaseRows(resolvedTenantId, recordId);
+      const existing = await getPurchaseRows(resolvedTenantId, recordId, branchId);
       if (existing.approvalStatus === 'approved') return existing;
       if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
       await prisma.$transaction(async (tx) => {
         const now = new Date();
-        const financeTransactionId = existing.financeTransactionId ? Number(existing.financeTransactionId) : await createPurchaseFinanceTransaction(tx, resolvedTenantId, recordId, existing);
+        const financeTransactionId = existing.financeTransactionId ? Number(existing.financeTransactionId) : await createPurchaseFinanceTransaction(tx, resolvedTenantId, recordId, existing, existing.branchId || null);
         await applyStockChange(tx, resolvedTenantId, existing.items, 1);
         await tx.$executeRaw`UPDATE store_suppliers SET balance = balance + ${existing.remainingAmount}, updatedAt = ${now} WHERE id = ${existing.supplierId} AND tenant_id = ${resolvedTenantId}`;
-        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'approved', financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'approved', financeTransactionId = ${financeTransactionId}, updatedAt = ${now} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId})`;
         await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
       });
 
-      return getPurchaseRows(resolvedTenantId, recordId);
+      const result = await getPurchaseRows(resolvedTenantId, recordId, branchId);
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: result.branchId || existing.branchId || branchId,
+        action: 'store.approval.approved',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: result,
+      }, auditContext);
+      return result;
     }
 
     if (normalizedModule === 'stock-out') {
-      const existing = await getStockIssueRows(resolvedTenantId, recordId);
-      const result = await this.approveStockIssue(resolvedTenantId, recordId);
+      const existing = await getStockIssueRows(resolvedTenantId, recordId, branchId);
+      const result = await this.approveStockIssue(resolvedTenantId, recordId, branchScope);
       await prisma.$executeRaw`
         INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
         VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
-      return existing.approvalStatus === 'approved' ? existing : result;
+      const finalResult = existing.approvalStatus === 'approved' ? existing : result;
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: finalResult.branchId || existing.branchId || branchId,
+        action: 'store.approval.approved',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: finalResult,
+      }, auditContext);
+      return finalResult;
     }
 
     if (normalizedModule === 'damage') {
-      const existing = await getDamagedStockRows(resolvedTenantId, recordId);
-      const result = await this.approveDamagedStock(resolvedTenantId, recordId);
+      const existing = await getDamagedStockRows(resolvedTenantId, recordId, branchId);
+      const result = await this.approveDamagedStock(resolvedTenantId, recordId, branchScope);
       await prisma.$executeRaw`
         INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
         VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'approved', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
-      return existing.approvalStatus === 'approved' ? existing : result;
+      const finalResult = existing.approvalStatus === 'approved' ? existing : result;
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: finalResult.branchId || existing.branchId || branchId,
+        action: 'store.approval.approved',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: finalResult,
+      }, auditContext);
+      return finalResult;
     }
 
-    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId);
+    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId, branchId);
     if (adjustment.approvalStatus === 'approved') return adjustment;
     if (adjustment.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
 
@@ -2264,70 +2435,119 @@ export const storeService = {
       await tx.$executeRaw`
         UPDATE store_stock_adjustments
         SET previousStock = ${previousStock}, adjustedStock = ${adjustedStock}, approvalStatus = 'approved', updatedAt = ${new Date()}
-        WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}
+        WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId})
       `;
       await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'approved', approvedBy, remarks: cleanRemarks });
     });
 
-    return getStockAdjustmentRows(resolvedTenantId, recordId);
+    const result = await getStockAdjustmentRows(resolvedTenantId, recordId, branchId);
+    await recordStoreAudit({
+      tenantId: resolvedTenantId,
+      branchId: result.branchId || adjustment.branchId || branchId,
+      action: 'store.approval.approved',
+      targetType: `store_${normalizedModule}`,
+      targetId: recordId,
+      oldValue: adjustment,
+      newValue: result,
+    }, auditContext);
+    return result;
   },
 
-  async rejectApproval({ tenantId, moduleType, id, remarks, admin }) {
+  async rejectApproval({ tenantId, moduleType, id, remarks, admin, branchScope = null, auditContext = {} }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedModule = normalizeApprovalModule(moduleType);
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
+    const branchId = getScopedBranchId(branchScope);
 
     if (normalizedModule === 'purchase') {
-      const existing = await getPurchaseRows(resolvedTenantId, recordId);
+      const existing = await getPurchaseRows(resolvedTenantId, recordId, branchId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
 
       await prisma.$transaction(async (tx) => {
-        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+        await tx.$executeRaw`UPDATE store_purchases SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId})`;
         await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
       });
 
-      return getPurchaseRows(resolvedTenantId, recordId);
+      const result = await getPurchaseRows(resolvedTenantId, recordId, branchId);
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: result.branchId || existing.branchId || branchId,
+        action: 'store.approval.rejected',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: result,
+      }, auditContext);
+      return result;
     }
 
     if (normalizedModule === 'stock-out') {
-      const existing = await getStockIssueRows(resolvedTenantId, recordId);
+      const existing = await getStockIssueRows(resolvedTenantId, recordId, branchId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
-      const result = await this.rejectStockIssue(resolvedTenantId, recordId);
+      const result = await this.rejectStockIssue(resolvedTenantId, recordId, branchScope);
       await prisma.$executeRaw`
         INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
         VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: result.branchId || existing.branchId || branchId,
+        action: 'store.approval.rejected',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: result,
+      }, auditContext);
       return result;
     }
 
     if (normalizedModule === 'damage') {
-      const existing = await getDamagedStockRows(resolvedTenantId, recordId);
+      const existing = await getDamagedStockRows(resolvedTenantId, recordId, branchId);
       if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
-      const result = await this.rejectDamagedStock(resolvedTenantId, recordId);
+      const result = await this.rejectDamagedStock(resolvedTenantId, recordId, branchScope);
       await prisma.$executeRaw`
         INSERT INTO store_approval_logs (tenant_id, moduleType, recordId, status, approvedBy, remarks, createdAt)
         VALUES (${resolvedTenantId}, ${normalizedModule}, ${recordId}, 'rejected', ${approvedBy}, ${cleanRemarks}, ${new Date()})
       `;
+      await recordStoreAudit({
+        tenantId: resolvedTenantId,
+        branchId: result.branchId || existing.branchId || branchId,
+        action: 'store.approval.rejected',
+        targetType: `store_${normalizedModule}`,
+        targetId: recordId,
+        oldValue: existing,
+        newValue: result,
+      }, auditContext);
       return result;
     }
 
-    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId);
+    const adjustment = await getStockAdjustmentRows(resolvedTenantId, recordId, branchId);
     if (adjustment.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
 
     await prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`UPDATE store_stock_adjustments SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId}`;
+      await tx.$executeRaw`UPDATE store_stock_adjustments SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${recordId} AND tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId})`;
       await createApprovalLog(tx, { tenantId: resolvedTenantId, moduleType: normalizedModule, recordId, status: 'rejected', approvedBy, remarks: cleanRemarks });
     });
 
-    return getStockAdjustmentRows(resolvedTenantId, recordId);
+    const result = await getStockAdjustmentRows(resolvedTenantId, recordId, branchId);
+    await recordStoreAudit({
+      tenantId: resolvedTenantId,
+      branchId: result.branchId || adjustment.branchId || branchId,
+      action: 'store.approval.rejected',
+      targetType: `store_${normalizedModule}`,
+      targetId: recordId,
+      oldValue: adjustment,
+      newValue: result,
+    }, auditContext);
+    return result;
   },
 
-  async exportPurchases({ tenantId, query = {}, format = 'html', admin = null }) {
+  async exportPurchases({ tenantId, query = {}, format = 'html', admin = null, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const result = await this.getPurchases(resolvedTenantId, query);
+    const result = await this.getPurchases(resolvedTenantId, query, branchScope);
     const rows = result.items || [];
 
     if (format === 'csv') {
@@ -2345,10 +2565,10 @@ export const storeService = {
     });
   },
 
-  async exportStockReport({ tenantId, query = {}, format = 'html', admin = null }) {
+  async exportStockReport({ tenantId, query = {}, format = 'html', admin = null, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const result = await this.getDailyStockReport(resolvedTenantId, query);
+    const result = await this.getDailyStockReport(resolvedTenantId, query, branchScope);
     const rows = result.items || [];
 
     if (format === 'csv') {
@@ -2366,10 +2586,10 @@ export const storeService = {
     });
   },
 
-  async getPurchaseInvoiceHtml(tenantId, id, admin = null) {
+  async getPurchaseInvoiceHtml(tenantId, id, admin = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const purchase = await getPurchaseRows(resolvedTenantId, id);
+    const purchase = await getPurchaseRows(resolvedTenantId, id, getScopedBranchId(branchScope));
     const columns = [
       { label: 'شے', value: (row) => row.itemName || '-' },
       { label: 'کوڈ', value: (row) => row.itemCode || '-' },
@@ -2389,10 +2609,10 @@ export const storeService = {
     });
   },
 
-  async getIssueSlipHtml(tenantId, id, admin = null) {
+  async getIssueSlipHtml(tenantId, id, admin = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const issue = await getStockIssueRows(resolvedTenantId, id);
+    const issue = await getStockIssueRows(resolvedTenantId, id, getScopedBranchId(branchScope));
     const rows = [
       { label: 'تاریخ', value: formatDate(issue.issueDate) },
       { label: 'شے', value: issue.itemName || '-' },
@@ -2418,13 +2638,15 @@ export const storeService = {
     });
   },
 
-  async getDailyStockReport(tenantId, query = {}) {
+  async getDailyStockReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const category = normalizeText(query.category);
+    const stockQuantitySql = getBranchStockQuantitySql(resolvedTenantId, branchId);
     const rows = await prisma.$queryRaw`
-      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, i.currentStock,
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, ${stockQuantitySql} AS currentStock,
              COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
-             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
+             (${stockQuantitySql} * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
       FROM store_items i
       LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
         SELECT pi.id
@@ -2433,6 +2655,8 @@ export const storeService = {
         WHERE pi.itemId = i.id
           AND pi.tenant_id = ${resolvedTenantId}
           AND p.tenant_id = ${resolvedTenantId}
+          AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
+          AND (${branchId} IS NULL OR p.branch_id = ${branchId})
           AND p.status = 'active'
           AND p.approvalStatus = 'approved'
         ORDER BY p.purchaseDate DESC, pi.id DESC
@@ -2448,8 +2672,9 @@ export const storeService = {
     return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.stockValue, 0) } };
   },
 
-  async getMonthlyStockReport(tenantId, query = {}) {
+  async getMonthlyStockReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT monthLabel,
@@ -2461,22 +2686,22 @@ export const storeService = {
         SELECT DATE_FORMAT(p.purchaseDate, '%Y-%m') AS monthLabel, SUM(pi.quantity) AS purchaseQuantity, 0 AS issueQuantity, 0 AS returnQuantity, 0 AS damagedQuantity
         FROM store_purchases p
         JOIN store_purchase_items pi ON pi.purchaseId = p.id
-        WHERE p.tenant_id = ${resolvedTenantId} AND pi.tenant_id = ${resolvedTenantId} AND p.status = 'active' AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate}) AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
+        WHERE p.tenant_id = ${resolvedTenantId} AND pi.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR p.branch_id = ${branchId}) AND (${branchId} IS NULL OR pi.branch_id = ${branchId}) AND p.status = 'active' AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate}) AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
         GROUP BY DATE_FORMAT(p.purchaseDate, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(issueDate, '%Y-%m') AS monthLabel, 0, SUM(quantity), 0, 0
         FROM store_stock_issues
-        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR issueDate >= ${fromDate}) AND (${toDate} IS NULL OR issueDate <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR issueDate >= ${fromDate}) AND (${toDate} IS NULL OR issueDate <= ${toDate})
         GROUP BY DATE_FORMAT(issueDate, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(createdAt, '%Y-%m') AS monthLabel, 0, 0, SUM(returnQuantity), 0
         FROM store_returns
-        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND (${fromDate} IS NULL OR createdAt >= ${fromDate}) AND (${toDate} IS NULL OR createdAt <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active' AND (${fromDate} IS NULL OR createdAt >= ${fromDate}) AND (${toDate} IS NULL OR createdAt <= ${toDate})
         GROUP BY DATE_FORMAT(createdAt, '%Y-%m')
         UNION ALL
         SELECT DATE_FORMAT(date, '%Y-%m') AS monthLabel, 0, 0, 0, SUM(quantity)
         FROM store_damaged_stock
-        WHERE tenant_id = ${resolvedTenantId} AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR date >= ${fromDate}) AND (${toDate} IS NULL OR date <= ${toDate})
+        WHERE tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active' AND approvalStatus = 'approved' AND (${fromDate} IS NULL OR date >= ${fromDate}) AND (${toDate} IS NULL OR date <= ${toDate})
         GROUP BY DATE_FORMAT(date, '%Y-%m')
       ) monthly
       GROUP BY monthLabel
@@ -2485,8 +2710,9 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getPurchaseReport(tenantId, query = {}) {
+  async getPurchaseReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { fromDate, toDate } = getReportDateRange(query);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
     const rows = await prisma.$queryRaw`
@@ -2495,6 +2721,7 @@ export const storeService = {
       JOIN store_suppliers s ON s.id = p.supplierId
       WHERE p.tenant_id = ${resolvedTenantId}
         AND s.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR p.branch_id = ${branchId})
         AND p.status = 'active'
         AND (${supplierId} IS NULL OR p.supplierId = ${supplierId})
         AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate})
@@ -2505,14 +2732,26 @@ export const storeService = {
     return { items, summary: { totalAmount: items.reduce((sum, item) => sum + item.totalAmount, 0), paidAmount: items.reduce((sum, item) => sum + item.paidAmount, 0), remainingAmount: items.reduce((sum, item) => sum + item.remainingAmount, 0) } };
   },
 
-  async getSupplierReport(tenantId, query = {}) {
+  async getSupplierReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const rows = await prisma.$queryRaw`
-      SELECT s.id, s.supplierName, s.mobileNumber, s.shopName, s.balance,
+      SELECT s.id, s.supplierName, s.mobileNumber, s.shopName,
+             CASE
+               WHEN ${branchId} IS NULL THEN s.balance
+               ELSE COALESCE(SUM(p.remainingAmount), 0) - COALESCE((
+                 SELECT SUM(sp.amount)
+                 FROM store_supplier_payments sp
+                 WHERE sp.supplierId = s.id
+                   AND sp.tenant_id = ${resolvedTenantId}
+                   AND sp.branch_id = ${branchId}
+                   AND sp.status = 'active'
+               ), 0)
+             END AS balance,
              COALESCE(SUM(p.totalAmount), 0) AS totalPurchase,
              COALESCE(SUM(p.paidAmount), 0) AS totalPaid
       FROM store_suppliers s
-      LEFT JOIN store_purchases p ON p.supplierId = s.id AND p.tenant_id = ${resolvedTenantId} AND p.status = 'active'
+      LEFT JOIN store_purchases p ON p.supplierId = s.id AND p.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR p.branch_id = ${branchId}) AND p.status = 'active'
       WHERE s.tenant_id = ${resolvedTenantId} AND s.status = 'active'
       GROUP BY s.id, s.supplierName, s.mobileNumber, s.shopName, s.balance
       ORDER BY s.supplierName ASC
@@ -2520,8 +2759,9 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getStockIssueReport(tenantId, query = {}) {
+  async getStockIssueReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { fromDate, toDate } = getReportDateRange(query);
     const department = normalizeText(query.department);
     const rows = await prisma.$queryRaw`
@@ -2530,6 +2770,7 @@ export const storeService = {
       JOIN store_items i ON i.id = si.itemId
       WHERE si.tenant_id = ${resolvedTenantId}
         AND i.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR si.branch_id = ${branchId})
         AND si.status = 'active'
         AND (${department} = '' OR si.department = ${department})
         AND (${fromDate} IS NULL OR si.issueDate >= ${fromDate})
@@ -2539,13 +2780,15 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getDepartmentWiseReport(tenantId, query = {}) {
+  async getDepartmentWiseReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT department, COUNT(*) AS totalIssues, SUM(quantity) AS totalQuantity
       FROM store_stock_issues
       WHERE tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR branch_id = ${branchId})
         AND status = 'active'
         AND approvalStatus = 'approved'
         AND (${fromDate} IS NULL OR issueDate >= ${fromDate})
@@ -2556,14 +2799,16 @@ export const storeService = {
     return { items: mapReportRows(rows), summary: null };
   },
 
-  async getLowStockReport(tenantId, query = {}) {
+  async getLowStockReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const category = normalizeText(query.category);
     const limit = Number(query.limit || 10);
+    const stockQuantitySql = getBranchStockQuantitySql(resolvedTenantId, branchId);
     const rows = await prisma.$queryRaw`
-      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, i.currentStock,
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.itemCode, ${stockQuantitySql} AS currentStock,
              COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
-             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
+             (${stockQuantitySql} * COALESCE(latest_purchase.rate, i.purchasePrice)) AS stockValue
       FROM store_items i
       LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
         SELECT pi.id
@@ -2572,6 +2817,8 @@ export const storeService = {
         WHERE pi.itemId = i.id
           AND pi.tenant_id = ${resolvedTenantId}
           AND p.tenant_id = ${resolvedTenantId}
+          AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
+          AND (${branchId} IS NULL OR p.branch_id = ${branchId})
           AND p.status = 'active'
           AND p.approvalStatus = 'approved'
         ORDER BY p.purchaseDate DESC, pi.id DESC
@@ -2580,16 +2827,17 @@ export const storeService = {
       LEFT JOIN store_units u ON u.id = latest_purchase.unitId AND u.tenant_id = ${resolvedTenantId}
       WHERE i.tenant_id = ${resolvedTenantId}
         AND i.status = 'active'
-        AND i.currentStock <= ${Number.isFinite(limit) ? limit : 10}
+        AND ${stockQuantitySql} <= ${Number.isFinite(limit) ? limit : 10}
         AND (${category} = '' OR i.category = ${category})
-      ORDER BY i.currentStock ASC, i.itemName ASC
+      ORDER BY currentStock ASC, i.itemName ASC
     `;
     const items = mapReportRows(rows);
     return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.stockValue, 0) } };
   },
 
-  async getDamagedStockReport(tenantId, query = {}) {
+  async getDamagedStockReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
       SELECT ds.id, ds.date, i.itemName, ds.quantity, ds.reason, ds.responsiblePerson, ds.amountLoss, ds.approvalStatus
@@ -2597,6 +2845,7 @@ export const storeService = {
       JOIN store_items i ON i.id = ds.itemId
       WHERE ds.tenant_id = ${resolvedTenantId}
         AND i.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ds.branch_id = ${branchId})
         AND ds.status = 'active'
         AND (${fromDate} IS NULL OR ds.date >= ${fromDate})
         AND (${toDate} IS NULL OR ds.date <= ${toDate})
@@ -2606,13 +2855,15 @@ export const storeService = {
     return { items, summary: { amountLoss: items.reduce((sum, item) => sum + item.amountLoss, 0) } };
   },
 
-  async getStoreValueReport(tenantId, query = {}) {
+  async getStoreValueReport(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const category = normalizeText(query.category);
+    const stockQuantitySql = getBranchStockQuantitySql(resolvedTenantId, branchId);
     const rows = await prisma.$queryRaw`
-      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, i.currentStock,
+      SELECT i.id, i.itemName, i.category, COALESCE(u.name, u.shortName, i.unit) AS unit, ${stockQuantitySql} AS currentStock,
              COALESCE(latest_purchase.rate, i.purchasePrice) AS purchasePrice,
-             (i.currentStock * COALESCE(latest_purchase.rate, i.purchasePrice)) AS totalValue
+             (${stockQuantitySql} * COALESCE(latest_purchase.rate, i.purchasePrice)) AS totalValue
       FROM store_items i
       LEFT JOIN store_purchase_items latest_purchase ON latest_purchase.id = (
         SELECT pi.id
@@ -2621,6 +2872,8 @@ export const storeService = {
         WHERE pi.itemId = i.id
           AND pi.tenant_id = ${resolvedTenantId}
           AND p.tenant_id = ${resolvedTenantId}
+          AND (${branchId} IS NULL OR pi.branch_id = ${branchId})
+          AND (${branchId} IS NULL OR p.branch_id = ${branchId})
           AND p.status = 'active'
           AND p.approvalStatus = 'approved'
         ORDER BY p.purchaseDate DESC, pi.id DESC
@@ -2634,8 +2887,9 @@ export const storeService = {
     return { items, summary: { totalItems: items.length, totalValue: items.reduce((sum, item) => sum + item.totalValue, 0) } };
   },
 
-  async getItemLedgerReport(tenantId, itemId, query = {}) {
+  async getItemLedgerReport(tenantId, itemId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const normalizedItemId = normalizeId(itemId);
     const { fromDate, toDate } = getReportDateRange(query);
     const rows = await prisma.$queryRaw`
@@ -2645,19 +2899,19 @@ export const storeService = {
         FROM store_purchase_items pi
         JOIN store_purchases p ON p.id = pi.purchaseId
         JOIN store_suppliers s ON s.id = p.supplierId
-        WHERE pi.itemId = ${normalizedItemId} AND pi.tenant_id = ${resolvedTenantId} AND p.tenant_id = ${resolvedTenantId} AND s.tenant_id = ${resolvedTenantId} AND p.status = 'active'
+        WHERE pi.itemId = ${normalizedItemId} AND pi.tenant_id = ${resolvedTenantId} AND p.tenant_id = ${resolvedTenantId} AND s.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR pi.branch_id = ${branchId}) AND (${branchId} IS NULL OR p.branch_id = ${branchId}) AND p.status = 'active'
         UNION ALL
         SELECT si.issueDate, 'issue', CAST(si.id AS CHAR), 0, si.quantity, si.department
         FROM store_stock_issues si
-        WHERE si.itemId = ${normalizedItemId} AND si.tenant_id = ${resolvedTenantId} AND si.status = 'active' AND si.approvalStatus = 'approved'
+        WHERE si.itemId = ${normalizedItemId} AND si.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR si.branch_id = ${branchId}) AND si.status = 'active' AND si.approvalStatus = 'approved'
         UNION ALL
         SELECT r.createdAt, 'return', CAST(r.id AS CHAR), CASE WHEN r.condition = 'good' AND r.addToStock = true THEN r.returnQuantity ELSE 0 END, 0, r.note
         FROM store_returns r
-        WHERE r.itemId = ${normalizedItemId} AND r.tenant_id = ${resolvedTenantId} AND r.status = 'active'
+        WHERE r.itemId = ${normalizedItemId} AND r.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR r.branch_id = ${branchId}) AND r.status = 'active'
         UNION ALL
         SELECT ds.date, 'damaged', CAST(ds.id AS CHAR), 0, ds.quantity, ds.reason
         FROM store_damaged_stock ds
-        WHERE ds.itemId = ${normalizedItemId} AND ds.tenant_id = ${resolvedTenantId} AND ds.status = 'active' AND ds.approvalStatus = 'approved' AND ds.returnId IS NULL
+        WHERE ds.itemId = ${normalizedItemId} AND ds.tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR ds.branch_id = ${branchId}) AND ds.status = 'active' AND ds.approvalStatus = 'approved' AND ds.returnId IS NULL
       ) ledger
       WHERE (${fromDate} IS NULL OR ledgerDate >= ${fromDate}) AND (${toDate} IS NULL OR ledgerDate <= ${toDate})
       ORDER BY ledgerDate ASC

@@ -13,6 +13,7 @@ const subjectMarksSchema = z.object({
 });
 
 const examResultBodySchema = z.object({
+  branchId: z.coerce.number().int().positive().optional(),
   studentId: z.coerce.number().int().positive('Student is required.'),
   sessionId: z.coerce.number().int().positive('Session is required.'),
   classId: z.coerce.number().int().positive('Class is required.'),
@@ -43,6 +44,7 @@ export const listExamResultsValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     studentId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     sessionId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),

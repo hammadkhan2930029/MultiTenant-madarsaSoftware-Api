@@ -6,6 +6,7 @@ const optionalStringField = (max, message) =>
   );
 
 const teacherBodySchema = z.object({
+  branchId: z.coerce.number().int().positive('Branch must be valid.').optional(),
   staffType: optionalStringField(50, 'عملہ کی قسم بہت لمبی ہے۔'),
   fullName: z.string().trim().min(2, 'استاد کا نام لازمی ہے۔').max(150, 'استاد کا نام بہت لمبا ہے۔'),
   email: z
@@ -49,6 +50,7 @@ export const listTeachersValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     subject: z.string().trim().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     status: z.enum(['active', 'inactive']).optional(),
     staffType: z.string().trim().optional(),
     page: z.coerce.number().int().positive().optional(),
@@ -87,6 +89,7 @@ export const listTeacherIncrementsValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     search: z.string().trim().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     staffType: z.enum(['teacher', 'staff']).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),

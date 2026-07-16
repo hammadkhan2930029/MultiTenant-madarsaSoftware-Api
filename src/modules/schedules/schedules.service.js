@@ -27,10 +27,14 @@ const scheduleSelect = {
   section: { select: { id: true, name: true } },
 };
 
-const ensureScheduleReferences = async (tenantId, { sessionId, classId, sectionId }) => {
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const ensureScheduleReferences = async (tenantId, { sessionId, classId, sectionId }, branchId = null) => {
   const [session, academicClass, section] = await Promise.all([
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
-    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.academicClass.findFirst({
+      where: { id: classId, tenantId, ...(branchId ? { branchId } : {}), branch: { status: 'active' } },
+    }),
     prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
   ]);
 
@@ -39,7 +43,7 @@ const ensureScheduleReferences = async (tenantId, { sessionId, classId, sectionI
   }
 
   if (!academicClass || academicClass.status !== 'active') {
-    throw new AppError('Active class not found.', 404);
+    throw new AppError('Active class or branch not found.', 404);
   }
 
   if (!section || section.status !== 'active') {
@@ -52,9 +56,9 @@ const ensureScheduleReferences = async (tenantId, { sessionId, classId, sectionI
 };
 
 export const schedulesService = {
-  async createSchedule(tenantId, payload) {
+  async createSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureScheduleReferences(resolvedTenantId, payload);
+    await ensureScheduleReferences(resolvedTenantId, payload, getScopedBranchId(branchScope));
 
     return prisma.studentSchedule.create({
       data: {
@@ -72,12 +76,13 @@ export const schedulesService = {
     });
   },
 
-  async getSchedules(tenantId, query) {
+  async getSchedules(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
     const where = {
       tenantId: resolvedTenantId,
-      class: { tenantId: resolvedTenantId },
+      class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       section: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
@@ -102,17 +107,18 @@ export const schedulesService = {
     };
   },
 
-  async updateSchedule(tenantId, id, payload) {
+  async updateSchedule(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const existingSchedule = await prisma.studentSchedule.findFirst({
-      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId }, section: { tenantId: resolvedTenantId } },
+      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
     });
 
     if (!existingSchedule) {
       throw new AppError('Schedule not found.', 404);
     }
 
-    await ensureScheduleReferences(resolvedTenantId, payload);
+    await ensureScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.studentSchedule.update({
       where: { id, tenantId: resolvedTenantId },
@@ -131,10 +137,11 @@ export const schedulesService = {
     });
   },
 
-  async deleteSchedule(tenantId, id) {
+  async deleteSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const schedule = await prisma.studentSchedule.findFirst({
-      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId }, section: { tenantId: resolvedTenantId } },
+      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
     });
 
     if (!schedule) {

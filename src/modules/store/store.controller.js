@@ -1,9 +1,10 @@
 import { apiResponse } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { auditService } from '../security/index.js';
 import { storeService } from './store.service.js';
 
 export const getStoreDashboard = asyncHandler(async (req, res) => {
-  const result = await storeService.getDashboard(req.tenantId);
+  const result = await storeService.getDashboard(req.tenantId, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store dashboard fetched successfully.',
@@ -12,7 +13,7 @@ export const getStoreDashboard = asyncHandler(async (req, res) => {
 });
 
 export const getStoreMonthlyExpense = asyncHandler(async (req, res) => {
-  const result = await storeService.getMonthlyExpense(req.tenantId);
+  const result = await storeService.getMonthlyExpense(req.tenantId, {}, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store monthly expense fetched successfully.',
@@ -21,7 +22,7 @@ export const getStoreMonthlyExpense = asyncHandler(async (req, res) => {
 });
 
 export const getStoreApprovals = asyncHandler(async (req, res) => {
-  const result = await storeService.getApprovals(req.tenantId);
+  const result = await storeService.getApprovals(req.tenantId, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store approvals fetched successfully.',
@@ -128,6 +129,8 @@ export const approveStoreApproval = asyncHandler(async (req, res) => {
     tenantId: req.tenantId,
     remarks: req.body?.remarks,
     admin: req.admin,
+    branchScope: req.branchScope,
+    auditContext: { ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null },
   });
 
   return apiResponse(res, {
@@ -143,6 +146,8 @@ export const rejectStoreApproval = asyncHandler(async (req, res) => {
     tenantId: req.tenantId,
     remarks: req.body?.remarks,
     admin: req.admin,
+    branchScope: req.branchScope,
+    auditContext: { ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null },
   });
 
   return apiResponse(res, {
@@ -244,7 +249,7 @@ export const deleteStoreSupplier = asyncHandler(async (req, res) => {
 });
 
 export const getStoreSupplierPurchases = asyncHandler(async (req, res) => {
-  const result = await storeService.getSupplierPurchases(req.tenantId, req.params.id);
+  const result = await storeService.getSupplierPurchases(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store supplier purchases fetched successfully.',
@@ -253,7 +258,7 @@ export const getStoreSupplierPurchases = asyncHandler(async (req, res) => {
 });
 
 export const getStoreSupplierPayments = asyncHandler(async (req, res) => {
-  const result = await storeService.getSupplierPayments(req.tenantId, req.params.id);
+  const result = await storeService.getSupplierPayments(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store supplier payments fetched successfully.',
@@ -262,7 +267,7 @@ export const getStoreSupplierPayments = asyncHandler(async (req, res) => {
 });
 
 export const createStoreSupplierPayment = asyncHandler(async (req, res) => {
-  const result = await storeService.createSupplierPayment(req.tenantId, req.params.id, req.body);
+  const result = await storeService.createSupplierPayment(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -272,7 +277,7 @@ export const createStoreSupplierPayment = asyncHandler(async (req, res) => {
 });
 
 export const getStorePurchases = asyncHandler(async (req, res) => {
-  const result = await storeService.getPurchases(req.tenantId, req.query);
+  const result = await storeService.getPurchases(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store purchases fetched successfully.',
@@ -281,7 +286,7 @@ export const getStorePurchases = asyncHandler(async (req, res) => {
 });
 
 export const createStorePurchase = asyncHandler(async (req, res) => {
-  const result = await storeService.createPurchase(req.tenantId, { body: req.body, file: req.file });
+  const result = await storeService.createPurchase(req.tenantId, { body: req.body, file: req.file }, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -291,7 +296,7 @@ export const createStorePurchase = asyncHandler(async (req, res) => {
 });
 
 export const getStorePurchaseById = asyncHandler(async (req, res) => {
-  const result = await storeService.getPurchaseById(req.tenantId, req.params.id);
+  const result = await storeService.getPurchaseById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store purchase fetched successfully.',
@@ -300,7 +305,7 @@ export const getStorePurchaseById = asyncHandler(async (req, res) => {
 });
 
 export const updateStorePurchase = asyncHandler(async (req, res) => {
-  const result = await storeService.updatePurchase(req.tenantId, req.params.id, { body: req.body, file: req.file });
+  const result = await storeService.updatePurchase(req.tenantId, req.params.id, { body: req.body, file: req.file }, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store purchase updated successfully.',
@@ -309,7 +314,7 @@ export const updateStorePurchase = asyncHandler(async (req, res) => {
 });
 
 export const deleteStorePurchase = asyncHandler(async (req, res) => {
-  const result = await storeService.deletePurchase(req.tenantId, req.params.id);
+  const result = await storeService.deletePurchase(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store purchase deleted successfully.',
@@ -318,137 +323,137 @@ export const deleteStorePurchase = asyncHandler(async (req, res) => {
 });
 
 export const getStoreStockIssues = asyncHandler(async (req, res) => {
-  const result = await storeService.getStockIssues(req.tenantId, req.query);
+  const result = await storeService.getStockIssues(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store stock issues fetched successfully.', data: result });
 });
 
 export const createStoreStockIssue = asyncHandler(async (req, res) => {
-  const result = await storeService.createStockIssue(req.tenantId, { body: req.body, file: req.file });
+  const result = await storeService.createStockIssue(req.tenantId, { body: req.body, file: req.file }, req.branchScope);
   return apiResponse(res, { statusCode: 201, message: 'Store stock issue created successfully.', data: result });
 });
 
 export const getStoreStockIssueById = asyncHandler(async (req, res) => {
-  const result = await storeService.getStockIssueById(req.tenantId, req.params.id);
+  const result = await storeService.getStockIssueById(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue fetched successfully.', data: result });
 });
 
 export const updateStoreStockIssue = asyncHandler(async (req, res) => {
-  const result = await storeService.updateStockIssue(req.tenantId, req.params.id, { body: req.body, file: req.file });
+  const result = await storeService.updateStockIssue(req.tenantId, req.params.id, { body: req.body, file: req.file }, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue updated successfully.', data: result });
 });
 
 export const deleteStoreStockIssue = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteStockIssue(req.tenantId, req.params.id);
+  const result = await storeService.deleteStockIssue(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue deleted successfully.', data: result });
 });
 
 export const approveStoreStockIssue = asyncHandler(async (req, res) => {
-  const result = await storeService.approveStockIssue(req.tenantId, req.params.id);
+  const result = await storeService.approveStockIssue(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue approved successfully.', data: result });
 });
 
 export const rejectStoreStockIssue = asyncHandler(async (req, res) => {
-  const result = await storeService.rejectStockIssue(req.tenantId, req.params.id);
+  const result = await storeService.rejectStockIssue(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue rejected successfully.', data: result });
 });
 
 export const getStoreReturns = asyncHandler(async (req, res) => {
-  const result = await storeService.getReturns(req.tenantId, req.query);
+  const result = await storeService.getReturns(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store returns fetched successfully.', data: result });
 });
 
 export const createStoreReturn = asyncHandler(async (req, res) => {
-  const result = await storeService.createReturn(req.tenantId, req.body);
+  const result = await storeService.createReturn(req.tenantId, req.body, req.branchScope);
   return apiResponse(res, { statusCode: 201, message: 'Store return created successfully.', data: result });
 });
 
 export const getStoreReturnById = asyncHandler(async (req, res) => {
-  const result = await storeService.getReturnById(req.tenantId, req.params.id);
+  const result = await storeService.getReturnById(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store return fetched successfully.', data: result });
 });
 
 export const deleteStoreReturn = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteReturn(req.tenantId, req.params.id);
+  const result = await storeService.deleteReturn(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store return deleted successfully.', data: result });
 });
 
 export const getStoreDamagedStock = asyncHandler(async (req, res) => {
-  const result = await storeService.getDamagedStock(req.tenantId, req.query);
+  const result = await storeService.getDamagedStock(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock fetched successfully.', data: result });
 });
 
 export const createStoreDamagedStock = asyncHandler(async (req, res) => {
-  const result = await storeService.createDamagedStock(req.tenantId, req.body);
+  const result = await storeService.createDamagedStock(req.tenantId, req.body, req.branchScope);
   return apiResponse(res, { statusCode: 201, message: 'Store damaged stock created successfully.', data: result });
 });
 
 export const getStoreDamagedStockById = asyncHandler(async (req, res) => {
-  const result = await storeService.getDamagedStockById(req.tenantId, req.params.id);
+  const result = await storeService.getDamagedStockById(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock fetched successfully.', data: result });
 });
 
 export const approveStoreDamagedStock = asyncHandler(async (req, res) => {
-  const result = await storeService.approveDamagedStock(req.tenantId, req.params.id);
+  const result = await storeService.approveDamagedStock(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock approved successfully.', data: result });
 });
 
 export const rejectStoreDamagedStock = asyncHandler(async (req, res) => {
-  const result = await storeService.rejectDamagedStock(req.tenantId, req.params.id);
+  const result = await storeService.rejectDamagedStock(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock rejected successfully.', data: result });
 });
 
 export const deleteStoreDamagedStock = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteDamagedStock(req.tenantId, req.params.id);
+  const result = await storeService.deleteDamagedStock(req.tenantId, req.params.id, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock deleted successfully.', data: result });
 });
 
 export const getStoreDailyStockReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getDailyStockReport(req.tenantId, req.query);
+  const result = await storeService.getDailyStockReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store daily stock report fetched successfully.', data: result });
 });
 
 export const getStoreMonthlyStockReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getMonthlyStockReport(req.tenantId, req.query);
+  const result = await storeService.getMonthlyStockReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store monthly stock report fetched successfully.', data: result });
 });
 
 export const getStorePurchaseReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getPurchaseReport(req.tenantId, req.query);
+  const result = await storeService.getPurchaseReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store purchase report fetched successfully.', data: result });
 });
 
 export const getStoreSupplierReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getSupplierReport(req.tenantId, req.query);
+  const result = await storeService.getSupplierReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store supplier report fetched successfully.', data: result });
 });
 
 export const getStoreStockIssueReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getStockIssueReport(req.tenantId, req.query);
+  const result = await storeService.getStockIssueReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store stock issue report fetched successfully.', data: result });
 });
 
 export const getStoreDepartmentWiseReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getDepartmentWiseReport(req.tenantId, req.query);
+  const result = await storeService.getDepartmentWiseReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store department wise report fetched successfully.', data: result });
 });
 
 export const getStoreLowStockReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getLowStockReport(req.tenantId, req.query);
+  const result = await storeService.getLowStockReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store low stock report fetched successfully.', data: result });
 });
 
 export const getStoreDamagedStockReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getDamagedStockReport(req.tenantId, req.query);
+  const result = await storeService.getDamagedStockReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store damaged stock report fetched successfully.', data: result });
 });
 
 export const getStoreValueReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getStoreValueReport(req.tenantId, req.query);
+  const result = await storeService.getStoreValueReport(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store value report fetched successfully.', data: result });
 });
 
 export const getStoreItemLedgerReport = asyncHandler(async (req, res) => {
-  const result = await storeService.getItemLedgerReport(req.tenantId, req.params.itemId, req.query);
+  const result = await storeService.getItemLedgerReport(req.tenantId, req.params.itemId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Store item ledger report fetched successfully.', data: result });
 });
 
@@ -464,31 +469,31 @@ const sendCsv = (res, csv, filename) => {
 };
 
 export const exportStorePurchasesPdf = asyncHandler(async (req, res) => {
-  const html = await storeService.exportPurchases({ tenantId: req.tenantId, query: req.query, format: 'html', admin: req.admin });
+  const html = await storeService.exportPurchases({ tenantId: req.tenantId, query: req.query, format: 'html', admin: req.admin, branchScope: req.branchScope });
   return sendHtml(res, html);
 });
 
 export const exportStorePurchasesExcel = asyncHandler(async (req, res) => {
-  const csv = await storeService.exportPurchases({ tenantId: req.tenantId, query: req.query, format: 'csv', admin: req.admin });
+  const csv = await storeService.exportPurchases({ tenantId: req.tenantId, query: req.query, format: 'csv', admin: req.admin, branchScope: req.branchScope });
   return sendCsv(res, csv, 'store-purchases.xls');
 });
 
 export const exportStoreStockReportPdf = asyncHandler(async (req, res) => {
-  const html = await storeService.exportStockReport({ tenantId: req.tenantId, query: req.query, format: 'html', admin: req.admin });
+  const html = await storeService.exportStockReport({ tenantId: req.tenantId, query: req.query, format: 'html', admin: req.admin, branchScope: req.branchScope });
   return sendHtml(res, html);
 });
 
 export const exportStoreStockReportExcel = asyncHandler(async (req, res) => {
-  const csv = await storeService.exportStockReport({ tenantId: req.tenantId, query: req.query, format: 'csv', admin: req.admin });
+  const csv = await storeService.exportStockReport({ tenantId: req.tenantId, query: req.query, format: 'csv', admin: req.admin, branchScope: req.branchScope });
   return sendCsv(res, csv, 'store-stock-report.xls');
 });
 
 export const printStoreInvoice = asyncHandler(async (req, res) => {
-  const html = await storeService.getPurchaseInvoiceHtml(req.tenantId, req.params.purchaseId, req.admin);
+  const html = await storeService.getPurchaseInvoiceHtml(req.tenantId, req.params.purchaseId, req.admin, req.branchScope);
   return sendHtml(res, html);
 });
 
 export const printStoreIssueSlip = asyncHandler(async (req, res) => {
-  const html = await storeService.getIssueSlipHtml(req.tenantId, req.params.issueId, req.admin);
+  const html = await storeService.getIssueSlipHtml(req.tenantId, req.params.issueId, req.admin, req.branchScope);
   return sendHtml(res, html);
 });

@@ -3,6 +3,14 @@ import { normalizeDomainName } from '../../utils/domain.js';
 
 const tenantStatusSchema = z.enum(['active', 'inactive']);
 
+const branchLimitSchema = z.preprocess(
+  (value) => {
+    if (value === '' || value === undefined || value === null) return null;
+    return value;
+  },
+  z.coerce.number().int('برانچ حد مکمل عدد ہونی چاہیے۔').min(0, 'برانچ حد منفی نہیں ہو سکتی۔').nullable().optional()
+);
+
 const domainSchema = z.preprocess(
   (value) => {
     if (value === null || value === undefined || value === '') return undefined;
@@ -65,6 +73,18 @@ const tenantBaseSchema = {
   customDomain: domainSchema,
   status: tenantStatusSchema.optional(),
   ownerAdminId: z.coerce.number().int().positive().optional().nullable(),
+  branchEnabled: z.boolean().optional(),
+  branchLimit: branchLimitSchema,
+};
+
+const validateBranchSettings = (value, context) => {
+  if (value.branchEnabled && (!Number.isInteger(value.branchLimit) || value.branchLimit < 1)) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['branchLimit'],
+      message: 'برانچ سسٹم فعال ہو تو برانچ حد کم از کم 1 ہونی چاہیے۔',
+    });
+  }
 };
 
 export const createTenantValidationSchema = z.object({
@@ -72,7 +92,7 @@ export const createTenantValidationSchema = z.object({
     ...tenantBaseSchema,
     admin: tenantAdminSchema,
     profile: initialProfileSchema,
-  }),
+  }).superRefine(validateBranchSettings),
   params: z.object({}).optional(),
   query: z.object({}).optional(),
 });
@@ -85,6 +105,19 @@ export const listTenantsValidationSchema = z.object({
     limit: z.coerce.number().int().positive().max(100).optional(),
     search: z.string().trim().optional(),
     status: tenantStatusSchema.optional(),
+  }).optional(),
+});
+
+export const listTenantBranchesValidationSchema = z.object({
+  body: z.object({}).optional(),
+  params: z.object({
+    id: z.coerce.number().int().positive(),
+  }),
+  query: z.object({
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().max(100).optional(),
+    search: z.string().trim().optional(),
+    status: z.enum(['active', 'inactive']).optional(),
   }).optional(),
 });
 
@@ -103,6 +136,28 @@ export const updateTenantValidationSchema = z.object({
     customDomain: tenantBaseSchema.customDomain,
     status: tenantStatusSchema.optional(),
     ownerAdminId: tenantBaseSchema.ownerAdminId,
+    branchEnabled: tenantBaseSchema.branchEnabled,
+    branchLimit: tenantBaseSchema.branchLimit,
+  }).superRefine(validateBranchSettings),
+  params: tenantIdValidationSchema.shape.params,
+  query: z.object({}).optional(),
+});
+
+export const updateTenantBranchSettingsValidationSchema = z.object({
+  body: z.object({
+    branchEnabled: z.boolean(),
+    branchLimit: branchLimitSchema,
+  }).superRefine(validateBranchSettings),
+  params: tenantIdValidationSchema.shape.params,
+  query: z.object({}).optional(),
+});
+
+export const updateTenantBranchLimitValidationSchema = z.object({
+  body: z.object({
+    branchLimit: branchLimitSchema,
+  }).refine((value) => Object.prototype.hasOwnProperty.call(value, 'branchLimit'), {
+    path: ['branchLimit'],
+    message: 'برانچ حد درج کرنا ضروری ہے۔',
   }),
   params: tenantIdValidationSchema.shape.params,
   query: z.object({}).optional(),

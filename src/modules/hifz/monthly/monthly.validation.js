@@ -21,6 +21,7 @@ export const listMonthlyValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     studentId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     month: z.coerce.number().int().min(1).max(12).optional(),
     year: z.coerce.number().int().min(2000).max(3000).optional(),
     performanceStatus: performanceStatusSchema.optional(),

@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { suggestionsService } from './suggestions.service.js';
 
 export const createSuggestion = asyncHandler(async (req, res) => {
-  const result = await suggestionsService.createSuggestion(req.tenantId, req.body, req.admin);
+  const result = await suggestionsService.createSuggestion(req.tenantId, req.body, req.admin, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSuggestion = asyncHandler(async (req, res) => {
 });
 
 export const getSuggestions = asyncHandler(async (req, res) => {
-  const result = await suggestionsService.getSuggestions(req.tenantId, req.query);
+  const result = await suggestionsService.getSuggestions(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Suggestions fetched successfully.',

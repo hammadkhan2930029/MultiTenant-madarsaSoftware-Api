@@ -14,6 +14,15 @@ const mapUserRow = (row) => ({
   role: row.role,
   tenantId: row.tenant_id === null || row.tenant_id === undefined ? null : Number(row.tenant_id),
   roleId: row.role_id === null || row.role_id === undefined ? null : Number(row.role_id),
+  branchId: row.branch_id === null || row.branch_id === undefined ? null : Number(row.branch_id),
+  branch: row.branch_id
+    ? {
+        id: Number(row.branch_id),
+        name: row.branch_name || null,
+        code: row.branch_code || null,
+        status: row.branch_status || null,
+      }
+    : null,
   ownerAdminId: row.owner_admin_id === null || row.owner_admin_id === undefined ? null : Number(row.owner_admin_id),
   roleName: row.role_name || row.role,
   status: row.status,
@@ -32,13 +41,18 @@ const getUserRowById = async (client, id) => {
       a.role,
       a.tenant_id,
       a.role_id,
+      a.branch_id,
       a.owner_admin_id,
       a.status,
       a.createdAt,
       a.updatedAt,
-      r.role_name
+      r.role_name,
+      b.name AS branch_name,
+      b.code AS branch_code,
+      b.status AS branch_status
     FROM admins a
     LEFT JOIN roles r ON r.id = a.role_id
+    LEFT JOIN branches b ON b.id = a.branch_id
     WHERE a.id = ${id}
     LIMIT 1
   `;
@@ -73,9 +87,47 @@ const normalizeTenantId = (tenantId) => (
   tenantId === null || tenantId === undefined || tenantId === '' ? null : Number(tenantId)
 );
 
+const normalizeBranchId = (branchId) => (
+  branchId === null || branchId === undefined || branchId === '' ? null : Number(branchId)
+);
+
+const ensureAssignableBranch = async (branchId, tenantId, client = prisma) => {
+  const resolvedBranchId = normalizeBranchId(branchId);
+  if (!resolvedBranchId) return null;
+
+  const resolvedTenantId = normalizeTenantId(tenantId);
+  const branch = await client.branch.findFirst({
+    where: {
+      id: resolvedBranchId,
+      tenantId: resolvedTenantId,
+    },
+    select: {
+      id: true,
+      tenantId: true,
+      status: true,
+    },
+  });
+
+  if (!branch) {
+    throw new AppError('منتخب برانچ دستیاب نہیں یا آپ کو اس تک رسائی نہیں ہے۔', 403);
+  }
+
+  if (branch.status !== 'active') {
+    throw new AppError('منتخب برانچ غیر فعال ہے۔ فعال برانچ منتخب کریں۔', 403);
+  }
+
+  return branch.id;
+};
+
 const canAccessUserRow = (requester, row) => {
   if (requester?.isSuperAdmin) return true;
-  return normalizeTenantId(row?.tenant_id) === normalizeTenantId(requester?.tenantId);
+  const sameTenant = normalizeTenantId(row?.tenant_id) === normalizeTenantId(requester?.tenantId);
+  if (!sameTenant) return false;
+
+  const requesterBranchId = normalizeBranchId(requester?.branchId);
+  if (!requesterBranchId) return true;
+
+  return normalizeBranchId(row?.branch_id) === requesterBranchId;
 };
 
 const assertCanAccessUserRow = (requester, row) => {
@@ -171,6 +223,8 @@ const buildUserDetails = async (client, row) => {
 const logUserAudit = (client, requester = {}, entry = {}) => auditService.recordAuditLog(client, {
   tenantId: entry.tenantId,
   actorUserId: requester?.admin?.id || null,
+  branchId: entry.branchId ?? entry.newValue?.branchId ?? entry.oldValue?.branchId ?? requester?.audit?.branchId ?? null,
+  roleId: requester?.audit?.roleId || requester?.admin?.roleId || requester?.admin?.role_id || null,
   module: 'users',
   targetType: 'user',
   ipAddress: requester?.audit?.ipAddress || null,
@@ -191,10 +245,11 @@ export const usersService = {
       const username = normalizeUsername(payload);
       const roleName = role.role_name || 'admin';
       const ownerAdminId = requester?.admin?.owner_admin_id || requester?.admin?.id || null;
+      const branchId = await ensureAssignableBranch(payload.branchId, tenantId, tx);
       await ensureUniqueUser({ email: payload.email, username, tenantId }, tx);
 
       await tx.$executeRaw`
-        INSERT INTO admins (name, email, phone, username, password, role, tenant_id, role_id, owner_admin_id, status, updatedAt)
+        INSERT INTO admins (name, email, phone, username, password, role, tenant_id, role_id, owner_admin_id, branch_id, status, updatedAt)
         VALUES (
           ${payload.name},
           ${payload.email},
@@ -205,6 +260,7 @@ export const usersService = {
           ${tenantId},
           ${payload.roleId},
           ${ownerAdminId},
+          ${branchId},
           ${payload.status || 'active'},
           CURRENT_TIMESTAMP
         )
@@ -238,6 +294,7 @@ export const usersService = {
     const status = query.status || null;
     const roleId = query.roleId || null;
     const tenantId = requester?.isSuperAdmin ? null : normalizeTenantId(requester?.tenantId);
+    const branchId = requester?.isSuperAdmin ? null : normalizeBranchId(requester?.branchId);
 
     const items = requester?.isSuperAdmin
       ? await prisma.$queryRaw`
@@ -250,13 +307,18 @@ export const usersService = {
           a.role,
           a.tenant_id,
           a.role_id,
+          a.branch_id,
           a.owner_admin_id,
           a.status,
           a.createdAt,
           a.updatedAt,
-          r.role_name
+          r.role_name,
+          b.name AS branch_name,
+          b.code AS branch_code,
+          b.status AS branch_status
         FROM admins a
         LEFT JOIN roles r ON r.id = a.role_id
+        LEFT JOIN branches b ON b.id = a.branch_id
         WHERE (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
@@ -276,14 +338,20 @@ export const usersService = {
           a.role,
           a.tenant_id,
           a.role_id,
+          a.branch_id,
           a.owner_admin_id,
           a.status,
           a.createdAt,
           a.updatedAt,
-          r.role_name
+          r.role_name,
+          b.name AS branch_name,
+          b.code AS branch_code,
+          b.status AS branch_status
         FROM admins a
         LEFT JOIN roles r ON r.id = a.role_id
+        LEFT JOIN branches b ON b.id = a.branch_id
         WHERE a.tenant_id <=> ${tenantId}
+          AND (${branchId} IS NULL OR a.branch_id = ${branchId})
           AND (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
@@ -309,6 +377,7 @@ export const usersService = {
         SELECT COUNT(*) AS total
         FROM admins a
         WHERE a.tenant_id <=> ${tenantId}
+          AND (${branchId} IS NULL OR a.branch_id = ${branchId})
           AND (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
@@ -350,6 +419,9 @@ export const usersService = {
       const nextPhone = Object.prototype.hasOwnProperty.call(payload, 'phone') ? payload.phone || null : existingUser.phone;
       const nextUsername = payload.username || existingUser.username;
       const tenantId = normalizeTenantId(existingUser.tenant_id);
+      const nextBranchId = Object.prototype.hasOwnProperty.call(payload, 'branchId')
+        ? await ensureAssignableBranch(payload.branchId, tenantId, tx)
+        : normalizeBranchId(existingUser.branch_id);
       assertNotSelfDeactivate(id, payload, requester);
 
       if (payload.email || payload.username) {
@@ -372,6 +444,7 @@ export const usersService = {
             password = ${hashedPassword},
             role = ${nextRoleName},
             role_id = ${nextRoleId},
+            branch_id = ${nextBranchId},
             status = ${payload.status || existingUser.status},
             updatedAt = CURRENT_TIMESTAMP
           WHERE id = ${id}
@@ -386,6 +459,7 @@ export const usersService = {
             username = ${nextUsername},
             role = ${nextRoleName},
             role_id = ${nextRoleId},
+            branch_id = ${nextBranchId},
             status = ${payload.status || existingUser.status},
             updatedAt = CURRENT_TIMESTAMP
           WHERE id = ${id}

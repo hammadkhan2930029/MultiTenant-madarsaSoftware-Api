@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import multer from 'multer';
 import { AppError } from '../utils/appError.js';
 
@@ -19,7 +20,7 @@ const createStorage = (folderName) => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
-      cb(null, `${Date.now()}-${safeName || 'file'}${extension}`);
+      cb(null, `${Date.now()}-${crypto.randomUUID()}-${safeName || 'file'}${extension}`);
     },
   });
 };

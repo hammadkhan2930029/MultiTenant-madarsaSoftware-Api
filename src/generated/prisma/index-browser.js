@@ -128,6 +128,8 @@ exports.Prisma.TenantScalarFieldEnum = {
   subdomain: 'subdomain',
   customDomain: 'customDomain',
   status: 'status',
+  branchEnabled: 'branchEnabled',
+  branchLimit: 'branchLimit',
   ownerAdminId: 'ownerAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -144,6 +146,7 @@ exports.Prisma.AdminScalarFieldEnum = {
   tenantId: 'tenantId',
   roleId: 'roleId',
   ownerAdminId: 'ownerAdminId',
+  branchId: 'branchId',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -153,6 +156,8 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   actorUserId: 'actorUserId',
+  branchId: 'branchId',
+  roleId: 'roleId',
   action: 'action',
   module: 'module',
   targetType: 'targetType',
@@ -228,6 +233,7 @@ exports.Prisma.CityScalarFieldEnum = {
 exports.Prisma.SuggestionScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   type: 'type',
   title: 'title',
   priority: 'priority',
@@ -246,6 +252,7 @@ exports.Prisma.SuggestionScalarFieldEnum = {
 exports.Prisma.SupportRequestScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   topic: 'topic',
   priority: 'priority',
   message: 'message',
@@ -308,6 +315,8 @@ exports.Prisma.BranchScalarFieldEnum = {
   name: 'name',
   code: 'code',
   address: 'address',
+  contact: 'contact',
+  createdBy: 'createdBy',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -408,6 +417,7 @@ exports.Prisma.ResultGradeScalarFieldEnum = {
 exports.Prisma.ExamResultScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   studentId: 'studentId',
   sessionId: 'sessionId',
   classId: 'classId',
@@ -442,6 +452,7 @@ exports.Prisma.ExamResultSubjectScalarFieldEnum = {
 exports.Prisma.StudentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   admissionNumber: 'admissionNumber',
   admissionDate: 'admissionDate',
   admissionFee: 'admissionFee',
@@ -478,6 +489,7 @@ exports.Prisma.StudentScalarFieldEnum = {
 exports.Prisma.ParentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   fullName: 'fullName',
   familyNumber: 'familyNumber',
   phone: 'phone',
@@ -519,6 +531,7 @@ exports.Prisma.StudentClassAssignmentScalarFieldEnum = {
 exports.Prisma.TeacherScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   staffType: 'staffType',
   fullName: 'fullName',
   email: 'email',
@@ -731,6 +744,7 @@ exports.Prisma.StudentFeeVoucherScalarFieldEnum = {
 exports.Prisma.FundCollectionScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   collectionGroupId: 'collectionGroupId',
   donorName: 'donorName',
   careOf: 'careOf',
@@ -752,6 +766,7 @@ exports.Prisma.FundCollectionScalarFieldEnum = {
 exports.Prisma.SalaryEntryScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   teacherId: 'teacherId',
   financeHeadId: 'financeHeadId',
   amount: 'amount',
@@ -767,6 +782,7 @@ exports.Prisma.SalaryEntryScalarFieldEnum = {
 exports.Prisma.FinanceTransactionScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   financeHeadId: 'financeHeadId',
   type: 'type',
   amount: 'amount',
@@ -785,6 +801,7 @@ exports.Prisma.FinanceTransactionScalarFieldEnum = {
 exports.Prisma.FinancialRecordScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   type: 'type',
   category: 'category',
   description: 'description',
@@ -801,6 +818,7 @@ exports.Prisma.StoreItemScalarFieldEnum = {
   tenantId: 'tenantId',
   itemName: 'itemName',
   category: 'category',
+  description: 'description',
   unit: 'unit',
   itemCode: 'itemCode',
   currentStock: 'currentStock',
@@ -847,6 +865,7 @@ exports.Prisma.StoreSupplierScalarFieldEnum = {
 exports.Prisma.StoreSupplierPaymentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   supplierId: 'supplierId',
   amount: 'amount',
   paymentDate: 'paymentDate',
@@ -860,6 +879,7 @@ exports.Prisma.StoreSupplierPaymentScalarFieldEnum = {
 exports.Prisma.StorePurchaseScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   purchaseDate: 'purchaseDate',
   supplierId: 'supplierId',
   invoiceNumber: 'invoiceNumber',
@@ -878,8 +898,10 @@ exports.Prisma.StorePurchaseScalarFieldEnum = {
 exports.Prisma.StorePurchaseItemScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   purchaseId: 'purchaseId',
   itemId: 'itemId',
+  unitId: 'unitId',
   quantity: 'quantity',
   rate: 'rate',
   total: 'total',
@@ -890,6 +912,7 @@ exports.Prisma.StorePurchaseItemScalarFieldEnum = {
 exports.Prisma.StoreStockIssueScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   issueDate: 'issueDate',
   itemId: 'itemId',
   quantity: 'quantity',
@@ -908,6 +931,7 @@ exports.Prisma.StoreStockIssueScalarFieldEnum = {
 exports.Prisma.StoreReturnScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   stockIssueId: 'stockIssueId',
   itemId: 'itemId',
   returnQuantity: 'returnQuantity',
@@ -922,6 +946,7 @@ exports.Prisma.StoreReturnScalarFieldEnum = {
 exports.Prisma.StoreDamagedStockScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   returnId: 'returnId',
   itemId: 'itemId',
   quantity: 'quantity',
@@ -939,6 +964,7 @@ exports.Prisma.StoreDamagedStockScalarFieldEnum = {
 exports.Prisma.StoreApprovalLogScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   moduleType: 'moduleType',
   recordId: 'recordId',
   status: 'status',
@@ -950,6 +976,7 @@ exports.Prisma.StoreApprovalLogScalarFieldEnum = {
 exports.Prisma.StoreStockAdjustmentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   itemId: 'itemId',
   adjustmentType: 'adjustmentType',
   quantity: 'quantity',
@@ -1110,6 +1137,7 @@ exports.Prisma.BranchOrderByRelevanceFieldEnum = {
   name: 'name',
   code: 'code',
   address: 'address',
+  contact: 'contact',
   status: 'status'
 };
 
@@ -1374,6 +1402,7 @@ exports.Prisma.FinancialRecordOrderByRelevanceFieldEnum = {
 exports.Prisma.StoreItemOrderByRelevanceFieldEnum = {
   itemName: 'itemName',
   category: 'category',
+  description: 'description',
   unit: 'unit',
   itemCode: 'itemCode',
   status: 'status'

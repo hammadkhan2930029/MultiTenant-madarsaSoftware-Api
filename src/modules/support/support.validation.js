@@ -17,6 +17,7 @@ export const listSupportRequestsValidationSchema = z.object({
     search: z.string().trim().optional(),
     status: z.enum(['open', 'in_progress', 'closed']).optional(),
     priority: z.enum(['normal', 'urgent', 'critical']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),

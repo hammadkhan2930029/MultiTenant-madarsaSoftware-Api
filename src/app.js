@@ -37,6 +37,7 @@ import { permissionsRoutes } from './modules/permissions/permissions.routes.js';
 import { rolesRoutes } from './modules/roles/roles.routes.js';
 import { usersRoutes } from './modules/users/users.routes.js';
 import { tenantsRoutes } from './modules/tenants/tenants.routes.js';
+import { auditLogsRoutes } from './modules/audit-logs/auditLogs.routes.js';
 import { tenantCurrentRoutes } from './modules/tenant-current/tenantCurrent.routes.js';
 import { tenantResolverMiddleware } from './middlewares/tenant.middleware.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
@@ -116,6 +117,7 @@ app.use('/api/support', supportRoutes);
 app.use('/api/permissions', permissionsRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/audit-logs', auditLogsRoutes);
 app.use('/api/tenant', tenantCurrentRoutes);
 app.use('/api/tenants', tenantsRoutes);
 

@@ -385,6 +385,8 @@ const hasPermissionPayload = (payload = {}) => (
 const logRoleAudit = (client, requester = {}, entry = {}) => auditService.recordAuditLog(client, {
   tenantId: entry.tenantId,
   actorUserId: requester?.admin?.id || null,
+  branchId: entry.branchId ?? requester?.audit?.branchId ?? null,
+  roleId: requester?.audit?.roleId || requester?.admin?.roleId || requester?.admin?.role_id || null,
   module: 'roles',
   targetType: 'role',
   ipAddress: requester?.audit?.ipAddress || null,

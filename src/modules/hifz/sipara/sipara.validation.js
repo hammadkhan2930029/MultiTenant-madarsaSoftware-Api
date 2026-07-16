@@ -25,6 +25,7 @@ export const listSiparaValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     studentId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     siparaNumber: z.coerce.number().int().min(1).max(30).optional(),
     date: z.coerce.date().optional(),
     performanceStatus: performanceStatusSchema.optional(),

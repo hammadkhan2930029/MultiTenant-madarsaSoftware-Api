@@ -3,11 +3,13 @@ import { env } from '../../config/env.js';
 import { sendEmail } from '../../utils/smtpMailer.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeTenantId } from '../../utils/tenantGuard.js';
+import { branchScopeService } from '../security/index.js';
 
 const suggestionTableSql = `
 CREATE TABLE IF NOT EXISTS suggestions (
   id INT NOT NULL AUTO_INCREMENT,
   tenant_id INT NOT NULL,
+  branch_id INT NULL,
   type VARCHAR(100) NOT NULL,
   title VARCHAR(180) NOT NULL,
   priority VARCHAR(50) NOT NULL DEFAULT 'normal',
@@ -23,19 +25,28 @@ CREATE TABLE IF NOT EXISTS suggestions (
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   INDEX suggestions_tenant_id_idx (tenant_id),
+  INDEX suggestions_branch_id_idx (branch_id),
   INDEX suggestions_status_idx (status),
   INDEX suggestions_priority_idx (priority),
   INDEX suggestions_adminId_idx (adminId),
   CONSTRAINT suggestions_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES Tenant(id),
+  CONSTRAINT suggestions_branch_id_fkey FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE SET NULL,
   CONSTRAINT suggestions_adminId_fkey FOREIGN KEY (adminId) REFERENCES admins(id) ON DELETE SET NULL
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+`;
+
+const suggestionBranchMigrationSql = `
+ALTER TABLE suggestions
+  ADD COLUMN IF NOT EXISTS branch_id INT NULL AFTER tenant_id;
 `;
 
 let suggestionTablePromise = null;
 
 const ensureSuggestionsTable = () => {
   if (!suggestionTablePromise) {
-    suggestionTablePromise = prisma.$executeRawUnsafe(suggestionTableSql);
+    suggestionTablePromise = prisma
+      .$executeRawUnsafe(suggestionTableSql)
+      .then(() => prisma.$executeRawUnsafe(suggestionBranchMigrationSql));
   }
 
   return suggestionTablePromise;
@@ -44,6 +55,7 @@ const ensureSuggestionsTable = () => {
 const mapSuggestion = (row) => ({
   id: row.id,
   tenantId: row.tenant_id ?? row.tenantId,
+  branchId: row.branch_id ?? row.branchId ?? null,
   type: row.type,
   title: row.title,
   priority: row.priority,
@@ -58,6 +70,16 @@ const mapSuggestion = (row) => ({
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
 });
+
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
 
 const priorityLabels = {
   normal: 'عام',
@@ -113,9 +135,10 @@ const markEmailStatus = async ({ id, emailStatus, emailError = null }) => {
 };
 
 export const suggestionsService = {
-  async createSuggestion(tenantId, payload, admin) {
+  async createSuggestion(tenantId, payload, admin, branchScope = null) {
     await ensureSuggestionsTable();
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
 
     const submitterName = admin?.name || admin?.username || null;
     const submitterEmail = admin?.email || null;
@@ -125,6 +148,7 @@ export const suggestionsService = {
       await tx.$executeRaw`
         INSERT INTO suggestions (
           tenant_id,
+          branch_id,
           type,
           title,
           priority,
@@ -138,6 +162,7 @@ export const suggestionsService = {
         )
         VALUES (
           ${resolvedTenantId},
+          ${branchId},
           ${payload.type},
           ${payload.title},
           ${payload.priority || 'normal'},
@@ -176,9 +201,10 @@ export const suggestionsService = {
     return suggestion;
   },
 
-  async getSuggestions(tenantId, query) {
+  async getSuggestions(tenantId, query, branchScope = null) {
     await ensureSuggestionsTable();
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
@@ -187,6 +213,7 @@ export const suggestionsService = {
       SELECT *
       FROM suggestions
       WHERE tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR branch_id = ${branchId})
         AND (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
@@ -198,6 +225,7 @@ export const suggestionsService = {
       SELECT COUNT(*) AS total
       FROM suggestions
       WHERE tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR branch_id = ${branchId})
         AND (${search} IS NULL OR title LIKE ${search} OR description LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})

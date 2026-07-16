@@ -67,6 +67,7 @@ const assertRoleTenantMatch = ({ access, tenantId, isSuperAdmin }) => {
 const buildAuthContext = ({ admin, access, tenantId }) => {
   const roleName = getRoleName(access, admin);
   const resolvedTenantId = normalizeTenantId(tenantId);
+  const branchId = admin.branchId || admin.branch_id || null;
 
   const auth = {
     admin,
@@ -75,8 +76,9 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
     permissionKeys: access.permissionKeys,
     roleName,
     isSuperAdmin: roleName === 'super_admin' && resolvedTenantId === null,
-    isTenantAdmin: roleName === 'admin' && resolvedTenantId !== null,
+    isTenantAdmin: roleName === 'admin' && resolvedTenantId !== null && !branchId,
     tenantId: resolvedTenantId,
+    branchId,
   };
 
   assertRoleTenantMatch({
@@ -97,11 +99,13 @@ const buildSecurityContext = ({ req, decodedToken, admin, auth }) => ({
   token: {
     adminId: decodedToken.adminId,
     tenantId: normalizeTenantId(decodedToken.tenantId),
+    branchId: normalizeTenantId(decodedToken.branchId),
     role: decodedToken.role,
   },
   actor: {
     id: admin.id,
     tenantId: auth.tenantId,
+    branchId: auth.branchId,
     roleId: auth.role?.id || null,
     roleName: auth.roleName,
     isSuperAdmin: auth.isSuperAdmin,
@@ -112,7 +116,7 @@ const buildSecurityContext = ({ req, decodedToken, admin, auth }) => ({
     source: 'role',
   },
   scopes: {
-    branchIds: [],
+    branchIds: auth.branchId ? [auth.branchId] : [],
     departmentIds: [],
   },
   featureFlags: {},

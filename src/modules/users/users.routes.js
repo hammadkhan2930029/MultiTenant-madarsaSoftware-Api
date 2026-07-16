@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { requireAnyPermission } from '../../middlewares/authorization.middleware.js';
+import { blockBranchScopedUserManagementWrites, requireAnyPermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import { assignUserRole, createUser, deactivateUser, getUserById, getUsers, updateUser } from './users.controller.js';
 import {
@@ -14,6 +14,7 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
+router.use(blockBranchScopedUserManagementWrites);
 
 router.post('/', requireAnyPermission('users.manage'), validate(createUserValidationSchema), createUser);
 router.get('/', requireAnyPermission('users.view'), validate(listUsersValidationSchema), getUsers);

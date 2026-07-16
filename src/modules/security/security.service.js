@@ -1,5 +1,6 @@
 import { authorizationService } from '../rbac/authorization.service.js';
 import { auditService } from './audit.service.js';
+import { branchScopeService } from './branch-scope.service.js';
 import { featureFlagsService } from './feature-flags.service.js';
 import { scopedAccessService } from './scoped-access.service.js';
 import { subscriptionService } from './subscription.service.js';
@@ -31,6 +32,7 @@ const enforceBusinessPrerequisites = (req, options = {}) => {
 
 export const securityService = {
   auditService,
+  branchScopeService,
   featureFlagsService,
   scopedAccessService,
   subscriptionService,

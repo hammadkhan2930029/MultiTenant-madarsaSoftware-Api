@@ -1,5 +1,6 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
+import { branchScopeService } from '../../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -29,24 +30,40 @@ const buildDateRangeWhere = (fromDate, toDate, fieldName) =>
 
 const toAmount = (value) => Number(value || 0);
 
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, query = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
+
 export const reportsService = {
-  async getFinanceSummary(tenantId, query) {
+  async getFinanceSummary(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const dateFilter = buildDateRangeWhere(query.fromDate, query.toDate, 'paymentDate');
 
     const [fundCollections, salaryEntries, feeVouchers, transactions] = await Promise.all([
       prisma.fundCollection.findMany({
-        where: { tenantId: resolvedTenantId, status: 'active', ...dateFilter },
+        where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), status: 'active', ...dateFilter },
         select: { amount: true },
       }),
       prisma.salaryEntry.findMany({
-        where: { tenantId: resolvedTenantId, teacher: { tenantId: resolvedTenantId }, status: 'active', ...dateFilter },
+        where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, status: 'active', ...dateFilter },
         select: { amount: true },
       }),
       prisma.studentFeeVoucher.findMany({
         where: {
           tenantId: resolvedTenantId,
-          student: { tenantId: resolvedTenantId },
+          student: {
+            tenantId: resolvedTenantId,
+            ...(branchId
+              ? { OR: [{ branchId }, { assignments: { some: { tenantId: resolvedTenantId, branchId, status: 'active' } } }] }
+              : {}),
+          },
           status: { in: ['paid', 'partial'] },
           paidAmount: { gt: 0 },
           ...buildDateRangeWhere(query.fromDate, query.toDate, 'paidDate'),
@@ -56,6 +73,7 @@ export const reportsService = {
       prisma.financeTransaction.findMany({
         where: {
           tenantId: resolvedTenantId,
+          ...(branchId ? { branchId } : {}),
           status: 'active',
           ...buildDateRangeWhere(query.fromDate, query.toDate, 'transactionDate'),
         },
@@ -85,10 +103,17 @@ export const reportsService = {
     };
   },
 
-  async getStudentFundHistory(tenantId, query) {
+  async getStudentFundHistory(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const student = await prisma.student.findFirst({
-      where: { id: query.studentId, tenantId: resolvedTenantId },
+      where: {
+        id: query.studentId,
+        tenantId: resolvedTenantId,
+        ...(branchId
+          ? { OR: [{ branchId }, { assignments: { some: { tenantId: resolvedTenantId, branchId, status: 'active' } } }] }
+          : {}),
+      },
       select: { id: true, admissionNumber: true, fullName: true },
     });
     if (!student) throw new AppError('Student not found.', 404);
@@ -124,10 +149,11 @@ export const reportsService = {
     };
   },
 
-  async getTeacherSalaryHistory(tenantId, query) {
+  async getTeacherSalaryHistory(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id: query.teacherId, tenantId: resolvedTenantId },
+      where: { id: query.teacherId, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       select: { id: true, fullName: true, subject: true, phone: true },
     });
     if (!teacher) throw new AppError('Teacher not found.', 404);
@@ -136,7 +162,8 @@ export const reportsService = {
       where: {
         tenantId: resolvedTenantId,
         teacherId: query.teacherId,
-        teacher: { tenantId: resolvedTenantId },
+        ...(branchId ? { branchId } : {}),
+        teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         ...buildDateRangeWhere(query.fromDate, query.toDate, 'paymentDate'),
       },
       orderBy: [{ salaryYear: 'desc' }, { salaryMonth: 'desc' }],

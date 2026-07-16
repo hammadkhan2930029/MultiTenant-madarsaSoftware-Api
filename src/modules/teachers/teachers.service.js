@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/teachers/${file.filename}` : null);
 const optionalString = (value) => (value ? value : null);
@@ -91,6 +92,7 @@ const ensureTeacherIncrementTable = () => {
 const teacherSelect = {
   id: true,
   tenantId: true,
+  branchId: true,
   staffType: true,
   fullName: true,
   email: true,
@@ -113,6 +115,14 @@ const teacherSelect = {
       status: true,
     },
   },
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
   imageUrl: true,
   basicSalary: true,
   bankName: true,
@@ -129,6 +139,21 @@ const teacherSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+};
+
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
+  getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
+
+const validateBranchAccess = async (tenantId, branchId) => {
+  if (!branchId) return null;
+
+  return branchScopeService.validateBranchBelongsToTenant({
+    tenantId,
+    branchId,
+    requireActive: true,
+  });
 };
 
 const mapTeacherIncrement = (row) => ({
@@ -183,8 +208,11 @@ const ensureShiftExists = async (shiftId) => {
 };
 
 export const teachersService = {
-  async createTeacher(tenantId, { body, file }) {
+  async createTeacher(tenantId, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getRequestedBranchId(body, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
+
     await ensureShiftExists(body.shiftId);
 
     if (body.phone || body.cnic) {
@@ -200,6 +228,7 @@ export const teachersService = {
     return prisma.teacher.create({
       data: {
         tenantId: resolvedTenantId,
+        branchId,
         staffType: optionalString(body.staffType) || 'teacher',
         fullName: body.fullName,
         email: optionalString(body.email),
@@ -230,12 +259,15 @@ export const teachersService = {
     });
   },
 
-  async getTeachers(tenantId, query) {
+  async getTeachers(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getRequestedBranchId(query, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
 
     const where = {
       tenantId: resolvedTenantId,
+      ...(branchId ? { branchId } : {}),
       ...(query.search
         ? {
             OR: [
@@ -268,10 +300,11 @@ export const teachersService = {
     };
   },
 
-  async getTeacherById(tenantId, id) {
+  async getTeacherById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       select: teacherSelect,
     });
 
@@ -282,8 +315,10 @@ export const teachersService = {
     return teacher;
   },
 
-  async getAllTeacherIncrements(tenantId, query) {
+  async getAllTeacherIncrements(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getRequestedBranchId(query, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
     await ensureTeacherIncrementTable();
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
@@ -304,6 +339,7 @@ export const teachersService = {
       LEFT JOIN admins admin ON admin.id = increment.createdById
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
       ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
@@ -316,6 +352,7 @@ export const teachersService = {
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
     `;
@@ -326,12 +363,13 @@ export const teachersService = {
     };
   },
 
-  async getTeacherIncrements(tenantId, id) {
+  async getTeacherIncrements(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     await ensureTeacherIncrementTable();
 
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       select: { id: true },
     });
 
@@ -351,12 +389,13 @@ export const teachersService = {
     return rows.map(mapTeacherIncrement);
   },
 
-  async createTeacherIncrement(tenantId, id, payload, admin) {
+  async createTeacherIncrement(tenantId, id, payload, admin, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     await ensureTeacherIncrementTable();
 
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       select: { id: true, basicSalary: true },
     });
 
@@ -419,15 +458,20 @@ export const teachersService = {
     };
   },
 
-  async updateTeacher(tenantId, id, { body, file }) {
+  async updateTeacher(tenantId, id, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const scopedBranchId = getScopedBranchId(branchScope);
     const existingTeacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(scopedBranchId ? { branchId: scopedBranchId } : {}) },
     });
 
     if (!existingTeacher) {
       throw new AppError('استاد نہیں ملا۔', 404);
     }
+
+    const requestedBranchId = getRequestedBranchId(body, branchScope);
+    const branchId = requestedBranchId || existingTeacher.branchId || null;
+    await validateBranchAccess(resolvedTenantId, branchId);
 
     await ensureShiftExists(body.shiftId);
 
@@ -445,6 +489,7 @@ export const teachersService = {
       where: { id, tenantId: resolvedTenantId },
       data: {
         staffType: optionalString(body.staffType) || existingTeacher.staffType,
+        branchId,
         fullName: body.fullName,
         email: optionalString(body.email),
         phone: optionalString(body.phone),
@@ -475,10 +520,11 @@ export const teachersService = {
     });
   },
 
-  async updateTeacherStatus(tenantId, id, status) {
+  async updateTeacherStatus(tenantId, id, status, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
     });
 
     if (!teacher) {
@@ -496,10 +542,11 @@ export const teachersService = {
     });
   },
 
-  async deleteTeacher(tenantId, id) {
+  async deleteTeacher(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       include: {
         _count: {
           select: {

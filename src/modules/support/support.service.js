@@ -3,11 +3,13 @@ import { env } from '../../config/env.js';
 import { sendEmail } from '../../utils/smtpMailer.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeTenantId } from '../../utils/tenantGuard.js';
+import { branchScopeService } from '../security/index.js';
 
 const supportRequestTableSql = `
 CREATE TABLE IF NOT EXISTS support_requests (
   id INT NOT NULL AUTO_INCREMENT,
   tenant_id INT NOT NULL,
+  branch_id INT NULL,
   topic VARCHAR(120) NOT NULL,
   priority VARCHAR(50) NOT NULL DEFAULT 'normal',
   message TEXT NOT NULL,
@@ -22,19 +24,28 @@ CREATE TABLE IF NOT EXISTS support_requests (
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   INDEX support_requests_tenant_id_idx (tenant_id),
+  INDEX support_requests_branch_id_idx (branch_id),
   INDEX support_requests_status_idx (status),
   INDEX support_requests_priority_idx (priority),
   INDEX support_requests_adminId_idx (adminId),
   CONSTRAINT support_requests_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES Tenant(id),
+  CONSTRAINT support_requests_branch_id_fkey FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE SET NULL,
   CONSTRAINT support_requests_adminId_fkey FOREIGN KEY (adminId) REFERENCES admins(id) ON DELETE SET NULL
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+`;
+
+const supportRequestBranchMigrationSql = `
+ALTER TABLE support_requests
+  ADD COLUMN IF NOT EXISTS branch_id INT NULL AFTER tenant_id;
 `;
 
 let supportRequestTablePromise = null;
 
 const ensureSupportRequestTable = () => {
   if (!supportRequestTablePromise) {
-    supportRequestTablePromise = prisma.$executeRawUnsafe(supportRequestTableSql);
+    supportRequestTablePromise = prisma
+      .$executeRawUnsafe(supportRequestTableSql)
+      .then(() => prisma.$executeRawUnsafe(supportRequestBranchMigrationSql));
   }
 
   return supportRequestTablePromise;
@@ -43,6 +54,7 @@ const ensureSupportRequestTable = () => {
 const mapSupportRequest = (row) => ({
   id: row.id,
   tenantId: row.tenant_id ?? row.tenantId,
+  branchId: row.branch_id ?? row.branchId ?? null,
   topic: row.topic,
   priority: row.priority,
   message: row.message,
@@ -56,6 +68,16 @@ const mapSupportRequest = (row) => ({
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
 });
+
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
 
 const priorityLabels = {
   normal: 'عام',
@@ -110,9 +132,10 @@ const markEmailStatus = async ({ id, emailStatus, emailError = null }) => {
 };
 
 export const supportService = {
-  async createSupportRequest(tenantId, payload, admin) {
+  async createSupportRequest(tenantId, payload, admin, branchScope = null) {
     await ensureSupportRequestTable();
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
 
     const submitterName = admin?.name || admin?.username || null;
     const submitterEmail = admin?.email || null;
@@ -122,6 +145,7 @@ export const supportService = {
       await tx.$executeRaw`
         INSERT INTO support_requests (
           tenant_id,
+          branch_id,
           topic,
           priority,
           message,
@@ -134,6 +158,7 @@ export const supportService = {
         )
         VALUES (
           ${resolvedTenantId},
+          ${branchId},
           ${payload.topic},
           ${payload.priority || 'normal'},
           ${payload.message},
@@ -171,9 +196,10 @@ export const supportService = {
     return supportRequest;
   },
 
-  async getSupportRequests(tenantId, query) {
+  async getSupportRequests(tenantId, query, branchScope = null) {
     await ensureSupportRequestTable();
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
 
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
@@ -182,6 +208,7 @@ export const supportService = {
       SELECT *
       FROM support_requests
       WHERE tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR branch_id = ${branchId})
         AND (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})
@@ -193,6 +220,7 @@ export const supportService = {
       SELECT COUNT(*) AS total
       FROM support_requests
       WHERE tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR branch_id = ${branchId})
         AND (${search} IS NULL OR topic LIKE ${search} OR message LIKE ${search} OR submitterName LIKE ${search} OR submitterEmail LIKE ${search})
         AND (${query.status || null} IS NULL OR status = ${query.status || null})
         AND (${query.priority || null} IS NULL OR priority = ${query.priority || null})

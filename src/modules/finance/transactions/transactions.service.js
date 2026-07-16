@@ -1,10 +1,12 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { auditService, branchScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
   tenantId: true,
+  branchId: true,
   financeHeadId: true,
   type: true,
   amount: true,
@@ -51,6 +53,29 @@ const toAmount = (value) => {
 
 const normalizeText = (value) => String(value || '').trim();
 
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
+
+const recordFinanceAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: entry.tenantId,
+  actorUserId: auditContext.actorUserId || null,
+  branchId: entry.branchId || auditContext.branchId || null,
+  roleId: auditContext.roleId || null,
+  module: 'finance',
+  targetType: 'finance_transaction',
+  targetId: entry.id,
+  ipAddress: auditContext.ipAddress || null,
+  userAgent: auditContext.userAgent || null,
+  ...entry,
+});
+
 const ensureHead = async (tenantId, { financeHeadId, type }) => {
   const head = await prisma.financeHead.findFirst({ where: { id: financeHeadId, tenantId } });
   if (!head) throw new AppError('Finance head not found.', 404);
@@ -81,6 +106,7 @@ const getOrCreateExpenseHead = async (tenantId, category) => {
 const mapExpense = (row) => ({
   id: Number(row.id),
   tenantId: row.tenant_id === null || row.tenant_id === undefined ? null : Number(row.tenant_id),
+  branchId: row.branch_id === null || row.branch_id === undefined ? null : Number(row.branch_id),
   title: row.details,
   category: row.category,
   amount: toAmount(row.amount),
@@ -95,8 +121,9 @@ const mapExpense = (row) => ({
 });
 
 export const transactionsService = {
-  async createExpense(tenantId, payload) {
+  async createExpense(tenantId, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const title = normalizeText(payload.title);
     const category = normalizeText(payload.category) || 'General Expenses';
     const amount = toAmount(payload.amount);
@@ -116,6 +143,7 @@ export const transactionsService = {
           SELECT id
           FROM finance_transactions
           WHERE tenant_id = ${resolvedTenantId}
+            AND (${branchId} IS NULL OR branch_id = ${branchId})
             AND referenceType = ${referenceType}
             AND referenceId = ${referenceId}
           LIMIT 1
@@ -124,9 +152,11 @@ export const transactionsService = {
 
     if (existing.length) {
       const id = Number(existing[0].id);
+      const oldEntry = await this.getExpenseById(resolvedTenantId, id, branchScope);
       await prisma.$executeRaw`
         UPDATE finance_transactions
         SET financeHeadId = ${financeHeadId},
+            branch_id = ${branchId},
             type = 'expense',
             amount = ${amount},
             transactionDate = ${date},
@@ -138,25 +168,45 @@ export const transactionsService = {
             updatedAt = ${new Date()}
         WHERE id = ${id} AND tenant_id = ${resolvedTenantId}
       `;
-      return this.getExpenseById(resolvedTenantId, id);
+      const updatedEntry = await this.getExpenseById(resolvedTenantId, id, branchScope);
+      await recordFinanceAudit({
+        tenantId: resolvedTenantId,
+        branchId,
+        action: 'finance.expense.updated',
+        oldValue: oldEntry,
+        newValue: updatedEntry,
+        id,
+      }, auditContext);
+      return updatedEntry;
     }
 
     await prisma.$executeRaw`
-      INSERT INTO finance_transactions (tenant_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
-      VALUES (${resolvedTenantId}, ${financeHeadId}, 'expense', ${amount}, ${date}, ${paymentMethod}, 'مکمل', ${note}, ${title}, ${referenceType}, ${referenceId}, 'active', ${new Date()}, ${new Date()})
+      INSERT INTO finance_transactions (tenant_id, branch_id, financeHeadId, type, amount, transactionDate, paymentMode, paymentStatus, slipNo, details, referenceType, referenceId, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${branchId}, ${financeHeadId}, 'expense', ${amount}, ${date}, ${paymentMethod}, 'مکمل', ${note}, ${title}, ${referenceType}, ${referenceId}, 'active', ${new Date()}, ${new Date()})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-    return this.getExpenseById(resolvedTenantId, Number(rows[0].id));
+    const createdEntry = await this.getExpenseById(resolvedTenantId, Number(rows[0].id), branchScope);
+    await recordFinanceAudit({
+      tenantId: resolvedTenantId,
+      branchId,
+      action: 'finance.expense.created',
+      oldValue: null,
+      newValue: createdEntry,
+      id: createdEntry.id,
+    }, auditContext);
+    return createdEntry;
   },
 
-  async getExpenseById(tenantId, id) {
+  async getExpenseById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const rows = await prisma.$queryRaw`
       SELECT ft.*, fh.name AS category
       FROM finance_transactions ft
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
       WHERE ft.id = ${id}
         AND ft.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ft.branch_id = ${branchId})
         AND ft.type = 'expense'
       LIMIT 1
     `;
@@ -164,14 +214,16 @@ export const transactionsService = {
     return mapExpense(rows[0]);
   },
 
-  async getExpenses(tenantId, query = {}) {
+  async getExpenses(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const category = normalizeText(query.category);
     const rows = await prisma.$queryRaw`
       SELECT ft.*, fh.name AS category
       FROM finance_transactions ft
       JOIN finance_heads fh ON fh.id = ft.financeHeadId
       WHERE ft.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR ft.branch_id = ${branchId})
         AND ft.type = 'expense'
         AND ft.status = 'active'
         AND (${category} = '' OR fh.name = ${category})
@@ -180,14 +232,16 @@ export const transactionsService = {
     return { items: rows.map(mapExpense), meta: null };
   },
 
-  async createEntry(tenantId, payload) {
+  async createEntry(tenantId, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureHead(resolvedTenantId, payload);
 
-    return prisma.financeTransaction.create({
+    const entry = await prisma.financeTransaction.create({
       data: {
         ...payload,
         tenantId: resolvedTenantId,
+        branchId,
         transactionDate: normalizeDate(payload.transactionDate),
         paymentMode: payload.paymentMode || null,
         paymentStatus: payload.paymentStatus || null,
@@ -196,13 +250,24 @@ export const transactionsService = {
       },
       select,
     });
+    await recordFinanceAudit({
+      tenantId: resolvedTenantId,
+      branchId,
+      action: 'finance.transaction.created',
+      oldValue: null,
+      newValue: entry,
+      id: entry.id,
+    }, auditContext);
+    return entry;
   },
 
-  async getEntries(tenantId, query) {
+  async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
+      ...(branchId ? { branchId } : {}),
       ...(query.financeHeadId ? { financeHeadId: query.financeHeadId } : {}),
       ...(query.type ? { type: query.type } : {}),
       ...(query.search
@@ -233,16 +298,18 @@ export const transactionsService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async updateEntry(tenantId, id, payload) {
+  async updateEntry(tenantId, id, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
+    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Finance record not found.', 404);
     await ensureHead(resolvedTenantId, payload);
 
-    return prisma.financeTransaction.update({
+    const entry = await prisma.financeTransaction.update({
       where: { id, tenantId: resolvedTenantId },
       data: {
         ...payload,
+        branchId,
         transactionDate: normalizeDate(payload.transactionDate),
         paymentMode: payload.paymentMode || null,
         paymentStatus: payload.paymentStatus || null,
@@ -252,13 +319,32 @@ export const transactionsService = {
       },
       select,
     });
+    await recordFinanceAudit({
+      tenantId: resolvedTenantId,
+      branchId: entry.branchId || branchId,
+      action: 'finance.transaction.updated',
+      oldValue: existing,
+      newValue: entry,
+      id: entry.id,
+    }, auditContext);
+    return entry;
   },
 
-  async deactivateEntry(tenantId, id) {
+  async deactivateEntry(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Finance record not found.', 404);
 
-    return prisma.financeTransaction.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
+    const entry = await prisma.financeTransaction.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
+    await recordFinanceAudit({
+      tenantId: resolvedTenantId,
+      branchId: entry.branchId || branchId,
+      action: 'finance.transaction.deactivated',
+      oldValue: existing,
+      newValue: entry,
+      id: entry.id,
+    }, auditContext);
+    return entry;
   },
 };

@@ -18,6 +18,7 @@ export const listSuggestionsValidationSchema = z.object({
     search: z.string().trim().optional(),
     status: z.enum(['new', 'reviewed', 'closed']).optional(),
     priority: z.enum(['normal', 'important', 'urgent']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),

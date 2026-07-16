@@ -50,6 +50,7 @@ export const listDailyValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     studentId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     date: z.coerce.date().optional(),
     performanceStatus: performanceStatusSchema.optional(),
     status: z.enum(['active', 'inactive']).optional(),

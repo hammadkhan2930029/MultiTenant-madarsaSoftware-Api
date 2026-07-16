@@ -93,11 +93,24 @@ const normalizeDate = (value) => {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
-const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId, classId, sectionId }) => {
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
+  getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
+
+const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId, classId, sectionId }, branchScoped = false) => {
   const [student, branch, academicClass, section, activeAssignment] = await Promise.all([
-    prisma.student.findFirst({ where: { id: studentId, tenantId } }),
-    prisma.branch.findFirst({ where: { id: branchId, tenantId } }),
-    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
+    prisma.student.findFirst({
+      where: {
+        id: studentId,
+        tenantId,
+        ...(branchScoped
+          ? { OR: [{ branchId }, { assignments: { some: { tenantId, branchId, status: 'active' } } }] }
+          : {}),
+      },
+    }),
+    prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId, branchId } }),
     prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
     prisma.studentClassAssignment.findFirst({
       where: {
@@ -129,20 +142,24 @@ const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId
   }
 };
 
-const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId }) => {
+const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId }, branchScoped = false) => {
   const [teacher, branch] = await Promise.all([
-    prisma.teacher.findFirst({ where: { id: teacherId, tenantId } }),
-    prisma.branch.findFirst({ where: { id: branchId, tenantId } }),
+    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchScoped ? { branchId } : {}) } }),
+    prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
   ]);
 
   if (!teacher) throw new AppError('استاد نہیں ملا۔', 404);
   if (!branch) throw new AppError('برانچ نہیں ملی۔', 404);
+  if (teacher.branchId && teacher.branchId !== branchId) {
+    throw new AppError('Selected teacher does not belong to the selected branch.', 400);
+  }
 };
 
 export const attendanceService = {
-  async markStudentAttendance(tenantId, payload) {
+  async markStudentAttendance(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureStudentAttendanceReferences(resolvedTenantId, payload);
+    const branchId = getRequestedBranchId(payload, branchScope);
+    await ensureStudentAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(getScopedBranchId(branchScope)));
 
     const attendanceDate = normalizeDate(payload.date);
 
@@ -156,7 +173,7 @@ export const attendanceService = {
       create: {
         tenantId: resolvedTenantId,
         studentId: payload.studentId,
-        branchId: payload.branchId,
+        branchId,
         classId: payload.classId,
         sectionId: payload.sectionId,
         date: attendanceDate,
@@ -165,7 +182,7 @@ export const attendanceService = {
       },
       update: {
         tenantId: resolvedTenantId,
-        branchId: payload.branchId,
+        branchId,
         classId: payload.classId,
         sectionId: payload.sectionId,
         status: payload.status,
@@ -175,9 +192,10 @@ export const attendanceService = {
     });
   },
 
-  async getStudentAttendance(tenantId, query) {
+  async getStudentAttendance(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getRequestedBranchId(query, branchScope);
     const dateFilter = query.date
       ? normalizeDate(query.date)
       : query.startDate || query.endDate
@@ -195,7 +213,7 @@ export const attendanceService = {
       section: { tenantId: resolvedTenantId },
       ...(dateFilter ? { date: dateFilter } : {}),
       ...(query.studentId ? { studentId: query.studentId } : {}),
-      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(branchId ? { branchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...(query.status ? { status: query.status } : {}),
@@ -218,9 +236,10 @@ export const attendanceService = {
     };
   },
 
-  async markTeacherAttendance(tenantId, payload) {
+  async markTeacherAttendance(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureTeacherAttendanceReferences(resolvedTenantId, payload);
+    const branchId = getRequestedBranchId(payload, branchScope);
+    await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(getScopedBranchId(branchScope)));
 
     const attendanceDate = normalizeDate(payload.date);
 
@@ -234,14 +253,14 @@ export const attendanceService = {
       create: {
         tenantId: resolvedTenantId,
         teacherId: payload.teacherId,
-        branchId: payload.branchId,
+        branchId,
         date: attendanceDate,
         status: payload.status,
         remarks: payload.remarks || null,
       },
       update: {
         tenantId: resolvedTenantId,
-        branchId: payload.branchId,
+        branchId,
         status: payload.status,
         remarks: payload.remarks || null,
       },
@@ -249,9 +268,10 @@ export const attendanceService = {
     });
   },
 
-  async getTeacherAttendance(tenantId, query) {
+  async getTeacherAttendance(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = getRequestedBranchId(query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -259,7 +279,7 @@ export const attendanceService = {
       branch: { tenantId: resolvedTenantId },
       ...(query.date ? { date: normalizeDate(query.date) } : {}),
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
-      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(branchId ? { branchId } : {}),
       ...(query.status ? { status: query.status } : {}),
     };
 
@@ -280,8 +300,9 @@ export const attendanceService = {
     };
   },
 
-  async deleteTeacherAttendance(tenantId, query) {
+  async deleteTeacherAttendance(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
     const attendanceDate = normalizeDate(query.date);
     const existingAttendance = await prisma.teacherAttendance.findFirst({
       where: {
@@ -289,6 +310,7 @@ export const attendanceService = {
         date: attendanceDate,
         tenantId: resolvedTenantId,
         teacher: { tenantId: resolvedTenantId },
+        ...(branchId ? { branchId } : {}),
       },
       select: teacherAttendanceSelect,
     });
@@ -302,6 +324,7 @@ export const attendanceService = {
         teacherId: query.teacherId,
         date: attendanceDate,
         tenantId: resolvedTenantId,
+        ...(branchId ? { branchId } : {}),
       },
     });
 

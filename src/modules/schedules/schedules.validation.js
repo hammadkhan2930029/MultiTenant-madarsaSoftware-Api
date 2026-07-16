@@ -32,6 +32,7 @@ export const listSchedulesValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     sessionId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),
     status: z.enum(['active', 'inactive']).optional(),

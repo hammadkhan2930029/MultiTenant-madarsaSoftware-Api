@@ -108,14 +108,14 @@ const assertAnyPermission = (auth, permissions = []) => {
   const requiredPermissions = normalizePermissions(permissions);
   if (hasAnyPermission(auth, requiredPermissions)) return;
 
-  throw new AppError('You do not have permission to perform this action.', 403);
+  throw new AppError('آپ کو یہ عمل کرنے کی اجازت نہیں ہے۔', 403);
 };
 
 const assertAllPermissions = (auth, permissions = []) => {
   const requiredPermissions = normalizePermissions(permissions);
   if (hasAllPermissions(auth, requiredPermissions)) return;
 
-  throw new AppError('You do not have permission to perform this action.', 403);
+  throw new AppError('آپ کو یہ عمل کرنے کی اجازت نہیں ہے۔', 403);
 };
 
 const enforceRoutePermission = (req) => {

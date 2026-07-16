@@ -66,6 +66,7 @@ const madrassaProfileBodySchema = z.object({
   city: optionalStringField(150, 'City is too long.'),
   familyNoSeq: optionalStringField(100, 'Family sequence number is too long.'),
   regNo: optionalStringField(100, 'Registration number is too long.'),
+  feeVoucherNoSeq: optionalStringField(100, 'Fee voucher sequence number is too long.'),
   logoUrl: optionalStringField(255, 'Logo URL is too long.'),
   status: z.enum(['active', 'inactive']).optional(),
 });

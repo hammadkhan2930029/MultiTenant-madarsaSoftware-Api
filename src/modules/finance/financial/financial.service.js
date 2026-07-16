@@ -1,10 +1,12 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { branchScopeService } from '../../security/index.js';
 
 const manualSelect = {
   id: true,
   tenantId: true,
+  branchId: true,
   type: true,
   category: true,
   description: true,
@@ -89,11 +91,22 @@ const buildDateWhere = (fieldName, range) =>
       }
     : {};
 
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
+  if (branchId) {
+    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
+  }
+  return branchId;
+};
+
 const makeDescription = (...parts) => parts.filter(Boolean).join(' - ') || null;
 
 const mapManualRecord = (item) => ({
   id: `manual-${item.id}`,
   recordId: item.id,
+  branchId: item.branchId || null,
   source: 'manual',
   type: item.type,
   category: item.category,
@@ -109,6 +122,7 @@ const mapManualRecord = (item) => ({
 const mapTransactionRecord = (item) => ({
   id: `transaction-${item.id}`,
   recordId: item.id,
+  branchId: item.branchId || null,
   source: 'other-transaction',
   type: item.type === 'income' ? 'amdan' : 'kharch',
   category: item.financeHead?.name || (item.type === 'income' ? 'دیگر آمدن' : 'دیگر خرچ'),
@@ -123,6 +137,7 @@ const mapTransactionRecord = (item) => ({
 const mapFundRecord = (item) => ({
   id: `fund-${item.id}`,
   recordId: item.id,
+  branchId: item.branchId || null,
   source: 'fund-collection',
   type: 'amdan',
   category: item.donationSubType || item.donationType || 'فنڈ',
@@ -137,6 +152,7 @@ const mapFundRecord = (item) => ({
 const mapSalaryRecord = (item) => ({
   id: `salary-${item.id}`,
   recordId: item.id,
+  branchId: item.branchId || null,
   source: 'salary',
   type: 'kharch',
   category: item.financeHead?.name || 'تنخواہ',
@@ -156,6 +172,7 @@ const mapFeeRecords = (item) => {
   const feeAmount = Math.max(paidAmount - admissionAmount, 0);
   const base = {
     recordId: item.id,
+    branchId: item.branchId || null,
     source: 'student-fee',
     type: 'amdan',
     date: item.paidDate || item.updatedAt,
@@ -185,7 +202,7 @@ const applyCommonFilters = (items, query) =>
     return typeOk && matchesSearch(item, query.search);
   });
 
-const getOutstandingSummary = async (tenantId) => {
+const getOutstandingSummary = async (tenantId, branchId = null) => {
   const resolvedTenantId = normalizeTenantId(tenantId);
   const [receivable, payable] = await Promise.all([
     prisma.studentFeeVoucher.aggregate({
@@ -193,7 +210,12 @@ const getOutstandingSummary = async (tenantId) => {
         tenantId: resolvedTenantId,
         status: { in: ['unpaid', 'partial'] },
         dueAmount: { gt: 0 },
-        student: { tenantId: resolvedTenantId },
+        student: {
+          tenantId: resolvedTenantId,
+          ...(branchId
+            ? { OR: [{ branchId }, { assignments: { some: { tenantId: resolvedTenantId, branchId, status: 'active' } } }] }
+            : {}),
+        },
       },
       _sum: { dueAmount: true },
     }),
@@ -203,6 +225,7 @@ const getOutstandingSummary = async (tenantId) => {
         status: 'active',
         approvalStatus: 'approved',
         remainingAmount: { gt: 0 },
+        ...(branchId ? { branchId } : {}),
       },
       _sum: { remainingAmount: true },
     }),
@@ -227,17 +250,18 @@ const summarize = (items, outstanding = {}) => {
   };
 };
 
-const fetchFinancialRows = async (tenantId, query) => {
+const fetchFinancialRows = async (tenantId, query, branchScope = null) => {
   const resolvedTenantId = normalizeTenantId(tenantId);
+  const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
   const range = getEffectiveDateRange(query);
   const [manual, transactions, funds, salaries, fees] = await Promise.all([
     prisma.financialRecord.findMany({
-      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('date', range) },
+      where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), status: 'active', ...buildDateWhere('date', range) },
       orderBy: { date: 'desc' },
       select: manualSelect,
     }),
     prisma.financeTransaction.findMany({
-      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('transactionDate', range) },
+      where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), status: 'active', ...buildDateWhere('transactionDate', range) },
       orderBy: { transactionDate: 'desc' },
       select: {
         id: true,
@@ -249,11 +273,12 @@ const fetchFinancialRows = async (tenantId, query) => {
         status: true,
         createdAt: true,
         updatedAt: true,
+        branchId: true,
         financeHead: { select: { id: true, name: true } },
       },
     }),
     prisma.fundCollection.findMany({
-      where: { tenantId: resolvedTenantId, status: 'active', ...buildDateWhere('paymentDate', range) },
+      where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), status: 'active', ...buildDateWhere('paymentDate', range) },
       orderBy: { paymentDate: 'desc' },
       select: {
         id: true,
@@ -268,10 +293,11 @@ const fetchFinancialRows = async (tenantId, query) => {
         status: true,
         createdAt: true,
         updatedAt: true,
+        branchId: true,
       },
     }),
     prisma.salaryEntry.findMany({
-      where: { tenantId: resolvedTenantId, status: 'active', teacher: { tenantId: resolvedTenantId }, ...buildDateWhere('paymentDate', range) },
+      where: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), status: 'active', teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, ...buildDateWhere('paymentDate', range) },
       orderBy: { paymentDate: 'desc' },
       select: {
         id: true,
@@ -281,6 +307,7 @@ const fetchFinancialRows = async (tenantId, query) => {
         status: true,
         createdAt: true,
         updatedAt: true,
+        branchId: true,
         teacher: { select: { id: true, fullName: true } },
         financeHead: { select: { id: true, name: true } },
       },
@@ -290,7 +317,12 @@ const fetchFinancialRows = async (tenantId, query) => {
         tenantId: resolvedTenantId,
         status: { in: ['paid', 'partial'] },
         paidAmount: { gt: 0 },
-        student: { tenantId: resolvedTenantId },
+        student: {
+          tenantId: resolvedTenantId,
+          ...(branchId
+            ? { OR: [{ branchId }, { assignments: { some: { tenantId: resolvedTenantId, branchId, status: 'active' } } }] }
+            : {}),
+        },
         ...buildDateWhere('paidDate', range),
       },
       orderBy: [{ paidDate: 'desc' }, { updatedAt: 'desc' }],
@@ -319,10 +351,11 @@ const fetchFinancialRows = async (tenantId, query) => {
 };
 
 export const financialService = {
-  async list(tenantId, query) {
+  async list(tenantId, query, branchScope = null) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const filteredItems = applyCommonFilters(await fetchFinancialRows(tenantId, query), query);
-    const outstanding = await getOutstandingSummary(tenantId);
+    const branchId = await resolveBranchId(normalizeTenantId(tenantId), query, branchScope);
+    const filteredItems = applyCommonFilters(await fetchFinancialRows(tenantId, query, branchScope), query);
+    const outstanding = await getOutstandingSummary(tenantId, branchId);
     const items = filteredItems.slice(skip, skip + limit);
 
     return {
@@ -339,20 +372,23 @@ export const financialService = {
     };
   },
 
-  async summary(tenantId, query) {
+  async summary(tenantId, query, branchScope = null) {
+    const branchId = await resolveBranchId(normalizeTenantId(tenantId), query, branchScope);
     const [items, outstanding] = await Promise.all([
-      fetchFinancialRows(tenantId, query),
-      getOutstandingSummary(tenantId),
+      fetchFinancialRows(tenantId, query, branchScope),
+      getOutstandingSummary(tenantId, branchId),
     ]);
     return summarize(applyCommonFilters(items, query), outstanding);
   },
 
-  async create(tenantId, payload, admin) {
+  async create(tenantId, payload, admin, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     return mapManualRecord(
       await prisma.financialRecord.create({
         data: {
           tenantId: resolvedTenantId,
+          branchId,
           type: payload.type,
           category: payload.category,
           description: payload.description || null,
@@ -366,9 +402,10 @@ export const financialService = {
     );
   },
 
-  async update(tenantId, id, payload) {
+  async update(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
+    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Financial record not found.', 404);
 
     return mapManualRecord(
@@ -376,6 +413,7 @@ export const financialService = {
         where: { id, tenantId: resolvedTenantId },
         data: {
           type: payload.type,
+          branchId,
           category: payload.category,
           description: payload.description || null,
           amount: payload.amount,
@@ -387,9 +425,10 @@ export const financialService = {
     );
   },
 
-  async remove(tenantId, id) {
+  async remove(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId } });
+    const branchId = getScopedBranchId(branchScope);
+    const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Financial record not found.', 404);
     return mapManualRecord(await prisma.financialRecord.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select: manualSelect }));
   },

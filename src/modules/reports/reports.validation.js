@@ -91,6 +91,7 @@ export const monthlyFinanceSummaryValidationSchema = withDateRangeValidation(
     query: z.object({
       fromDate: z.coerce.date().optional(),
       toDate: z.coerce.date().optional(),
+      branchId: z.coerce.number().int().positive().optional(),
     }),
   })
 );

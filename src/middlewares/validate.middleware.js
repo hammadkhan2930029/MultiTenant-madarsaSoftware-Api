@@ -8,7 +8,7 @@ export const validate = (schema) => (req, _res, next) => {
   });
 
   if (!result.success) {
-    throw new AppError('Validation failed.', 400, result.error.flatten());
+    throw new AppError('درج کردہ معلومات درست نہیں ہیں۔', 400, result.error.flatten());
   }
 
   req.body = result.data.body;

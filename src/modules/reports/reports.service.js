@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -28,14 +29,35 @@ const buildDateRangeFilter = (fromDate, toDate, fieldName) =>
       }
     : {};
 
-const buildStudentAssignmentFilter = (tenantId, query) =>
-  query.branchId || query.classId || query.sectionId || query.sessionId
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
+  if (!branchId) return {};
+
+  return {
+    OR: [
+      { branchId },
+      {
+        assignments: {
+          some: {
+            tenantId,
+            branchId,
+            status: 'active',
+          },
+        },
+      },
+    ],
+  };
+};
+
+const buildStudentAssignmentFilter = (tenantId, query, branchId) =>
+  branchId || query.classId || query.sectionId || query.sessionId
     ? {
         assignments: {
           some: {
             tenantId,
             status: 'active',
-            ...(query.branchId ? { branchId: query.branchId } : {}),
+            ...(branchId ? { branchId } : {}),
             ...(query.classId ? { classId: query.classId } : {}),
             ...(query.sectionId ? { sectionId: query.sectionId } : {}),
             ...(query.sessionId ? { sessionId: query.sessionId } : {}),
@@ -67,11 +89,25 @@ const studentReportSelect = {
 };
 
 export const reportsService = {
-  async getStudentsReport(tenantId, query) {
+  async getStudentsReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const scopedBranchId = getScopedBranchId(branchScope);
+    const requestedBranchId = scopedBranchId || query.branchId || null;
+
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
+
     const where = {
       tenantId: resolvedTenantId,
+      AND: [
+        buildStudentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
+      ].filter((item) => Object.keys(item).length),
       ...(query.search
         ? {
             OR: [
@@ -82,7 +118,7 @@ export const reportsService = {
           }
         : {}),
       ...(query.status ? { status: query.status } : {}),
-      ...buildStudentAssignmentFilter(resolvedTenantId, query),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -102,16 +138,25 @@ export const reportsService = {
     };
   },
 
-  async getAttendanceReport(tenantId, query) {
+  async getAttendanceReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
+
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
 
     if (query.type === 'teacher') {
       const where = {
         teacher: { tenantId: resolvedTenantId },
         branch: { tenantId: resolvedTenantId },
         ...(query.status ? { status: query.status } : {}),
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
         ...buildDateRangeFilter(query.fromDate, query.toDate, 'date'),
       };
 
@@ -146,7 +191,7 @@ export const reportsService = {
       class: { tenantId: resolvedTenantId },
       section: { tenantId: resolvedTenantId },
       ...(query.status ? { status: query.status } : {}),
-      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...buildDateRangeFilter(query.fromDate, query.toDate, 'date'),
@@ -181,13 +226,25 @@ export const reportsService = {
     };
   },
 
-  async getHifzProgressReport(tenantId, query) {
+  async getHifzProgressReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
+
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
     const studentWhere = {
       tenantId: resolvedTenantId,
       ...(query.studentId ? { id: query.studentId } : {}),
-      ...buildStudentAssignmentFilter(resolvedTenantId, query),
+      AND: [
+        buildStudentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
+      ].filter((item) => Object.keys(item).length),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId),
     };
 
     const [students, totalItems] = await Promise.all([
@@ -258,11 +315,20 @@ export const reportsService = {
     };
   },
 
-  async getFundCollectionsReport(tenantId, query) {
+  async getFundCollectionsReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
+      ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.paymentMode ? { paymentMode: query.paymentMode } : {}),
       ...(query.donationType ? { donationType: query.donationType } : {}),
@@ -317,12 +383,21 @@ export const reportsService = {
     };
   },
 
-  async getSalaryReport(tenantId, query) {
+  async getSalaryReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
-      teacher: { tenantId: resolvedTenantId },
+      ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
+      teacher: { tenantId: resolvedTenantId, ...(requestedBranchId ? { branchId: requestedBranchId } : {}) },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.salaryMonth ? { salaryMonth: query.salaryMonth } : {}),
@@ -360,8 +435,16 @@ export const reportsService = {
     };
   },
 
-  async getMonthlyFinanceSummaryReport(tenantId, query) {
+  async getMonthlyFinanceSummaryReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
+    if (requestedBranchId) {
+      await branchScopeService.validateBranchBelongsToTenant({
+        tenantId: resolvedTenantId,
+        branchId: requestedBranchId,
+        requireActive: true,
+      });
+    }
     const whereFromDate = query.fromDate ? normalizeDate(query.fromDate) : undefined;
     const whereToDate = query.toDate ? normalizeDate(query.toDate) : undefined;
 
@@ -369,6 +452,7 @@ export const reportsService = {
       prisma.fundCollection.findMany({
         where: {
           tenantId: resolvedTenantId,
+          ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
           status: 'active',
           ...buildDateRangeFilter(whereFromDate, whereToDate, 'paymentDate'),
         },
@@ -377,7 +461,8 @@ export const reportsService = {
       prisma.salaryEntry.findMany({
         where: {
           tenantId: resolvedTenantId,
-          teacher: { tenantId: resolvedTenantId },
+          ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
+          teacher: { tenantId: resolvedTenantId, ...(requestedBranchId ? { branchId: requestedBranchId } : {}) },
           status: 'active',
           ...buildDateRangeFilter(whereFromDate, whereToDate, 'paymentDate'),
         },

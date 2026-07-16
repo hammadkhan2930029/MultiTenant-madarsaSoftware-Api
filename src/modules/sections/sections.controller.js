@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { sectionsService } from './sections.service.js';
 
 export const createSection = asyncHandler(async (req, res) => {
-  const section = await sectionsService.createSection(req.tenantId, req.body);
+  const section = await sectionsService.createSection(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSection = asyncHandler(async (req, res) => {
 });
 
 export const getSections = asyncHandler(async (req, res) => {
-  const sections = await sectionsService.getSections(req.tenantId, req.query);
+  const sections = await sectionsService.getSections(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Sections fetched successfully.',
@@ -22,7 +22,7 @@ export const getSections = asyncHandler(async (req, res) => {
 });
 
 export const getSectionById = asyncHandler(async (req, res) => {
-  const section = await sectionsService.getSectionById(req.tenantId, Number(req.params.id));
+  const section = await sectionsService.getSectionById(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'Section fetched successfully.',
@@ -31,7 +31,7 @@ export const getSectionById = asyncHandler(async (req, res) => {
 });
 
 export const updateSection = asyncHandler(async (req, res) => {
-  const section = await sectionsService.updateSection(req.tenantId, Number(req.params.id), req.body);
+  const section = await sectionsService.updateSection(req.tenantId, Number(req.params.id), req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Section updated successfully.',
@@ -40,7 +40,7 @@ export const updateSection = asyncHandler(async (req, res) => {
 });
 
 export const deleteSection = asyncHandler(async (req, res) => {
-  const section = await sectionsService.deleteSection(req.tenantId, Number(req.params.id));
+  const section = await sectionsService.deleteSection(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'Section deleted successfully.',

@@ -25,6 +25,47 @@ const madrassaProfileSelect = {
 
 const emptyToNull = (value) => (value ? value : null);
 const buildLogoUrl = (file) => (file ? `/uploads/madrassa-profiles/${file.filename}` : null);
+const DEFAULT_FEE_VOUCHER_NUMBER = 'FEE-0001';
+
+const isMissingFeeVoucherColumnError = (error) => {
+  const message = String(error?.message || '');
+  return error?.code === 'P2010' || message.includes('feeVoucherNoSeq') || message.includes('Unknown column');
+};
+
+const getFeeVoucherNoSeq = async (tenantId, tx = prisma) => {
+  try {
+    const rows = await tx.$queryRaw`
+      SELECT feeVoucherNoSeq
+      FROM madrassa_profiles
+      WHERE tenant_id = ${tenantId}
+      LIMIT 1
+    `;
+    return rows?.[0]?.feeVoucherNoSeq || '';
+  } catch (error) {
+    if (isMissingFeeVoucherColumnError(error)) return '';
+    throw error;
+  }
+};
+
+const setFeeVoucherNoSeq = async (tenantId, value, tx = prisma) => {
+  try {
+    await tx.$executeRaw`
+      UPDATE madrassa_profiles
+      SET feeVoucherNoSeq = ${emptyToNull(value)}
+      WHERE tenant_id = ${tenantId}
+    `;
+  } catch (error) {
+    if (isMissingFeeVoucherColumnError(error)) return false;
+    throw error;
+  }
+  return true;
+};
+
+const withFeeVoucherNoSeq = async (profile) => {
+  if (!profile?.tenantId) return { ...profile, feeVoucherNoSeq: '' };
+  const feeVoucherNoSeq = await getFeeVoucherNoSeq(profile.tenantId);
+  return { ...profile, feeVoucherNoSeq: feeVoucherNoSeq || DEFAULT_FEE_VOUCHER_NUMBER };
+};
 
 const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
   adminId: admin.id,
@@ -73,6 +114,43 @@ const assertLoginRoleIsActive = (access, admin) => {
   }
 };
 
+const assertLoginBranchIsActive = async (admin) => {
+  const branchId = admin.branchId ?? admin.branch_id ?? null;
+  const tenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
+
+  if (!branchId) return null;
+
+  const branch = await prisma.branch.findFirst({
+    where: {
+      id: Number(branchId),
+      tenantId,
+    },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+      tenantId: true,
+      tenant: {
+        select: {
+          branchEnabled: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  if (!branch?.tenant?.branchEnabled) {
+    throw new AppError('اس مدرسہ کے لیے برانچ سسٹم فعال نہیں ہے۔ ایڈمن سے رابطہ کریں۔', 403);
+  }
+
+  if (!branch || branch.status !== 'active') {
+    throw new AppError('آپ کی برانچ غیر فعال ہے یا دستیاب نہیں۔ ایڈمن سے رابطہ کریں۔', 403);
+  }
+
+  return branch;
+};
+
 const canManageMadrassaProfile = async (admin) => {
   if (admin.role === 'super_admin' || admin.role === 'admin') return true;
 
@@ -84,6 +162,7 @@ const canManageMadrassaProfile = async (admin) => {
 const buildAdminAuthPayload = async (admin) => {
   const access = await getAdminRoleAndPermissions(admin);
   assertLoginRoleIsActive(access, admin);
+  const branch = await assertLoginBranchIsActive(admin);
   const roleDetails = buildRoleResponse(access.role);
 
   return {
@@ -94,6 +173,8 @@ const buildAdminAuthPayload = async (admin) => {
     username: admin.username,
     role: admin.role,
     tenantId: admin.tenantId || admin.tenant_id || null,
+    branchId: admin.branchId || admin.branch_id || null,
+    branch,
     ownerAdminId: admin.ownerAdminId || admin.owner_admin_id || null,
     roleId: roleDetails?.id || null,
     roleDetails,
@@ -148,9 +229,27 @@ const findGlobalSuperAdminByIdentity = (identity) =>
 export const authService = {
   async getAuthenticatedAdminById(adminId) {
     const rows = await prisma.$queryRaw`
-      SELECT id, name, email, phone, username, role, tenant_id, role_id, owner_admin_id, status, createdAt, updatedAt
-      FROM admins
-      WHERE id = ${adminId}
+      SELECT
+        a.id,
+        a.name,
+        a.email,
+        a.phone,
+        a.username,
+        a.role,
+        a.tenant_id,
+        a.role_id,
+        a.owner_admin_id,
+        a.branch_id,
+        a.status,
+        a.createdAt,
+        a.updatedAt,
+        b.status AS branch_status,
+        t.branch_enabled,
+        t.status AS tenant_status
+      FROM admins a
+      LEFT JOIN branches b ON b.id = a.branch_id
+      LEFT JOIN tenant t ON t.id = a.tenant_id
+      WHERE a.id = ${adminId}
       LIMIT 1
     `;
 
@@ -167,6 +266,11 @@ export const authService = {
       tenantId: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
       tenant_id: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
       roleId: admin.role_id === null || admin.role_id === undefined ? null : Number(admin.role_id),
+      branchId: admin.branch_id === null || admin.branch_id === undefined ? null : Number(admin.branch_id),
+      branch_id: admin.branch_id === null || admin.branch_id === undefined ? null : Number(admin.branch_id),
+      branchStatus: admin.branch_status || null,
+      branchEnabled: admin.branch_enabled === null || admin.branch_enabled === undefined ? null : Boolean(admin.branch_enabled),
+      tenantStatus: admin.tenant_status || null,
       ownerAdminId: admin.owner_admin_id === null || admin.owner_admin_id === undefined ? null : Number(admin.owner_admin_id),
       owner_admin_id: admin.owner_admin_id === null || admin.owner_admin_id === undefined ? null : Number(admin.owner_admin_id),
       status: admin.status,
@@ -207,12 +311,12 @@ export const authService = {
       });
 
       if (!tenant || tenant.status !== 'active') {
-        throw new AppError('Tenant is inactive. Please contact support.', 403);
+        throw new AppError('یہ مدرسہ/ادارہ غیر فعال ہے۔ سپورٹ سے رابطہ کریں۔', 403);
       }
     }
 
     if (admin.status !== 'active') {
-      throw new AppError('Your account is inactive. Please contact support.', 403);
+      throw new AppError('آپ کا اکاؤنٹ غیر فعال ہے۔ سپورٹ سے رابطہ کریں۔', 403);
     }
 
     const isPasswordValid = await bcrypt.compare(payload.password, admin.password);
@@ -229,6 +333,8 @@ export const authService = {
       phone: adminPayload.phone,
       username: adminPayload.username,
       tenantId: adminPayload.tenantId,
+      branchId: adminPayload.branchId,
+      branch: adminPayload.branch,
       ownerAdminId: adminPayload.ownerAdminId,
       role: adminPayload.roleDetails,
       roleName: adminPayload.role,
@@ -301,12 +407,14 @@ export const authService = {
       throw new AppError('Tenant context is required for madrassa profile.', 403);
     }
 
-    return prisma.madrassaProfile.upsert({
+    const profile = await prisma.madrassaProfile.upsert({
       where: { tenantId: resolvedTenantId },
       update: {},
       create: buildDefaultMadrassaProfileData(admin, resolvedTenantId),
       select: madrassaProfileSelect,
     });
+
+    return withFeeVoucherNoSeq(profile);
   },
 
   async updateMadrassaProfile(admin, tenantId, payload, file) {
@@ -319,7 +427,7 @@ export const authService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const existingProfile = await this.getMadrassaProfile(admin, resolvedTenantId);
 
-    return prisma.madrassaProfile.update({
+    const profile = await prisma.madrassaProfile.update({
       where: { tenantId: resolvedTenantId },
       data: {
         name: payload.name,
@@ -336,5 +444,8 @@ export const authService = {
       },
       select: madrassaProfileSelect,
     });
+
+    await setFeeVoucherNoSeq(resolvedTenantId, payload.feeVoucherNoSeq);
+    return withFeeVoucherNoSeq(profile);
   },
 };

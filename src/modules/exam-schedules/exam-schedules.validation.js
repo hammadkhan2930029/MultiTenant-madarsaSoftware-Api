@@ -37,6 +37,7 @@ export const listExamSchedulesValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     sessionId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     subjectId: z.coerce.number().int().positive().optional(),
     fromDate: z.coerce.date().optional(),
