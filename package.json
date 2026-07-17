@@ -21,10 +21,12 @@
     "test:finance-reconciliation": "node scripts/test-financial-branch-reconciliation.js",
     "test:branch-performance": "node scripts/test-branch-performance-audit.js",
     "test:branch-api-errors": "node scripts/test-branch-api-errors.js",
+    "test:branch-role-isolation": "node scripts/test-branch-role-isolation.js",
     "test:login-rbac": "node scripts/test-login-rbac-response.js",
     "test:audit-logs": "node scripts/test-rbac-audit-logs.js",
     "test:rbac-suite": "node scripts/test-rbac-suite.js",
     "smoke:test": "node scripts/smoke-test.js",
+    "migrate:branch-role-scope": "node scripts/migrate-branch-role-scope.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"

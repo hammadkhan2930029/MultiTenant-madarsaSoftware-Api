@@ -85,15 +85,33 @@ const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
 const buildRoleResponse = (role) => {
   if (!role) return null;
 
+  const branchId = role.branchId ?? role.branch_id ?? null;
+  const tenantId = role.tenantId ?? role.tenant_id ?? null;
+  const scope = tenantId === null || tenantId === undefined ? 'system' : branchId ? 'branch' : 'tenant';
+
   return {
     id: role.id || null,
-    tenantId: role.tenantId ?? role.tenant_id ?? null,
+    tenantId,
+    branchId,
+    roleScopeKey: role.roleScopeKey ?? role.role_scope_key ?? null,
+    scope,
     name: role.roleName || role.role_name || null,
     roleName: role.roleName || role.role_name || null,
     description: role.description || null,
     status: role.status || 'active',
     isSystemRole: Boolean(role.isSystemRole ?? role.is_system_role),
   };
+};
+
+const buildAccountScope = (admin, roleDetails) => {
+  const tenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
+  const branchId = normalizeTenantId(admin.branchId ?? admin.branch_id);
+  const roleName = roleDetails?.roleName || admin.role;
+
+  if (roleName === 'super_admin' && !tenantId) return 'super_admin';
+  if (branchId) return 'branch_admin';
+  if (roleName === 'admin' && tenantId) return 'tenant_admin';
+  return tenantId ? 'tenant_user' : 'system_user';
 };
 
 const assertLoginRoleIsActive = (access, admin) => {
@@ -111,6 +129,17 @@ const assertLoginRoleIsActive = (access, admin) => {
 
   if (!isGlobalSuperAdmin && roleTenantId !== adminTenantId) {
     throw new AppError('Assigned role is not valid for this tenant. Please contact support.', 403);
+  }
+
+  const adminBranchId = normalizeTenantId(admin.branchId ?? admin.branch_id);
+  const roleBranchId = normalizeTenantId(access.role.branchId ?? access.role.branch_id);
+
+  if (adminBranchId && roleBranchId !== adminBranchId) {
+    throw new AppError('Assigned role is not valid for this branch. Please contact support.', 403);
+  }
+
+  if (!adminBranchId && roleBranchId && !isGlobalSuperAdmin) {
+    throw new AppError('Assigned role is not valid for this account scope. Please contact support.', 403);
   }
 };
 
@@ -164,21 +193,29 @@ const buildAdminAuthPayload = async (admin) => {
   assertLoginRoleIsActive(access, admin);
   const branch = await assertLoginBranchIsActive(admin);
   const roleDetails = buildRoleResponse(access.role);
+  const branchId = admin.branchId || admin.branch_id || null;
+  const tenantId = admin.tenantId || admin.tenant_id || null;
+  const accountScope = buildAccountScope(admin, roleDetails);
 
   return {
     id: admin.id,
+    userId: admin.id,
     name: admin.name,
     email: admin.email,
     phone: admin.phone || null,
     username: admin.username,
     role: admin.role,
-    tenantId: admin.tenantId || admin.tenant_id || null,
-    branchId: admin.branchId || admin.branch_id || null,
+    tenantId,
+    branchId,
+    branchName: branch?.name || null,
     branch,
     ownerAdminId: admin.ownerAdminId || admin.owner_admin_id || null,
     roleId: roleDetails?.id || null,
+    roleScope: roleDetails?.scope || null,
     roleDetails,
     permissions: access.permissionKeys,
+    accountScope,
+    userType: accountScope,
     status: admin.status,
     createdAt: admin.createdAt,
     updatedAt: admin.updatedAt,

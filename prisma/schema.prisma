@@ -67,6 +67,9 @@ model Tenant {
   studentAttendances  StudentAttendance[]      @relation("TenantStudentAttendances")
   teacherAttendances  TeacherAttendance[]      @relation("TenantTeacherAttendances")
   salaryIncrements    TeacherSalaryIncrement[] @relation("TenantTeacherSalaryIncrements")
+  departmentHeads     DepartmentHeadAssignment[]
+  teacherResponsibilities TeacherResponsibility[] @relation("TenantTeacherResponsibilities")
+  teacherAssignments  TeacherAssignment[]      @relation("TenantTeacherAssignments")
 
   @@map("tenant")
 }
@@ -100,6 +103,8 @@ model Admin {
   supportRequests  SupportRequest[]
   salaryIncrements TeacherSalaryIncrement[]
   auditLogs        AuditLog[]               @relation("AdminAuditLogs")
+  createdTeacherResponsibilities TeacherResponsibility[] @relation("TeacherResponsibilityCreatedBy")
+  createdTeacherAssignments TeacherAssignment[] @relation("TeacherAssignmentCreatedBy")
 
   @@unique([tenantId, email])
   @@unique([tenantId, username])
@@ -142,6 +147,8 @@ model AuditLog {
 model Role {
   id              Int              @id @default(autoincrement())
   tenantId        Int?             @map("tenant_id")
+  branchId        Int?             @map("branch_id")
+  roleScopeKey    Int              @default(0) @map("role_scope_key")
   roleName        String           @map("role_name") @db.VarChar(100)
   description     String?          @db.VarChar(255)
   status          String           @default("active") @db.VarChar(50)
@@ -151,13 +158,16 @@ model Role {
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
   tenant          Tenant?          @relation("TenantRoles", fields: [tenantId], references: [id], onDelete: Cascade)
+  branch          Branch?          @relation("BranchRoles", fields: [branchId], references: [id], onDelete: SetNull)
   creator         Admin?           @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   updater         Admin?           @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
   admins          Admin[]          @relation("AdminAssignedRole")
   rolePermissions RolePermission[]
 
-  @@unique([tenantId, roleName])
+  @@unique([tenantId, roleScopeKey, roleName])
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status])
   @@index([isSystemRole])
   @@index([createdBy])
@@ -315,8 +325,30 @@ model Department {
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  headAssignments DepartmentHeadAssignment[]
 
   @@map("departments")
+}
+
+model DepartmentHeadAssignment {
+  id             Int        @id @default(autoincrement())
+  departmentId   Int        @map("department_id")
+  tenantId       Int        @map("tenant_id")
+  branchId       Int?       @map("branch_id")
+  branchScopeKey String     @default("tenant") @map("branch_scope_key") @db.VarChar(50)
+  teacherId      Int        @map("teacher_id")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  department     Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  tenant         Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  branch         Branch?    @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  teacher        Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([departmentId, tenantId, branchScopeKey], map: "dept_head_scope_key")
+  @@index([tenantId], map: "dept_head_tenant_idx")
+  @@index([branchId], map: "dept_head_branch_idx")
+  @@index([teacherId], map: "dept_head_teacher_idx")
+  @@map("department_head_assignments")
 }
 
 /// Intentionally global master data shared by all tenants.
@@ -343,6 +375,7 @@ model Subject {
   tenant             Tenant              @relation("TenantSubjects", fields: [tenantId], references: [id])
   examSchedules      ExamSchedule[]
   examResultSubjects ExamResultSubject[]
+  teacherAssignments TeacherAssignment[]
 
   @@unique([tenantId, name])
   @@index([tenantId])
@@ -363,6 +396,7 @@ model Branch {
   tenant             Tenant                   @relation("TenantBranches", fields: [tenantId], references: [id])
   creator            Admin?                   @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   assignedAdmins     Admin[]                  @relation("AdminBranchAssignment")
+  roles              Role[]                   @relation("BranchRoles")
   students           Student[]                @relation("BranchStudents")
   parents            Parent[]                 @relation("BranchParents")
   teachers           Teacher[]                @relation("BranchTeachers")
@@ -372,6 +406,9 @@ model Branch {
   teacherAttendances TeacherAttendance[]
   suggestions        Suggestion[]             @relation("BranchSuggestions")
   supportRequests    SupportRequest[]         @relation("BranchSupportRequests")
+  departmentHeads    DepartmentHeadAssignment[]
+  teacherResponsibilities TeacherResponsibility[] @relation("BranchTeacherResponsibilities")
+  teacherAssignments TeacherAssignment[]      @relation("BranchTeacherAssignments")
 
   @@unique([tenantId, name])
   @@unique([tenantId, code])
@@ -398,6 +435,7 @@ model AcademicClass {
   teacherSchedules   TeacherSchedule[]
   examSchedules      ExamSchedule[]
   examResults        ExamResult[]
+  teacherAssignments TeacherAssignment[]
 
   @@unique([branchId, name])
   @@index([tenantId])
@@ -419,6 +457,7 @@ model Section {
   studentSchedules   StudentSchedule[]
   teacherSchedules   TeacherSchedule[]
   examResults        ExamResult[]
+  teacherAssignments TeacherAssignment[]
 
   @@unique([classId, name])
   @@index([tenantId])
@@ -490,6 +529,67 @@ model TeacherSchedule {
   @@index([teacherId])
   @@index([sessionId, classId, sectionId])
   @@map("teacher_schedules")
+}
+
+model TeacherResponsibility {
+  id             Int                 @id @default(autoincrement())
+  tenantId       Int                 @map("tenant_id")
+  branchId       Int?                @map("branch_id")
+  branchScopeKey String              @default("tenant") @map("branch_scope_key") @db.VarChar(50)
+  name           String              @db.VarChar(150)
+  status         String              @default("active") @db.VarChar(50)
+  createdBy      Int?                @map("created_by")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+  tenant         Tenant              @relation("TenantTeacherResponsibilities", fields: [tenantId], references: [id], onDelete: Cascade)
+  branch         Branch?             @relation("BranchTeacherResponsibilities", fields: [branchId], references: [id], onDelete: SetNull)
+  creator        Admin?              @relation("TeacherResponsibilityCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  assignments    TeacherAssignment[]
+
+  @@unique([tenantId, branchScopeKey, name], map: "teacher_resp_scope_name_unique")
+  @@index([tenantId], map: "teacher_resp_tenant_idx")
+  @@index([branchId], map: "teacher_resp_branch_idx")
+  @@index([status], map: "teacher_resp_status_idx")
+  @@index([createdBy], map: "teacher_resp_created_by_idx")
+  @@map("teacher_responsibilities")
+}
+
+model TeacherAssignment {
+  id                 Int                   @id @default(autoincrement())
+  tenantId           Int                   @map("tenant_id")
+  branchId           Int                   @map("branch_id")
+  branchScopeKey     String                @map("branch_scope_key") @db.VarChar(50)
+  teacherId          Int                   @map("teacher_id")
+  subjectId          Int                   @map("subject_id")
+  classId            Int                   @map("class_id")
+  sectionId          Int                   @map("section_id")
+  responsibilityId   Int                   @map("responsibility_id")
+  assignmentScopeKey String                @map("assignment_scope_key") @db.VarChar(255)
+  status             String                @default("active") @db.VarChar(50)
+  createdBy          Int?                  @map("created_by")
+  createdAt          DateTime              @default(now()) @map("created_at")
+  updatedAt          DateTime              @updatedAt @map("updated_at")
+  tenant             Tenant                @relation("TenantTeacherAssignments", fields: [tenantId], references: [id], onDelete: Cascade)
+  branch             Branch                @relation("BranchTeacherAssignments", fields: [branchId], references: [id])
+  teacher            Teacher               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject            Subject               @relation(fields: [subjectId], references: [id])
+  class              AcademicClass         @relation(fields: [classId], references: [id])
+  section            Section               @relation(fields: [sectionId], references: [id])
+  responsibility     TeacherResponsibility @relation(fields: [responsibilityId], references: [id])
+  creator            Admin?                @relation("TeacherAssignmentCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, branchId, assignmentScopeKey], map: "teacher_assign_scope_unique")
+  @@index([tenantId], map: "teacher_assign_tenant_idx")
+  @@index([branchId], map: "teacher_assign_branch_idx")
+  @@index([tenantId, branchId], map: "teacher_assign_tenant_branch_idx")
+  @@index([teacherId], map: "teacher_assign_teacher_idx")
+  @@index([subjectId], map: "teacher_assign_subject_idx")
+  @@index([classId], map: "teacher_assign_class_idx")
+  @@index([sectionId], map: "teacher_assign_section_idx")
+  @@index([responsibilityId], map: "teacher_assign_resp_idx")
+  @@index([status], map: "teacher_assign_status_idx")
+  @@index([createdBy], map: "teacher_assign_created_by_idx")
+  @@map("teacher_assignments")
 }
 
 model ExamSchedule {
@@ -757,6 +857,8 @@ model Teacher {
   shift              Shift?                   @relation(fields: [shiftId], references: [id], onDelete: SetNull)
   tenant             Tenant                   @relation("TenantTeachers", fields: [tenantId], references: [id])
   branch             Branch?                  @relation("BranchTeachers", fields: [branchId], references: [id], onDelete: SetNull)
+  departmentHeads    DepartmentHeadAssignment[]
+  teachingAssignments TeacherAssignment[]
 
   @@unique([tenantId, phone])
   @@unique([tenantId, cnic])

@@ -13,8 +13,152 @@ const departmentSelect = {
   updatedAt: true,
 };
 
+const headTeacherSelect = {
+  id: true,
+  fullName: true,
+  staffType: true,
+  jobTitle: true,
+  department: true,
+  status: true,
+  branchId: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
+};
+
+const normalizeTenantId = (tenantId) => {
+  const resolvedTenantId = Number(tenantId);
+
+  return Number.isInteger(resolvedTenantId) && resolvedTenantId > 0 ? resolvedTenantId : null;
+};
+
+const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+
+const getBranchScopeKey = (branchScope) => {
+  const branchId = getScopedBranchId(branchScope);
+  return branchId ? `branch:${branchId}` : 'tenant';
+};
+
+const buildDepartmentSelect = (tenantId, branchScope = null) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
+
+  if (!resolvedTenantId) return departmentSelect;
+
+  return {
+    ...departmentSelect,
+    headAssignments: {
+      where: {
+        tenantId: resolvedTenantId,
+        branchScopeKey: getBranchScopeKey(branchScope),
+      },
+      select: {
+        id: true,
+        teacherId: true,
+        branchId: true,
+        branchScopeKey: true,
+        teacher: {
+          select: headTeacherSelect,
+        },
+      },
+      take: 1,
+    },
+  };
+};
+
+const mapDepartment = (department) => {
+  const assignment = department.headAssignments?.[0] || null;
+  const { headAssignments, ...rest } = department;
+
+  return {
+    ...rest,
+    head: assignment?.teacher?.fullName || rest.head,
+    legacyHead: rest.head,
+    headTeacherId: assignment?.teacherId || null,
+    headTeacher: assignment?.teacher || null,
+  };
+};
+
+const validateHeadTeacher = async (tenantId, headTeacherId, branchScope = null) => {
+  if (!headTeacherId) return null;
+
+  const resolvedTenantId = normalizeTenantId(tenantId);
+
+  if (!resolvedTenantId) {
+    throw new AppError('Tenant context is required to assign department head.', 403);
+  }
+
+  const branchId = getScopedBranchId(branchScope);
+  const teacher = await prisma.teacher.findFirst({
+    where: {
+      id: Number(headTeacherId),
+      tenantId: resolvedTenantId,
+      status: 'active',
+      ...(branchId ? { branchId } : {}),
+    },
+    select: headTeacherSelect,
+  });
+
+  if (!teacher) {
+    throw new AppError('Selected department head is not available for this tenant or branch.', 403);
+  }
+
+  return teacher;
+};
+
+const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, branchScope = null) => {
+  if (headTeacherId === undefined) return null;
+
+  const resolvedTenantId = normalizeTenantId(tenantId);
+
+  if (!resolvedTenantId) {
+    if (headTeacherId === null || headTeacherId === '') return null;
+    throw new AppError('Tenant context is required to assign department head.', 403);
+  }
+
+  const branchId = getScopedBranchId(branchScope);
+  const branchScopeKey = getBranchScopeKey(branchScope);
+  const existingAssignment = await tx.departmentHeadAssignment.findFirst({
+    where: {
+      departmentId,
+      tenantId: resolvedTenantId,
+      branchScopeKey,
+    },
+    select: { id: true },
+  });
+
+  if (headTeacherId === null || headTeacherId === '') {
+    if (existingAssignment) {
+      await tx.departmentHeadAssignment.delete({ where: { id: existingAssignment.id } });
+    }
+    return null;
+  }
+
+  const teacher = await validateHeadTeacher(resolvedTenantId, headTeacherId, branchScope);
+  const data = {
+    departmentId,
+    tenantId: resolvedTenantId,
+    branchId,
+    branchScopeKey,
+    teacherId: teacher.id,
+  };
+
+  if (existingAssignment) {
+    return tx.departmentHeadAssignment.update({
+      where: { id: existingAssignment.id },
+      data,
+    });
+  }
+
+  return tx.departmentHeadAssignment.create({ data });
+};
+
 export const departmentsService = {
-  async createDepartment(payload) {
+  async createDepartment(tenantId, payload, branchScope = null) {
     const existingDepartment = await prisma.department.findFirst({
       where: {
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
@@ -25,19 +169,30 @@ export const departmentsService = {
       throw new AppError('Department with the same name or code already exists.', 409);
     }
 
-    return prisma.department.create({
-      data: {
-        name: payload.name,
-        code: payload.code || null,
-        head: payload.head || null,
-        members: payload.members ?? 0,
-        status: payload.status || 'active',
-      },
-      select: departmentSelect,
+    const department = await prisma.$transaction(async (tx) => {
+      const createdDepartment = await tx.department.create({
+        data: {
+          name: payload.name,
+          code: payload.code || null,
+          head: payload.head || null,
+          members: payload.members ?? 0,
+          status: payload.status || 'active',
+        },
+        select: departmentSelect,
+      });
+
+      await syncHeadAssignment(tx, createdDepartment.id, tenantId, payload.headTeacherId, branchScope);
+
+      return tx.department.findUnique({
+        where: { id: createdDepartment.id },
+        select: buildDepartmentSelect(tenantId, branchScope),
+      });
     });
+
+    return mapDepartment(department);
   },
 
-  async getDepartments(query) {
+  async getDepartments(tenantId, query, branchScope = null) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
@@ -59,33 +214,35 @@ export const departmentsService = {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: departmentSelect,
+        select: buildDepartmentSelect(tenantId, branchScope),
       }),
       prisma.department.count({ where }),
     ]);
 
     return {
-      items,
+      items: items.map(mapDepartment),
       meta: buildPaginationMeta({ totalItems, page, limit }),
     };
   },
 
-  async getDepartmentById(id) {
+  async getDepartmentById(tenantId, id, branchScope = null) {
+    const departmentId = Number(id);
     const department = await prisma.department.findUnique({
-      where: { id },
-      select: departmentSelect,
+      where: { id: departmentId },
+      select: buildDepartmentSelect(tenantId, branchScope),
     });
 
     if (!department) {
       throw new AppError('Department not found.', 404);
     }
 
-    return department;
+    return mapDepartment(department);
   },
 
-  async updateDepartment(id, payload) {
+  async updateDepartment(tenantId, id, payload, branchScope = null) {
+    const departmentId = Number(id);
     const existingDepartment = await prisma.department.findUnique({
-      where: { id },
+      where: { id: departmentId },
     });
 
     if (!existingDepartment) {
@@ -94,7 +251,7 @@ export const departmentsService = {
 
     const duplicateDepartment = await prisma.department.findFirst({
       where: {
-        id: { not: id },
+        id: { not: departmentId },
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
       },
     });
@@ -103,17 +260,28 @@ export const departmentsService = {
       throw new AppError('Another department with the same name or code already exists.', 409);
     }
 
-    return prisma.department.update({
-      where: { id },
-      data: {
-        name: payload.name,
-        code: payload.code || null,
-        head: payload.head || null,
-        members: payload.members ?? existingDepartment.members,
-        status: payload.status || existingDepartment.status,
-      },
-      select: departmentSelect,
+    const department = await prisma.$transaction(async (tx) => {
+      await tx.department.update({
+        where: { id: departmentId },
+        data: {
+          name: payload.name,
+          code: payload.code || null,
+          head: payload.head || null,
+          members: payload.members ?? existingDepartment.members,
+          status: payload.status || existingDepartment.status,
+        },
+        select: departmentSelect,
+      });
+
+      await syncHeadAssignment(tx, departmentId, tenantId, payload.headTeacherId, branchScope);
+
+      return tx.department.findUnique({
+        where: { id: departmentId },
+        select: buildDepartmentSelect(tenantId, branchScope),
+      });
     });
+
+    return mapDepartment(department);
   },
 
   async deleteDepartment(id) {

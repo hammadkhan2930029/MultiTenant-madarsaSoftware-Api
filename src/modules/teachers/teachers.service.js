@@ -288,7 +288,7 @@ export const teachersService = {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
         select: teacherSelect,
       }),
       prisma.teacher.count({ where }),

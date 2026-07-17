@@ -79,6 +79,82 @@ export const classesService = {
     });
   },
 
+  async bulkCreateClasses(tenantId, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getRequestedBranchId(payload, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
+
+    const normalizedRows = payload.classes
+      .map((item, index) => ({
+        index,
+        name: String(item.name || '').trim(),
+      }))
+      .filter((item) => item.name);
+
+    if (!normalizedRows.length) {
+      throw new AppError('کم از کم ایک جماعت کا نام درج کریں۔', 400);
+    }
+
+    const seenNames = new Map();
+    const rowErrors = [];
+
+    normalizedRows.forEach((row) => {
+      const key = row.name.toLowerCase();
+      if (seenNames.has(key)) {
+        rowErrors.push({
+          index: row.index,
+          message: 'یہ جماعت اسی فارم میں دوبارہ درج ہے۔',
+        });
+      } else {
+        seenNames.set(key, row.index);
+      }
+    });
+
+    const existingClasses = await prisma.academicClass.findMany({
+      where: {
+        tenantId: resolvedTenantId,
+        branchId,
+        name: { in: normalizedRows.map((row) => row.name) },
+      },
+      select: { name: true },
+    });
+    const existingNames = new Set(existingClasses.map((item) => item.name.toLowerCase()));
+
+    normalizedRows.forEach((row) => {
+      if (existingNames.has(row.name.toLowerCase())) {
+        rowErrors.push({
+          index: row.index,
+          message: 'یہ جماعت پہلے سے موجود ہے۔',
+        });
+      }
+    });
+
+    if (rowErrors.length) {
+      throw new AppError('درج کردہ جماعتوں میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+    }
+
+    return prisma.$transaction(async (tx) => {
+      const createdClasses = [];
+
+      for (const row of normalizedRows) {
+        const createdClass = await tx.academicClass.create({
+          data: {
+            tenantId: resolvedTenantId,
+            branchId,
+            name: row.name,
+          },
+          select: classSelect,
+        });
+        createdClasses.push(createdClass);
+      }
+
+      return {
+        items: createdClasses,
+        createdCount: createdClasses.length,
+      };
+    });
+  },
+
   async getClasses(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);

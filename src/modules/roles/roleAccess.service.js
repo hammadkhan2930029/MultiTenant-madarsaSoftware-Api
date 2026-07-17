@@ -11,6 +11,8 @@ export const mapRoleRow = (row) => {
   return {
     id: toNumber(row.id),
     tenantId: toNumber(row.tenant_id),
+    branchId: toNumber(row.branch_id),
+    roleScopeKey: row.role_scope_key === undefined ? undefined : Number(row.role_scope_key),
     roleName: row.role_name,
     description: row.description,
     status: row.status || 'active',
@@ -26,7 +28,7 @@ export const getRoleById = async (roleId, client = prisma) => {
   if (!roleId) return null;
 
     const rows = await client.$queryRaw`
-    SELECT id, tenant_id, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
+    SELECT id, tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
     FROM roles
     WHERE id = ${roleId}
     LIMIT 1
@@ -39,7 +41,7 @@ export const getRoleByName = async (roleName, client = prisma, tenantId = null) 
   if (!roleName) return null;
 
   const rows = await client.$queryRaw`
-    SELECT id, tenant_id, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
+    SELECT id, tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
     FROM roles
     WHERE role_name = ${roleName}
       AND tenant_id <=> ${tenantId}

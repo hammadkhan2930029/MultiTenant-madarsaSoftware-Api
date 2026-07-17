@@ -1,0 +1,56 @@
+AppError: درج کردہ معلومات درست نہیں ہیں۔
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/validate.middleware.js:11:11
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/authorization.middleware.js:65:14
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12) {
+  statusCode: 400,
+  details: { formErrors: [], fieldErrors: { query: [Array] } }
+}
+AppError: درج کردہ معلومات درست نہیں ہیں۔
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/validate.middleware.js:11:11
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/authorization.middleware.js:65:14
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12) {
+  statusCode: 400,
+  details: { formErrors: [], fieldErrors: { query: [Array] } }
+}
+AppError: درج کردہ معلومات درست نہیں ہیں۔
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/validate.middleware.js:11:11
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/authorization.middleware.js:65:14
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12) {
+  statusCode: 400,
+  details: { formErrors: [], fieldErrors: { query: [Array] } }
+}
+AppError: درج کردہ معلومات درست نہیں ہیں۔
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/validate.middleware.js:11:11
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/authorization.middleware.js:65:14
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12) {
+  statusCode: 400,
+  details: { formErrors: [], fieldErrors: { query: [Array] } }
+}

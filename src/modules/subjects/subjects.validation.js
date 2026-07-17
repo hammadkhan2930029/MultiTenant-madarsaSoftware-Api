@@ -12,6 +12,19 @@ export const createSubjectValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const bulkCreateSubjectsValidationSchema = z.object({
+  body: z.object({
+    subjects: z.array(
+      z.object({
+        name: z.string().trim().min(2, 'Subject name is required.').max(150, 'Subject name is too long.'),
+        detail: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((value) => (value === '' ? undefined : value)),
+      }),
+    ).min(1, 'At least one subject is required.').max(50, 'Too many subjects in one request.'),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const listSubjectsValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

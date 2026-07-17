@@ -12,6 +12,16 @@ export const createSection = asyncHandler(async (req, res) => {
   });
 });
 
+export const bulkCreateSections = asyncHandler(async (req, res) => {
+  const result = await sectionsService.bulkCreateSections(req.tenantId, req.body, req.branchScope);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Sections created successfully.',
+    data: result,
+  });
+});
+
 export const getSections = asyncHandler(async (req, res) => {
   const sections = await sectionsService.getSections(req.tenantId, req.query, req.branchScope);
 

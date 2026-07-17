@@ -12,6 +12,16 @@ export const createSubject = asyncHandler(async (req, res) => {
   });
 });
 
+export const bulkCreateSubjects = asyncHandler(async (req, res) => {
+  const result = await subjectsService.bulkCreateSubjects(req.tenantId, req.body);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Subjects created successfully.',
+    data: result,
+  });
+});
+
 export const getSubjects = asyncHandler(async (req, res) => {
   const result = await subjectsService.getSubjects(req.tenantId, req.query);
 

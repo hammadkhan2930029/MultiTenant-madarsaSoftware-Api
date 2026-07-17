@@ -104,6 +104,10 @@ const permissions = [
   { key: 'teachers.attendance.create', name: 'اساتذہ حاضری لگائیں', path: '/teachers/attendance', module: 'teachers' },
   { key: 'teachers.schedule.view', name: 'اساتذہ شیڈول دیکھیں', path: '/teachers/schedule', module: 'teachers' },
   { key: 'teachers.schedule.create', name: 'اساتذہ شیڈول بنائیں', path: '/teachers/schedule', module: 'teachers' },
+  { key: 'teachers.assignments.view', name: 'مضامین اور ذمہ داریاں دیکھیں', path: '/teachers/assignments', module: 'teachers' },
+  { key: 'teachers.assignments.create', name: 'مضامین اور ذمہ داریاں شامل کریں', path: '/teachers/assignments', module: 'teachers' },
+  { key: 'teachers.assignments.edit', name: 'مضامین اور ذمہ داریاں تبدیل کریں', path: '/teachers/assignments', module: 'teachers' },
+  { key: 'teachers.assignments.delete', name: 'مضامین اور ذمہ داریاں حذف کریں', path: '/teachers/assignments', module: 'teachers' },
   { key: 'teachers.salary_increments.view', name: 'تنخواہ انکریمنٹ دیکھیں', path: '/teachers/salary-increments', module: 'teachers' },
   { key: 'teachers.salary_increments.create', name: 'تنخواہ انکریمنٹ شامل کریں', path: '/teachers/salary-increments', module: 'teachers' },
 

@@ -4,6 +4,7 @@ const departmentBodySchema = z.object({
   name: z.string().trim().min(2, 'Department name is required.').max(150, 'Department name is too long.'),
   code: z.string().trim().max(50, 'Department code is too long.').optional().or(z.literal('')),
   head: z.string().trim().max(150, 'Department head is too long.').optional().or(z.literal('')),
+  headTeacherId: z.union([z.coerce.number().int().positive(), z.null()]).optional(),
   members: z.coerce.number().int().min(0).optional(),
   status: z.enum(['active', 'inactive']).optional(),
 });

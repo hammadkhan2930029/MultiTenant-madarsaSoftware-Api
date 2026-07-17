@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { blockBranchScopedPermissionManagement, requireAnyPermission } from '../../middlewares/authorization.middleware.js';
+import { requireAnyPermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   assignRolePermissions,
@@ -23,7 +23,6 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.use(blockBranchScopedPermissionManagement);
 
 router.post('/', requireAnyPermission('roles.manage'), validate(createRoleValidationSchema), createRole);
 router.get('/', requireAnyPermission('roles.view'), validate(listRolesValidationSchema), getRoles);

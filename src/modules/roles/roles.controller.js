@@ -27,8 +27,8 @@ export const getRoles = asyncHandler(async (req, res) => {
   });
 });
 
-export const getPermissions = asyncHandler(async (_req, res) => {
-  const result = await rolesService.getPermissions();
+export const getPermissions = asyncHandler(async (req, res) => {
+  const result = await rolesService.getPermissions(buildRequester(req));
 
   return apiResponse(res, {
     message: 'Permissions fetched successfully.',

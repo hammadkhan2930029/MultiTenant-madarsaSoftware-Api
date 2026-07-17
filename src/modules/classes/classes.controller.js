@@ -12,6 +12,16 @@ export const createClass = asyncHandler(async (req, res) => {
   });
 });
 
+export const bulkCreateClasses = asyncHandler(async (req, res) => {
+  const result = await classesService.bulkCreateClasses(req.tenantId, req.body, req.branchScope);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Classes created successfully.',
+    data: result,
+  });
+});
+
 export const getClasses = asyncHandler(async (req, res) => {
   const academicClasses = await classesService.getClasses(req.tenantId, req.query, req.branchScope);
 

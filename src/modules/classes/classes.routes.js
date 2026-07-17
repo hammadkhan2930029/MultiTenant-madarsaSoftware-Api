@@ -4,12 +4,14 @@ import { requirePermission } from '../../middlewares/authorization.middleware.js
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createClass,
+  bulkCreateClasses,
   getClasses,
   getClassById,
   updateClass,
   deleteClass,
 } from './classes.controller.js';
 import {
+  bulkCreateClassesValidationSchema,
   createClassValidationSchema,
   listClassesValidationSchema,
   classIdValidationSchema,
@@ -21,6 +23,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.post('/', requirePermission('classes.create'), validate(createClassValidationSchema), createClass);
+router.post('/bulk', requirePermission('classes.create'), validate(bulkCreateClassesValidationSchema), bulkCreateClasses);
 router.get('/', requirePermission('classes.view'), validate(listClassesValidationSchema), getClasses);
 router.get('/:id', requirePermission('classes.view'), validate(classIdValidationSchema), getClassById);
 router.patch('/:id', requirePermission('classes.update'), validate(updateClassValidationSchema), updateClass);

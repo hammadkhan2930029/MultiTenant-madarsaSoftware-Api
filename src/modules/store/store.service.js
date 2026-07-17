@@ -1794,6 +1794,7 @@ export const storeService = {
     await ensureStorePurchaseTables();
     const search = normalizeText(query.search);
     const supplierId = query.supplierId ? normalizeId(query.supplierId) : null;
+    const outstandingOnly = String(query.outstanding || '').toLowerCase() === 'true';
     const { fromDate, toDate } = getReportDateRange(query);
     const searchTerm = `%${search}%`;
     const rows = await prisma.$queryRaw`
@@ -1806,6 +1807,7 @@ export const storeService = {
         AND p.status = 'active'
         AND (${search} = '' OR s.supplierName LIKE ${searchTerm} OR p.invoiceNumber LIKE ${searchTerm})
         AND (${supplierId} IS NULL OR p.supplierId = ${supplierId})
+        AND (${outstandingOnly} = false OR (p.remainingAmount > 0 AND p.approvalStatus = 'approved'))
         AND (${fromDate} IS NULL OR p.purchaseDate >= ${fromDate})
         AND (${toDate} IS NULL OR p.purchaseDate <= ${toDate})
       ORDER BY p.purchaseDate DESC, p.id DESC

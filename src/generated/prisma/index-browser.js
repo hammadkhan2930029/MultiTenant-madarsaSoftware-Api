@@ -172,6 +172,8 @@ exports.Prisma.AuditLogScalarFieldEnum = {
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
+  roleScopeKey: 'roleScopeKey',
   roleName: 'roleName',
   description: 'description',
   status: 'status',
@@ -289,6 +291,17 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentHeadAssignmentScalarFieldEnum = {
+  id: 'id',
+  departmentId: 'departmentId',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  branchScopeKey: 'branchScopeKey',
+  teacherId: 'teacherId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.QualificationScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -379,6 +392,35 @@ exports.Prisma.TeacherScheduleScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeacherResponsibilityScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  branchScopeKey: 'branchScopeKey',
+  name: 'name',
+  status: 'status',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeacherAssignmentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  branchScopeKey: 'branchScopeKey',
+  teacherId: 'teacherId',
+  subjectId: 'subjectId',
+  classId: 'classId',
+  sectionId: 'sectionId',
+  responsibilityId: 'responsibilityId',
+  assignmentScopeKey: 'assignmentScopeKey',
+  status: 'status',
+  createdBy: 'createdBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1120,6 +1162,10 @@ exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.DepartmentHeadAssignmentOrderByRelevanceFieldEnum = {
+  branchScopeKey: 'branchScopeKey'
+};
+
 exports.Prisma.QualificationOrderByRelevanceFieldEnum = {
   title: 'title',
   category: 'category',
@@ -1165,6 +1211,18 @@ exports.Prisma.StudentScheduleOrderByRelevanceFieldEnum = {
 exports.Prisma.TeacherScheduleOrderByRelevanceFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
+  status: 'status'
+};
+
+exports.Prisma.TeacherResponsibilityOrderByRelevanceFieldEnum = {
+  branchScopeKey: 'branchScopeKey',
+  name: 'name',
+  status: 'status'
+};
+
+exports.Prisma.TeacherAssignmentOrderByRelevanceFieldEnum = {
+  branchScopeKey: 'branchScopeKey',
+  assignmentScopeKey: 'assignmentScopeKey',
   status: 'status'
 };
 
@@ -1495,6 +1553,7 @@ exports.Prisma.ModelName = {
   SupportRequest: 'SupportRequest',
   Shift: 'Shift',
   Department: 'Department',
+  DepartmentHeadAssignment: 'DepartmentHeadAssignment',
   Qualification: 'Qualification',
   Subject: 'Subject',
   Branch: 'Branch',
@@ -1503,6 +1562,8 @@ exports.Prisma.ModelName = {
   AcademicSession: 'AcademicSession',
   StudentSchedule: 'StudentSchedule',
   TeacherSchedule: 'TeacherSchedule',
+  TeacherResponsibility: 'TeacherResponsibility',
+  TeacherAssignment: 'TeacherAssignment',
   ExamSchedule: 'ExamSchedule',
   ResultGrade: 'ResultGrade',
   ExamResult: 'ExamResult',

@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { requirePermission, requireTenantAdmin } from '../../middlewares/authorization.middleware.js';
+import { requirePermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
+import { AppError } from '../../utils/appError.js';
 import {
   createBranch,
   getBranches,
@@ -28,7 +29,14 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.use(requireTenantAdmin);
+
+const requireTenantAdminBranchLookup = (req, _res, next) => {
+  if (req.auth?.isTenantAdmin) return next();
+
+  return next(new AppError('یہ عمل صرف مدرسہ ایڈمن کر سکتا ہے۔', 403));
+};
+
+router.use(requireTenantAdminBranchLookup);
 
 router.post('/', requirePermission('branches.create'), validate(createBranchValidationSchema), createBranch);
 router.get('/', requirePermission('branches.view'), validate(listBranchesValidationSchema), getBranches);

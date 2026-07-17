@@ -11,6 +11,19 @@ export const createClassValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const bulkCreateClassesValidationSchema = z.object({
+  body: z.object({
+    branchId: z.coerce.number().int().positive('Branch id must be a valid number.'),
+    classes: z.array(
+      z.object({
+        name: z.string().trim().min(2, 'Class name is required.').max(150, 'Class name is too long.'),
+      }),
+    ).min(1, 'At least one class is required.').max(50, 'Too many classes in one request.'),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const listClassesValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

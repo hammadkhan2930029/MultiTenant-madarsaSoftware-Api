@@ -5,6 +5,9 @@ const optionalStringField = (max, message) =>
     value === '' ? undefined : value
   );
 
+const requiredStringField = (max, requiredMessage, maxMessage) =>
+  z.string().trim().min(1, requiredMessage).max(max, maxMessage);
+
 const teacherBodySchema = z.object({
   branchId: z.coerce.number().int().positive('Branch must be valid.').optional(),
   staffType: optionalStringField(50, 'عملہ کی قسم بہت لمبی ہے۔'),
@@ -14,7 +17,7 @@ const teacherBodySchema = z.object({
     .transform((value) => (value === '' ? undefined : value)),
   phone: optionalStringField(50, 'فون نمبر بہت لمبا ہے۔'),
   cnic: optionalStringField(50, 'شناختی کارڈ نمبر بہت لمبا ہے۔'),
-  subject: optionalStringField(150, 'مضمون / ذمہ داری بہت لمبی ہے۔'),
+  subject: requiredStringField(150, 'مضمون / ذمہ داری لازمی ہے۔', 'مضمون / ذمہ داری بہت لمبی ہے۔'),
   qualification: optionalStringField(150, 'تعلیمی قابلیت بہت لمبی ہے۔'),
   educationInstitute: optionalStringField(150, 'تعلیمی ادارہ بہت لمبا ہے۔'),
   educationYear: optionalStringField(20, 'تعلیمی سال بہت لمبا ہے۔'),
@@ -28,8 +31,8 @@ const teacherBodySchema = z.object({
   jobTitle: optionalStringField(150, 'عہدہ بہت لمبا ہے۔'),
   department: optionalStringField(150, 'شعبہ بہت لمبا ہے۔'),
   employmentType: optionalStringField(100, 'ملازمت کی نوعیت بہت لمبی ہے۔'),
-  appointmentDate: optionalStringField(20, 'تاریخ تقرری درست نہیں۔'),
-  joiningDate: optionalStringField(20, 'تاریخ شمولیت درست نہیں۔'),
+  appointmentDate: requiredStringField(20, 'تاریخ تقرری لازمی ہے۔', 'تاریخ تقرری درست نہیں۔'),
+  joiningDate: requiredStringField(20, 'تاریخ شمولیت لازمی ہے۔', 'تاریخ شمولیت درست نہیں۔'),
   experienceSummary: optionalStringField(500, 'تجربہ بہت لمبا ہے۔'),
   notes: optionalStringField(500, 'نوٹس بہت لمبے ہیں۔'),
   shiftId: z

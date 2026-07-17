@@ -11,6 +11,19 @@ export const createSectionValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const bulkCreateSectionsValidationSchema = z.object({
+  body: z.object({
+    classId: z.coerce.number().int().positive('Class id must be a valid number.'),
+    sections: z.array(
+      z.object({
+        name: z.string().trim().min(1, 'Section name is required.').max(150, 'Section name is too long.'),
+      }),
+    ).min(1, 'At least one section is required.').max(50, 'Too many sections in one request.'),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const listSectionsValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

@@ -348,7 +348,7 @@ export const studentFeesService = {
       tenantId: resolvedTenantId,
       ...(query.feeMonth ? { feeMonth: query.feeMonth } : {}),
       ...(query.feeYear ? { feeYear: query.feeYear } : {}),
-      ...(query.status ? { status: query.status } : {}),
+      ...(query.status ? { status: query.status === 'due' ? { in: ['unpaid', 'partial'] } : query.status } : {}),
       student: {
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
@@ -446,17 +446,21 @@ export const studentFeesService = {
     if (!existing) throw new AppError('Fee voucher not found.', 404);
 
     const totalAmount = toAmount(existing.totalAmount);
-    const paidAmount = Math.min(toAmount(payload.paidAmount), totalAmount);
+    const previousPaidAmount = Math.min(toAmount(existing.paidAmount), totalAmount);
+    const currentDueAmount = Math.max(totalAmount - previousPaidAmount, 0);
+    const paymentAmount = Math.min(toAmount(payload.paidAmount), currentDueAmount);
+    const paidAmount = Math.min(previousPaidAmount + paymentAmount, totalAmount);
     const dueAmount = Math.max(totalAmount - paidAmount, 0);
     const status = dueAmount <= 0 ? 'paid' : paidAmount > 0 ? 'partial' : 'unpaid';
+    const hasNewPayment = paymentAmount > 0;
 
     return prisma.studentFeeVoucher.update({
       where: { id, tenantId: resolvedTenantId },
       data: {
         paidAmount,
         dueAmount,
-        paidDate: paidAmount > 0 ? normalizeDate(payload.paidDate || new Date()) : null,
-        paymentMethod: paidAmount > 0 ? payload.paymentMethod || 'Cash' : null,
+        paidDate: hasNewPayment ? normalizeDate(payload.paidDate || new Date()) : existing.paidDate,
+        paymentMethod: hasNewPayment ? payload.paymentMethod || existing.paymentMethod || 'Cash' : existing.paymentMethod,
         remarks: payload.remarks || null,
         status,
       },

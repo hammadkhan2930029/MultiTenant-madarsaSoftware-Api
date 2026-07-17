@@ -1,15 +1,26 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { auditService } from '../security/index.js';
 
 const SYSTEM_SUPER_ADMIN_ROLE = 'super_admin';
+const BRANCH_RESTRICTED_PERMISSION_MODULES = new Set(['tenant_management', 'branches']);
+const BRANCH_RESTRICTED_PERMISSION_PREFIXES = ['tenant_management.', 'branches.'];
+const BRANCH_PROTECTED_ROLE_NAMES = new Set(['super_admin', 'admin']);
 
 const toNumber = (value) => (value === null || value === undefined ? null : Number(value));
 
 const mapRole = (row) => ({
   id: Number(row.id),
   tenantId: toNumber(row.tenant_id),
+  branchId: toNumber(row.branch_id),
+  roleScopeKey: row.role_scope_key === undefined ? undefined : Number(row.role_scope_key),
+  scope: row.tenant_id === null || row.tenant_id === undefined
+    ? 'system'
+    : row.branch_id === null || row.branch_id === undefined
+      ? 'tenant'
+      : 'branch',
   name: row.role_name,
   roleName: row.role_name,
   description: row.description,
@@ -40,6 +51,67 @@ const normalizeOptionalTenantId = (tenantId) => (
   tenantId === null || tenantId === undefined || tenantId === '' ? null : Number(tenantId)
 );
 
+const normalizeOptionalBranchId = (branchId) => (
+  branchId === null || branchId === undefined || branchId === '' ? null : Number(branchId)
+);
+
+const getRoleScopeKey = (branchId) => normalizeOptionalBranchId(branchId) || 0;
+
+const isBranchScopedRequester = (requester = {}) => Boolean(
+  normalizeOptionalBranchId(requester?.branchId) && !requester?.isTenantAdmin && !requester?.isSuperAdmin,
+);
+
+const logDeniedRoleAudit = (requester = {}, entry = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: requester?.tenantId || null,
+  actorUserId: requester?.admin?.id || null,
+  branchId: requester?.audit?.branchId || requester?.branchId || null,
+  roleId: requester?.audit?.roleId || requester?.admin?.roleId || requester?.admin?.role_id || null,
+  module: 'roles',
+  targetType: 'role',
+  action: 'role.authorization.denied',
+  ipAddress: requester?.audit?.ipAddress || null,
+  userAgent: requester?.audit?.userAgent || null,
+  ...entry,
+});
+
+const denyRoleEscalation = async (requester, reason, details = {}) => {
+  await logDeniedRoleAudit(requester, {
+    oldValue: null,
+    newValue: {
+      reason,
+      ...details,
+    },
+  });
+  throw new AppError('Branch admin cannot perform this action outside own branch scope.', 403);
+};
+
+const assertNoBranchScopeInjection = async (payload = {}, requester = {}, targetRoleId = null) => {
+  if (!isBranchScopedRequester(requester)) return;
+
+  const requesterTenantId = normalizeOptionalTenantId(requester?.tenantId);
+  const requesterBranchId = normalizeOptionalBranchId(requester?.branchId);
+
+  if (
+    Object.prototype.hasOwnProperty.call(payload, 'tenantId') &&
+    normalizeOptionalTenantId(payload.tenantId) !== requesterTenantId
+  ) {
+    await denyRoleEscalation(requester, 'tenantId injection', {
+      targetId: targetRoleId,
+      requestedTenantId: payload.tenantId,
+    });
+  }
+
+  if (
+    Object.prototype.hasOwnProperty.call(payload, 'branchId') &&
+    normalizeOptionalBranchId(payload.branchId) !== requesterBranchId
+  ) {
+    await denyRoleEscalation(requester, 'branchId injection', {
+      targetId: targetRoleId,
+      requestedBranchId: payload.branchId,
+    });
+  }
+};
+
 const resolveRoleTenantId = (payload = {}, requester = {}) => {
   if (requester?.isSuperAdmin) {
     return normalizeOptionalTenantId(payload.tenantId);
@@ -53,13 +125,71 @@ const resolveRoleTenantId = (payload = {}, requester = {}) => {
   return tenantId;
 };
 
+const ensureBranchBelongsToTenant = async (client, { tenantId, branchId }) => {
+  const resolvedTenantId = normalizeOptionalTenantId(tenantId);
+  const resolvedBranchId = normalizeOptionalBranchId(branchId);
+
+  if (!resolvedBranchId) return null;
+
+  if (!resolvedTenantId) {
+    throw new AppError('Tenant context is required for branch roles.', 403);
+  }
+
+  const branch = await client.branch.findFirst({
+    where: {
+      id: resolvedBranchId,
+      tenantId: resolvedTenantId,
+    },
+    select: {
+      id: true,
+      status: true,
+    },
+  });
+
+  if (!branch) {
+    throw new AppError('Branch not found.', 404);
+  }
+
+  if (branch.status !== 'active') {
+    throw new AppError('Selected branch is inactive.', 400);
+  }
+
+  return Number(branch.id);
+};
+
+const resolveRoleBranchId = async (client, payload = {}, requester = {}, roleTenantId = null) => {
+  const requesterBranchId = normalizeOptionalBranchId(requester?.branchId);
+
+  if (requesterBranchId && !requester?.isTenantAdmin && !requester?.isSuperAdmin) {
+    return requesterBranchId;
+  }
+
+  const requestedBranchId = normalizeOptionalBranchId(payload.branchId);
+  if (!requestedBranchId) return null;
+
+  return ensureBranchBelongsToTenant(client, {
+    tenantId: roleTenantId,
+    branchId: requestedBranchId,
+  });
+};
+
 const assertCanAccessRole = (role, requester = {}) => {
   if (requester?.isSuperAdmin) return;
 
   const roleTenantId = normalizeOptionalTenantId(role?.tenant_id);
   const requestTenantId = normalizeOptionalTenantId(requester?.tenantId);
+  const roleBranchId = normalizeOptionalBranchId(role?.branch_id);
+  const roleScopeKey = Number(role?.role_scope_key || 0);
+  const requesterBranchId = normalizeOptionalBranchId(requester?.branchId);
 
   if (roleTenantId !== null && roleTenantId !== requestTenantId) {
+    throw new AppError('Role not found.', 404);
+  }
+
+  if (
+    isBranchScopedRequester(requester) &&
+    (roleTenantId !== requestTenantId || roleBranchId !== requesterBranchId || roleScopeKey !== requesterBranchId)
+  ) {
     throw new AppError('Role not found.', 404);
   }
 };
@@ -67,16 +197,33 @@ const assertCanAccessRole = (role, requester = {}) => {
 const buildRoleScopeWhere = (query = {}, requester = {}) => {
   if (!requester?.isSuperAdmin) {
     const tenantId = normalizeOptionalTenantId(requester?.tenantId);
+    const requesterBranchId = normalizeOptionalBranchId(requester?.branchId);
+    const queryBranchId = normalizeOptionalBranchId(query.branchId);
+
+    if (requesterBranchId) {
+      return {
+        sql: 'r.tenant_id = ? AND r.branch_id = ? AND r.role_scope_key = ?',
+        values: [tenantId, requesterBranchId, requesterBranchId],
+      };
+    }
+
+    if (queryBranchId) {
+      return {
+        sql: 'r.tenant_id = ? AND r.branch_id = ? AND r.role_scope_key = ?',
+        values: [tenantId, queryBranchId, queryBranchId],
+      };
+    }
 
     return {
       sql: `(
-        r.tenant_id = ?
+        (r.tenant_id = ? AND r.branch_id IS NULL)
         OR (
           r.tenant_id IS NULL
           AND NOT EXISTS (
             SELECT 1
             FROM roles tenant_role
             WHERE tenant_role.tenant_id = ?
+              AND tenant_role.branch_id IS NULL
               AND tenant_role.role_name = r.role_name
           )
         )
@@ -90,8 +237,13 @@ const buildRoleScopeWhere = (query = {}, requester = {}) => {
   }
 
   const queryTenantId = normalizeOptionalTenantId(query.tenantId);
+  const queryBranchId = normalizeOptionalBranchId(query.branchId);
+  if (queryBranchId) {
+    return { sql: 'r.tenant_id = ? AND r.branch_id = ? AND r.role_scope_key = ?', values: [queryTenantId, queryBranchId, queryBranchId] };
+  }
+
   if (query.scope === 'tenant' || queryTenantId) {
-    return { sql: 'r.tenant_id = ?', values: [queryTenantId] };
+    return { sql: 'r.tenant_id = ? AND r.branch_id IS NULL', values: [queryTenantId] };
   }
 
   return { sql: '1 = 1', values: [] };
@@ -102,6 +254,8 @@ const getRoleRowById = async (client, id) => {
     SELECT
       r.id,
       r.tenant_id,
+      r.branch_id,
+      r.role_scope_key,
       r.role_name,
       r.description,
       r.status,
@@ -114,28 +268,32 @@ const getRoleRowById = async (client, id) => {
     FROM roles r
     LEFT JOIN admins a ON a.role_id = r.id
     WHERE r.id = ${id}
-    GROUP BY r.id, r.tenant_id, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
+    GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
     LIMIT 1
   `;
 
   return rows[0] || null;
 };
 
-const getRoleByName = async (client, roleName, tenantId, excludeId = null) => {
+const getRoleByName = async (client, roleName, tenantId, branchId = null, excludeId = null) => {
+  const roleBranchId = normalizeOptionalBranchId(branchId);
+  const roleScopeKey = getRoleScopeKey(roleBranchId);
   const rows = excludeId
     ? await client.$queryRaw`
-        SELECT id, tenant_id, role_name
+        SELECT id, tenant_id, branch_id, role_scope_key, role_name
         FROM roles
         WHERE role_name = ${roleName}
           AND tenant_id <=> ${tenantId}
+          AND role_scope_key = ${roleScopeKey}
           AND id <> ${excludeId}
         LIMIT 1
       `
     : await client.$queryRaw`
-        SELECT id, tenant_id, role_name
+        SELECT id, tenant_id, branch_id, role_scope_key, role_name
         FROM roles
         WHERE role_name = ${roleName}
           AND tenant_id <=> ${tenantId}
+          AND role_scope_key = ${roleScopeKey}
         LIMIT 1
       `;
 
@@ -182,9 +340,11 @@ const ensureTenantCopyOfRole = async (client, { globalRole, tenantId, actorId = 
   }
 
   await client.$executeRaw`
-    INSERT INTO roles (tenant_id, role_name, description, status, is_system_role, created_by, updated_by)
+    INSERT INTO roles (tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by)
     VALUES (
       ${tenantId},
+      ${null},
+      ${0},
       ${nextRoleName},
       ${payload?.description === undefined ? globalRole.description : payload.description || null},
       ${payload?.status || globalRole.status || 'active'},
@@ -280,6 +440,107 @@ const collectPermissionInputs = (payload = {}) => {
     ids: Array.from(ids).filter((id) => Number.isInteger(id) && id > 0),
     keys: Array.from(keys).filter(Boolean),
   };
+};
+
+const assertBranchRoleNameAllowed = (roleName, requester = {}) => {
+  if (!isBranchScopedRequester(requester)) return;
+
+  const normalizedRoleName = normalizeRoleName(roleName).toLowerCase();
+  if (BRANCH_PROTECTED_ROLE_NAMES.has(normalizedRoleName)) {
+    throw new AppError('Branch admin cannot create protected system roles.', 403);
+  }
+};
+
+const assertBranchRoleCanBeChanged = (role, requester = {}) => {
+  if (!isBranchScopedRequester(requester)) return;
+
+  const roleName = normalizeRoleName(role?.role_name).toLowerCase();
+  if (Boolean(role?.is_system_role) || BRANCH_PROTECTED_ROLE_NAMES.has(roleName)) {
+    throw new AppError('Branch admin cannot change protected system roles.', 403);
+  }
+};
+
+const assertNotCurrentRequesterRole = (role, requester = {}) => {
+  const requesterRoleId = requester?.role?.id || requester?.admin?.roleId || requester?.admin?.role_id || null;
+  if (requesterRoleId && Number(role?.id) === Number(requesterRoleId)) {
+    throw new AppError('You cannot delete your current role.', 400);
+  }
+};
+
+const getPermissionsByIds = async (client, permissionIds = []) => {
+  const ids = permissionIds.map((id) => Number(id)).filter(Number.isInteger);
+  if (!ids.length) return [];
+
+  const placeholders = ids.map(() => '?').join(',');
+  const rows = await client.$queryRawUnsafe(`
+    SELECT id, permission_key, module_name
+    FROM permissions
+    WHERE id IN (${placeholders})
+  `, ...ids);
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    permissionKey: row.permission_key,
+    moduleName: row.module_name,
+  }));
+};
+
+const isRestrictedForBranchAdmin = (permission = {}) => {
+  const key = String(permission.permissionKey || '').trim().toLowerCase();
+  const moduleName = String(permission.moduleName || '').trim().toLowerCase().replace(/\s+/g, '_');
+
+  return (
+    BRANCH_RESTRICTED_PERMISSION_MODULES.has(moduleName) ||
+    BRANCH_RESTRICTED_PERMISSION_PREFIXES.some((prefix) => key.startsWith(prefix)) ||
+    key === SYSTEM_SUPER_ADMIN_ROLE
+  );
+};
+
+const filterPermissionsForRequester = (permissions = [], requester = {}) => {
+  if (!isBranchScopedRequester(requester)) return permissions;
+
+  const requesterPermissions = new Set(requester.permissionKeys || []);
+  return permissions.filter((permission) => (
+    requesterPermissions.has(permission.permissionKey) &&
+    !isRestrictedForBranchAdmin(permission)
+  ));
+};
+
+const assertPermissionBoundary = async (client, permissionIds = [], requester = {}) => {
+  if (!isBranchScopedRequester(requester) || !permissionIds.length) return;
+
+  const requesterPermissions = new Set(requester.permissionKeys || []);
+  const ids = permissionIds.map((id) => Number(id)).filter(Number.isInteger);
+  if (!ids.length) return;
+  const placeholders = ids.map(() => '?').join(',');
+  const restrictedRows = await client.$queryRawUnsafe(`
+    SELECT permission_key
+    FROM permissions
+    WHERE id IN (${placeholders})
+      AND (
+        LOWER(REPLACE(module_name, ' ', '_')) IN ('tenant_management', 'branches')
+        OR LOWER(permission_key) LIKE 'tenant_management.%'
+        OR LOWER(permission_key) LIKE 'branches.%'
+        OR LOWER(permission_key) = ?
+      )
+    LIMIT 1
+  `, ...ids, SYSTEM_SUPER_ADMIN_ROLE);
+
+  if (restrictedRows[0]) {
+    await denyRoleEscalation(requester, 'restricted permission requested', {
+      permissionKey: restrictedRows[0].permission_key,
+    });
+  }
+
+  const permissions = await getPermissionsByIds(client, permissionIds);
+
+  for (const permission of permissions) {
+    if (!requesterPermissions.has(permission.permissionKey) || isRestrictedForBranchAdmin(permission)) {
+      await denyRoleEscalation(requester, 'permission boundary exceeded', {
+        permissionKey: permission.permissionKey,
+      });
+    }
+  }
 };
 
 const resolvePermissionIds = async (client, payload = {}) => {
@@ -395,7 +656,7 @@ const logRoleAudit = (client, requester = {}, entry = {}) => auditService.record
 });
 
 export const rolesService = {
-  async getPermissions() {
+  async getPermissions(requester = {}) {
     const rows = await prisma.$queryRaw`
       SELECT
         id,
@@ -412,28 +673,33 @@ export const rolesService = {
       ORDER BY module_name ASC, sort_order ASC, permission_key ASC
     `;
 
-    return rows.map(mapPermission);
+    return filterPermissionsForRequester(rows.map(mapPermission), requester);
   },
 
   async createRole(payload, requester = {}) {
+    await assertNoBranchScopeInjection(payload, requester);
     const roleName = normalizeRoleName(payload.roleName || payload.name);
+    assertBranchRoleNameAllowed(roleName, requester);
     const roleTenantId = resolveRoleTenantId(payload, requester);
+    const roleBranchId = await resolveRoleBranchId(prisma, payload, requester, roleTenantId);
+    const roleScopeKey = getRoleScopeKey(roleBranchId);
     const actorId = requester?.admin?.id || null;
 
-    const existingRole = await getRoleByName(prisma, roleName, roleTenantId);
+    const existingRole = await getRoleByName(prisma, roleName, roleTenantId, roleBranchId);
     if (existingRole) {
       throw new AppError('Role with the same name already exists.', 409);
     }
 
     return prisma.$transaction(async (tx) => {
       const permissionIds = await resolvePermissionIds(tx, payload);
+      await assertPermissionBoundary(tx, permissionIds, requester);
 
       await tx.$executeRaw`
-        INSERT INTO roles (tenant_id, role_name, description, status, is_system_role, created_by, updated_by)
-        VALUES (${roleTenantId}, ${roleName}, ${payload.description || null}, ${payload.status || 'active'}, false, ${actorId}, ${actorId})
+        INSERT INTO roles (tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by)
+        VALUES (${roleTenantId}, ${roleBranchId}, ${roleScopeKey}, ${roleName}, ${payload.description || null}, ${payload.status || 'active'}, false, ${actorId}, ${actorId})
       `;
 
-      const createdRole = await getRoleByName(tx, roleName, roleTenantId);
+      const createdRole = await getRoleByName(tx, roleName, roleTenantId, roleBranchId);
 
       await replaceRolePermissions(tx, Number(createdRole.id), permissionIds);
 
@@ -471,12 +737,20 @@ export const rolesService = {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search || null;
     const status = query.status || null;
+    if (!requester?.isSuperAdmin && !requester?.branchId && query.branchId) {
+      await ensureBranchBelongsToTenant(prisma, {
+        tenantId: requester?.tenantId,
+        branchId: query.branchId,
+      });
+    }
     const scope = buildRoleScopeWhere(query, requester);
 
     const items = await prisma.$queryRawUnsafe(`
       SELECT
         r.id,
         r.tenant_id,
+        r.branch_id,
+        r.role_scope_key,
         r.role_name,
         r.description,
         r.status,
@@ -493,7 +767,7 @@ export const rolesService = {
         AND (? IS NULL
           OR r.role_name LIKE CONCAT('%', ?, '%')
           OR r.description LIKE CONCAT('%', ?, '%'))
-      GROUP BY r.id, r.tenant_id, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
+      GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
       ORDER BY r.is_system_role DESC, r.created_at DESC
       LIMIT ? OFFSET ?
     `, ...scope.values, status, status, search, search, search, limit, skip);
@@ -531,9 +805,11 @@ export const rolesService = {
 
   async updateRole(id, payload, requester = {}) {
     return prisma.$transaction(async (tx) => {
+      await assertNoBranchScopeInjection(payload, requester, id);
       const existingRole = await assertRoleExists(tx, id);
       assertCanAccessRole(existingRole, requester);
       assertSystemRoleCanBeChanged(existingRole);
+      assertBranchRoleCanBeChanged(existingRole, requester);
 
       if (!requester?.isSuperAdmin && normalizeOptionalTenantId(existingRole.tenant_id) === null) {
         const tenantId = normalizeOptionalTenantId(requester?.tenantId);
@@ -548,6 +824,7 @@ export const rolesService = {
 
         if (hasPermissionPayload(payload)) {
           const permissionIds = await resolvePermissionIds(tx, payload);
+          await assertPermissionBoundary(tx, permissionIds, requester);
           await replaceRolePermissions(tx, tenantRoleId, permissionIds);
         }
 
@@ -577,11 +854,13 @@ export const rolesService = {
 
       const nextRoleName = payload.roleName || payload.name ? normalizeRoleName(payload.roleName || payload.name) : existingRole.role_name;
       const roleTenantId = normalizeOptionalTenantId(existingRole.tenant_id);
+      const roleBranchId = normalizeOptionalBranchId(existingRole.branch_id);
       const nextStatus = payload.status || existingRole.status || 'active';
       const actorId = requester?.admin?.id || null;
 
       if (payload.roleName || payload.name) {
-        const duplicateRole = await getRoleByName(tx, nextRoleName, roleTenantId, id);
+        assertBranchRoleNameAllowed(nextRoleName, requester);
+        const duplicateRole = await getRoleByName(tx, nextRoleName, roleTenantId, roleBranchId, id);
         if (duplicateRole) {
           throw new AppError('Another role with the same name already exists.', 409);
         }
@@ -600,6 +879,7 @@ export const rolesService = {
 
       if (hasPermissionPayload(payload)) {
         const permissionIds = await resolvePermissionIds(tx, payload);
+        await assertPermissionBoundary(tx, permissionIds, requester);
         await replaceRolePermissions(tx, id, permissionIds);
       }
 
@@ -638,6 +918,8 @@ export const rolesService = {
       const existingRole = await assertRoleExists(tx, id);
       assertCanAccessRole(existingRole, requester);
       assertSystemRoleCanBeDeleted(existingRole);
+      assertBranchRoleCanBeChanged(existingRole, requester);
+      assertNotCurrentRequesterRole(existingRole, requester);
 
       if (!requester?.isSuperAdmin && normalizeOptionalTenantId(existingRole.tenant_id) === null) {
         const tenantId = normalizeOptionalTenantId(requester?.tenantId);
@@ -731,9 +1013,11 @@ export const rolesService = {
 
   async assignPermissionsToRole(id, payload, requester = {}) {
     return prisma.$transaction(async (tx) => {
+      await assertNoBranchScopeInjection(payload, requester, id);
       const existingRole = await assertRoleExists(tx, id);
       assertCanAccessRole(existingRole, requester);
       assertPermissionsCanBeChanged(existingRole, requester);
+      assertBranchRoleCanBeChanged(existingRole, requester);
 
       if (!requester?.isSuperAdmin && normalizeOptionalTenantId(existingRole.tenant_id) === null) {
         const tenantId = normalizeOptionalTenantId(requester?.tenantId);
@@ -745,6 +1029,7 @@ export const rolesService = {
           actorId,
         });
         const permissionIds = await resolvePermissionIds(tx, payload);
+        await assertPermissionBoundary(tx, permissionIds, requester);
         await replaceRolePermissions(tx, tenantRoleId, permissionIds);
 
         const updatedResponse = await buildRoleResponse(tx, tenantRoleId);
@@ -762,6 +1047,7 @@ export const rolesService = {
       const oldResponse = await buildRoleResponse(tx, id);
 
       const permissionIds = await resolvePermissionIds(tx, payload);
+      await assertPermissionBoundary(tx, permissionIds, requester);
       await replaceRolePermissions(tx, id, permissionIds);
 
       const updatedResponse = await buildRoleResponse(tx, id);

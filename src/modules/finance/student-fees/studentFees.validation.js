@@ -26,7 +26,7 @@ export const listStudentFeesValidationSchema = z.object({
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),
     sessionId: z.coerce.number().int().positive().optional(),
-    status: z.enum(['unpaid', 'partial', 'paid', 'cancelled']).optional(),
+    status: z.enum(['due', 'unpaid', 'partial', 'paid', 'cancelled']).optional(),
     search: z.string().trim().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(200).optional(),

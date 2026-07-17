@@ -20,6 +20,7 @@ export const MODULE_PERMISSION_MAP = {
   shifts: 'settings',
   schedules: 'schedules',
   'teacher-schedules': 'teachers',
+  'teacher-assignments': 'teachers',
   'exam-schedules': 'exams',
   'exam-results': 'exams',
   'result-grades': 'exams',

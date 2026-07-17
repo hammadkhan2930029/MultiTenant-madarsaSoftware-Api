@@ -57,6 +57,93 @@ export const subjectsService = {
     });
   },
 
+  async bulkCreateSubjects(tenantId, payload) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const normalizedRows = payload.subjects
+      .map((item, index) => ({
+        index,
+        name: String(item.name || '').trim(),
+        detail: String(item.detail || '').trim(),
+      }))
+      .filter((item) => item.name || item.detail);
+
+    if (!normalizedRows.length) {
+      throw new AppError('At least one subject name is required.', 400);
+    }
+
+    const rowErrors = [];
+    const seenNames = new Map();
+    const validRows = [];
+
+    normalizedRows.forEach((row) => {
+      if (!row.name) {
+        rowErrors.push({
+          index: row.index,
+          message: 'Subject name is required.',
+        });
+        return;
+      }
+
+      const key = row.name.toLowerCase();
+      if (seenNames.has(key)) {
+        rowErrors.push({
+          index: row.index,
+          message: 'This subject is duplicated in the same form.',
+        });
+        return;
+      }
+
+      seenNames.set(key, row.index);
+      validRows.push(row);
+    });
+
+    if (validRows.length) {
+      const existingSubjects = await prisma.subject.findMany({
+        where: {
+          tenantId: resolvedTenantId,
+          name: { in: validRows.map((row) => row.name) },
+        },
+        select: { name: true },
+      });
+      const existingNames = new Set(existingSubjects.map((item) => item.name.toLowerCase()));
+
+      validRows.forEach((row) => {
+        if (existingNames.has(row.name.toLowerCase())) {
+          rowErrors.push({
+            index: row.index,
+            message: 'This subject already exists.',
+          });
+        }
+      });
+    }
+
+    if (rowErrors.length) {
+      throw new AppError('Submitted subjects contain validation errors.', 409, { rows: rowErrors });
+    }
+
+    return prisma.$transaction(async (tx) => {
+      const createdSubjects = [];
+
+      for (const row of validRows) {
+        const createdSubject = await tx.subject.create({
+          data: {
+            tenantId: resolvedTenantId,
+            name: row.name,
+            detail: row.detail || null,
+            status: 'active',
+          },
+          select: subjectSelect,
+        });
+        createdSubjects.push(createdSubject);
+      }
+
+      return {
+        items: createdSubjects,
+        createdCount: createdSubjects.length,
+      };
+    });
+  },
+
   async getSubjects(tenantId, query) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);

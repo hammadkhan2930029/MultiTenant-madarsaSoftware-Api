@@ -49,6 +49,12 @@ const getRequiredPermissionForRequest = (req) => {
   if (req.originalUrl.startsWith('/api/teacher-schedules')) {
     return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
   }
+  if (req.originalUrl.startsWith('/api/teacher-assignments')) {
+    if (req.method === 'GET') return 'teachers.assignments.view';
+    if (req.method === 'POST') return 'teachers.assignments.create';
+    if (req.method === 'DELETE') return 'teachers.assignments.delete';
+    return 'teachers.assignments.edit';
+  }
   if (req.originalUrl.startsWith('/api/exam-results')) {
     if (req.method === 'GET') return 'exam_results.view';
     if (req.method === 'DELETE') return 'exams.delete';
