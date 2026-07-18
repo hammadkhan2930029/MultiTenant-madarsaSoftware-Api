@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../generated/prisma/index.js';
 import { env } from '../../config/env.js';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';

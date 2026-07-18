@@ -31,7 +31,7 @@ const router = Router();
 router.use(authMiddleware);
 
 const requireTenantAdminBranchLookup = (req, _res, next) => {
-  if (req.auth?.isTenantAdmin) return next();
+  if (req.auth?.isTenantAdmin || req.auth?.isSuperAdmin) return next();
 
   return next(new AppError('یہ عمل صرف مدرسہ ایڈمن کر سکتا ہے۔', 403));
 };
