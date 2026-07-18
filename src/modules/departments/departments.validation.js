@@ -15,6 +15,14 @@ export const createDepartmentValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const bulkCreateDepartmentsValidationSchema = z.object({
+  body: z.object({
+    departments: z.array(departmentBodySchema).min(1, 'At least one department is required.').max(50, 'Too many departments in one request.'),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const listDepartmentsValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

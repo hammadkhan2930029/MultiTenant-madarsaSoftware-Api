@@ -20,6 +20,14 @@ export const createShiftValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const bulkCreateShiftsValidationSchema = z.object({
+  body: z.object({
+    shifts: z.array(shiftBodySchema).min(1, 'At least one shift is required.').max(50, 'Too many shifts in one request.'),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const listShiftsValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

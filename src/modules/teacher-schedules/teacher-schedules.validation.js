@@ -20,6 +20,14 @@ export const createTeacherScheduleValidationSchema = z.object({
   query: z.object({}).default({}),
 });
 
+export const updateTeacherScheduleValidationSchema = z.object({
+  body: teacherScheduleBodySchema,
+  params: z.object({
+    id: z.coerce.number().int().positive('Ø´ÛŒÚˆÙˆÙ„ Ú©Ø§ Ù†Ù…Ø¨Ø± Ø¯Ø±Ø³Øª ÛÙˆÙ†Ø§ Ú†Ø§ÛÛŒÛ’Û”'),
+  }),
+  query: z.object({}).default({}),
+});
+
 export const listTeacherSchedulesValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

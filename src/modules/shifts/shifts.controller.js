@@ -12,6 +12,16 @@ export const createShift = asyncHandler(async (req, res) => {
   });
 });
 
+export const bulkCreateShifts = asyncHandler(async (req, res) => {
+  const result = await shiftsService.bulkCreateShifts(req.body);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Shifts created successfully.',
+    data: result,
+  });
+});
+
 export const getShifts = asyncHandler(async (req, res) => {
   const result = await shiftsService.getShifts(req.query);
 

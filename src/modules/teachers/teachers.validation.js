@@ -112,3 +112,19 @@ export const teacherIncrementValidationSchema = z.object({
   }),
   query: z.object({}).default({}),
 });
+
+export const teacherIncrementIdValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({
+    incrementId: z.coerce.number().int().positive('Increment id must be valid.'),
+  }),
+  query: z.object({}).default({}),
+});
+
+export const updateTeacherIncrementValidationSchema = z.object({
+  body: teacherIncrementValidationSchema.shape.body,
+  params: z.object({
+    incrementId: z.coerce.number().int().positive('Increment id must be valid.'),
+  }),
+  query: z.object({}).default({}),
+});

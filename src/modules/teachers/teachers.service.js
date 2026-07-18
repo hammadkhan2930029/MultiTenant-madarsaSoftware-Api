@@ -339,6 +339,7 @@ export const teachersService = {
       LEFT JOIN admins admin ON admin.id = increment.createdById
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
+        AND increment.status = 'active'
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
@@ -352,6 +353,7 @@ export const teachersService = {
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
+        AND increment.status = 'active'
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
@@ -383,6 +385,7 @@ export const teachersService = {
       LEFT JOIN admins admin ON admin.id = increment.createdById
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND increment.teacherId = ${id}
+        AND increment.status = 'active'
       ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
     `;
 
@@ -456,6 +459,106 @@ export const teachersService = {
         select: teacherSelect,
       }),
     };
+  },
+
+  async updateTeacherIncrement(tenantId, incrementId, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
+    await ensureTeacherIncrementTable();
+
+    const rows = await prisma.$queryRaw`
+      SELECT increment.*, teacher.branch_id AS teacherBranchId
+      FROM teacher_salary_increments increment
+      INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+      WHERE increment.id = ${incrementId}
+        AND increment.tenant_id = ${resolvedTenantId}
+        AND increment.status = 'active'
+        AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
+      LIMIT 1
+    `;
+
+    const existing = rows[0];
+    if (!existing) {
+      throw new AppError('Increment record not found.', 404);
+    }
+
+    const previousSalary = Number(existing.previousSalary || 0);
+    const oldIncrementAmount = Number(existing.incrementAmount || 0);
+    const incrementAmount = Number(payload.incrementAmount || 0);
+    const newSalary = previousSalary + incrementAmount;
+    const salaryDifference = incrementAmount - oldIncrementAmount;
+
+    const [increment] = await prisma.$transaction(async (tx) => {
+      await tx.teacher.update({
+        where: { id: Number(existing.teacherId), tenantId: resolvedTenantId },
+        data: { basicSalary: { increment: salaryDifference } },
+        select: { id: true },
+      });
+
+      await tx.$executeRaw`
+        UPDATE teacher_salary_increments
+        SET incrementAmount = ${incrementAmount},
+            newSalary = ${newSalary},
+            effectiveDate = ${payload.effectiveDate},
+            reason = ${optionalString(payload.reason)}
+        WHERE id = ${incrementId}
+          AND tenant_id = ${resolvedTenantId}
+          AND status = 'active'
+      `;
+
+      return tx.$queryRaw`
+        SELECT increment.*, admin.name AS createdByName, teacher.fullName AS teacherName, teacher.staffType, teacher.department, teacher.jobTitle, teacher.basicSalary AS currentSalary
+        FROM teacher_salary_increments increment
+        INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+        LEFT JOIN admins admin ON admin.id = increment.createdById
+        WHERE increment.id = ${incrementId}
+          AND increment.tenant_id = ${resolvedTenantId}
+      `;
+    }).then((items) => items.map(mapTeacherIncrement));
+
+    return increment;
+  },
+
+  async deleteTeacherIncrement(tenantId, incrementId, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
+    await ensureTeacherIncrementTable();
+
+    const rows = await prisma.$queryRaw`
+      SELECT increment.*, teacher.branch_id AS teacherBranchId
+      FROM teacher_salary_increments increment
+      INNER JOIN teachers teacher ON teacher.id = increment.teacherId
+      WHERE increment.id = ${incrementId}
+        AND increment.tenant_id = ${resolvedTenantId}
+        AND increment.status = 'active'
+        AND teacher.tenant_id = ${resolvedTenantId}
+        AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
+      LIMIT 1
+    `;
+
+    const existing = rows[0];
+    if (!existing) {
+      throw new AppError('Increment record not found.', 404);
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.teacher.update({
+        where: { id: Number(existing.teacherId), tenantId: resolvedTenantId },
+        data: { basicSalary: { decrement: Number(existing.incrementAmount || 0) } },
+        select: { id: true },
+      });
+
+      await tx.$executeRaw`
+        UPDATE teacher_salary_increments
+        SET status = 'inactive'
+        WHERE id = ${incrementId}
+          AND tenant_id = ${resolvedTenantId}
+          AND status = 'active'
+      `;
+    });
+
+    return mapTeacherIncrement({ ...existing, status: 'inactive' });
   },
 
   async updateTeacher(tenantId, id, { body, file, branchScope = null }) {

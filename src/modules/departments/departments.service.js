@@ -192,6 +192,105 @@ export const departmentsService = {
     return mapDepartment(department);
   },
 
+  async bulkCreateDepartments(tenantId, payload, branchScope = null) {
+    const normalizedRows = payload.departments
+      .map((item, index) => ({
+        index,
+        name: String(item.name || '').trim(),
+        code: String(item.code || '').trim(),
+        head: String(item.head || '').trim(),
+        headTeacherId: item.headTeacherId ?? null,
+        members: item.members ?? 0,
+        status: item.status || 'active',
+      }))
+      .filter((item) => item.name || item.code || item.head || item.headTeacherId);
+
+    if (!normalizedRows.length) {
+      throw new AppError('کم از کم ایک شعبہ کی معلومات درج کریں۔', 400);
+    }
+
+    const rowErrors = [];
+    const seenNames = new Map();
+    const seenCodes = new Map();
+
+    normalizedRows.forEach((row) => {
+      if (!row.name) {
+        rowErrors.push({ index: row.index, message: 'شعبہ کا نام ضروری ہے۔' });
+      }
+
+      const nameKey = row.name.toLowerCase();
+      if (row.name && seenNames.has(nameKey)) {
+        rowErrors.push({ index: row.index, message: 'یہ شعبہ اسی فارم میں دوبارہ درج ہے۔' });
+      } else if (row.name) {
+        seenNames.set(nameKey, row.index);
+      }
+
+      const codeKey = row.code.toLowerCase();
+      if (row.code && seenCodes.has(codeKey)) {
+        rowErrors.push({ index: row.index, message: 'یہ شعبہ کوڈ اسی فارم میں دوبارہ درج ہے۔' });
+      } else if (row.code) {
+        seenCodes.set(codeKey, row.index);
+      }
+    });
+
+    const existingDepartments = await prisma.department.findMany({
+      where: {
+        OR: [
+          { name: { in: normalizedRows.map((row) => row.name).filter(Boolean) } },
+          { code: { in: normalizedRows.map((row) => row.code).filter(Boolean) } },
+        ],
+      },
+      select: { name: true, code: true },
+    });
+    const existingNames = new Set(existingDepartments.map((item) => item.name.toLowerCase()));
+    const existingCodes = new Set(existingDepartments.map((item) => item.code).filter(Boolean).map((code) => code.toLowerCase()));
+
+    normalizedRows.forEach((row) => {
+      if (existingNames.has(row.name.toLowerCase())) {
+        rowErrors.push({ index: row.index, message: 'یہ شعبہ پہلے سے موجود ہے۔' });
+      }
+      if (row.code && existingCodes.has(row.code.toLowerCase())) {
+        rowErrors.push({ index: row.index, message: 'یہ شعبہ کوڈ پہلے سے موجود ہے۔' });
+      }
+    });
+
+    if (rowErrors.length) {
+      throw new AppError('درج کردہ شعبہ جات میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+    }
+
+    const departments = await prisma.$transaction(async (tx) => {
+      const createdDepartments = [];
+
+      for (const row of normalizedRows) {
+        const createdDepartment = await tx.department.create({
+          data: {
+            name: row.name,
+            code: row.code || null,
+            head: row.headTeacherId ? null : row.head || null,
+            members: row.members,
+            status: row.status,
+          },
+          select: departmentSelect,
+        });
+
+        await syncHeadAssignment(tx, createdDepartment.id, tenantId, row.headTeacherId, branchScope);
+
+        const department = await tx.department.findUnique({
+          where: { id: createdDepartment.id },
+          select: buildDepartmentSelect(tenantId, branchScope),
+        });
+        createdDepartments.push(mapDepartment(department));
+      }
+
+      return createdDepartments;
+    });
+
+    return {
+      items: departments,
+      createdCount: departments.length,
+    };
+  },
+
   async getDepartments(tenantId, query, branchScope = null) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
 

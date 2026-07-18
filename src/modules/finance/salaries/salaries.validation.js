@@ -21,6 +21,7 @@ export const listSalariesValidationSchema = z.object({
     salaryYear: z.coerce.number().int().min(2000).max(3000).optional(),
     fromDate: z.coerce.date().optional(),
     toDate: z.coerce.date().optional(),
+    staffType: z.enum(['teacher', 'staff']).optional(),
     status: z.enum(['active', 'inactive']).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),

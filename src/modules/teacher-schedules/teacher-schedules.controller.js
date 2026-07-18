@@ -21,6 +21,15 @@ export const getTeacherSchedules = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateTeacherSchedule = asyncHandler(async (req, res) => {
+  const schedule = await teacherSchedulesService.updateTeacherSchedule(req.tenantId, Number(req.params.id), req.body, req.branchScope);
+
+  return apiResponse(res, {
+    message: 'Ø§Ø³ØªØ§Ø¯ Ú©Ø§ Ø´ÛŒÚˆÙˆÙ„ Ú©Ø§Ù…ÛŒØ§Ø¨ÛŒ Ø³Û’ Ø§Ù¾ÚˆÛŒÙ¹ ÛÙˆ Ú¯ÛŒØ§Û”',
+    data: schedule,
+  });
+});
+
 export const deleteTeacherSchedule = asyncHandler(async (req, res) => {
   const schedule = await teacherSchedulesService.deleteTeacherSchedule(req.tenantId, Number(req.params.id), req.branchScope);
 

@@ -1,0 +1,671 @@
+Madarsa Management System API is running on port 5002
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [32m200[0m 59.194 ms - 764[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 12.765 ms - -[0m
+[0mGET /api/auth/me [32m200[0m 58.318 ms - 8234[0m
+[0mGET /api/auth/me [36m304[0m 17.447 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 50.948 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 63.127 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 67.987 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [32m200[0m 81.111 ms - 1714[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 73.637 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 71.210 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 38.471 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 36.643 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 51.372 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 51.038 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 55.502 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 45.491 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 32.783 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 43.340 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 49.853 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 117.906 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 41.919 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 41.436 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 85.672 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 223.437 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 97.417 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 120.994 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 224.413 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 70.212 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 216.010 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 187.523 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 114.672 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 260.037 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 33.253 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 100.856 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 71.663 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 309.712 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 154.136 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 100.262 ms - -[0m
+[0mGET /uploads/madrassa-profiles/1783505094707-app-icon-logo-resize-1.png?v=2026-07-15T07%3A43%3A58.533Z [36m304[0m 37.124 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 32.911 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 38.017 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 40.288 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 43.156 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 47.138 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 45.755 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 14.600 ms - -[0m
+[0mGET /api/health [32m200[0m 10.888 ms - 158[0m
+[0mGET /favicon.ico [33m404[0m 0.386 ms - 71[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [32m200[0m 19.431 ms - 764[0m
+[0mGET /api/tenant/current [32m200[0m 17.923 ms - 764[0m
+[0mGET /api/auth/me [36m304[0m 20.372 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 8.166 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 198.661 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 197.633 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 201.960 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 227.338 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 230.309 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 196.341 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 572.574 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 329.971 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 336.275 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 462.944 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 261.084 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 481.152 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 39.455 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 47.155 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 51.302 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 29.336 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 34.828 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 61.770 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 112.716 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 130.799 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 118.950 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 85.559 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 73.224 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 86.604 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 54.227 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 94.393 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 65.275 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 76.337 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 109.802 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 76.902 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 35.658 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 82.093 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 43.213 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 79.854 ms - -[0m
+[0mGET /uploads/madrassa-profiles/1783505094707-app-icon-logo-resize-1.png?v=2026-07-15T07%3A43%3A58.533Z [36m304[0m 1.813 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 29.977 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 34.072 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 34.332 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 34.965 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 48.638 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 48.446 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 11.794 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/auth/me [36m304[0m 31.402 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 32.218 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=100&status=active [32m200[0m 30.721 ms - 1007[0m
+[0mGET /api/tenant/current [36m304[0m 43.576 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [32m200[0m 50.715 ms - 4766[0m
+[0mGET /api/hifz/sipara?page=1&limit=100&status=active [36m304[0m 15.182 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 19.849 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 15.207 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 41.667 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 54.518 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 76.290 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 109.516 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 118.263 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 129.716 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 73.298 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 87.181 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 27.546 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 97.376 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 87.480 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 123.156 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 93.538 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 93.686 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 93.945 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 27.424 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 32.494 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 177.225 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 43.580 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 33.792 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 15.282 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 20.820 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 124.756 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 117.983 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 65.476 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 112.221 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 123.577 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 96.370 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 383.722 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 377.066 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 85.212 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 175.333 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 119.437 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 42.948 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 31.918 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 72.016 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 39.220 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 42.976 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 173.532 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 41.909 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 33.969 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 27.582 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 59.884 ms - -[0m
+[0mGET /api/store/units?activeOnly=true [36m304[0m 62.106 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 74.271 ms - -[0m
+[0mGET /api/store/units?activeOnly=true [36m304[0m 14.430 ms - -[0m
+[0mGET /api/store/items [36m304[0m 108.891 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 14.226 ms - -[0m
+[0mGET /api/store/suppliers [36m304[0m 125.417 ms - -[0m
+[0mGET /api/store/items [36m304[0m 12.944 ms - -[0m
+[0mGET /api/store/suppliers [36m304[0m 7.495 ms - -[0m
+[0mGET /api/store/purchases?outstanding=true [32m200[0m 23.647 ms - 1258[0m
+[0mGET /api/store/purchases [32m200[0m 11.469 ms - 1258[0m
+[0mGET /api/store/purchases?outstanding=true [36m304[0m 16.895 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 91.829 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 96.002 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 102.361 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 148.168 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 165.778 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 65.217 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 190.526 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 121.643 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 139.300 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 109.984 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 136.115 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 138.483 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 35.046 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 52.979 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 28.901 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 15.627 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 130.921 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 44.787 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 43.517 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 22.044 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 21.752 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 82.339 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 93.730 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 61.335 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 97.406 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 82.027 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 71.582 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 30.968 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 58.054 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 41.049 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 139.956 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 88.666 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 77.511 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 30.545 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 28.565 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 41.876 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 46.761 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 51.394 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 58.670 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 56.793 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 171.536 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/sessions?page=1&limit=100&status=active [32m200[0m 26.783 ms - 774[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&status=due [33m400[0m 37.657 ms - 229[0m
+[0mGET /api/tenant/current [36m304[0m 38.205 ms - -[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&status=due [33m400[0m 8.537 ms - 229[0m
+[0mGET /api/auth/profile [36m304[0m 88.305 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [32m200[0m 100.468 ms - 632[0m
+[0mGET /api/auth/me [36m304[0m 103.289 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 28.680 ms - -[0m
+[0mGET /api/sessions?page=1&limit=100&status=active [36m304[0m 100.110 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 33.349 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [36m304[0m 42.315 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 25.284 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 27.361 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 58.990 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 74.523 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 74.364 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 77.523 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 86.552 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 76.155 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 50.058 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 18.486 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 79.706 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 116.668 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 42.661 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 92.562 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 23.491 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 39.988 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 32.612 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 40.856 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 88.111 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 100.877 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 33.743 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 36.174 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 41.585 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 117.719 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 52.465 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 88.220 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 89.728 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 16.035 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 193.464 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 39.255 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 81.800 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 275.616 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 166.610 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 92.736 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 97.742 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 81.555 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 91.585 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 93.151 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 37.921 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 40.965 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 27.691 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 28.628 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 23.281 ms - -[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&status=due [33m400[0m 59.455 ms - 229[0m
+[0mGET /api/auth/me [36m304[0m 96.945 ms - -[0m
+[0mGET /api/sessions?page=1&limit=100&status=active [36m304[0m 113.348 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 103.449 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [36m304[0m 161.621 ms - -[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&status=due [33m400[0m 34.507 ms - 229[0m
+[0mGET /api/auth/me [36m304[0m 65.690 ms - -[0m
+[0mGET /api/sessions?page=1&limit=100&status=active [36m304[0m 102.286 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [36m304[0m 97.057 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 139.119 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 13.817 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 67.261 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 72.387 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 76.730 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 81.403 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 93.275 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 104.049 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 33.520 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 55.212 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 54.131 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 35.545 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 26.585 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 21.410 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 20.834 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 11.450 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 21.704 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 104.142 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 130.452 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 163.326 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 47.165 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 58.047 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 57.002 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 80.146 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 37.858 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 65.823 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 67.877 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 114.196 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 107.805 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 74.377 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 26.608 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 34.532 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 122.026 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 64.140 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 61.256 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 29.789 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 21.961 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 26.179 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 25.156 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 30.630 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 28.418 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 14.868 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 49.556 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 26.857 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 39.043 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=8&type=kharch [32m200[0m 48.128 ms - 1580[0m
+[0mGET /api/auth/profile [36m304[0m 46.340 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=8&type=kharch [36m304[0m 79.268 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 31.406 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 33.515 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 33.160 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 36.238 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 51.078 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 56.452 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 68.662 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 58.200 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 45.640 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 55.655 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 53.565 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 53.123 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 67.399 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 10.291 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 45.230 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 47.493 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 60.309 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 31.188 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 75.774 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 49.438 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 19.968 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 44.707 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 30.990 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 17.189 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 66.713 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 44.605 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 52.812 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 111.929 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 100.082 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 31.235 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 25.028 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 24.716 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 71.835 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 59.595 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 24.662 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 46.143 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 46.642 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 49.588 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 51.687 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 55.141 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 32.449 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 13.151 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 7.615 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 21.241 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 22.559 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=8 [32m200[0m 26.806 ms - 2812[0m
+[0mGET /api/finance/financial?page=1&limit=8 [36m304[0m 48.349 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 14.034 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 65.712 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 56.215 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 63.212 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 62.383 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 79.878 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 25.952 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 33.303 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 30.909 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 136.430 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 34.034 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 60.366 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 15.809 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 30.645 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 6.883 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 24.298 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 26.660 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 44.354 ms - -[0m
+[0mGET /api/teachers?page=1&limit=10 [36m304[0m 20.863 ms - -[0m
+[0mGET /api/students?page=1&limit=10 [36m304[0m 40.338 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=staff [36m304[0m 38.452 ms - -[0m
+[0mGET /api/teachers?page=1&limit=1&staffType=teacher [36m304[0m 76.555 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 101.675 ms - -[0m
+[0mGET /api/exam-schedules?page=1&limit=10 [36m304[0m 68.747 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=1 [36m304[0m 148.045 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=10 [36m304[0m 69.923 ms - -[0m
+[0mGET /api/finance/financial?page=1&limit=10 [36m304[0m 85.415 ms - -[0m
+[0mGET /api/parents?page=1&limit=10 [36m304[0m 39.926 ms - -[0m
+[0mGET /api/students?page=1&limit=1&status=active [36m304[0m 75.539 ms - -[0m
+[0mGET /api/hifz/weekly?page=1&limit=10 [36m304[0m 40.258 ms - -[0m
+[0mGET /api/hifz/daily?page=1&limit=10 [36m304[0m 46.779 ms - -[0m
+[0mGET /api/hifz/sipara?page=1&limit=10 [36m304[0m 42.208 ms - -[0m
+[0mGET /api/exam-results?page=1&limit=10 [36m304[0m 74.059 ms - -[0m
+[0mGET /api/hifz/monthly?page=1&limit=10 [36m304[0m 27.634 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 37.750 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-11 [36m304[0m 33.209 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-16 [36m304[0m 27.648 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-13 [36m304[0m 40.547 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-14 [36m304[0m 42.852 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-15 [36m304[0m 42.836 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-12 [36m304[0m 53.650 ms - -[0m
+[0mGET /api/attendance/students?page=1&limit=100&date=2026-07-17 [36m304[0m 22.439 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 51.492 ms - -[0m
+[0mGET /api/store/items [36m304[0m 84.894 ms - -[0m
+[0mGET /api/store/suppliers [36m304[0m 83.522 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 86.472 ms - -[0m
+[0mGET /api/store/units?activeOnly=true [36m304[0m 76.630 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 77.411 ms - -[0m
+[0mGET /api/store/suppliers [36m304[0m 19.454 ms - -[0m
+[0mGET /api/store/items [36m304[0m 26.163 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 23.912 ms - -[0m
+[0mGET /api/store/units?activeOnly=true [36m304[0m 19.453 ms - -[0m
+[0mGET /api/store/purchases?outstanding=true [36m304[0m 8.221 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 21.252 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 46.720 ms - -[0m
+[0mGET /api/sessions?page=1&limit=100&status=active [36m304[0m 58.306 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [36m304[0m 56.076 ms - -[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&feeMonth=7&feeYear=2026 [36m304[0m 40.701 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 78.794 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 28.269 ms - -[0m
+[0mGET /api/classes?page=1&limit=100&status=active [36m304[0m 25.245 ms - -[0m
+[0mGET /api/finance/student-fees?page=1&limit=200&feeMonth=7&feeYear=2026 [36m304[0m 32.318 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 15.628 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 15.778 ms - -[0m
+[0mGET /api/sessions?page=1&limit=100&status=active [36m304[0m 65.268 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 36.861 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 68.600 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&staffType=teacher [32m200[0m 66.622 ms - 2748[0m
+[0mGET /api/auth/profile [36m304[0m 72.790 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 13.758 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&staffType=teacher [36m304[0m 12.584 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&staffType=teacher [36m304[0m 22.908 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&staffType=teacher [36m304[0m 9.557 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&staffType=teacher [36m304[0m 8.658 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 25.094 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 39.239 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 46.190 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 11.586 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 65.633 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 23.652 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 14.349 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/tenant/current [36m304[0m 10.328 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 26.000 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 26.348 ms - -[0m
+[0mGET /api/students/21 [32m200[0m 27.850 ms - 1642[0m
+[0mGET /api/auth/me [36m304[0m 9.311 ms - -[0m
+[0mGET /api/students/21 [36m304[0m 22.041 ms - -[0m
+[0mGET /uploads/students/1783685400209-chatgpt-image-jul-2-2026-07-58-19-pm.png [36m304[0m 2.149 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/auth/me [36m304[0m 27.314 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 27.364 ms - -[0m
+[0mGET /api/tenant/current [36m304[0m 28.063 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 44.253 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 15.339 ms - -[0m
+[0mGET /api/students?page=1&limit=100&status=active [36m304[0m 16.030 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 6.559 ms - -[0m
+[tenant/current] {
+  hostname: 'localhost',
+  origin: 'http://localhost:3000',
+  appOrigin: 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173,http://jamia1.localhost:3000,http://jamia2.localhost:3000,http://admin.localhost:3000,http://jamia1.localhost:5173,http://jamia2.localhost:5173,http://admin.localhost:5173,http://branch-security-jamia1.localhost:3000,',
+  resolvedTenantCode: 'default',
+  hostSource: 'system',
+  subdomain: null,
+  fallbackToDefault: false
+}
+[0mGET /api/branches?page=1&limit=100 [33m403[0m 23.773 ms - 103[0m
+[0mGET /api/tenant/current [36m304[0m 19.790 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 52.135 ms - -[0m
+[0mGET /api/teachers?page=1&limit=100&status=active&staffType=teacher [32m200[0m 60.511 ms - 2748[0m
+[0mGET /api/auth/me [36m304[0m 64.753 ms - -[0m
+[0mGET /api/branches?page=1&limit=100 [33m403[0m 32.100 ms - 103[0m
+[0mGET /api/teachers?page=1&limit=100&status=active&staffType=teacher [36m304[0m 15.065 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 15.880 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 28.807 ms - -[0m
+[0mGET /api/auth/profile [36m304[0m 31.571 ms - -[0m
+[0mGET /api/branches?page=1&limit=100 [33m403[0m 18.889 ms - 103[0m
+[0mGET /api/teachers?page=1&limit=100&status=active&staffType=teacher [36m304[0m 11.093 ms - -[0m
+[0mGET /api/teacher-assignments?page=1&limit=500&status=active [33m400[0m 7.722 ms - 181[0m

@@ -3,6 +3,7 @@ import { authMiddleware } from '../../middlewares/auth.middleware.js';
 import { requireAnyPermission } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
+  bulkCreateDepartments,
   createDepartment,
   deleteDepartment,
   getDepartmentById,
@@ -10,6 +11,7 @@ import {
   updateDepartment,
 } from './departments.controller.js';
 import {
+  bulkCreateDepartmentsValidationSchema,
   createDepartmentValidationSchema,
   departmentIdValidationSchema,
   listDepartmentsValidationSchema,
@@ -21,6 +23,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.post('/', requireAnyPermission('settings.departments.create', 'settings.update', 'settings.edit'), validate(createDepartmentValidationSchema), createDepartment);
+router.post('/bulk', requireAnyPermission('settings.departments.create', 'settings.update', 'settings.edit'), validate(bulkCreateDepartmentsValidationSchema), bulkCreateDepartments);
 router.get('/', requireAnyPermission('settings.departments.view', 'settings.view'), validate(listDepartmentsValidationSchema), getDepartments);
 router.get('/:id', requireAnyPermission('settings.departments.view', 'settings.view'), validate(departmentIdValidationSchema), getDepartmentById);
 router.patch('/:id', requireAnyPermission('settings.departments.update', 'settings.update', 'settings.edit'), validate(updateDepartmentValidationSchema), updateDepartment);

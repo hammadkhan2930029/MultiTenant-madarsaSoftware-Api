@@ -62,6 +62,24 @@ export const createTeacherIncrement = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateTeacherIncrement = asyncHandler(async (req, res) => {
+  const increment = await teachersService.updateTeacherIncrement(req.tenantId, Number(req.params.incrementId), req.body, req.branchScope);
+
+  return apiResponse(res, {
+    message: 'Teacher salary increment updated successfully.',
+    data: increment,
+  });
+});
+
+export const deleteTeacherIncrement = asyncHandler(async (req, res) => {
+  const increment = await teachersService.deleteTeacherIncrement(req.tenantId, Number(req.params.incrementId), req.branchScope);
+
+  return apiResponse(res, {
+    message: 'Teacher salary increment removed successfully.',
+    data: increment,
+  });
+});
+
 export const updateTeacher = asyncHandler(async (req, res) => {
   const teacher = await teachersService.updateTeacher(req.tenantId, Number(req.params.id), {
     body: req.body,

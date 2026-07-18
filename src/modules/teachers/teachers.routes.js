@@ -6,11 +6,13 @@ import { teacherImageUpload } from '../../middlewares/upload.middleware.js';
 import {
   createTeacher,
   createTeacherIncrement,
+  deleteTeacherIncrement,
   getAllTeacherIncrements,
   getTeachers,
   getTeacherById,
   getTeacherIncrements,
   updateTeacher,
+  updateTeacherIncrement,
   updateTeacherStatus,
   deleteTeacher,
 } from './teachers.controller.js';
@@ -18,8 +20,10 @@ import {
   createTeacherValidationSchema,
   listTeacherIncrementsValidationSchema,
   listTeachersValidationSchema,
+  teacherIncrementIdValidationSchema,
   teacherIdValidationSchema,
   teacherIncrementValidationSchema,
+  updateTeacherIncrementValidationSchema,
   updateTeacherValidationSchema,
   updateTeacherStatusValidationSchema,
 } from './teachers.validation.js';
@@ -31,6 +35,8 @@ router.use(authMiddleware);
 router.post('/', requirePermission('teachers.create'), teacherImageUpload.single('image'), validate(createTeacherValidationSchema), createTeacher);
 router.get('/', requirePermission('teachers.view'), validate(listTeachersValidationSchema), getTeachers);
 router.get('/increments', requirePermission('teachers.view', 'teachers.salary_increments.view'), validate(listTeacherIncrementsValidationSchema), getAllTeacherIncrements);
+router.put('/increments/:incrementId', requirePermission('teachers.update'), validate(updateTeacherIncrementValidationSchema), updateTeacherIncrement);
+router.delete('/increments/:incrementId', requirePermission('teachers.update'), validate(teacherIncrementIdValidationSchema), deleteTeacherIncrement);
 router.get('/:id/increments', requirePermission('teachers.view', 'teachers.salary_increments.view'), validate(teacherIdValidationSchema), getTeacherIncrements);
 router.post('/:id/increments', requirePermission('teachers.update'), validate(teacherIncrementValidationSchema), createTeacherIncrement);
 router.get('/:id', requirePermission('teachers.view'), validate(teacherIdValidationSchema), getTeacherById);

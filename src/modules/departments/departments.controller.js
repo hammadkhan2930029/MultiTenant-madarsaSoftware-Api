@@ -12,6 +12,16 @@ export const createDepartment = asyncHandler(async (req, res) => {
   });
 });
 
+export const bulkCreateDepartments = asyncHandler(async (req, res) => {
+  const result = await departmentsService.bulkCreateDepartments(req.tenantId, req.body, req.branchScope);
+
+  return apiResponse(res, {
+    statusCode: 201,
+    message: 'Departments created successfully.',
+    data: result,
+  });
+});
+
 export const getDepartments = asyncHandler(async (req, res) => {
   const result = await departmentsService.getDepartments(req.tenantId, req.query, req.branchScope);
 

@@ -54,3 +54,50 @@ AppError: درج کردہ معلومات درست نہیں ہیں۔
   statusCode: 400,
   details: { formErrors: [], fieldErrors: { query: [Array] } }
 }
+AppError: یہ عمل صرف مدرسہ ایڈمن کر سکتا ہے۔
+    at requireTenantAdminBranchLookup (file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/modules/branches/branches.routes.js:36:15)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:328:13)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:280:10)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/auth.middleware.js:110:3 {
+  statusCode: 403,
+  details: null
+}
+AppError: یہ عمل صرف مدرسہ ایڈمن کر سکتا ہے۔
+    at requireTenantAdminBranchLookup (file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/modules/branches/branches.routes.js:36:15)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:328:13)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:280:10)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/auth.middleware.js:110:3 {
+  statusCode: 403,
+  details: null
+}
+AppError: یہ عمل صرف مدرسہ ایڈمن کر سکتا ہے۔
+    at requireTenantAdminBranchLookup (file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/modules/branches/branches.routes.js:36:15)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:328:13)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:286:9
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:280:10)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/auth.middleware.js:110:3 {
+  statusCode: 403,
+  details: null
+}
+AppError: درج کردہ معلومات درست نہیں ہیں۔
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/validate.middleware.js:11:11
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at file:///G:/MultiTanant-madarsa-software/multiTenant-madarsaSoftware-api/src/middlewares/authorization.middleware.js:65:14
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at next (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\layer.js:95:5)
+    at G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (G:\MultiTanant-madarsa-software\multiTenant-madarsaSoftware-api\node_modules\express\lib\router\index.js:346:12) {
+  statusCode: 400,
+  details: { formErrors: [], fieldErrors: { query: [Array] } }
+}

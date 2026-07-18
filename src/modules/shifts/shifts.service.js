@@ -35,6 +35,83 @@ export const shiftsService = {
     });
   },
 
+  async bulkCreateShifts(payload) {
+    const normalizedRows = payload.shifts
+      .map((item, index) => ({
+        index,
+        name: String(item.name || '').trim(),
+        startTime: item.startTime,
+        endTime: item.endTime,
+        type: item.type,
+        status: item.status || 'active',
+      }))
+      .filter((item) => item.name || item.startTime || item.endTime);
+
+    if (!normalizedRows.length) {
+      throw new AppError('کم از کم ایک شفٹ کی معلومات درج کریں۔', 400);
+    }
+
+    const rowErrors = [];
+    const seenNames = new Map();
+
+    normalizedRows.forEach((row) => {
+      if (!row.name) {
+        rowErrors.push({ index: row.index, message: 'شفٹ کا نام ضروری ہے۔' });
+      }
+      if (!row.startTime || !row.endTime) {
+        rowErrors.push({ index: row.index, message: 'شفٹ کے اوقات درج کریں۔' });
+      }
+
+      const key = row.name.toLowerCase();
+      if (row.name && seenNames.has(key)) {
+        rowErrors.push({ index: row.index, message: 'یہ شفٹ اسی فارم میں دوبارہ درج ہے۔' });
+      } else if (row.name) {
+        seenNames.set(key, row.index);
+      }
+    });
+
+    const existingShifts = await prisma.shift.findMany({
+      where: {
+        name: { in: normalizedRows.map((row) => row.name).filter(Boolean) },
+      },
+      select: { name: true },
+    });
+    const existingNames = new Set(existingShifts.map((item) => item.name.toLowerCase()));
+
+    normalizedRows.forEach((row) => {
+      if (existingNames.has(row.name.toLowerCase())) {
+        rowErrors.push({ index: row.index, message: 'یہ شفٹ پہلے سے موجود ہے۔' });
+      }
+    });
+
+    if (rowErrors.length) {
+      throw new AppError('درج کردہ شفٹس میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+    }
+
+    return prisma.$transaction(async (tx) => {
+      const createdShifts = [];
+
+      for (const row of normalizedRows) {
+        const createdShift = await tx.shift.create({
+          data: {
+            name: row.name,
+            startTime: row.startTime,
+            endTime: row.endTime,
+            type: row.type,
+            status: row.status,
+          },
+          select: shiftSelect,
+        });
+        createdShifts.push(createdShift);
+      }
+
+      return {
+        items: createdShifts,
+        createdCount: createdShifts.length,
+      };
+    });
+  },
+
   async getShifts(query) {
     const { page, limit, skip } = getPagination(query.page, query.limit);
 

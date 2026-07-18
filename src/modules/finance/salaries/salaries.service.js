@@ -25,7 +25,7 @@ const select = {
   status: true,
   createdAt: true,
   updatedAt: true,
-  teacher: { select: { id: true, tenantId: true, fullName: true, phone: true, subject: true } },
+  teacher: { select: { id: true, tenantId: true, fullName: true, phone: true, subject: true, staffType: true } },
   financeHead: { select: { id: true, name: true, type: true } },
 };
 
@@ -83,7 +83,7 @@ export const salariesService = {
     const where = {
       tenantId: resolvedTenantId,
       ...(branchId ? { branchId } : {}),
-      teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+      teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...(query.staffType ? { staffType: query.staffType } : {}) },
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.salaryMonth ? { salaryMonth: query.salaryMonth } : {}),
       ...(query.salaryYear ? { salaryYear: query.salaryYear } : {}),

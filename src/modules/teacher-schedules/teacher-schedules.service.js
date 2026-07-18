@@ -119,6 +119,43 @@ export const teacherSchedulesService = {
     };
   },
 
+  async updateTeacherSchedule(tenantId, id, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = getScopedBranchId(branchScope);
+    const existingSchedule = await prisma.teacherSchedule.findFirst({
+      where: {
+        id,
+        tenantId: resolvedTenantId,
+        teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+        class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+        section: { tenantId: resolvedTenantId },
+      },
+    });
+
+    if (!existingSchedule) {
+      throw new AppError('Ø´ÛŒÚˆÙˆÙ„ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
+    }
+
+    await ensureTeacherScheduleReferences(resolvedTenantId, payload, branchId);
+
+    return prisma.teacherSchedule.update({
+      where: { id, tenantId: resolvedTenantId },
+      data: {
+        tenantId: resolvedTenantId,
+        teacherId: payload.teacherId,
+        sessionId: payload.sessionId,
+        classId: payload.classId,
+        sectionId: payload.sectionId,
+        subjects: payload.subjects,
+        days: payload.days,
+        startTime: payload.startTime,
+        endTime: payload.endTime,
+        status: payload.status || existingSchedule.status,
+      },
+      select: teacherScheduleSelect,
+    });
+  },
+
   async deleteTeacherSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = getScopedBranchId(branchScope);
