@@ -140,6 +140,8 @@ exports.Prisma.AdminScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
+  city: 'city',
+  province: 'province',
   username: 'username',
   password: 'password',
   role: 'role',
@@ -815,6 +817,7 @@ exports.Prisma.SalaryEntryScalarFieldEnum = {
   salaryMonth: 'salaryMonth',
   salaryYear: 'salaryYear',
   paymentDate: 'paymentDate',
+  paymentMethod: 'paymentMethod',
   remarks: 'remarks',
   status: 'status',
   createdAt: 'createdAt',
@@ -1062,6 +1065,8 @@ exports.Prisma.AdminOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
+  city: 'city',
+  province: 'province',
   username: 'username',
   password: 'password',
   role: 'role',
@@ -1436,6 +1441,7 @@ exports.Prisma.FundCollectionOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.SalaryEntryOrderByRelevanceFieldEnum = {
+  paymentMethod: 'paymentMethod',
   remarks: 'remarks',
   status: 'status'
 };

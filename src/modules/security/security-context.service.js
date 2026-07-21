@@ -6,16 +6,12 @@ const normalizeTenantId = (tenantId) => (
 
 const getRoleName = (access, admin) => access.role?.roleName || access.role?.role_name || admin.role;
 
-const assertTokenTenantMatch = ({ decodedToken, requestTenantId, isSystemHost }) => {
+const assertTokenTenantMatch = ({ decodedToken, requestTenantId }) => {
   const tokenTenantId = normalizeTenantId(decodedToken.tenantId);
   const resolvedRequestTenantId = normalizeTenantId(requestTenantId);
   const isGlobalSuperAdminToken = decodedToken.role === 'super_admin' && tokenTenantId === null;
 
   if (isGlobalSuperAdminToken) {
-    if (!isSystemHost) {
-      throw new AppError('Super admin token is not valid for this tenant domain.', 403);
-    }
-
     return { tokenTenantId, isGlobalSuperAdminToken };
   }
 

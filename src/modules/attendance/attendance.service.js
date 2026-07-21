@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { ensureDefaultBranch } from '../branches/branches.service.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -98,6 +99,64 @@ const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?
 const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
   getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
 
+const getDefaultActiveBranchId = async (tenantId) => {
+  const branch =
+    await prisma.branch.findFirst({
+      where: {
+        tenantId,
+        status: 'active',
+        OR: [{ name: 'Main Campus' }, { code: 'MC-01' }],
+      },
+      orderBy: { id: 'asc' },
+      select: { id: true },
+    }) ||
+    await prisma.branch.findFirst({
+      where: {
+        tenantId,
+        status: 'active',
+      },
+      orderBy: { id: 'asc' },
+      select: { id: true },
+    });
+
+  if (!branch) {
+    const defaultBranch = await ensureDefaultBranch(tenantId);
+    return defaultBranch.id;
+  }
+
+  return branch.id;
+};
+
+const resolveStudentAttendanceBranchId = async (tenantId, payload, branchScope = null) => {
+  const requestedBranchId = getRequestedBranchId(payload, branchScope);
+  if (requestedBranchId) return requestedBranchId;
+
+  if (payload.classId) {
+    const academicClass = await prisma.academicClass.findFirst({
+      where: { id: payload.classId, tenantId },
+      select: { branchId: true },
+    });
+    if (academicClass?.branchId) return academicClass.branchId;
+  }
+
+  return getDefaultActiveBranchId(tenantId);
+};
+
+const resolveTeacherAttendanceBranchId = async (tenantId, payload, branchScope = null) => {
+  const requestedBranchId = getRequestedBranchId(payload, branchScope);
+  if (requestedBranchId) return requestedBranchId;
+
+  if (payload.teacherId) {
+    const teacher = await prisma.teacher.findFirst({
+      where: { id: payload.teacherId, tenantId },
+      select: { branchId: true },
+    });
+    if (teacher?.branchId) return teacher.branchId;
+  }
+
+  return getDefaultActiveBranchId(tenantId);
+};
+
 const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId, classId, sectionId }, branchScoped = false) => {
   const [student, branch, academicClass, section, activeAssignment] = await Promise.all([
     prisma.student.findFirst({
@@ -158,7 +217,7 @@ const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId
 export const attendanceService = {
   async markStudentAttendance(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getRequestedBranchId(payload, branchScope);
+    const branchId = await resolveStudentAttendanceBranchId(resolvedTenantId, payload, branchScope);
     await ensureStudentAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(getScopedBranchId(branchScope)));
 
     const attendanceDate = normalizeDate(payload.date);
@@ -238,7 +297,7 @@ export const attendanceService = {
 
   async markTeacherAttendance(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getRequestedBranchId(payload, branchScope);
+    const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, payload, branchScope);
     await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(getScopedBranchId(branchScope)));
 
     const attendanceDate = normalizeDate(payload.date);

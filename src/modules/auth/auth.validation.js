@@ -45,6 +45,21 @@ export const changePasswordValidationSchema = z
     }
   });
 
+export const forgotPasswordValidationSchema = z.object({
+  body: z.object({
+    identity: z
+      .string()
+      .trim()
+      .min(3, 'Email or username is required.')
+      .max(150, 'Email or username is too long.'),
+    contactEmail: z
+      .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])
+      .transform((value) => value || undefined),
+  }),
+  params: z.object({}).default({}),
+  query: z.object({}).default({}),
+});
+
 export const currentAdminValidationSchema = z.object({
   body: z.object({}).default({}),
   params: z.object({}).default({}),

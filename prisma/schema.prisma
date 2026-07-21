@@ -79,6 +79,8 @@ model Admin {
   name             String                   @db.VarChar(150)
   email            String                   @db.VarChar(150)
   phone            String?                  @db.VarChar(50)
+  city             String?                  @db.VarChar(150)
+  province         String?                  @db.VarChar(150)
   username         String                   @db.VarChar(100)
   password         String                   @db.VarChar(255)
   role             String                   @default("admin") @db.VarChar(50)
@@ -1159,6 +1161,7 @@ model SalaryEntry {
   salaryMonth   Int
   salaryYear    Int
   paymentDate   DateTime
+  paymentMethod String?     @db.VarChar(50)
   remarks       String?     @db.VarChar(255)
   status        String      @default("active") @db.VarChar(50)
   createdAt     DateTime    @default(now())

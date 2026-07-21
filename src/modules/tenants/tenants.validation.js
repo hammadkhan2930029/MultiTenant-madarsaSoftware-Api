@@ -39,10 +39,22 @@ const optionalStringField = (max, message) =>
 
 const tenantAdminSchema = z.object({
   name: z.string().trim().min(2, 'Tenant admin name is required.').max(150, 'Tenant admin name is too long.'),
+  phone: optionalStringField(50, 'Tenant admin phone is too long.'),
   email: z.string().trim().email('Valid tenant admin email is required.').max(150, 'Tenant admin email is too long.'),
   username: z.string().trim().min(3, 'Tenant admin username is required.').max(100, 'Tenant admin username is too long.'),
   password: z.string().min(8, 'Tenant admin password must be at least 8 characters.').max(100, 'Tenant admin password is too long.'),
+  city: optionalStringField(150, 'Tenant admin city is too long.'),
+  province: optionalStringField(150, 'Tenant admin province is too long.'),
 });
+
+const updateTenantAdminSchema = z.object({
+  name: z.string().trim().min(2, 'Tenant admin name is required.').max(150, 'Tenant admin name is too long.').optional(),
+  phone: optionalStringField(50, 'Tenant admin phone is too long.'),
+  email: z.string().trim().email('Valid tenant admin email is required.').max(150, 'Tenant admin email is too long.').optional(),
+  username: z.string().trim().min(3, 'Tenant admin username is required.').max(100, 'Tenant admin username is too long.').optional(),
+  city: optionalStringField(150, 'Tenant admin city is too long.'),
+  province: optionalStringField(150, 'Tenant admin province is too long.'),
+}).optional();
 
 const initialProfileSchema = z.object({
   name: optionalStringField(150, 'Profile name is too long.'),
@@ -136,6 +148,9 @@ export const updateTenantValidationSchema = z.object({
     customDomain: tenantBaseSchema.customDomain,
     status: tenantStatusSchema.optional(),
     ownerAdminId: tenantBaseSchema.ownerAdminId,
+    adminPassword: z.string().min(8, 'Tenant admin password must be at least 8 characters.').max(100, 'Tenant admin password is too long.').optional(),
+    admin: updateTenantAdminSchema,
+    profile: initialProfileSchema,
     branchEnabled: tenantBaseSchema.branchEnabled,
     branchLimit: tenantBaseSchema.branchLimit,
   }).superRefine(validateBranchSettings),

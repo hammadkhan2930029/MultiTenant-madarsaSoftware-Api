@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   loginAdmin,
   changePassword,
+  requestForgotPassword,
   getCurrentAdminProfile,
   getMadrassaProfile,
   updateMadrassaProfile,
@@ -11,6 +12,7 @@ import { madrassaProfileImageUpload } from '../../middlewares/upload.middleware.
 import {
   loginValidationSchema,
   changePasswordValidationSchema,
+  forgotPasswordValidationSchema,
   currentAdminValidationSchema,
   madrassaProfileValidationSchema,
   updateMadrassaProfileValidationSchema,
@@ -21,6 +23,7 @@ import { requirePermission } from '../../middlewares/authorization.middleware.js
 const router = Router();
 
 router.post('/login', validate(loginValidationSchema), loginAdmin);
+router.post('/forgot-password', validate(forgotPasswordValidationSchema), requestForgotPassword);
 router.post(
   '/change-password',
   authMiddleware,

@@ -26,7 +26,7 @@ router.post('/', requirePermission('classes.create'), validate(createClassValida
 router.post('/bulk', requirePermission('classes.create'), validate(bulkCreateClassesValidationSchema), bulkCreateClasses);
 router.get('/', requirePermission('classes.view'), validate(listClassesValidationSchema), getClasses);
 router.get('/:id', requirePermission('classes.view'), validate(classIdValidationSchema), getClassById);
-router.patch('/:id', requirePermission('classes.update'), validate(updateClassValidationSchema), updateClass);
+router.patch('/:id', requirePermission('classes.edit'), validate(updateClassValidationSchema), updateClass);
 router.delete('/:id', requirePermission('classes.delete'), validate(classIdValidationSchema), deleteClass);
 
 export { router as classesRoutes };

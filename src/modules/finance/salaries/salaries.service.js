@@ -21,6 +21,7 @@ const select = {
   salaryMonth: true,
   salaryYear: true,
   paymentDate: true,
+  paymentMethod: true,
   remarks: true,
   status: true,
   createdAt: true,
@@ -72,7 +73,7 @@ export const salariesService = {
     });
     if (duplicate) throw new AppError('Salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.create({
-      data: { ...payload, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null },
+      data: { ...payload, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || 'Cash', remarks: payload.remarks || null },
       select,
     });
   },
@@ -130,7 +131,7 @@ export const salariesService = {
     if (duplicate) throw new AppError('Another salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.update({
       where: { id, tenantId: resolvedTenantId },
-      data: { ...payload, branchId, paymentDate: normalizeDate(payload.paymentDate), remarks: payload.remarks || null, status: payload.status || existing.status },
+      data: { ...payload, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || existing.paymentMethod || 'Cash', remarks: payload.remarks || null, status: payload.status || existing.status },
       select,
     });
   },

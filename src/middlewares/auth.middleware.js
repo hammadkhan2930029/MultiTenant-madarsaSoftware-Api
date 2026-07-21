@@ -31,7 +31,6 @@ export const authMiddleware = asyncHandler(async (req, _res, next) => {
   const { isGlobalSuperAdminToken } = securityContextService.assertTokenTenantMatch({
     decodedToken,
     requestTenantId,
-    isSystemHost: req.tenantHost?.isSystemHost,
   });
 
   const admin = await authService.getAuthenticatedAdminById(decodedToken.adminId);

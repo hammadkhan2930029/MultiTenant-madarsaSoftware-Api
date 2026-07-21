@@ -3,6 +3,7 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { generateAdminToken } from '../../utils/jwt.js';
 import { getAdminRoleAndPermissions } from '../roles/roleAccess.service.js';
+import { supportService } from '../support/support.service.js';
 
 const madrassaProfileSelect = {
   id: true,
@@ -424,6 +425,40 @@ export const authService = {
     return {
       adminId,
       passwordChanged: true,
+    };
+  },
+
+  async requestForgotPassword({ tenantId, identity, contactEmail = null }) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const normalizedIdentity = String(identity || '').trim();
+    const safeContactEmail = contactEmail ? String(contactEmail).trim() : null;
+    const admin = await findTenantAdminByIdentity(normalizedIdentity, resolvedTenantId);
+
+    await supportService.createSupportRequest(
+      resolvedTenantId,
+      {
+        topic: 'Password reset request',
+        priority: 'urgent',
+        message: [
+          'Tenant admin password reset request received.',
+          `Identity: ${normalizedIdentity}`,
+          `Contact email: ${safeContactEmail || admin?.email || 'Not provided'}`,
+          admin ? `Matched admin ID: ${admin.id}` : 'Matched admin ID: Not found',
+        ].join('\n'),
+      },
+      admin
+        ? {
+            id: admin.id,
+            name: admin.name,
+            username: admin.username,
+            email: admin.email,
+          }
+        : null,
+      null
+    );
+
+    return {
+      requestSubmitted: true,
     };
   },
 

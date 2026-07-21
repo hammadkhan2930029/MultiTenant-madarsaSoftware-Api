@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const classBodySchema = z.object({
   name: z.string().trim().min(2, 'Class name is required.').max(150, 'Class name is too long.'),
-  branchId: z.coerce.number().int().positive('Branch id must be a valid number.'),
+  branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
 });
 
 export const createClassValidationSchema = z.object({
@@ -13,7 +13,7 @@ export const createClassValidationSchema = z.object({
 
 export const bulkCreateClassesValidationSchema = z.object({
   body: z.object({
-    branchId: z.coerce.number().int().positive('Branch id must be a valid number.'),
+    branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
     classes: z.array(
       z.object({
         name: z.string().trim().min(2, 'Class name is required.').max(150, 'Class name is too long.'),
@@ -41,7 +41,9 @@ export const classIdValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Class id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const updateClassValidationSchema = z.object({

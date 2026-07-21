@@ -302,7 +302,7 @@ export const studentsService = {
 
   async createStudent(tenantId, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = getScopedBranchId(branchScope) || body.branchId || null;
     if (scopedBranchId) {
       await branchScopeService.validateBranchBelongsToTenant({
         tenantId: resolvedTenantId,
@@ -404,7 +404,7 @@ export const studentsService = {
         : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.gender ? { gender: query.gender } : {}),
-      ...(requestedBranchId || query.classId || query.sectionId || query.sessionId
+      ...(query.classId || query.sectionId || query.sessionId
         ? {
             assignments: {
               some: {
@@ -458,7 +458,7 @@ export const studentsService = {
 
   async updateStudent(tenantId, id, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = getScopedBranchId(branchScope) || body.branchId || null;
     const existingStudent = await prisma.student.findFirst({
       where: {
         id,

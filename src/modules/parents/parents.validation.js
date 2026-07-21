@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalCnicField } from '../../utils/cnicValidation.js';
 
 const optionalStringField = (max, message) =>
   z.union([z.string().trim().max(max, message), z.literal(''), z.undefined()]).transform((value) =>
@@ -16,7 +17,7 @@ const parentBodySchema = z.object({
   email: z
     .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
-  cnic: optionalStringField(50, 'CNIC is too long.'),
+  cnic: optionalCnicField(),
   occupation: optionalStringField(150, 'Occupation is too long.'),
   address: requiredStringField(1, 255, 'Address is required.', 'Address is too long.'),
 });

@@ -45,7 +45,15 @@ const branchSelect = {
       name: true,
       username: true,
       email: true,
+      phone: true,
+      role: true,
+      roleId: true,
       status: true,
+      assignedRole: {
+        select: {
+          roleName: true,
+        },
+      },
     },
     take: 5,
     orderBy: { createdAt: 'desc' },
@@ -88,30 +96,56 @@ const recordBranchAudit = async (client, {
   ...auditContext,
 });
 
-const ensureDefaultBranch = async (tenantId) => {
-  const existingBranch = await prisma.branch.findFirst({
+export const ensureDefaultBranch = async (tenantId, options = {}, client = prisma) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
+  const branchData = {
+    ...defaultBranchData,
+    name: normalizeOptionalString(options.name) || defaultBranchData.name,
+    address: normalizeOptionalString(options.address) || defaultBranchData.address,
+    contact: normalizeOptionalString(options.contact) || defaultBranchData.contact,
+  };
+
+  const existingBranch = await client.branch.findFirst({
     where: {
-      tenantId,
-      name: defaultBranchData.name,
+      tenantId: resolvedTenantId,
+      OR: [{ code: defaultBranchData.code }, { name: branchData.name }, { name: defaultBranchData.name }],
     },
     select: branchSelect,
   });
 
   if (existingBranch) {
-    return prisma.branch.update({
-      where: { id: existingBranch.id, tenantId },
-      data: defaultBranchData,
+    return client.branch.update({
+      where: { id: existingBranch.id, tenantId: resolvedTenantId },
+      data: {
+        ...(existingBranch.status === BRANCH_STATUS.ARCHIVED ? { status: BRANCH_STATUS.ACTIVE } : {}),
+      },
       select: branchSelect,
     });
   }
 
-  return prisma.branch.create({
-    data: {
-      ...defaultBranchData,
-      tenantId,
-    },
-    select: branchSelect,
-  });
+  try {
+    return await client.branch.create({
+      data: {
+        ...branchData,
+        tenantId: resolvedTenantId,
+        createdBy: options.createdBy || null,
+      },
+      select: branchSelect,
+    });
+  } catch (error) {
+    if (error?.code !== 'P2002') throw error;
+
+    const branch = await client.branch.findFirst({
+      where: {
+        tenantId: resolvedTenantId,
+        OR: [{ code: defaultBranchData.code }, { name: branchData.name }, { name: defaultBranchData.name }],
+      },
+      select: branchSelect,
+    });
+
+    if (branch) return branch;
+    throw error;
+  }
 };
 
 const normalizeOptionalString = (value) => {

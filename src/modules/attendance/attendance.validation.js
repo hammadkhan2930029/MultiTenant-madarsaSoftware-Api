@@ -9,7 +9,7 @@ const optionalRemarks = z
 export const markStudentAttendanceValidationSchema = z.object({
   body: z.object({
     studentId: z.coerce.number().int().positive('Student id must be a valid number.'),
-    branchId: z.coerce.number().int().positive('Branch id must be a valid number.'),
+    branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional(),
     classId: z.coerce.number().int().positive('Class id must be a valid number.'),
     sectionId: z.coerce.number().int().positive('Section id must be a valid number.'),
     date: z.coerce.date({ message: 'Attendance date is required.' }),
@@ -40,7 +40,7 @@ export const getStudentAttendanceValidationSchema = z.object({
 export const markTeacherAttendanceValidationSchema = z.object({
   body: z.object({
     teacherId: z.coerce.number().int().positive('استاد کا نمبر درست ہونا چاہیے۔'),
-    branchId: z.coerce.number().int().positive('برانچ کا نمبر درست ہونا چاہیے۔'),
+    branchId: z.coerce.number().int().positive('برانچ کا نمبر درست ہونا چاہیے۔').optional(),
     date: z.coerce.date({ message: 'حاضری کی تاریخ لازمی ہے۔' }),
     status: attendanceStatus,
     remarks: optionalRemarks,

@@ -7,6 +7,7 @@ const bodySchema = z.object({
   salaryMonth: z.coerce.number().int().min(1).max(12),
   salaryYear: z.coerce.number().int().min(2000).max(3000),
   paymentDate: z.coerce.date({ message: 'Payment date is required.' }),
+  paymentMethod: z.enum(['Cash', 'Online', 'Cheque', 'Bank Transfer']).optional(),
   remarks: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),
 });

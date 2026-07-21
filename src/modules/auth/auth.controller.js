@@ -26,6 +26,18 @@ export const changePassword = asyncHandler(async (req, res) => {
   });
 });
 
+export const requestForgotPassword = asyncHandler(async (req, res) => {
+  const result = await authService.requestForgotPassword({
+    tenantId: req.tenantId,
+    ...req.body,
+  });
+
+  return apiResponse(res, {
+    message: 'Password reset request submitted successfully.',
+    data: result,
+  });
+});
+
 export const getCurrentAdminProfile = asyncHandler(async (req, res) => {
   const result = await authService.getCurrentAdminProfile(req.admin.id);
 

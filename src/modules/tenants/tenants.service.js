@@ -5,6 +5,7 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { normalizeDomainName } from '../../utils/domain.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { ensureDefaultBranch } from '../branches/branches.service.js';
 import { seedDefaultTenantRoles } from '../roles/tenantRoleSeeder.service.js';
 import { auditService } from '../security/index.js';
 
@@ -30,6 +31,8 @@ const mapTenantAdmin = (admin) => ({
   name: admin.name,
   email: admin.email,
   phone: admin.phone || null,
+  city: admin.city || null,
+  province: admin.province || null,
   username: admin.username,
   role: admin.role,
   tenantId: admin.tenantId,
@@ -37,7 +40,7 @@ const mapTenantAdmin = (admin) => ({
   status: admin.status,
 });
 
-const mapMadrassaProfile = (profile) => ({
+const mapMadrassaProfile = (profile) => profile ? ({
   id: profile.id,
   adminId: profile.adminId,
   tenantId: profile.tenantId,
@@ -52,7 +55,7 @@ const mapMadrassaProfile = (profile) => ({
   regNo: profile.regNo,
   logoUrl: profile.logoUrl,
   status: profile.status,
-});
+}) : null;
 
 const assertTenantCodeAvailable = async (tenantCode) => {
   const existingTenant = await prisma.tenant.findUnique({
@@ -130,6 +133,8 @@ const mapTenantAdminRow = (admin) => {
     name: admin.name,
     email: admin.email,
     phone: admin.phone || null,
+    city: admin.city || null,
+    province: admin.province || null,
     username: admin.username,
     role: admin.role,
     tenantId: admin.tenant_id === null || admin.tenant_id === undefined ? null : Number(admin.tenant_id),
@@ -141,7 +146,7 @@ const mapTenantAdminRow = (admin) => {
 const getTenantAdminDetails = async (tenantId, ownerAdminId = null, client = prisma) => {
   const rows = ownerAdminId
     ? await client.$queryRaw`
-        SELECT id, name, email, phone, username, role, tenant_id, role_id, status
+        SELECT id, name, email, phone, city, province, username, role, tenant_id, role_id, status
         FROM admins
         WHERE id = ${ownerAdminId}
           AND tenant_id = ${tenantId}
@@ -152,7 +157,7 @@ const getTenantAdminDetails = async (tenantId, ownerAdminId = null, client = pri
   if (rows[0]) return mapTenantAdminRow(rows[0]);
 
   const fallbackRows = await client.$queryRaw`
-    SELECT a.id, a.name, a.email, a.phone, a.username, a.role, a.tenant_id, a.role_id, a.status
+    SELECT a.id, a.name, a.email, a.phone, a.city, a.province, a.username, a.role, a.tenant_id, a.role_id, a.status
     FROM admins a
     LEFT JOIN roles r ON r.id = a.role_id
     WHERE a.tenant_id = ${tenantId}
@@ -162,6 +167,44 @@ const getTenantAdminDetails = async (tenantId, ownerAdminId = null, client = pri
   `;
 
   return mapTenantAdminRow(fallbackRows[0]);
+};
+
+const getTenantProfileDetails = async (tenantId, client = prisma) => {
+  const profile = await client.madrassaProfile.findUnique({
+    where: { tenantId },
+  });
+
+  return profile ? mapMadrassaProfile(profile) : null;
+};
+
+const getTenantAdminForPasswordUpdate = async (tenantId, ownerAdminId = null, client = prisma) => {
+  if (ownerAdminId) {
+    const admin = await client.admin.findFirst({
+      where: {
+        id: ownerAdminId,
+        tenantId,
+      },
+      select: { id: true },
+    });
+
+    if (admin) return admin;
+  }
+
+  const rows = await client.$queryRaw`
+    SELECT a.id
+    FROM admins a
+    LEFT JOIN roles r ON r.id = a.role_id
+    WHERE a.tenant_id = ${tenantId}
+      AND (a.role = 'admin' OR r.role_name = 'admin')
+    ORDER BY a.createdAt ASC
+    LIMIT 1
+  `;
+
+  if (!rows[0]) {
+    throw new AppError('Tenant admin was not found.', 404);
+  }
+
+  return { id: Number(rows[0].id) };
 };
 
 const getBranchStats = async (tenantId, client = prisma) => {
@@ -204,7 +247,7 @@ const getTenantAdminDetailsMap = async (tenants, client = prisma) => {
   const ownerAdminIds = tenants.map((tenant) => tenant.ownerAdminId).filter(Boolean);
   const ownerRows = ownerAdminIds.length
     ? await client.$queryRaw`
-        SELECT id, name, email, phone, username, role, tenant_id, role_id, status
+        SELECT id, name, email, phone, city, province, username, role, tenant_id, role_id, status
         FROM admins
         WHERE id IN (${Prisma.join(ownerAdminIds)})
           AND tenant_id IN (${Prisma.join(tenantIds)})
@@ -213,9 +256,9 @@ const getTenantAdminDetailsMap = async (tenants, client = prisma) => {
   const ownerMap = new Map(ownerRows.map((row) => [Number(row.tenant_id), mapTenantAdminRow(row)]));
 
   const fallbackRows = await client.$queryRaw`
-    SELECT id, name, email, phone, username, role, tenant_id, role_id, status
+    SELECT id, name, email, phone, city, province, username, role, tenant_id, role_id, status
     FROM (
-      SELECT a.id, a.name, a.email, a.phone, a.username, a.role, a.tenant_id, a.role_id, a.status,
+      SELECT a.id, a.name, a.email, a.phone, a.city, a.province, a.username, a.role, a.tenant_id, a.role_id, a.status,
              ROW_NUMBER() OVER (PARTITION BY a.tenant_id ORDER BY a.createdAt ASC) AS row_num
       FROM admins a
       LEFT JOIN roles r ON r.id = a.role_id
@@ -235,7 +278,7 @@ const getRemainingBranches = ({ branchEnabled, branchLimit, branchesCreated }) =
   return Math.max(branchLimit - branchesCreated, 0);
 };
 
-const mapTenantBranchSummary = ({ tenant, tenantAdmin, stats }) => {
+const mapTenantBranchSummary = ({ tenant, tenantAdmin, madrassaProfile = null, stats }) => {
   const branchEnabled = Boolean(tenant.branchEnabled ?? tenant.branch_enabled);
   const branchLimit = tenant.branchLimit ?? tenant.branch_limit ?? null;
   const branchesCreated = stats.branchesCreated || 0;
@@ -250,6 +293,7 @@ const mapTenantBranchSummary = ({ tenant, tenantAdmin, stats }) => {
     customDomain: tenant.customDomain,
     link: buildTenantLink(tenant),
     tenantAdmin,
+    madrassaProfile,
     status: tenant.status,
     branchEnabled,
     branchLimit,
@@ -340,12 +384,13 @@ export const tenantsService = {
 
   async getTenantBranchSummary(id) {
     const tenant = await getTenantOrThrow(id);
-    const [tenantAdmin, stats] = await Promise.all([
+    const [tenantAdmin, madrassaProfile, stats] = await Promise.all([
       getTenantAdminDetails(tenant.id, tenant.ownerAdminId),
+      getTenantProfileDetails(tenant.id),
       getBranchStats(tenant.id),
     ]);
 
-    return mapTenantBranchSummary({ tenant, tenantAdmin, stats });
+    return mapTenantBranchSummary({ tenant, tenantAdmin, madrassaProfile, stats });
   },
 
   async getTenantBranchList(id, query = {}) {
@@ -470,9 +515,10 @@ export const tenantsService = {
       const tenant = await getTenantOrThrow(id, tx);
       const stats = await getBranchStats(tenant.id, tx);
       const branchLimit = payload.branchLimit;
+      const branchEnabled = Boolean(tenant.branchEnabled) || (Number.isInteger(branchLimit) && branchLimit >= 1);
 
       validateBranchSettingsAgainstCount({
-        branchEnabled: Boolean(tenant.branchEnabled),
+        branchEnabled,
         branchLimit,
         branchesCreated: stats.branchesCreated,
       });
@@ -480,6 +526,7 @@ export const tenantsService = {
       const updatedTenant = await tx.tenant.update({
         where: { id: tenant.id },
         data: {
+          branchEnabled,
           branchLimit: branchLimit ?? null,
         },
       });
@@ -496,8 +543,8 @@ export const tenantsService = {
         module: 'tenants',
         targetType: 'tenant',
         targetId: tenant.id,
-        oldValue: { branchLimit: tenant.branchLimit },
-        newValue: { branchLimit: updatedTenant.branchLimit },
+        oldValue: { branchEnabled: Boolean(tenant.branchEnabled), branchLimit: tenant.branchLimit },
+        newValue: { branchEnabled: Boolean(updatedTenant.branchEnabled), branchLimit: updatedTenant.branchLimit },
         ipAddress: requester?.audit?.ipAddress || null,
         userAgent: requester?.audit?.userAgent || null,
       });
@@ -538,6 +585,7 @@ export const tenantsService = {
           data: {
             name: adminPayload.name,
             email: adminPayload.email,
+            phone: emptyToNull(adminPayload.phone),
             username: adminPayload.username,
             password: hashedPassword,
             role: adminRole?.roleName || 'admin',
@@ -546,6 +594,13 @@ export const tenantsService = {
             status: 'active',
           },
         });
+
+        await tx.$executeRaw`
+          UPDATE admins
+          SET city = ${emptyToNull(adminPayload.city)},
+              province = ${emptyToNull(adminPayload.province)}
+          WHERE id = ${tenantAdmin.id}
+        `;
 
         const updatedTenant = await tx.tenant.update({
           where: { id: tenant.id },
@@ -580,6 +635,17 @@ export const tenantsService = {
             status: 'active',
           },
         });
+
+        await ensureDefaultBranch(
+          tenant.id,
+          {
+            createdBy: tenantAdmin.id,
+            name: madrassaProfile.branch,
+            address: madrassaProfile.address,
+            contact: madrassaProfile.phone1,
+          },
+          tx
+        );
 
         return {
           ...mapTenant(updatedTenant),
@@ -644,7 +710,16 @@ export const tenantsService = {
       throw new AppError('Tenant not found.', 404);
     }
 
-    return mapTenant(tenant);
+    const [tenantAdmin, madrassaProfile] = await Promise.all([
+      getTenantAdminDetails(tenant.id, tenant.ownerAdminId),
+      getTenantProfileDetails(tenant.id),
+    ]);
+
+    return {
+      ...mapTenant(tenant),
+      tenantAdmin,
+      madrassaProfile,
+    };
   },
 
   async updateTenant(id, payload) {
@@ -689,19 +764,94 @@ export const tenantsService = {
     await assertDomainAvailable({ subdomain, customDomain, excludeId: id });
     await assertOwnerExists(ownerAdminId);
 
-    const tenant = await prisma.tenant.update({
-      where: { id },
-      data: {
-        ...(payload.name ? { name: payload.name } : {}),
-        subdomain,
-        customDomain,
-        ownerAdminId,
-        branchEnabled,
-        branchLimit: branchEnabled ? branchLimit : branchLimit || null,
-        ...(payload.status ? { status: payload.status } : {}),
-      },
-    });
+    return prisma.$transaction(async (tx) => {
+      const tenant = await tx.tenant.update({
+        where: { id },
+        data: {
+          ...(payload.name ? { name: payload.name } : {}),
+          subdomain,
+          customDomain,
+          ownerAdminId,
+          branchEnabled,
+          branchLimit: branchEnabled ? branchLimit : branchLimit || null,
+          ...(payload.status ? { status: payload.status } : {}),
+        },
+      });
 
-    return mapTenant(tenant);
+      if (payload.adminPassword) {
+        const tenantAdmin = await getTenantAdminForPasswordUpdate(tenant.id, tenant.ownerAdminId, tx);
+        const hashedPassword = await bcrypt.hash(payload.adminPassword, 12);
+
+        await tx.admin.update({
+          where: { id: tenantAdmin.id },
+          data: { password: hashedPassword },
+        });
+      }
+
+      if (payload.admin && Object.keys(payload.admin).length) {
+        const tenantAdmin = await getTenantAdminForPasswordUpdate(tenant.id, tenant.ownerAdminId, tx);
+        await tx.admin.update({
+          where: { id: tenantAdmin.id },
+          data: {
+            ...(payload.admin.name ? { name: payload.admin.name } : {}),
+            ...(payload.admin.email ? { email: payload.admin.email } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.admin, 'phone') ? { phone: emptyToNull(payload.admin.phone) } : {}),
+            ...(payload.admin.username ? { username: payload.admin.username } : {}),
+          },
+        });
+
+        await tx.$executeRaw`
+          UPDATE admins
+          SET city = ${emptyToNull(payload.admin.city)},
+              province = ${emptyToNull(payload.admin.province)}
+          WHERE id = ${tenantAdmin.id}
+        `;
+      }
+
+      if (payload.profile && Object.keys(payload.profile).length) {
+        const tenantAdmin = await getTenantAdminDetails(tenant.id, tenant.ownerAdminId, tx);
+        await tx.madrassaProfile.upsert({
+          where: { tenantId: tenant.id },
+          create: {
+            adminId: tenantAdmin.id,
+            tenantId: tenant.id,
+            name: payload.profile.name || tenant.name,
+            email: payload.profile.email || payload.admin?.email || tenantAdmin.email,
+            phone1: emptyToNull(payload.profile.phone1),
+            phone2: emptyToNull(payload.profile.phone2),
+            address: emptyToNull(payload.profile.address),
+            branch: emptyToNull(payload.profile.branch) || 'Main Campus',
+            city: emptyToNull(payload.profile.city),
+            familyNoSeq: emptyToNull(payload.profile.familyNoSeq),
+            regNo: emptyToNull(payload.profile.regNo),
+            logoUrl: emptyToNull(payload.profile.logoUrl),
+            status: 'active',
+          },
+          update: {
+            ...(payload.profile.name ? { name: payload.profile.name } : {}),
+            ...(payload.profile.email ? { email: payload.profile.email } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'phone1') ? { phone1: emptyToNull(payload.profile.phone1) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'phone2') ? { phone2: emptyToNull(payload.profile.phone2) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'address') ? { address: emptyToNull(payload.profile.address) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'branch') ? { branch: emptyToNull(payload.profile.branch) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'city') ? { city: emptyToNull(payload.profile.city) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'familyNoSeq') ? { familyNoSeq: emptyToNull(payload.profile.familyNoSeq) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'regNo') ? { regNo: emptyToNull(payload.profile.regNo) } : {}),
+            ...(Object.prototype.hasOwnProperty.call(payload.profile, 'logoUrl') ? { logoUrl: emptyToNull(payload.profile.logoUrl) } : {}),
+          },
+        });
+      }
+
+      const [tenantAdmin, madrassaProfile] = await Promise.all([
+        getTenantAdminDetails(tenant.id, tenant.ownerAdminId, tx),
+        getTenantProfileDetails(tenant.id, tx),
+      ]);
+
+      return {
+        ...mapTenant(tenant),
+        tenantAdmin,
+        madrassaProfile,
+      };
+    });
   },
 };

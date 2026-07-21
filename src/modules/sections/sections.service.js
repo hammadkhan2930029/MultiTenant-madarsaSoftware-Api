@@ -38,18 +38,31 @@ const sectionSelect = {
 
 const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
 
-const getClassBranchWhere = (branchId) => (branchId ? { class: { branchId } } : {});
+const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
+  getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
+
+const buildClassBranchWhere = (branchId) => (
+  branchId ? { class: { branchId: Number(branchId) } } : { class: { branchId: null } }
+);
+
+const getActiveClassBranchWhere = (branchId) => (
+  branchId
+    ? {
+        branchId: Number(branchId),
+        branch: { status: 'active' },
+      }
+    : { branchId: null }
+);
 
 export const sectionsService = {
   async createSection(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = getRequestedBranchId(payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
       where: {
         id: payload.classId,
         tenantId: resolvedTenantId,
-        ...(scopedBranchId ? { branchId: scopedBranchId } : {}),
-        branch: { status: 'active' },
+        ...getActiveClassBranchWhere(scopedBranchId),
       },
     });
 
@@ -81,13 +94,12 @@ export const sectionsService = {
 
   async bulkCreateSections(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = getRequestedBranchId(payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
       where: {
         id: payload.classId,
         tenantId: resolvedTenantId,
-        ...(scopedBranchId ? { branchId: scopedBranchId } : {}),
-        branch: { status: 'active' },
+        ...getActiveClassBranchWhere(scopedBranchId),
       },
       select: { id: true },
     });
@@ -170,11 +182,11 @@ export const sectionsService = {
   async getSections(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+    const branchId = getRequestedBranchId(query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
-      ...getClassBranchWhere(branchId),
+      ...buildClassBranchWhere(branchId),
       ...(query.search
         ? {
             name: {
@@ -205,9 +217,9 @@ export const sectionsService = {
 
   async getSectionById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = getRequestedBranchId({}, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...getClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
       select: sectionSelect,
     });
 
@@ -220,9 +232,9 @@ export const sectionsService = {
 
   async updateSection(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = getRequestedBranchId(payload, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...getClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
     });
 
     if (!section) {
@@ -233,8 +245,7 @@ export const sectionsService = {
       where: {
         id: payload.classId,
         tenantId: resolvedTenantId,
-        ...(branchId ? { branchId } : {}),
-        branch: { status: 'active' },
+        ...getActiveClassBranchWhere(branchId),
       },
     });
 
@@ -268,9 +279,9 @@ export const sectionsService = {
 
   async deleteSection(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = getRequestedBranchId({}, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...getClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
     });
 
     if (!section) {
