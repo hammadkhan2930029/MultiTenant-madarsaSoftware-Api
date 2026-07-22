@@ -18,10 +18,10 @@ import {
 
 const router = Router();
 router.use(authMiddleware);
-router.post('/', requirePermission('fees.create'), validate(createSalaryValidationSchema), createSalaryEntry);
-router.get('/', requirePermission('fees.view'), validate(listSalariesValidationSchema), getSalaryEntries);
-router.get('/:id', requirePermission('fees.view'), validate(salaryIdValidationSchema), getSalaryEntryById);
-router.put('/:id', requirePermission('fees.update'), validate(updateSalaryValidationSchema), updateSalaryEntry);
-router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(salaryIdValidationSchema), deactivateSalaryEntry);
+router.post('/', requirePermission('salary.create'), validate(createSalaryValidationSchema), createSalaryEntry);
+router.get('/', requirePermission('salary.view'), validate(listSalariesValidationSchema), getSalaryEntries);
+router.get('/:id', requirePermission('salary.view'), validate(salaryIdValidationSchema), getSalaryEntryById);
+router.put('/:id', requirePermission('salary.edit'), validate(updateSalaryValidationSchema), updateSalaryEntry);
+router.patch('/:id/deactivate', requirePermission('salary.delete'), validate(salaryIdValidationSchema), deactivateSalaryEntry);
 
 export { router as salaryRoutes };

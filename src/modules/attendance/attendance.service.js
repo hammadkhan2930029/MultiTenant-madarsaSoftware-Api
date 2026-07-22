@@ -94,6 +94,18 @@ const normalizeDate = (value) => {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
+const getTeacherStartDate = (teacher) => {
+  const value = teacher?.joiningDate || teacher?.appointmentDate || teacher?.createdAt;
+  return value ? normalizeDate(value) : null;
+};
+
+const ensureTeacherIsAvailableOnDate = (teacher, date) => {
+  const startDate = getTeacherStartDate(teacher);
+  if (startDate && date < startDate) {
+    throw new AppError('اس تاریخ پر استاد/عملہ ابھی شامل نہیں ہوا تھا۔', 400);
+  }
+};
+
 const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
 
 const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
@@ -201,7 +213,7 @@ const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId
   }
 };
 
-const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId }, branchScoped = false) => {
+const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId, date }, branchScoped = false) => {
   const [teacher, branch] = await Promise.all([
     prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchScoped ? { branchId } : {}) } }),
     prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
@@ -212,6 +224,7 @@ const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId
   if (teacher.branchId && teacher.branchId !== branchId) {
     throw new AppError('Selected teacher does not belong to the selected branch.', 400);
   }
+  ensureTeacherIsAvailableOnDate(teacher, date);
 };
 
 export const attendanceService = {
@@ -298,9 +311,8 @@ export const attendanceService = {
   async markTeacherAttendance(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, payload, branchScope);
-    await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(getScopedBranchId(branchScope)));
-
     const attendanceDate = normalizeDate(payload.date);
+    await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId, date: attendanceDate }, Boolean(getScopedBranchId(branchScope)));
 
     return prisma.teacherAttendance.upsert({
       where: {

@@ -437,7 +437,13 @@ export const usersService = {
     const status = query.status || null;
     const roleId = query.roleId || null;
     const tenantId = requester?.isSuperAdmin ? null : normalizeTenantId(requester?.tenantId);
-    const branchId = requester?.isSuperAdmin ? null : normalizeBranchId(requester?.branchId);
+    const requestedBranchId = normalizeBranchId(query.branchId);
+    if (!requester?.isSuperAdmin && !normalizeBranchId(requester?.branchId) && requestedBranchId) {
+      await ensureAssignableBranch(requestedBranchId, tenantId, prisma);
+    }
+    const branchId = requester?.isSuperAdmin
+      ? null
+      : normalizeBranchId(requester?.branchId) || requestedBranchId || null;
     const branchScopedRequester = isBranchScopedRequester(requester);
 
     const items = requester?.isSuperAdmin

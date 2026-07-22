@@ -92,7 +92,7 @@ const formatExamResult = (result) => ({
   })),
 });
 
-const ensureReferences = async (tenantId, { studentId, sessionId, classId, sectionId, subjects }, requestedBranchId = null) => {
+const ensureReferences = async (tenantId, { studentId, sessionId, classId, sectionId, examName, subjects }, requestedBranchId = null) => {
   const subjectIds = [...new Set(subjects.map((subject) => subject.subjectId))];
   if (subjectIds.length !== subjects.length) {
     throw new AppError('Duplicate subjects are not allowed in the same result.', 400);
@@ -116,6 +116,41 @@ const ensureReferences = async (tenantId, { studentId, sessionId, classId, secti
   }
   if (dbSubjects.length !== subjectIds.length) throw new AppError('One or more active subjects were not found.', 404);
 
+  const scheduleWhere = {
+    tenantId,
+    examName,
+    sessionId,
+    classId,
+    sectionId: sectionId || null,
+    status: 'active',
+    ...(requestedBranchId ? { class: { tenantId, branchId: requestedBranchId } } : { class: { tenantId } }),
+  };
+  const scheduleSubjects = await prisma.examSchedule.findMany({
+    where: scheduleWhere,
+    select: {
+      subjectId: true,
+      totalMarks: true,
+      subject: { select: { id: true, name: true } },
+    },
+  });
+
+  if (!scheduleSubjects.length) {
+    throw new AppError('منتخب امتحانی نظام الاوقات نہیں ملا۔', 404);
+  }
+
+  const scheduleBySubjectId = new Map(scheduleSubjects.map((schedule) => [Number(schedule.subjectId), schedule]));
+  if (scheduleSubjects.length !== subjectIds.length || subjectIds.some((subjectId) => !scheduleBySubjectId.has(Number(subjectId)))) {
+    throw new AppError('رزلٹ میں صرف منتخب امتحانی نظام الاوقات کے مضامین شامل کیے جا سکتے ہیں۔', 400);
+  }
+
+  const scheduledSubjects = subjects.map((subject) => {
+    const schedule = scheduleBySubjectId.get(Number(subject.subjectId));
+    return {
+      ...subject,
+      totalMarks: Number(schedule.totalMarks),
+    };
+  });
+
   const assignment = await prisma.studentClassAssignment.findFirst({
     where: {
       tenantId,
@@ -136,7 +171,7 @@ const ensureReferences = async (tenantId, { studentId, sessionId, classId, secti
   if (resolvedBranchId) {
     await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId: resolvedBranchId, requireActive: true });
   }
-  return resolvedBranchId;
+  return { branchId: resolvedBranchId, subjects: scheduledSubjects };
 };
 
 const buildCalculatedResult = async (tenantId, payload) => {
@@ -221,9 +256,10 @@ export const examResultsService = {
   async saveExamResult(tenantId, payload, id = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
-    const branchId = await ensureReferences(resolvedTenantId, payload, requestedBranchId);
+    const { branchId, subjects } = await ensureReferences(resolvedTenantId, payload, requestedBranchId);
+    const scopedPayload = { ...payload, subjects };
     const scopedBranchId = getScopedBranchId(branchScope);
-    const calculated = await buildCalculatedResult(resolvedTenantId, payload);
+    const calculated = await buildCalculatedResult(resolvedTenantId, scopedPayload);
 
     const existingResult = id
       ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(scopedBranchId ? { branchId: scopedBranchId } : {}) } })
@@ -243,7 +279,7 @@ export const examResultsService = {
       throw new AppError('Exam result not found.', 404);
     }
 
-    const result = await prisma.$transaction((tx) => writeResult(tx, resolvedTenantId, existingResult?.id || null, payload, calculated, branchId));
+    const result = await prisma.$transaction((tx) => writeResult(tx, resolvedTenantId, existingResult?.id || null, scopedPayload, calculated, branchId));
     return formatExamResult(result);
   },
 
@@ -260,6 +296,7 @@ export const examResultsService = {
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
       ...(query.sectionId ? { sectionId: query.sectionId, section: { tenantId: resolvedTenantId } } : {}),
+      ...(query.examName ? { examName: query.examName } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
         ? {

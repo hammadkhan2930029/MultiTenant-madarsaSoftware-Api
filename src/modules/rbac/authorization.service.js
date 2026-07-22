@@ -78,6 +78,11 @@ const getRequiredPermissionForRequest = (req) => {
     if (req.method === 'PATCH' && /\/payment(\/|$)/i.test(req.originalUrl)) return 'fees.create';
     return action === 'view' ? 'fees.view' : `fees.${action}`;
   }
+  if (req.originalUrl.startsWith('/api/finance/salaries')) {
+    if (action === 'view') return 'salary.view';
+    if (action === 'update') return 'salary.edit';
+    return `salary.${action}`;
+  }
   if (req.originalUrl.startsWith('/api/finance/reports')) return 'reports.view';
   if (req.originalUrl.startsWith('/api/finance/expenses')) {
     return action === 'view' ? 'fees.view' : `fees.${action}`;

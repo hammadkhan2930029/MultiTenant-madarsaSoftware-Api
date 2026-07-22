@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { citiesService } from './cities.service.js';
 
 export const createCity = asyncHandler(async (req, res) => {
-  const result = await citiesService.createCity(req.body);
+  const result = await citiesService.createCity(req.tenantId, req.body, req.auth);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createCity = asyncHandler(async (req, res) => {
 });
 
 export const getCities = asyncHandler(async (req, res) => {
-  const result = await citiesService.getCities(req.query);
+  const result = await citiesService.getCities(req.tenantId, req.query, req.auth);
 
   return apiResponse(res, {
     message: 'Cities fetched successfully.',
@@ -22,7 +22,7 @@ export const getCities = asyncHandler(async (req, res) => {
 });
 
 export const getCityById = asyncHandler(async (req, res) => {
-  const result = await citiesService.getCityById(req.params.id);
+  const result = await citiesService.getCityById(req.tenantId, req.params.id, req.auth);
 
   return apiResponse(res, {
     message: 'City fetched successfully.',
@@ -31,7 +31,7 @@ export const getCityById = asyncHandler(async (req, res) => {
 });
 
 export const updateCity = asyncHandler(async (req, res) => {
-  const result = await citiesService.updateCity(req.params.id, req.body);
+  const result = await citiesService.updateCity(req.tenantId, req.params.id, req.body, req.auth);
 
   return apiResponse(res, {
     message: 'City updated successfully.',
@@ -40,7 +40,7 @@ export const updateCity = asyncHandler(async (req, res) => {
 });
 
 export const deactivateCity = asyncHandler(async (req, res) => {
-  const result = await citiesService.deactivateCity(req.params.id);
+  const result = await citiesService.deactivateCity(req.tenantId, req.params.id, req.auth);
 
   return apiResponse(res, {
     message: 'City deactivated successfully.',

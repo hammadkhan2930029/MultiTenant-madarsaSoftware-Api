@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const bodySchema = z.object({
   teacherId: z.coerce.number().int().positive(),
-  financeHeadId: z.coerce.number().int().positive(),
+  financeHeadId: z.coerce.number().int().positive().optional(),
   amount: z.coerce.number().positive('Amount must be positive.'),
   salaryMonth: z.coerce.number().int().min(1).max(12),
   salaryYear: z.coerce.number().int().min(2000).max(3000),

@@ -228,6 +228,7 @@ exports.Prisma.MadrassaProfileScalarFieldEnum = {
 
 exports.Prisma.CityScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
   name: 'name',
   status: 'status',
   createdAt: 'createdAt',
@@ -433,6 +434,7 @@ exports.Prisma.ExamScheduleScalarFieldEnum = {
   examName: 'examName',
   sessionId: 'sessionId',
   classId: 'classId',
+  sectionId: 'sectionId',
   subjectId: 'subjectId',
   examDate: 'examDate',
   startTime: 'startTime',

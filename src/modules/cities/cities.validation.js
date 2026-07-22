@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const cityBodySchema = z.object({
-  name: z.string().trim().min(2, 'City name is required.').max(150, 'City name is too long.'),
+  name: z.string().trim().min(2, 'شہر کا نام لازمی ہے۔').max(150, 'شہر کا نام بہت لمبا ہے۔'),
   status: z.enum(['active', 'inactive']).optional(),
 });
 

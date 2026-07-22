@@ -4,11 +4,11 @@ const optionalString = (max) =>
   z.union([z.string().trim().max(max), z.literal(''), z.undefined(), z.null()]).transform((value) => (value ? value : undefined));
 
 const subjectMarksSchema = z.object({
-  subjectId: z.coerce.number().int().positive('Subject is required.'),
-  totalMarks: z.coerce.number().int().positive('Total marks must be greater than 0.'),
-  obtainedMarks: z.coerce.number().int().min(0, 'Obtained marks cannot be negative.'),
+  subjectId: z.coerce.number().int().positive('مضمون لازمی ہے۔'),
+  totalMarks: z.coerce.number().int().positive('کل نمبر صفر سے زیادہ ہونے چاہئیں۔'),
+  obtainedMarks: z.coerce.number().int().min(0, 'حاصل کردہ نمبر منفی نہیں ہو سکتے۔'),
 }).refine((value) => value.obtainedMarks <= value.totalMarks, {
-  message: 'Obtained marks cannot be greater than total marks.',
+  message: 'حاصل کردہ نمبر کل نمبروں سے زیادہ نہیں ہو سکتے۔',
   path: ['obtainedMarks'],
 });
 
@@ -18,10 +18,10 @@ const examResultBodySchema = z.object({
   sessionId: z.coerce.number().int().positive('Session is required.'),
   classId: z.coerce.number().int().positive('Class is required.'),
   sectionId: z.union([z.coerce.number().int().positive(), z.literal(''), z.null(), z.undefined()]).transform((value) => (value ? Number(value) : null)),
-  examName: optionalString(150),
+  examName: z.string().trim().min(1, 'امتحانی نظام الاوقات منتخب کریں۔').max(150, 'امتحان کا نام بہت لمبا ہے۔'),
   remarks: optionalString(255),
   status: z.enum(['active', 'inactive']).optional(),
-  subjects: z.array(subjectMarksSchema).min(1, 'At least one subject result is required.'),
+  subjects: z.array(subjectMarksSchema).min(1, 'کم از کم ایک مضمون کا رزلٹ لازمی ہے۔'),
 });
 
 export const saveExamResultValidationSchema = z.object({
@@ -48,6 +48,7 @@ export const listExamResultsValidationSchema = z.object({
     sessionId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
     sectionId: z.coerce.number().int().positive().optional(),
+    examName: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),

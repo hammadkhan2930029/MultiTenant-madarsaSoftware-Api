@@ -18,6 +18,7 @@ const examScheduleSelect = {
   updatedAt: true,
   session: { select: { id: true, name: true, startDate: true, endDate: true } },
   class: { select: { id: true, tenantId: true, name: true } },
+  section: { select: { id: true, tenantId: true, classId: true, name: true } },
   subject: { select: { id: true, tenantId: true, name: true } },
 };
 
@@ -45,25 +46,32 @@ const normalizeEndDate = (value) => {
 
 const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
 
-const ensureExamScheduleReferences = async (tenantId, { sessionId, classId, subjectId }, branchId = null) => {
-  const [session, academicClass, subject] = await Promise.all([
+const ensureExamScheduleReferences = async (tenantId, { sessionId, classId, sectionId, subjectId }, branchId = null) => {
+  const [session, academicClass, section, subject] = await Promise.all([
     prisma.academicSession.findUnique({ where: { id: sessionId } }),
     prisma.academicClass.findFirst({
       where: { id: classId, tenantId, ...(branchId ? { branchId } : {}), branch: { status: 'active' } },
+    }),
+    prisma.section.findFirst({
+      where: { id: sectionId, classId, tenantId, status: 'active' },
     }),
     prisma.subject.findFirst({ where: { id: subjectId, tenantId } }),
   ]);
 
   if (!session || session.status !== 'active') {
-    throw new AppError('Active session not found.', 404);
+    throw new AppError('فعال سیشن نہیں ملا۔', 404);
   }
 
   if (!academicClass || academicClass.status !== 'active') {
-    throw new AppError('Active class or branch not found.', 404);
+    throw new AppError('فعال کلاس یا برانچ نہیں ملی۔', 404);
+  }
+
+  if (!section) {
+    throw new AppError('فعال جماعت سیکشن نہیں ملا۔', 404);
   }
 
   if (!subject || subject.status !== 'active') {
-    throw new AppError('Active subject not found.', 404);
+    throw new AppError('فعال مضمون نہیں ملا۔', 404);
   }
 };
 
@@ -74,7 +82,7 @@ const getTenantExamSchedule = async (tenantId, id, branchId = null) => {
   });
 
   if (!schedule) {
-    throw new AppError('Exam schedule not found.', 404);
+    throw new AppError('امتحانی نظام الاوقات نہیں ملا۔', 404);
   }
 
   return schedule;
@@ -91,6 +99,7 @@ export const examSchedulesService = {
         examName: payload.examName,
         sessionId: payload.sessionId,
         classId: payload.classId,
+        sectionId: payload.sectionId,
         subjectId: payload.subjectId,
         examDate: normalizeStartDate(payload.examDate),
         startTime: payload.startTime,
@@ -115,6 +124,7 @@ export const examSchedulesService = {
       subject: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...(query.subjectId ? { subjectId: query.subjectId } : {}),
       ...(query.fromDate || query.toDate
         ? {
@@ -168,6 +178,7 @@ export const examSchedulesService = {
         examName: payload.examName,
         sessionId: payload.sessionId,
         classId: payload.classId,
+        sectionId: payload.sectionId,
         subjectId: payload.subjectId,
         examDate: normalizeStartDate(payload.examDate),
         startTime: payload.startTime,
