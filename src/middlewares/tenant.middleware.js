@@ -153,6 +153,20 @@ export const tenantResolverMiddleware = asyncHandler(async (req, _res, next) => 
   });
 
   if (!tenant) {
+    if (source === 'system') {
+      req.tenant = null;
+      req.tenantId = null;
+      req.tenantHost = {
+        hostname,
+        source,
+        subdomain: subdomain || null,
+        baseDomain: baseDomain || null,
+        isSystemHost: true,
+        fallbackToDefault: false,
+      };
+      return next();
+    }
+
     const message = source === 'subdomain'
       ? 'Tenant not found for this subdomain.'
       : 'Tenant not found for this domain.';

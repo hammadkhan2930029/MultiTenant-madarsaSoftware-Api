@@ -64,7 +64,10 @@ const getNextAdmissionNumber = async (tenantId, tx = prisma) => {
   return buildNextAdmissionNumber(students, profile?.regNo || DEFAULT_ADMISSION_NUMBER);
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveStudentBranchId = (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
@@ -302,14 +305,7 @@ export const studentsService = {
 
   async createStudent(tenantId, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope) || body.branchId || null;
-    if (scopedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: scopedBranchId,
-        requireActive: true,
-      });
-    }
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
 
     body.admissionNumber = optionalString(body.admissionNumber) || (await getNextAdmissionNumber(resolvedTenantId));
 
@@ -376,16 +372,7 @@ export const studentsService = {
   async getStudents(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const scopedBranchId = getScopedBranchId(branchScope);
-    const requestedBranchId = scopedBranchId || query.branchId;
-
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveStudentBranchId(resolvedTenantId, query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -439,7 +426,7 @@ export const studentsService = {
 
   async getStudentById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, {}, branchScope);
     const student = await prisma.student.findFirst({
       where: {
         id,
@@ -458,7 +445,7 @@ export const studentsService = {
 
   async updateStudent(tenantId, id, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope) || body.branchId || null;
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
     const existingStudent = await prisma.student.findFirst({
       where: {
         id,
@@ -534,7 +521,7 @@ export const studentsService = {
 
   async deleteStudent(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, {}, branchScope);
     const existingStudent = await prisma.student.findFirst({
       where: {
         id,
@@ -570,14 +557,8 @@ export const studentsService = {
 
   async assignClassToStudent(tenantId, studentId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
-    const requestedBranchId = scopedBranchId || payload.branchId;
-
-    await branchScopeService.validateBranchBelongsToTenant({
-      tenantId: resolvedTenantId,
-      branchId: requestedBranchId,
-      requireActive: true,
-    });
+    const requestedBranchId = await resolveStudentBranchId(resolvedTenantId, payload, branchScope);
+    const scopedBranchId = requestedBranchId;
 
     const student = await prisma.student.findFirst({
       where: {
@@ -653,7 +634,7 @@ export const studentsService = {
 
   async removeClassAssignment(tenantId, assignmentId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, {}, branchScope);
     const assignment = await prisma.studentClassAssignment.findUnique({
       where: { id: assignmentId },
       include: {

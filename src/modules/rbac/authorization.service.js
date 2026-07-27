@@ -55,6 +55,9 @@ const getRequiredPermissionForRequest = (req) => {
     if (req.method === 'DELETE') return 'teachers.assignments.delete';
     return 'teachers.assignments.edit';
   }
+  if (req.originalUrl.startsWith('/api/schedules')) {
+    return 'students.schedule.view';
+  }
   if (req.originalUrl.startsWith('/api/exam-results')) {
     if (req.method === 'GET') return 'exam_results.view';
     if (req.method === 'DELETE') return 'exams.delete';

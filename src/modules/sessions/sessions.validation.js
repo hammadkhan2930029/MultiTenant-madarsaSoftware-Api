@@ -4,6 +4,7 @@ const sessionBodyBaseSchema = z.object({
   name: z.string().trim().min(2, 'Session name is required.').max(150, 'Session name is too long.'),
   startDate: z.coerce.date({ message: 'Start date is required.' }),
   endDate: z.coerce.date({ message: 'End date is required.' }),
+  branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
 });
 
 const withSessionDateValidation = (schema) =>
@@ -31,6 +32,7 @@ export const listSessionsValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
@@ -41,7 +43,9 @@ export const sessionIdValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Session id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const updateSessionValidationSchema = z.object({

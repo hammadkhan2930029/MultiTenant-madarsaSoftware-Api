@@ -47,14 +47,10 @@ const normalizeEndDate = (value) => {
   return date;
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
 };
 
 const getTenantFundCollection = async (tenantId, id, branchId = null) => {
@@ -136,7 +132,8 @@ export const fundCollectionsService = {
 
   async getEntryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getTenantFundCollection(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    return getTenantFundCollection(resolvedTenantId, id, branchId);
   },
 
   async updateEntry(tenantId, id, payload, branchScope = null) {
@@ -159,7 +156,8 @@ export const fundCollectionsService = {
 
   async deactivateEntry(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantFundCollection(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    await getTenantFundCollection(resolvedTenantId, id, branchId);
 
     return prisma.fundCollection.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
   },

@@ -2,6 +2,9 @@ import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 
 const BRANCH_SCOPED_METHODS = ['POST', 'PUT', 'PATCH'];
+const DEFAULT_BRANCH_NAME = 'Main Campus';
+const DEFAULT_BRANCH_CODE = 'MC-01';
+const DEFAULT_BRANCH_ADDRESS = 'Madarsa Road, Lahore';
 
 const isEmptyValue = (value) => value === null || value === undefined || value === '';
 
@@ -14,6 +17,92 @@ const normalizePositiveId = (value, label = 'scope') => {
   }
 
   return normalized;
+};
+
+const ensureTenantDefaultBranch = async (tenantId, client = prisma) => {
+  const resolvedTenantId = normalizePositiveId(tenantId, 'tenant scope');
+
+  if (!resolvedTenantId) {
+    throw new AppError('Tenant context is required.', 403);
+  }
+
+  const existingBranch = await client.branch.findFirst({
+    where: {
+      tenantId: resolvedTenantId,
+      OR: [
+        { code: DEFAULT_BRANCH_CODE },
+        { name: DEFAULT_BRANCH_NAME },
+      ],
+    },
+    select: {
+      id: true,
+      tenantId: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+    orderBy: { id: 'asc' },
+  });
+
+  if (existingBranch) {
+    if (existingBranch.status !== 'active') {
+      return client.branch.update({
+        where: { id: existingBranch.id },
+        data: { status: 'active' },
+        select: {
+          id: true,
+          tenantId: true,
+          name: true,
+          code: true,
+          status: true,
+        },
+      });
+    }
+
+    return existingBranch;
+  }
+
+  try {
+    return await client.branch.create({
+      data: {
+        tenantId: resolvedTenantId,
+        name: DEFAULT_BRANCH_NAME,
+        code: DEFAULT_BRANCH_CODE,
+        address: DEFAULT_BRANCH_ADDRESS,
+        status: 'active',
+      },
+      select: {
+        id: true,
+        tenantId: true,
+        name: true,
+        code: true,
+        status: true,
+      },
+    });
+  } catch (error) {
+    if (error?.code !== 'P2002') throw error;
+
+    const branch = await client.branch.findFirst({
+      where: {
+        tenantId: resolvedTenantId,
+        OR: [
+          { code: DEFAULT_BRANCH_CODE },
+          { name: DEFAULT_BRANCH_NAME },
+        ],
+      },
+      select: {
+        id: true,
+        tenantId: true,
+        name: true,
+        code: true,
+        status: true,
+      },
+      orderBy: { id: 'asc' },
+    });
+
+    if (!branch) throw error;
+    return branch;
+  }
 };
 
 const getContextFromRequest = (req = {}) => ({
@@ -156,6 +245,69 @@ const validateBranchBelongsToTenant = async ({
   return branch;
 };
 
+const getScopedBranchId = (branchScope = null) =>
+  normalizePositiveId(
+    branchScope?.branchId ?? branchScope?.resolvedBranchId ?? branchScope?.requestedBranchId,
+    'branch scope',
+  );
+
+const resolveOperationalBranchId = async (
+  tenantId,
+  queryOrPayload = {},
+  branchScope = null,
+  options = {},
+) => {
+  const resolvedTenantId = normalizePositiveId(tenantId, 'tenant scope');
+  const requestedBranchId = normalizePositiveId(queryOrPayload?.branchId, 'branch scope');
+  const scopedBranchId = getScopedBranchId(branchScope);
+  const branchId = branchScope?.isBranchScoped
+    ? scopedBranchId
+    : requestedBranchId || scopedBranchId;
+
+  if (branchScope?.isBranchScoped && !scopedBranchId) {
+    throw new AppError('Ø¨Ø±Ø§Ù†Ú† Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ø¯Ø³ØªÛŒØ§Ø¨ Ù†ÛÛŒÚº ÛÛŒÚºÛ”', 403);
+  }
+
+  if (branchScope?.isBranchScoped && requestedBranchId && requestedBranchId !== scopedBranchId) {
+    throw new AppError('Ø¢Ù¾ Ú©Ùˆ Ø§Ø³ Ø¨Ø±Ø§Ù†Ú† ØªÚ© Ø±Ø³Ø§Ø¦ÛŒ Ø­Ø§ØµÙ„ Ù†ÛÛŒÚº ÛÛ’Û”', 403);
+  }
+
+  if (branchId) {
+    await validateBranchBelongsToTenant({
+      tenantId: resolvedTenantId,
+      branchId,
+      requireActive: options.requireActive !== false,
+      client: options.client || prisma,
+    });
+
+    return branchId;
+  }
+
+  if (options.defaultToMain === false) return null;
+
+  const defaultBranch = await ensureTenantDefaultBranch(resolvedTenantId, options.client || prisma);
+  return defaultBranch.id;
+};
+
+const buildOperationalBranchScope = async (
+  tenantId,
+  queryOrPayload = {},
+  branchScope = null,
+  options = {},
+) => {
+  const resolvedTenantId = normalizePositiveId(tenantId, 'tenant scope');
+  const branchId = await resolveOperationalBranchId(resolvedTenantId, queryOrPayload, branchScope, options);
+
+  return {
+    tenantId: resolvedTenantId,
+    branchId,
+    where: {
+      tenantId: resolvedTenantId,
+      ...(branchId ? { branchId } : {}),
+    },
+  };
+};
+
 const applyBranchScopeToRequest = (req) => {
   const branchScope = requireBranchAccess(req, undefined, {
     required: isBranchScopedUser(req.auth),
@@ -184,8 +336,11 @@ const applyBranchScopeToRequest = (req) => {
 
 export const branchScopeService = {
   normalizePositiveId,
+  ensureTenantDefaultBranch,
   buildTenantScope,
   buildBranchScope,
+  buildOperationalBranchScope,
+  resolveOperationalBranchId,
   requireBranchAccess,
   validateBranchBelongsToTenant,
   applyBranchScopeToRequest,

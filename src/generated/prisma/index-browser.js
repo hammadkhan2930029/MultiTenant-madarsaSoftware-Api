@@ -274,6 +274,8 @@ exports.Prisma.SupportRequestScalarFieldEnum = {
 
 exports.Prisma.ShiftScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   startTime: 'startTime',
   endTime: 'endTime',
@@ -285,6 +287,8 @@ exports.Prisma.ShiftScalarFieldEnum = {
 
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   code: 'code',
   head: 'head',
@@ -307,6 +311,8 @@ exports.Prisma.DepartmentHeadAssignmentScalarFieldEnum = {
 
 exports.Prisma.QualificationScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
   title: 'title',
   category: 'category',
   level: 'level',
@@ -318,6 +324,7 @@ exports.Prisma.QualificationScalarFieldEnum = {
 exports.Prisma.SubjectScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   detail: 'detail',
   status: 'status',
@@ -360,6 +367,8 @@ exports.Prisma.SectionScalarFieldEnum = {
 
 exports.Prisma.AcademicSessionScalarFieldEnum = {
   id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -451,6 +460,7 @@ exports.Prisma.ExamScheduleScalarFieldEnum = {
 exports.Prisma.ResultGradeScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   title: 'title',
   code: 'code',
   fromPercent: 'fromPercent',
@@ -758,6 +768,15 @@ exports.Prisma.FinanceHeadScalarFieldEnum = {
   name: 'name',
   type: 'type',
   description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FinanceExpenseCategoryScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1420,6 +1439,11 @@ exports.Prisma.FinanceHeadOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.FinanceExpenseCategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  status: 'status'
+};
+
 exports.Prisma.StudentFeeVoucherOrderByRelevanceFieldEnum = {
   voucherNo: 'voucherNo',
   paymentMethod: 'paymentMethod',
@@ -1589,6 +1613,7 @@ exports.Prisma.ModelName = {
   HifzMonthlyEntry: 'HifzMonthlyEntry',
   HifzSiparaEntry: 'HifzSiparaEntry',
   FinanceHead: 'FinanceHead',
+  FinanceExpenseCategory: 'FinanceExpenseCategory',
   StudentFeeVoucher: 'StudentFeeVoucher',
   FundCollection: 'FundCollection',
   SalaryEntry: 'SalaryEntry',

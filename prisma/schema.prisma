@@ -29,10 +29,14 @@ model Tenant {
   parents             Parent[]                 @relation("TenantParents")
   teachers            Teacher[]                @relation("TenantTeachers")
   branches            Branch[]                 @relation("TenantBranches")
+  shifts              Shift[]                  @relation("TenantShifts")
+  departments         Department[]             @relation("TenantDepartments")
+  qualifications      Qualification[]          @relation("TenantQualifications")
   classes             AcademicClass[]          @relation("TenantClasses")
   sections            Section[]                @relation("TenantSections")
   assignments         StudentClassAssignment[] @relation("TenantClassAssignments")
   subjects            Subject[]                @relation("TenantSubjects")
+  sessions            AcademicSession[]        @relation("TenantSessions")
   examSchedules       ExamSchedule[]           @relation("TenantExamSchedules")
   resultGrades        ResultGrade[]            @relation("TenantResultGrades")
   examResults         ExamResult[]             @relation("TenantExamResults")
@@ -307,33 +311,48 @@ model SupportRequest {
   @@map("support_requests")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Shift {
   id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(150)
+  tenantId  Int?      @map("tenant_id")
+  branchId  Int?      @map("branch_id")
+  name      String    @db.VarChar(150)
   startTime String    @db.VarChar(10)
   endTime   String    @db.VarChar(10)
   type      String    @db.VarChar(50)
   status    String    @default("active") @db.VarChar(50)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  tenant    Tenant?   @relation("TenantShifts", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch    Branch?   @relation("BranchShifts", fields: [branchId], references: [id], onDelete: SetNull)
   teachers  Teacher[]
 
+  @@unique([tenantId, branchId, name])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("shifts")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Department {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
-  code      String?  @unique @db.VarChar(50)
-  head      String?  @db.VarChar(150)
-  members   Int      @default(0)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  tenantId  Int?      @map("tenant_id")
+  branchId  Int?      @map("branch_id")
+  name      String    @db.VarChar(150)
+  code      String?   @db.VarChar(50)
+  head      String?   @db.VarChar(150)
+  members   Int       @default(0)
+  status    String    @default("active") @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tenant    Tenant?   @relation("TenantDepartments", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch    Branch?   @relation("BranchDepartments", fields: [branchId], references: [id], onDelete: SetNull)
   headAssignments DepartmentHeadAssignment[]
 
+  @@unique([tenantId, branchId, name])
+  @@unique([tenantId, branchId, code])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("departments")
 }
 
@@ -358,34 +377,45 @@ model DepartmentHeadAssignment {
   @@map("department_head_assignments")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Qualification {
   id        Int      @id @default(autoincrement())
-  title     String   @unique @db.VarChar(150)
+  tenantId  Int?     @map("tenant_id")
+  branchId  Int?     @map("branch_id")
+  title     String   @db.VarChar(150)
   category  String?  @db.VarChar(150)
   level     String?  @db.VarChar(150)
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant?  @relation("TenantQualifications", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch    Branch?  @relation("BranchQualifications", fields: [branchId], references: [id], onDelete: SetNull)
 
+  @@unique([tenantId, branchId, title])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("qualifications")
 }
 
 model Subject {
   id                 Int                 @id @default(autoincrement())
   tenantId           Int                 @map("tenant_id")
+  branchId           Int?                @map("branch_id")
   name               String              @db.VarChar(150)
   detail             String?             @db.VarChar(255)
   status             String              @default("active") @db.VarChar(50)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   tenant             Tenant              @relation("TenantSubjects", fields: [tenantId], references: [id])
+  branch             Branch?             @relation("BranchSubjects", fields: [branchId], references: [id], onDelete: SetNull)
   examSchedules      ExamSchedule[]
   examResultSubjects ExamResultSubject[]
   teacherAssignments TeacherAssignment[]
 
-  @@unique([tenantId, name])
+  @@unique([tenantId, branchId, name])
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("subjects")
 }
 
@@ -404,10 +434,15 @@ model Branch {
   creator            Admin?                   @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   assignedAdmins     Admin[]                  @relation("AdminBranchAssignment")
   roles              Role[]                   @relation("BranchRoles")
+  shifts             Shift[]                  @relation("BranchShifts")
+  departments        Department[]             @relation("BranchDepartments")
+  qualifications     Qualification[]          @relation("BranchQualifications")
   students           Student[]                @relation("BranchStudents")
   parents            Parent[]                 @relation("BranchParents")
   teachers           Teacher[]                @relation("BranchTeachers")
   classes            AcademicClass[]
+  subjects           Subject[]                @relation("BranchSubjects")
+  sessions           AcademicSession[]        @relation("BranchSessions")
   assignments        StudentClassAssignment[]
   studentAttendances StudentAttendance[]
   teacherAttendances TeacherAttendance[]
@@ -416,6 +451,7 @@ model Branch {
   departmentHeads    DepartmentHeadAssignment[]
   teacherResponsibilities TeacherResponsibility[] @relation("BranchTeacherResponsibilities")
   teacherAssignments TeacherAssignment[]      @relation("BranchTeacherAssignments")
+  resultGrades       ResultGrade[]            @relation("BranchResultGrades")
 
   @@unique([tenantId, name])
   @@unique([tenantId, code])
@@ -472,21 +508,28 @@ model Section {
   @@map("sections")
 }
 
-/// Intentionally global master data shared by all tenants.
 model AcademicSession {
   id               Int                      @id @default(autoincrement())
-  name             String                   @unique @db.VarChar(150)
+  tenantId         Int?                     @map("tenant_id")
+  branchId         Int?                     @map("branch_id")
+  name             String                   @db.VarChar(150)
   startDate        DateTime
   endDate          DateTime
   status           String                   @default("active") @db.VarChar(50)
   createdAt        DateTime                 @default(now())
   updatedAt        DateTime                 @updatedAt
+  tenant           Tenant?                  @relation("TenantSessions", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch           Branch?                  @relation("BranchSessions", fields: [branchId], references: [id], onDelete: SetNull)
   assignments      StudentClassAssignment[]
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
   examSchedules    ExamSchedule[]
   examResults      ExamResult[]
 
+  @@unique([tenantId, branchId, name])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("sessions")
 }
 
@@ -635,6 +678,7 @@ model ExamSchedule {
 model ResultGrade {
   id          Int      @id @default(autoincrement())
   tenantId    Int      @map("tenant_id")
+  branchId    Int?     @map("branch_id")
   title       String   @db.VarChar(150)
   code        String?  @db.VarChar(20)
   fromPercent Int
@@ -643,8 +687,11 @@ model ResultGrade {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tenant      Tenant   @relation("TenantResultGrades", fields: [tenantId], references: [id])
+  branch      Branch?  @relation("BranchResultGrades", fields: [branchId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status, fromPercent, toPercent])
   @@map("result_grades")
 }

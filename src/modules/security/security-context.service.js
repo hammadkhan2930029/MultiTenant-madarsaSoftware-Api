@@ -65,6 +65,7 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
   const resolvedTenantId = normalizeTenantId(tenantId);
   const branchId = admin.branchId || admin.branch_id || null;
   const roleBranchId = normalizeTenantId(access.role?.branchId ?? access.role?.branch_id);
+  const isTenantAdminRole = roleName === 'admin' && resolvedTenantId !== null;
 
   const auth = {
     admin,
@@ -73,7 +74,7 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
     permissionKeys: access.permissionKeys,
     roleName,
     isSuperAdmin: roleName === 'super_admin' && resolvedTenantId === null,
-    isTenantAdmin: roleName === 'admin' && resolvedTenantId !== null && !branchId,
+    isTenantAdmin: isTenantAdminRole,
     tenantId: resolvedTenantId,
     branchId,
   };
@@ -84,11 +85,11 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
     isSuperAdmin: auth.isSuperAdmin,
   });
 
-  if (!auth.isSuperAdmin && branchId && roleBranchId !== branchId) {
+  if (!auth.isSuperAdmin && !auth.isTenantAdmin && branchId && roleBranchId !== branchId) {
     throw new AppError('Assigned role is not valid for this branch.', 403);
   }
 
-  if (!auth.isSuperAdmin && !branchId && roleBranchId) {
+  if (!auth.isSuperAdmin && !auth.isTenantAdmin && !branchId && roleBranchId) {
     throw new AppError('Assigned role is not valid for this account scope.', 403);
   }
 

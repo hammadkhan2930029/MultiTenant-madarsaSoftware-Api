@@ -14,9 +14,9 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/', requirePermission('schedules.create'), validate(createScheduleValidationSchema), createSchedule);
-router.get('/', requirePermission('schedules.view'), validate(listSchedulesValidationSchema), getSchedules);
-router.put('/:id', requirePermission('schedules.edit'), validate(updateScheduleValidationSchema), updateSchedule);
-router.delete('/:id', requirePermission('schedules.delete'), validate(scheduleIdValidationSchema), deleteSchedule);
+router.post('/', requirePermission('students.schedule.view', 'schedules.create'), validate(createScheduleValidationSchema), createSchedule);
+router.get('/', requirePermission('students.schedule.view', 'schedules.view'), validate(listSchedulesValidationSchema), getSchedules);
+router.put('/:id', requirePermission('students.schedule.view', 'schedules.edit'), validate(updateScheduleValidationSchema), updateSchedule);
+router.delete('/:id', requirePermission('students.schedule.view', 'schedules.delete'), validate(scheduleIdValidationSchema), deleteSchedule);
 
 export { router as schedulesRoutes };

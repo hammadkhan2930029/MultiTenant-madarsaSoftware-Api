@@ -1,29 +1,65 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeTenantId } from '../../utils/tenantGuard.js';
+import { branchScopeService } from '../security/index.js';
 
 const qualificationSelect = {
   id: true,
+  tenantId: true,
+  branchId: true,
   title: true,
   category: true,
   level: true,
   status: true,
   createdAt: true,
   updatedAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
+};
+
+const resolveQualificationBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
+};
+
+const getScopedQualification = async (tenantId, id, branchId) => {
+  const qualification = await prisma.qualification.findFirst({
+    where: { id: Number(id), tenantId, branchId },
+    select: qualificationSelect,
+  });
+
+  if (!qualification) {
+    throw new AppError('Qualification not found.', 404);
+  }
+
+  return qualification;
 };
 
 export const qualificationsService = {
-  async createQualification(payload) {
-    const existingQualification = await prisma.qualification.findUnique({
-      where: { title: payload.title },
+  async createQualification(tenantId, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveQualificationBranchId(resolvedTenantId, payload, branchScope);
+
+    const existingQualification = await prisma.qualification.findFirst({
+      where: { tenantId: resolvedTenantId, branchId, title: payload.title },
     });
 
     if (existingQualification) {
-      throw new AppError('Qualification with the same title already exists.', 409);
+      throw new AppError('Qualification with the same title already exists in this branch.', 409);
     }
 
     return prisma.qualification.create({
       data: {
+        tenantId: resolvedTenantId,
+        branchId,
         title: payload.title,
         category: payload.category || null,
         level: payload.level || null,
@@ -33,10 +69,14 @@ export const qualificationsService = {
     });
   },
 
-  async getQualifications(query) {
+  async getQualifications(tenantId, query, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveQualificationBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
+      branchId,
       ...(query.search
         ? {
             OR: [
@@ -66,31 +106,22 @@ export const qualificationsService = {
     };
   },
 
-  async getQualificationById(id) {
-    const qualification = await prisma.qualification.findUnique({
-      where: { id },
-      select: qualificationSelect,
-    });
-
-    if (!qualification) {
-      throw new AppError('Qualification not found.', 404);
-    }
-
-    return qualification;
+  async getQualificationById(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveQualificationBranchId(resolvedTenantId, {}, branchScope);
+    return getScopedQualification(resolvedTenantId, id, branchId);
   },
 
-  async updateQualification(id, payload) {
-    const existingQualification = await prisma.qualification.findUnique({
-      where: { id },
-    });
-
-    if (!existingQualification) {
-      throw new AppError('Qualification not found.', 404);
-    }
+  async updateQualification(tenantId, id, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveQualificationBranchId(resolvedTenantId, payload, branchScope);
+    const existingQualification = await getScopedQualification(resolvedTenantId, id, branchId);
 
     const duplicateQualification = await prisma.qualification.findFirst({
       where: {
-        id: { not: id },
+        tenantId: resolvedTenantId,
+        branchId,
+        id: { not: Number(id) },
         title: payload.title,
       },
     });
@@ -100,8 +131,10 @@ export const qualificationsService = {
     }
 
     return prisma.qualification.update({
-      where: { id },
+      where: { id: Number(id) },
       data: {
+        tenantId: resolvedTenantId,
+        branchId,
         title: payload.title,
         category: payload.category || null,
         level: payload.level || null,
@@ -111,17 +144,13 @@ export const qualificationsService = {
     });
   },
 
-  async deleteQualification(id) {
-    const existingQualification = await prisma.qualification.findUnique({
-      where: { id },
-    });
-
-    if (!existingQualification) {
-      throw new AppError('Qualification not found.', 404);
-    }
+  async deleteQualification(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveQualificationBranchId(resolvedTenantId, {}, branchScope);
+    await getScopedQualification(resolvedTenantId, id, branchId);
 
     return prisma.qualification.delete({
-      where: { id },
+      where: { id: Number(id) },
       select: qualificationSelect,
     });
   },

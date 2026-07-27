@@ -22,7 +22,7 @@ export const getParents = asyncHandler(async (req, res) => {
 });
 
 export const getParentById = asyncHandler(async (req, res) => {
-  const parent = await parentsService.getParentById(req.tenantId, Number(req.params.id), req.branchScope);
+  const parent = await parentsService.getParentById(req.tenantId, Number(req.params.id), req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Parent fetched successfully.',
@@ -40,7 +40,7 @@ export const updateParent = asyncHandler(async (req, res) => {
 });
 
 export const deactivateParent = asyncHandler(async (req, res) => {
-  const parent = await parentsService.deactivateParent(req.tenantId, Number(req.params.id), req.branchScope);
+  const parent = await parentsService.deactivateParent(req.tenantId, Number(req.params.id), req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Parent deactivated successfully.',
@@ -49,7 +49,7 @@ export const deactivateParent = asyncHandler(async (req, res) => {
 });
 
 export const deleteParent = asyncHandler(async (req, res) => {
-  const parent = await parentsService.deleteParent(req.tenantId, Number(req.params.id), req.branchScope);
+  const parent = await parentsService.deleteParent(req.tenantId, Number(req.params.id), req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Parent deleted successfully.',

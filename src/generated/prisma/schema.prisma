@@ -10,66 +10,69 @@ datasource db {
 }
 
 model Tenant {
-  id                      Int                        @id @default(autoincrement())
-  tenantCode              String                     @unique
-  name                    String
-  subdomain               String?                    @unique
-  customDomain            String?                    @unique
-  status                  String                     @default("active")
-  branchEnabled           Boolean                    @default(false) @map("branch_enabled")
-  branchLimit             Int?                       @map("branch_limit")
-  ownerAdminId            Int?
-  createdAt               DateTime                   @default(now())
-  updatedAt               DateTime                   @updatedAt
-  admins                  Admin[]                    @relation("TenantAdmins")
-  roles                   Role[]                     @relation("TenantRoles")
-  rolePermissions         RolePermission[]           @relation("TenantRolePermissions")
-  profile                 MadrassaProfile?           @relation("TenantMadrassaProfile")
-  students                Student[]                  @relation("TenantStudents")
-  parents                 Parent[]                   @relation("TenantParents")
-  teachers                Teacher[]                  @relation("TenantTeachers")
-  branches                Branch[]                   @relation("TenantBranches")
-  classes                 AcademicClass[]            @relation("TenantClasses")
-  sections                Section[]                  @relation("TenantSections")
-  assignments             StudentClassAssignment[]   @relation("TenantClassAssignments")
-  subjects                Subject[]                  @relation("TenantSubjects")
-  examSchedules           ExamSchedule[]             @relation("TenantExamSchedules")
-  resultGrades            ResultGrade[]              @relation("TenantResultGrades")
-  examResults             ExamResult[]               @relation("TenantExamResults")
-  examResultSubjects      ExamResultSubject[]        @relation("TenantExamResultSubjects")
-  financeHeads            FinanceHead[]              @relation("TenantFinanceHeads")
-  feeVouchers             StudentFeeVoucher[]        @relation("TenantFeeVouchers")
-  fundCollections         FundCollection[]           @relation("TenantFundCollections")
-  salaryEntries           SalaryEntry[]              @relation("TenantSalaryEntries")
-  financeTransactions     FinanceTransaction[]       @relation("TenantFinanceTransactions")
-  financialRecords        FinancialRecord[]          @relation("TenantFinancialRecords")
-  storeItems              StoreItem[]                @relation("TenantStoreItems")
-  storeUnits              StoreUnit[]                @relation("TenantStoreUnits")
-  storeCategories         StoreCategory[]            @relation("TenantStoreCategories")
-  storeSuppliers          StoreSupplier[]            @relation("TenantStoreSuppliers")
-  storeSupplierPays       StoreSupplierPayment[]     @relation("TenantStoreSupplierPayments")
-  storePurchases          StorePurchase[]            @relation("TenantStorePurchases")
-  storePurchaseItems      StorePurchaseItem[]        @relation("TenantStorePurchaseItems")
-  storeStockIssues        StoreStockIssue[]          @relation("TenantStoreStockIssues")
-  storeReturns            StoreReturn[]              @relation("TenantStoreReturns")
-  storeDamagedStocks      StoreDamagedStock[]        @relation("TenantStoreDamagedStocks")
-  storeApprovalLogs       StoreApprovalLog[]         @relation("TenantStoreApprovalLogs")
-  storeAdjustments        StoreStockAdjustment[]     @relation("TenantStoreStockAdjustments")
-  hifzDailyEntries        HifzDailyEntry[]           @relation("TenantHifzDailyEntries")
-  hifzWeeklyEntries       HifzWeeklyEntry[]          @relation("TenantHifzWeeklyEntries")
-  hifzMonthlyEntries      HifzMonthlyEntry[]         @relation("TenantHifzMonthlyEntries")
-  hifzSiparaEntries       HifzSiparaEntry[]          @relation("TenantHifzSiparaEntries")
-  suggestions             Suggestion[]               @relation("TenantSuggestions")
-  supportRequests         SupportRequest[]           @relation("TenantSupportRequests")
-  studentSchedules        StudentSchedule[]          @relation("TenantStudentSchedules")
-  teacherSchedules        TeacherSchedule[]          @relation("TenantTeacherSchedules")
-  studentParents          StudentParent[]            @relation("TenantStudentParents")
-  studentAttendances      StudentAttendance[]        @relation("TenantStudentAttendances")
-  teacherAttendances      TeacherAttendance[]        @relation("TenantTeacherAttendances")
-  salaryIncrements        TeacherSalaryIncrement[]   @relation("TenantTeacherSalaryIncrements")
-  departmentHeads         DepartmentHeadAssignment[]
-  teacherResponsibilities TeacherResponsibility[]    @relation("TenantTeacherResponsibilities")
-  teacherAssignments      TeacherAssignment[]        @relation("TenantTeacherAssignments")
+  id                       Int                        @id @default(autoincrement())
+  tenantCode               String                     @unique
+  name                     String
+  subdomain                String?                    @unique
+  customDomain             String?                    @unique
+  status                   String                     @default("active")
+  branchEnabled            Boolean                    @default(false) @map("branch_enabled")
+  branchLimit              Int?                       @map("branch_limit")
+  ownerAdminId             Int?
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  admins                   Admin[]                    @relation("TenantAdmins")
+  roles                    Role[]                     @relation("TenantRoles")
+  rolePermissions          RolePermission[]           @relation("TenantRolePermissions")
+  profile                  MadrassaProfile?           @relation("TenantMadrassaProfile")
+  students                 Student[]                  @relation("TenantStudents")
+  parents                  Parent[]                   @relation("TenantParents")
+  teachers                 Teacher[]                  @relation("TenantTeachers")
+  branches                 Branch[]                   @relation("TenantBranches")
+  classes                  AcademicClass[]            @relation("TenantClasses")
+  sections                 Section[]                  @relation("TenantSections")
+  assignments              StudentClassAssignment[]   @relation("TenantClassAssignments")
+  subjects                 Subject[]                  @relation("TenantSubjects")
+  sessions                 AcademicSession[]          @relation("TenantSessions")
+  examSchedules            ExamSchedule[]             @relation("TenantExamSchedules")
+  resultGrades             ResultGrade[]              @relation("TenantResultGrades")
+  examResults              ExamResult[]               @relation("TenantExamResults")
+  examResultSubjects       ExamResultSubject[]        @relation("TenantExamResultSubjects")
+  financeHeads             FinanceHead[]              @relation("TenantFinanceHeads")
+  financeExpenseCategories FinanceExpenseCategory[]   @relation("TenantFinanceExpenseCategories")
+  feeVouchers              StudentFeeVoucher[]        @relation("TenantFeeVouchers")
+  fundCollections          FundCollection[]           @relation("TenantFundCollections")
+  salaryEntries            SalaryEntry[]              @relation("TenantSalaryEntries")
+  financeTransactions      FinanceTransaction[]       @relation("TenantFinanceTransactions")
+  financialRecords         FinancialRecord[]          @relation("TenantFinancialRecords")
+  storeItems               StoreItem[]                @relation("TenantStoreItems")
+  storeUnits               StoreUnit[]                @relation("TenantStoreUnits")
+  storeCategories          StoreCategory[]            @relation("TenantStoreCategories")
+  storeSuppliers           StoreSupplier[]            @relation("TenantStoreSuppliers")
+  storeSupplierPays        StoreSupplierPayment[]     @relation("TenantStoreSupplierPayments")
+  storePurchases           StorePurchase[]            @relation("TenantStorePurchases")
+  storePurchaseItems       StorePurchaseItem[]        @relation("TenantStorePurchaseItems")
+  storeStockIssues         StoreStockIssue[]          @relation("TenantStoreStockIssues")
+  storeReturns             StoreReturn[]              @relation("TenantStoreReturns")
+  storeDamagedStocks       StoreDamagedStock[]        @relation("TenantStoreDamagedStocks")
+  storeApprovalLogs        StoreApprovalLog[]         @relation("TenantStoreApprovalLogs")
+  storeAdjustments         StoreStockAdjustment[]     @relation("TenantStoreStockAdjustments")
+  hifzDailyEntries         HifzDailyEntry[]           @relation("TenantHifzDailyEntries")
+  hifzWeeklyEntries        HifzWeeklyEntry[]          @relation("TenantHifzWeeklyEntries")
+  hifzMonthlyEntries       HifzMonthlyEntry[]         @relation("TenantHifzMonthlyEntries")
+  hifzSiparaEntries        HifzSiparaEntry[]          @relation("TenantHifzSiparaEntries")
+  suggestions              Suggestion[]               @relation("TenantSuggestions")
+  supportRequests          SupportRequest[]           @relation("TenantSupportRequests")
+  studentSchedules         StudentSchedule[]          @relation("TenantStudentSchedules")
+  teacherSchedules         TeacherSchedule[]          @relation("TenantTeacherSchedules")
+  studentParents           StudentParent[]            @relation("TenantStudentParents")
+  studentAttendances       StudentAttendance[]        @relation("TenantStudentAttendances")
+  teacherAttendances       TeacherAttendance[]        @relation("TenantTeacherAttendances")
+  salaryIncrements         TeacherSalaryIncrement[]   @relation("TenantTeacherSalaryIncrements")
+  departmentHeads          DepartmentHeadAssignment[]
+  teacherResponsibilities  TeacherResponsibility[]    @relation("TenantTeacherResponsibilities")
+  teacherAssignments       TeacherAssignment[]        @relation("TenantTeacherAssignments")
+  cities                   City[]                     @relation("TenantCities")
 
   @@map("tenant")
 }
@@ -79,6 +82,8 @@ model Admin {
   name                           String                   @db.VarChar(150)
   email                          String                   @db.VarChar(150)
   phone                          String?                  @db.VarChar(50)
+  city                           String?                  @db.VarChar(150)
+  province                       String?                  @db.VarChar(150)
   username                       String                   @db.VarChar(100)
   password                       String                   @db.VarChar(255)
   role                           String                   @default("admin") @db.VarChar(50)
@@ -232,14 +237,17 @@ model MadrassaProfile {
   @@map("madrassa_profiles")
 }
 
-/// Intentionally global master data shared by all tenants.
 model City {
   id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(150)
+  tenantId  Int?     @map("tenant_id")
+  name      String   @db.VarChar(150)
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant?  @relation("TenantCities", fields: [tenantId], references: [id], onDelete: Cascade)
 
+  @@unique([tenantId, name])
+  @@index([tenantId])
   @@map("cities")
 }
 
@@ -367,18 +375,22 @@ model Qualification {
 model Subject {
   id                 Int                 @id @default(autoincrement())
   tenantId           Int                 @map("tenant_id")
+  branchId           Int?                @map("branch_id")
   name               String              @db.VarChar(150)
   detail             String?             @db.VarChar(255)
   status             String              @default("active") @db.VarChar(50)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   tenant             Tenant              @relation("TenantSubjects", fields: [tenantId], references: [id])
+  branch             Branch?             @relation("BranchSubjects", fields: [branchId], references: [id], onDelete: SetNull)
   examSchedules      ExamSchedule[]
   examResultSubjects ExamResultSubject[]
   teacherAssignments TeacherAssignment[]
 
-  @@unique([tenantId, name])
+  @@unique([tenantId, branchId, name])
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("subjects")
 }
 
@@ -401,6 +413,8 @@ model Branch {
   parents                 Parent[]                   @relation("BranchParents")
   teachers                Teacher[]                  @relation("BranchTeachers")
   classes                 AcademicClass[]
+  subjects                Subject[]                  @relation("BranchSubjects")
+  sessions                AcademicSession[]          @relation("BranchSessions")
   assignments             StudentClassAssignment[]
   studentAttendances      StudentAttendance[]
   teacherAttendances      TeacherAttendance[]
@@ -456,6 +470,7 @@ model Section {
   studentAttendances StudentAttendance[]
   studentSchedules   StudentSchedule[]
   teacherSchedules   TeacherSchedule[]
+  examSchedules      ExamSchedule[]
   examResults        ExamResult[]
   teacherAssignments TeacherAssignment[]
 
@@ -464,21 +479,28 @@ model Section {
   @@map("sections")
 }
 
-/// Intentionally global master data shared by all tenants.
 model AcademicSession {
   id               Int                      @id @default(autoincrement())
-  name             String                   @unique @db.VarChar(150)
+  tenantId         Int?                     @map("tenant_id")
+  branchId         Int?                     @map("branch_id")
+  name             String                   @db.VarChar(150)
   startDate        DateTime
   endDate          DateTime
   status           String                   @default("active") @db.VarChar(50)
   createdAt        DateTime                 @default(now())
   updatedAt        DateTime                 @updatedAt
+  tenant           Tenant?                  @relation("TenantSessions", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch           Branch?                  @relation("BranchSessions", fields: [branchId], references: [id], onDelete: SetNull)
   assignments      StudentClassAssignment[]
   studentSchedules StudentSchedule[]
   teacherSchedules TeacherSchedule[]
   examSchedules    ExamSchedule[]
   examResults      ExamResult[]
 
+  @@unique([tenantId, branchId, name])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("sessions")
 }
 
@@ -598,6 +620,7 @@ model ExamSchedule {
   examName    String          @db.VarChar(150)
   sessionId   Int
   classId     Int
+  sectionId   Int?            @map("section_id")
   subjectId   Int
   examDate    DateTime
   startTime   String          @db.VarChar(10)
@@ -612,10 +635,13 @@ model ExamSchedule {
   tenant      Tenant          @relation("TenantExamSchedules", fields: [tenantId], references: [id])
   session     AcademicSession @relation(fields: [sessionId], references: [id])
   class       AcademicClass   @relation(fields: [classId], references: [id])
+  section     Section?        @relation(fields: [sectionId], references: [id])
   subject     Subject         @relation(fields: [subjectId], references: [id])
 
   @@index([tenantId])
+  @@index([sectionId])
   @@index([sessionId, classId, subjectId])
+  @@index([sessionId, classId, sectionId])
   @@index([examDate, status])
   @@map("exam_schedules")
 }
@@ -1084,6 +1110,21 @@ model FinanceHead {
   @@map("finance_heads")
 }
 
+model FinanceExpenseCategory {
+  id        Int      @id @default(autoincrement())
+  tenantId  Int      @map("tenant_id")
+  name      String   @db.VarChar(150)
+  status    String   @default("active") @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation("TenantFinanceExpenseCategories", fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([status])
+  @@map("finance_expense_categories")
+}
+
 model StudentFeeVoucher {
   id            Int       @id @default(autoincrement())
   tenantId      Int       @map("tenant_id")
@@ -1159,6 +1200,7 @@ model SalaryEntry {
   salaryMonth   Int
   salaryYear    Int
   paymentDate   DateTime
+  paymentMethod String?     @db.VarChar(50)
   remarks       String?     @db.VarChar(255)
   status        String      @default("active") @db.VarChar(50)
   createdAt     DateTime    @default(now())

@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { shiftsService } from './shifts.service.js';
 
 export const createShift = asyncHandler(async (req, res) => {
-  const result = await shiftsService.createShift(req.body);
+  const result = await shiftsService.createShift(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createShift = asyncHandler(async (req, res) => {
 });
 
 export const bulkCreateShifts = asyncHandler(async (req, res) => {
-  const result = await shiftsService.bulkCreateShifts(req.body);
+  const result = await shiftsService.bulkCreateShifts(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -23,7 +23,7 @@ export const bulkCreateShifts = asyncHandler(async (req, res) => {
 });
 
 export const getShifts = asyncHandler(async (req, res) => {
-  const result = await shiftsService.getShifts(req.query);
+  const result = await shiftsService.getShifts(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Shifts fetched successfully.',
@@ -32,7 +32,7 @@ export const getShifts = asyncHandler(async (req, res) => {
 });
 
 export const getShiftById = asyncHandler(async (req, res) => {
-  const result = await shiftsService.getShiftById(req.params.id);
+  const result = await shiftsService.getShiftById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Shift fetched successfully.',
@@ -41,7 +41,7 @@ export const getShiftById = asyncHandler(async (req, res) => {
 });
 
 export const updateShift = asyncHandler(async (req, res) => {
-  const result = await shiftsService.updateShift(req.params.id, req.body);
+  const result = await shiftsService.updateShift(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Shift updated successfully.',
@@ -50,7 +50,7 @@ export const updateShift = asyncHandler(async (req, res) => {
 });
 
 export const deleteShift = asyncHandler(async (req, res) => {
-  const result = await shiftsService.deleteShift(req.params.id);
+  const result = await shiftsService.deleteShift(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Shift deleted successfully.',

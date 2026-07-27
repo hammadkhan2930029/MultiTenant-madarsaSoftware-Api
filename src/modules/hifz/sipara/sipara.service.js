@@ -2,6 +2,7 @@ import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
 import { findTenantRecordOrThrow, normalizeTenantId } from '../../../utils/tenantGuard.js';
+import { branchScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
@@ -34,7 +35,10 @@ const normalizeDate = (value) => {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveHifzBranchId = (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
@@ -63,7 +67,7 @@ const notFoundMessage = 'Sipara jaiza entry not found.';
 export const siparaHifzService = {
   async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
     await ensureStudent(resolvedTenantId, payload.studentId, branchId);
 
     return prisma.hifzSiparaEntry.upsert({
@@ -83,7 +87,7 @@ export const siparaHifzService = {
   async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+    const branchId = await resolveHifzBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
       student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
@@ -109,7 +113,7 @@ export const siparaHifzService = {
 
   async getEntryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveHifzBranchId(resolvedTenantId, {}, branchScope);
     const entry = await prisma.hifzSiparaEntry.findFirst({
       where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) } },
       select,
@@ -121,7 +125,8 @@ export const siparaHifzService = {
   async updateEntry(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await this.getEntryById(resolvedTenantId, id, branchScope);
-    await ensureStudent(resolvedTenantId, payload.studentId, getScopedBranchId(branchScope));
+    const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
     const duplicate = await prisma.hifzSiparaEntry.findFirst({
       where: { tenantId: resolvedTenantId, id: { not: id }, studentId: payload.studentId, siparaNumber: payload.siparaNumber },
     });

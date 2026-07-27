@@ -1,9 +1,13 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeTenantId } from '../../utils/tenantGuard.js';
+import { branchScopeService } from '../security/index.js';
 
 const shiftSelect = {
   id: true,
+  tenantId: true,
+  branchId: true,
   name: true,
   startTime: true,
   endTime: true,
@@ -11,38 +15,74 @@ const shiftSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
+};
+
+const resolveShiftBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
+};
+
+const normalizeShiftType = (type) => String(type || '').trim() || 'Custom';
+
+const getScopedShift = async (tenantId, id, branchId) => {
+  const shift = await prisma.shift.findFirst({
+    where: { id: Number(id), tenantId, branchId },
+    select: shiftSelect,
+  });
+
+  if (!shift) {
+    throw new AppError('Shift not found.', 404);
+  }
+
+  return shift;
 };
 
 export const shiftsService = {
-  async createShift(payload) {
-    const existingShift = await prisma.shift.findUnique({
-      where: { name: payload.name },
+  async createShift(tenantId, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, payload, branchScope);
+
+    const existingShift = await prisma.shift.findFirst({
+      where: { tenantId: resolvedTenantId, branchId, name: payload.name },
     });
 
     if (existingShift) {
-      throw new AppError('Shift with the same name already exists.', 409);
+      throw new AppError('Shift with the same name already exists in this branch.', 409);
     }
 
     return prisma.shift.create({
       data: {
+        tenantId: resolvedTenantId,
+        branchId,
         name: payload.name,
         startTime: payload.startTime,
         endTime: payload.endTime,
-        type: payload.type,
+        type: normalizeShiftType(payload.type),
         status: payload.status || 'active',
       },
       select: shiftSelect,
     });
   },
 
-  async bulkCreateShifts(payload) {
+  async bulkCreateShifts(tenantId, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, payload, branchScope);
     const normalizedRows = payload.shifts
       .map((item, index) => ({
         index,
         name: String(item.name || '').trim(),
         startTime: item.startTime,
         endTime: item.endTime,
-        type: item.type,
+        type: normalizeShiftType(item.type),
         status: item.status || 'active',
       }))
       .filter((item) => item.name || item.startTime || item.endTime);
@@ -72,6 +112,8 @@ export const shiftsService = {
 
     const existingShifts = await prisma.shift.findMany({
       where: {
+        tenantId: resolvedTenantId,
+        branchId,
         name: { in: normalizedRows.map((row) => row.name).filter(Boolean) },
       },
       select: { name: true },
@@ -94,6 +136,8 @@ export const shiftsService = {
       for (const row of normalizedRows) {
         const createdShift = await tx.shift.create({
           data: {
+            tenantId: resolvedTenantId,
+            branchId,
             name: row.name,
             startTime: row.startTime,
             endTime: row.endTime,
@@ -112,10 +156,14 @@ export const shiftsService = {
     });
   },
 
-  async getShifts(query) {
+  async getShifts(tenantId, query, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
+      branchId,
       ...(query.search
         ? {
             OR: [
@@ -144,31 +192,22 @@ export const shiftsService = {
     };
   },
 
-  async getShiftById(id) {
-    const shift = await prisma.shift.findUnique({
-      where: { id },
-      select: shiftSelect,
-    });
-
-    if (!shift) {
-      throw new AppError('Shift not found.', 404);
-    }
-
-    return shift;
+  async getShiftById(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, {}, branchScope);
+    return getScopedShift(resolvedTenantId, id, branchId);
   },
 
-  async updateShift(id, payload) {
-    const existingShift = await prisma.shift.findUnique({
-      where: { id },
-    });
-
-    if (!existingShift) {
-      throw new AppError('Shift not found.', 404);
-    }
+  async updateShift(tenantId, id, payload, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, payload, branchScope);
+    const existingShift = await getScopedShift(resolvedTenantId, id, branchId);
 
     const duplicateShift = await prisma.shift.findFirst({
       where: {
-        id: { not: id },
+        tenantId: resolvedTenantId,
+        branchId,
+        id: { not: Number(id) },
         name: payload.name,
       },
     });
@@ -178,29 +217,27 @@ export const shiftsService = {
     }
 
     return prisma.shift.update({
-      where: { id },
+      where: { id: Number(id) },
       data: {
+        tenantId: resolvedTenantId,
+        branchId,
         name: payload.name,
         startTime: payload.startTime,
         endTime: payload.endTime,
-        type: payload.type,
+        type: normalizeShiftType(payload.type || existingShift.type),
         status: payload.status || existingShift.status,
       },
       select: shiftSelect,
     });
   },
 
-  async deleteShift(id) {
-    const existingShift = await prisma.shift.findUnique({
-      where: { id },
-    });
-
-    if (!existingShift) {
-      throw new AppError('Shift not found.', 404);
-    }
+  async deleteShift(tenantId, id, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveShiftBranchId(resolvedTenantId, {}, branchScope);
+    await getScopedShift(resolvedTenantId, id, branchId);
 
     return prisma.shift.delete({
-      where: { id },
+      where: { id: Number(id) },
       select: shiftSelect,
     });
   },

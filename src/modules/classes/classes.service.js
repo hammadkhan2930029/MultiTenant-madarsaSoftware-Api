@@ -36,21 +36,18 @@ const classSelect = {
   },
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
-const getRequestedBranchId = (queryOrPayload = {}, branchScope = null) =>
-  getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
-
 const buildClassBranchWhere = (branchId) => (
-  branchId ? { branchId } : { branchId: null }
+  { branchId: Number(branchId) }
 );
 
 const buildClassBranchData = (branchId) => (
-  branchId ? { branchId } : {}
+  { branchId: Number(branchId) }
 );
 
 const validateBranchAccess = async (tenantId, branchId) => {
-  if (!branchId) return null;
+  if (!branchId) {
+    throw new AppError('Branch context is required for class management.', 403);
+  }
 
   return branchScopeService.validateBranchBelongsToTenant({
     tenantId,
@@ -59,9 +56,10 @@ const validateBranchAccess = async (tenantId, branchId) => {
   });
 };
 
-const resolveClassBranchId = async (_tenantId, queryOrPayload = {}, branchScope = null) => {
-  const branchId = getRequestedBranchId(queryOrPayload, branchScope);
-  return branchId ? Number(branchId) : null;
+const resolveClassBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 };
 
 export const classesService = {

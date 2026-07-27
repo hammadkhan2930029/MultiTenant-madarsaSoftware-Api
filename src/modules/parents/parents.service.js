@@ -4,8 +4,6 @@ import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { branchScopeService } from '../security/index.js';
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
 
@@ -91,6 +89,11 @@ const normalizeTenantId = (tenantId) => {
   return normalizedTenantId;
 };
 
+const resolveParentBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
+
 const ensureFamilyNumberUnique = async (tenantId, familyNumber, excludeId) => {
   if (!familyNumber) return;
 
@@ -125,14 +128,7 @@ const buildDuplicateParentWhere = (tenantId, payload, excludeId) => ({
 export const parentsService = {
   async createParent(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
-    if (scopedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: scopedBranchId,
-        requireActive: true,
-      });
-    }
+    const scopedBranchId = await resolveParentBranchId(resolvedTenantId, payload, branchScope);
     const familyNumber = payload.familyNumber || (await getNextFamilyNumber(resolvedTenantId));
 
     await ensureFamilyNumberUnique(resolvedTenantId, familyNumber);
@@ -175,16 +171,7 @@ export const parentsService = {
   async getParents(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const scopedBranchId = getScopedBranchId(branchScope);
-    const requestedBranchId = query.branchId || scopedBranchId;
-
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveParentBranchId(resolvedTenantId, query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -221,9 +208,9 @@ export const parentsService = {
     };
   },
 
-  async getParentById(tenantId, id, branchScope = null) {
+  async getParentById(tenantId, id, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveParentBranchId(resolvedTenantId, query, branchScope);
     const parent = await prisma.parent.findFirst({
       where: {
         id,
@@ -242,7 +229,7 @@ export const parentsService = {
 
   async updateParent(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveParentBranchId(resolvedTenantId, payload, branchScope);
     const existingParent = await prisma.parent.findFirst({
       where: {
         id,
@@ -284,9 +271,9 @@ export const parentsService = {
     });
   },
 
-  async deactivateParent(tenantId, id, branchScope = null) {
+  async deactivateParent(tenantId, id, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveParentBranchId(resolvedTenantId, query, branchScope);
     const parent = await prisma.parent.findFirst({
       where: {
         id,
@@ -310,9 +297,9 @@ export const parentsService = {
     });
   },
 
-  async deleteParent(tenantId, id, branchScope = null) {
+  async deleteParent(tenantId, id, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveParentBranchId(resolvedTenantId, query, branchScope);
     const parent = await prisma.parent.findFirst({
       where: {
         id,

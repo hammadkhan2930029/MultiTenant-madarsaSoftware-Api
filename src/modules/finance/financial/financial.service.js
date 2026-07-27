@@ -91,14 +91,10 @@ const buildDateWhere = (fieldName, range) =>
       }
     : {};
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 };
 
 const makeDescription = (...parts) => parts.filter(Boolean).join(' - ') || null;
@@ -427,7 +423,7 @@ export const financialService = {
 
   async remove(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Financial record not found.', 404);
     return mapManualRecord(await prisma.financialRecord.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select: manualSelect }));

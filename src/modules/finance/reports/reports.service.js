@@ -30,14 +30,10 @@ const buildDateRangeWhere = (fromDate, toDate, fieldName) =>
 
 const toAmount = (value) => Number(value || 0);
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, query = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || query.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, query, branchScope, {
+    requireActive: true,
+  });
 };
 
 export const reportsService = {

@@ -53,14 +53,10 @@ const toAmount = (value) => {
 
 const normalizeText = (value) => String(value || '').trim();
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
 };
 
 const recordFinanceAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
@@ -199,7 +195,7 @@ export const transactionsService = {
 
   async getExpenseById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const rows = await prisma.$queryRaw`
       SELECT ft.*, fh.name AS category
       FROM finance_transactions ft
@@ -332,7 +328,7 @@ export const transactionsService = {
 
   async deactivateEntry(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Finance record not found.', 404);
 

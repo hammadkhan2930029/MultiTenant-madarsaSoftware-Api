@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const examScheduleSelect = {
   id: true,
@@ -44,18 +45,21 @@ const normalizeEndDate = (value) => {
   return date;
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveExamScheduleBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 
 const ensureExamScheduleReferences = async (tenantId, { sessionId, classId, sectionId, subjectId }, branchId = null) => {
   const [session, academicClass, section, subject] = await Promise.all([
-    prisma.academicSession.findUnique({ where: { id: sessionId } }),
+    prisma.academicSession.findFirst({ where: { id: sessionId, tenantId, ...(branchId ? { branchId } : {}) } }),
     prisma.academicClass.findFirst({
       where: { id: classId, tenantId, ...(branchId ? { branchId } : {}), branch: { status: 'active' } },
     }),
     prisma.section.findFirst({
-      where: { id: sectionId, classId, tenantId, status: 'active' },
+      where: { id: sectionId, classId, tenantId, status: 'active', class: { branchId } },
     }),
-    prisma.subject.findFirst({ where: { id: subjectId, tenantId } }),
+    prisma.subject.findFirst({ where: { id: subjectId, tenantId, ...(branchId ? { branchId } : {}) } }),
   ]);
 
   if (!session || session.status !== 'active') {
@@ -91,7 +95,8 @@ const getTenantExamSchedule = async (tenantId, id, branchId = null) => {
 export const examSchedulesService = {
   async createExamSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureExamScheduleReferences(resolvedTenantId, payload, getScopedBranchId(branchScope));
+    const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
+    await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.examSchedule.create({
       data: {
@@ -117,7 +122,7 @@ export const examSchedulesService = {
   async getExamSchedules(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+    const branchId = await resolveExamScheduleBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
       class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
@@ -168,7 +173,7 @@ export const examSchedulesService = {
 
   async updateExamSchedule(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
     await getTenantExamSchedule(resolvedTenantId, id, branchId);
     await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
 
@@ -195,7 +200,8 @@ export const examSchedulesService = {
 
   async deleteExamSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantExamSchedule(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveExamScheduleBranchId(resolvedTenantId, {}, branchScope);
+    await getTenantExamSchedule(resolvedTenantId, id, branchId);
 
     return prisma.examSchedule.update({
       where: { id, tenantId: resolvedTenantId },

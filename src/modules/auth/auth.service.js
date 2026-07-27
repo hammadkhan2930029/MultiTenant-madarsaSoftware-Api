@@ -110,8 +110,8 @@ const buildAccountScope = (admin, roleDetails) => {
   const roleName = roleDetails?.roleName || admin.role;
 
   if (roleName === 'super_admin' && !tenantId) return 'super_admin';
-  if (branchId) return 'branch_admin';
   if (roleName === 'admin' && tenantId) return 'tenant_admin';
+  if (branchId) return 'branch_admin';
   return tenantId ? 'tenant_user' : 'system_user';
 };
 
@@ -134,19 +134,23 @@ const assertLoginRoleIsActive = (access, admin) => {
 
   const adminBranchId = normalizeTenantId(admin.branchId ?? admin.branch_id);
   const roleBranchId = normalizeTenantId(access.role.branchId ?? access.role.branch_id);
+  const roleName = access.role.roleName || access.role.role_name || admin.role;
+  const isTenantAdminRole = roleName === 'admin' && adminTenantId !== null;
 
-  if (adminBranchId && roleBranchId !== adminBranchId) {
+  if (!isTenantAdminRole && adminBranchId && roleBranchId !== adminBranchId) {
     throw new AppError('Assigned role is not valid for this branch. Please contact support.', 403);
   }
 
-  if (!adminBranchId && roleBranchId && !isGlobalSuperAdmin) {
+  if (!isTenantAdminRole && !adminBranchId && roleBranchId && !isGlobalSuperAdmin) {
     throw new AppError('Assigned role is not valid for this account scope. Please contact support.', 403);
   }
 };
 
-const assertLoginBranchIsActive = async (admin) => {
+const assertLoginBranchIsActive = async (admin, access = {}) => {
   const branchId = admin.branchId ?? admin.branch_id ?? null;
   const tenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
+  const roleName = access.role?.roleName || access.role?.role_name || admin.role;
+  const isTenantAdminRole = roleName === 'admin' && tenantId !== null;
 
   if (!branchId) return null;
 
@@ -170,7 +174,7 @@ const assertLoginBranchIsActive = async (admin) => {
     },
   });
 
-  if (!branch?.tenant?.branchEnabled) {
+  if (!isTenantAdminRole && !branch?.tenant?.branchEnabled) {
     throw new AppError('اس مدرسہ کے لیے برانچ سسٹم فعال نہیں ہے۔ ایڈمن سے رابطہ کریں۔', 403);
   }
 
@@ -192,7 +196,7 @@ const canManageMadrassaProfile = async (admin) => {
 const buildAdminAuthPayload = async (admin) => {
   const access = await getAdminRoleAndPermissions(admin);
   assertLoginRoleIsActive(access, admin);
-  const branch = await assertLoginBranchIsActive(admin);
+  const branch = await assertLoginBranchIsActive(admin, access);
   const roleDetails = buildRoleResponse(access.role);
   const branchId = admin.branchId || admin.branch_id || null;
   const tenantId = admin.tenantId || admin.tenant_id || null;

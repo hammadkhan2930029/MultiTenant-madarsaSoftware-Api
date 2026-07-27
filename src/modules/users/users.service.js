@@ -238,6 +238,90 @@ const assertRoleCanBeAssignedToBranch = (role, branchId) => {
   }
 };
 
+const copyRolePermissionsToBranchRole = async (client, { sourceRoleId, targetRoleId, tenantId }) => {
+  await client.$executeRaw`
+    INSERT IGNORE INTO role_permissions (tenant_id, role_id, permission_id)
+    SELECT ${tenantId}, ${targetRoleId}, permission_id
+    FROM role_permissions
+    WHERE role_id = ${Number(sourceRoleId)}
+  `;
+};
+
+const getBranchRoleByName = async (client, { tenantId, branchId, roleName }) => {
+  const rows = await client.$queryRaw`
+    SELECT id, tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
+    FROM roles
+    WHERE tenant_id = ${tenantId}
+      AND branch_id = ${branchId}
+      AND role_scope_key = ${branchId}
+      AND role_name = ${roleName}
+    LIMIT 1
+  `;
+
+  return rows[0] || null;
+};
+
+const ensureTenantAdminBranchRole = async ({ role, tenantId, branchId, requester = null, client = prisma }) => {
+  const targetBranchId = normalizeBranchId(branchId);
+  if (!targetBranchId) return role;
+
+  const roleBranchId = normalizeBranchId(role?.branch_id);
+  const roleScopeKey = Number(role?.role_scope_key || 0);
+  if (roleBranchId === targetBranchId && roleScopeKey === targetBranchId) return role;
+
+  if (isBranchScopedRequester(requester) || requester?.isSuperAdmin) return role;
+
+  const requesterTenantId = normalizeTenantId(requester?.tenantId);
+  const roleTenantId = normalizeTenantId(role?.tenant_id);
+  const roleName = String(role?.role_name || '').trim();
+  if (!roleName || requesterTenantId !== normalizeTenantId(tenantId) || roleTenantId !== normalizeTenantId(tenantId)) {
+    return role;
+  }
+
+  const normalizedRoleName = roleName.toLowerCase();
+  if (PROTECTED_USER_ROLE_NAMES.has(normalizedRoleName) || Boolean(role?.is_system_role)) {
+    throw new AppError('Protected role cannot be assigned to branch users.', 400);
+  }
+
+  const existingBranchRole = await getBranchRoleByName(client, {
+    tenantId: normalizeTenantId(tenantId),
+    branchId: targetBranchId,
+    roleName,
+  });
+
+  if (existingBranchRole) return existingBranchRole;
+
+  const actorId = requester?.admin?.id || null;
+  await client.$executeRaw`
+    INSERT INTO roles (tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by)
+    VALUES (
+      ${normalizeTenantId(tenantId)},
+      ${targetBranchId},
+      ${targetBranchId},
+      ${roleName},
+      ${role.description || null},
+      ${role.status || 'active'},
+      false,
+      ${actorId},
+      ${actorId}
+    )
+  `;
+
+  const createdBranchRole = await getBranchRoleByName(client, {
+    tenantId: normalizeTenantId(tenantId),
+    branchId: targetBranchId,
+    roleName,
+  });
+
+  await copyRolePermissionsToBranchRole(client, {
+    sourceRoleId: Number(role.id),
+    targetRoleId: Number(createdBranchRole.id),
+    tenantId: normalizeTenantId(tenantId),
+  });
+
+  return createdBranchRole;
+};
+
 const assertRoleAllowedForBranchAdmin = async (role, requester = null, client = prisma) => {
   if (!isBranchScopedRequester(requester)) return;
 
@@ -376,11 +460,18 @@ export const usersService = {
   async createUser(payload, requester = null) {
     return prisma.$transaction(async (tx) => {
       await assertNoBranchUserScopeInjection(payload, requester);
-      const role = await ensureRoleExists(payload.roleId, requester, tx);
+      const requestedRole = await ensureRoleExists(payload.roleId, requester, tx);
       const tenantId = requester?.isSuperAdmin
-        ? normalizeTenantId(role.tenant_id)
+        ? normalizeTenantId(requestedRole.tenant_id)
         : normalizeTenantId(requester?.tenantId);
       const branchId = await resolveUserBranchIdForCreate(payload, tenantId, requester, tx);
+      const role = await ensureTenantAdminBranchRole({
+        role: requestedRole,
+        tenantId,
+        branchId,
+        requester,
+        client: tx,
+      });
       assertRoleCanBeAssignedToTenant(role, tenantId);
       await assertRoleAllowedForBranchAdmin(role, requester, tx);
       assertRoleCanBeAssignedToBranch(role, branchId);
@@ -401,7 +492,7 @@ export const usersService = {
           ${hashedPassword},
           ${roleName},
           ${tenantId},
-          ${payload.roleId},
+          ${Number(role.id)},
           ${ownerAdminId},
           ${branchId},
           ${payload.status || 'active'},
@@ -438,13 +529,15 @@ export const usersService = {
     const roleId = query.roleId || null;
     const tenantId = requester?.isSuperAdmin ? null : normalizeTenantId(requester?.tenantId);
     const requestedBranchId = normalizeBranchId(query.branchId);
-    if (!requester?.isSuperAdmin && !normalizeBranchId(requester?.branchId) && requestedBranchId) {
+    const branchScopedRequester = isBranchScopedRequester(requester);
+    if (!requester?.isSuperAdmin && !branchScopedRequester && requestedBranchId) {
       await ensureAssignableBranch(requestedBranchId, tenantId, prisma);
     }
     const branchId = requester?.isSuperAdmin
       ? null
-      : normalizeBranchId(requester?.branchId) || requestedBranchId || null;
-    const branchScopedRequester = isBranchScopedRequester(requester);
+      : branchScopedRequester
+        ? normalizeBranchId(requester?.branchId)
+        : requestedBranchId || null;
 
     const items = requester?.isSuperAdmin
       ? await prisma.$queryRaw`
@@ -580,10 +673,6 @@ export const usersService = {
       const nextBranchId = Object.prototype.hasOwnProperty.call(payload, 'branchId')
         ? await ensureAssignableBranch(payload.branchId, tenantId, tx)
         : normalizeBranchId(existingUser.branch_id);
-      if (nextBranchId !== normalizeBranchId(existingUser.branch_id)) {
-        const currentRole = await ensureRoleExists(existingUser.role_id, requester, tx);
-        assertRoleCanBeAssignedToBranch(currentRole, nextBranchId);
-      }
       assertNotSelfDeactivate(id, payload, requester);
 
       if (payload.email || payload.username) {
@@ -592,6 +681,21 @@ export const usersService = {
 
       let nextRoleId = existingUser.role_id;
       let nextRoleName = existingUser.role;
+      if (payload.roleId || nextBranchId !== normalizeBranchId(existingUser.branch_id)) {
+        const requestedRole = await ensureRoleExists(payload.roleId || existingUser.role_id, requester, tx);
+        const role = await ensureTenantAdminBranchRole({
+          role: requestedRole,
+          tenantId,
+          branchId: nextBranchId,
+          requester,
+          client: tx,
+        });
+        assertRoleCanBeAssignedToTenant(role, tenantId);
+        await assertRoleAllowedForBranchAdmin(role, requester, tx);
+        assertRoleCanBeAssignedToBranch(role, nextBranchId);
+        nextRoleId = Number(role.id);
+        nextRoleName = role.role_name || nextRoleName;
+      }
 
       if (payload.password) {
         const hashedPassword = await bcrypt.hash(payload.password, 12);
@@ -688,7 +792,14 @@ export const usersService = {
       assertNotSelfRoleChange(id, requester);
       const oldResponse = await buildUserDetails(tx, existingUser);
 
-      const role = await ensureRoleExists(payload.roleId, requester, tx);
+      const requestedRole = await ensureRoleExists(payload.roleId, requester, tx);
+      const role = await ensureTenantAdminBranchRole({
+        role: requestedRole,
+        tenantId: existingUser.tenant_id,
+        branchId: existingUser.branch_id,
+        requester,
+        client: tx,
+      });
       assertRoleCanBeAssignedToTenant(role, existingUser.tenant_id);
       await assertRoleAllowedForBranchAdmin(role, requester, tx);
       assertRoleCanBeAssignedToBranch(role, existingUser.branch_id);
@@ -696,7 +807,7 @@ export const usersService = {
       await tx.$executeRaw`
         UPDATE admins
         SET role = ${role.role_name},
-            role_id = ${payload.roleId},
+            role_id = ${Number(role.id)},
             updatedAt = CURRENT_TIMESTAMP
         WHERE id = ${id}
       `;

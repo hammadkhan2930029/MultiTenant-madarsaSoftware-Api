@@ -10,8 +10,9 @@ const shiftBodySchema = z.object({
   name: z.string().trim().min(2, 'Shift name is required.').max(150, 'Shift name is too long.'),
   startTime: timeField('Start time'),
   endTime: timeField('End time'),
-  type: z.string().trim().min(2, 'Shift type is required.').max(50, 'Shift type is too long.'),
+  type: z.string().trim().max(50, 'Shift type is too long.').optional().or(z.literal('')),
   status: z.enum(['active', 'inactive']).optional(),
+  branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
 });
 
 export const createShiftValidationSchema = z.object({
@@ -34,6 +35,7 @@ export const listShiftsValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
@@ -44,7 +46,9 @@ export const shiftIdValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Shift id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const updateShiftValidationSchema = z.object({
@@ -52,5 +56,7 @@ export const updateShiftValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Shift id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });

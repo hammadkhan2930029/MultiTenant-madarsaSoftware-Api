@@ -10,6 +10,10 @@ export const getSalaryEntries = asyncHandler(async (req, res) => {
   const entries = await salariesService.getEntries(req.tenantId, req.query, req.branchScope);
   return apiResponse(res, { message: 'Salary entries fetched successfully.', data: entries });
 });
+export const getSalaryTeachers = asyncHandler(async (req, res) => {
+  const teachers = await salariesService.getPayableTeachers(req.tenantId, req.query, req.branchScope);
+  return apiResponse(res, { message: 'Salary teachers fetched successfully.', data: teachers });
+});
 export const getSalaryEntryById = asyncHandler(async (req, res) => {
   const entry = await salariesService.getEntryById(req.tenantId, Number(req.params.id), req.branchScope);
   return apiResponse(res, { message: 'Salary entry detail fetched successfully.', data: entry });

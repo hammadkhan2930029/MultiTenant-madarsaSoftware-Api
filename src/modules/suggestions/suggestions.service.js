@@ -71,14 +71,10 @@ const mapSuggestion = (row) => ({
   updatedAt: row.updatedAt,
 });
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 };
 
 const priorityLabels = {

@@ -155,18 +155,10 @@ const getFeePeriodEndDate = ({ feeMonth, feeYear }) => {
   return Number.isNaN(date.getTime()) ? null : date;
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({
-      tenantId,
-      branchId,
-      requireActive: true,
-    });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
 };
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
@@ -380,7 +372,7 @@ export const studentFeesService = {
 
   async getFeeById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const voucher = await prisma.studentFeeVoucher.findFirst({
       where: {
         id,
@@ -395,7 +387,7 @@ export const studentFeesService = {
 
   async getStudentFeeHistory(tenantId, studentId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const student = await prisma.student.findFirst({
       where: {
         id: studentId,
@@ -435,7 +427,7 @@ export const studentFeesService = {
 
   async savePayment(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getScopedBranchId(branchScope);
+    const scopedBranchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.studentFeeVoucher.findFirst({
       where: {
         id,

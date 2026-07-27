@@ -42,14 +42,10 @@ const normalizeNumber = (value, fieldName) => {
 
 const normalizeText = (value) => String(value || '').trim();
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || queryOrPayload.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 };
 
 const recordStoreAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
@@ -1254,12 +1250,12 @@ const getItemDependencyCount = async (tenantId, itemId) => {
 export const storeService = {
   async getDashboard(tenantId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreItemsTable();
     const { startDate, endDate } = getCurrentMonthRange();
 
     const [totalItems, purchaseTotal, monthlyExpense] = await Promise.all([
-      prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_items WHERE tenant_id = ${resolvedTenantId} AND status = 'active'`,
+      prisma.$queryRaw`SELECT COUNT(*) AS total FROM store_items WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND status = 'active'`,
       prisma.$queryRaw`SELECT COALESCE(SUM(totalAmount), 0) AS total FROM store_purchases WHERE tenant_id = ${resolvedTenantId} AND (${branchId} IS NULL OR branch_id = ${branchId}) AND status = 'active' AND purchaseDate >= ${startDate} AND purchaseDate < ${endDate}`,
       this.getMonthlyExpense(resolvedTenantId, { startDate, endDate }, branchScope),
     ]);
@@ -1273,7 +1269,7 @@ export const storeService = {
 
   async getMonthlyExpense(tenantId, range = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, range, branchScope);
     const { startDate, endDate } = range.startDate && range.endDate ? range : getCurrentMonthRange();
     const rows = await prisma.$queryRaw`
       SELECT COALESCE(SUM(ft.amount), 0) AS total
@@ -1707,7 +1703,7 @@ export const storeService = {
 
   async getSupplierPurchases(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(resolvedTenantId, supplierId);
@@ -1744,7 +1740,7 @@ export const storeService = {
 
   async getSupplierPayments(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     await this.getSupplierById(resolvedTenantId, supplierId);
@@ -1835,7 +1831,8 @@ export const storeService = {
   async getPurchaseById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
-    return getPurchaseRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    return getPurchaseRows(resolvedTenantId, id, branchId);
   },
 
   async createPurchase(tenantId, { body, file }, branchScope = null) {
@@ -1950,7 +1947,7 @@ export const storeService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await ensureStorePurchaseTables();
     const purchaseId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getPurchaseRows(resolvedTenantId, purchaseId, branchId);
 
     await prisma.$transaction(async (tx) => {
@@ -1994,7 +1991,8 @@ export const storeService = {
 
   async getStockIssueById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getStockIssueRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    return getStockIssueRows(resolvedTenantId, id, branchId);
   },
 
   async createStockIssue(tenantId, { body, file }, branchScope = null) {
@@ -2060,7 +2058,7 @@ export const storeService = {
   async deleteStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
     await prisma.$transaction(async (tx) => {
       if (existing.approvalStatus === 'approved') {
@@ -2074,7 +2072,7 @@ export const storeService = {
   async approveStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
@@ -2089,7 +2087,7 @@ export const storeService = {
   async rejectStockIssue(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const issueId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getStockIssueRows(resolvedTenantId, issueId, branchId);
 
     await prisma.$transaction(async (tx) => {
@@ -2125,7 +2123,8 @@ export const storeService = {
 
   async getReturnById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getReturnRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    return getReturnRows(resolvedTenantId, id, branchId);
   },
 
   async createReturn(tenantId, payload, branchScope = null) {
@@ -2174,7 +2173,7 @@ export const storeService = {
   async deleteReturn(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const returnId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getReturnRows(resolvedTenantId, returnId, branchId);
     const now = new Date();
 
@@ -2213,7 +2212,8 @@ export const storeService = {
 
   async getDamagedStockById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getDamagedStockRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    return getDamagedStockRows(resolvedTenantId, id, branchId);
   },
 
   async createDamagedStock(tenantId, payload, branchScope = null) {
@@ -2236,7 +2236,7 @@ export const storeService = {
   async approveDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
     if (existing.approvalStatus === 'approved') return existing;
     if (existing.approvalStatus === 'rejected') throw new AppError('رد شدہ ریکارڈ منظور نہیں کیا جا سکتا۔', 400);
@@ -2252,7 +2252,7 @@ export const storeService = {
   async rejectDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
     if (existing.approvalStatus === 'approved') throw new AppError('منظور شدہ ریکارڈ رد نہیں کیا جا سکتا۔', 400);
     await prisma.$executeRaw`UPDATE store_damaged_stock SET approvalStatus = 'rejected', updatedAt = ${new Date()} WHERE id = ${damagedId} AND tenant_id = ${resolvedTenantId}`;
@@ -2262,7 +2262,7 @@ export const storeService = {
   async deleteDamagedStock(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const damagedId = normalizeId(id);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await getDamagedStockRows(resolvedTenantId, damagedId, branchId);
 
     await prisma.$transaction(async (tx) => {
@@ -2277,7 +2277,7 @@ export const storeService = {
 
   async getApprovals(tenantId, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const purchaseRows = await prisma.$queryRaw`
       SELECT p.id, p.purchaseDate, p.invoiceNumber, p.totalAmount, p.paidAmount, p.remainingAmount, p.paymentMethod, p.approvalStatus, p.createdAt,
              s.supplierName
@@ -2346,7 +2346,7 @@ export const storeService = {
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
 
     if (normalizedModule === 'purchase') {
       const existing = await getPurchaseRows(resolvedTenantId, recordId, branchId);
@@ -2461,7 +2461,7 @@ export const storeService = {
     const recordId = normalizeId(id);
     const approvedBy = getApproverName(admin);
     const cleanRemarks = normalizeText(remarks) || null;
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
 
     if (normalizedModule === 'purchase') {
       const existing = await getPurchaseRows(resolvedTenantId, recordId, branchId);
@@ -2591,7 +2591,8 @@ export const storeService = {
   async getPurchaseInvoiceHtml(tenantId, id, admin = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const purchase = await getPurchaseRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    const purchase = await getPurchaseRows(resolvedTenantId, id, branchId);
     const columns = [
       { label: 'شے', value: (row) => row.itemName || '-' },
       { label: 'کوڈ', value: (row) => row.itemCode || '-' },
@@ -2614,7 +2615,8 @@ export const storeService = {
   async getIssueSlipHtml(tenantId, id, admin = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const profile = await getMadrassaPrintProfile(resolvedTenantId, admin);
-    const issue = await getStockIssueRows(resolvedTenantId, id, getScopedBranchId(branchScope));
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    const issue = await getStockIssueRows(resolvedTenantId, id, branchId);
     const rows = [
       { label: 'تاریخ', value: formatDate(issue.issueDate) },
       { label: 'شے', value: issue.itemName || '-' },

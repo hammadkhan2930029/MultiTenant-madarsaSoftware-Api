@@ -50,7 +50,7 @@ export const updateDepartment = asyncHandler(async (req, res) => {
 });
 
 export const deleteDepartment = asyncHandler(async (req, res) => {
-  const result = await departmentsService.deleteDepartment(req.params.id);
+  const result = await departmentsService.deleteDepartment(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Department deleted successfully.',

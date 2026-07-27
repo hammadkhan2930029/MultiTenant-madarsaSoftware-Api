@@ -30,6 +30,28 @@ const select = {
   financeHead: { select: { id: true, name: true, type: true } },
 };
 
+const teacherLookupSelect = {
+  id: true,
+  tenantId: true,
+  branchId: true,
+  fullName: true,
+  phone: true,
+  subject: true,
+  staffType: true,
+  basicSalary: true,
+  appointmentDate: true,
+  joiningDate: true,
+  createdAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
+};
+
 const normalizeDate = (value) => {
   const date = new Date(value);
   date.setHours(0, 0, 0, 0);
@@ -61,14 +83,10 @@ const ensureTeacherIsEligibleForSalaryDate = (teacher, payload) => {
   }
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
 };
 
 const findSalaryExpenseHead = async (tenantId) => {
@@ -94,6 +112,43 @@ const ensureReferences = async (tenantId, { teacherId, financeHeadId }, branchId
 };
 
 export const salariesService = {
+  async getPayableTeachers(tenantId, query, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
+    const { page, limit, skip } = getPagination(query.page, query.limit);
+    const where = {
+      tenantId: resolvedTenantId,
+      ...(branchId ? { branchId } : {}),
+      status: query.status || 'active',
+      ...(query.staffType ? { staffType: query.staffType } : {}),
+      ...(query.search
+        ? {
+            OR: [
+              { fullName: { contains: query.search } },
+              { phone: { contains: query.search } },
+              { subject: { contains: query.search } },
+            ],
+          }
+        : {}),
+    };
+
+    const [items, totalItems] = await Promise.all([
+      prisma.teacher.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+        select: teacherLookupSelect,
+      }),
+      prisma.teacher.count({ where }),
+    ]);
+
+    return {
+      items,
+      meta: buildPaginationMeta({ totalItems, page, limit }),
+    };
+  },
+
   async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
@@ -161,7 +216,7 @@ export const salariesService = {
   },
   async getEntryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const entry = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } }, select });
     if (!entry) throw new AppError('Salary entry not found.', 404);
     return entry;
@@ -193,7 +248,7 @@ export const salariesService = {
   },
   async deactivateEntry(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
     return prisma.salaryEntry.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });

@@ -8,6 +8,7 @@ const resultGradeBodySchema = z.object({
   from: percentageSchema,
   to: percentageSchema,
   status: z.enum(['active', 'inactive']).optional(),
+  branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
 }).refine((value) => value.from <= value.to, {
   message: 'From percentage must be less than or equal to to percentage.',
   path: ['from'],
@@ -25,6 +26,7 @@ export const listResultGradesValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
@@ -35,7 +37,9 @@ export const resultGradeIdValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Result grade id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const updateResultGradeValidationSchema = z.object({
@@ -43,5 +47,7 @@ export const updateResultGradeValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Result grade id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });

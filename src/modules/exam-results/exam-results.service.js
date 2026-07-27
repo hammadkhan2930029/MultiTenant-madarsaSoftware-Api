@@ -59,19 +59,15 @@ const formatGradeLabel = (grade) => (grade?.code ? `${grade.title} (${grade.code
 const findGrade = (percentage, grades) =>
   grades.find((grade) => percentage >= grade.fromPercent && percentage <= grade.toPercent) || null;
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
   return { OR: [{ branchId }, { assignments: { some: { tenantId, branchId, status: 'active' } } }] };
 };
 
 const resolveRequestedBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
-  const branchId = getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-  if (branchId) {
-    await branchScopeService.validateBranchBelongsToTenant({ tenantId, branchId, requireActive: true });
-  }
-  return branchId;
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
 };
 
 const formatExamResult = (result) => ({
@@ -258,11 +254,10 @@ export const examResultsService = {
     const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
     const { branchId, subjects } = await ensureReferences(resolvedTenantId, payload, requestedBranchId);
     const scopedPayload = { ...payload, subjects };
-    const scopedBranchId = getScopedBranchId(branchScope);
     const calculated = await buildCalculatedResult(resolvedTenantId, scopedPayload);
 
     const existingResult = id
-      ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(scopedBranchId ? { branchId: scopedBranchId } : {}) } })
+      ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } })
       : await prisma.examResult.findFirst({
           where: {
             tenantId: resolvedTenantId,
@@ -329,7 +324,7 @@ export const examResultsService = {
 
   async getExamResultById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveRequestedBranchId(resolvedTenantId, {}, branchScope);
     const result = await prisma.examResult.findFirst({
       where: {
         id: Number(id),
@@ -373,7 +368,7 @@ export const examResultsService = {
 
   async deleteExamResult(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveRequestedBranchId(resolvedTenantId, {}, branchScope);
     const existingResult = await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existingResult) throw new AppError('Exam result not found.', 404);
 

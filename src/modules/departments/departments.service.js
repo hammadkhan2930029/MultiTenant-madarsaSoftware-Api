@@ -1,9 +1,12 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const departmentSelect = {
   id: true,
+  tenantId: true,
+  branchId: true,
   name: true,
   code: true,
   head: true,
@@ -11,6 +14,14 @@ const departmentSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
 };
 
 const headTeacherSelect = {
@@ -37,11 +48,28 @@ const normalizeTenantId = (tenantId) => {
   return Number.isInteger(resolvedTenantId) && resolvedTenantId > 0 ? resolvedTenantId : null;
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
-const getBranchScopeKey = (branchScope) => {
-  const branchId = getScopedBranchId(branchScope);
+const getBranchScopeKey = (branchScope = null) => {
+  const branchId = branchScope?.branchId || branchScope?.resolvedBranchId || null;
   return branchId ? `branch:${branchId}` : 'tenant';
+};
+
+const resolveDepartmentBranchContext = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
+  const resolvedTenantId = normalizeTenantId(tenantId);
+  if (!resolvedTenantId) {
+    return { branchId: null, branchScopeKey: 'tenant' };
+  }
+
+  const branchId = await branchScopeService.resolveOperationalBranchId(
+    resolvedTenantId,
+    payloadOrQuery,
+    branchScope,
+    { requireActive: true }
+  );
+
+  return {
+    branchId,
+    branchScopeKey: branchId ? `branch:${branchId}` : 'tenant',
+  };
 };
 
 const buildDepartmentSelect = (tenantId, branchScope = null) => {
@@ -83,7 +111,7 @@ const mapDepartment = (department) => {
   };
 };
 
-const validateHeadTeacher = async (tenantId, headTeacherId, branchScope = null) => {
+const validateHeadTeacher = async (tenantId, headTeacherId, branchContext = null) => {
   if (!headTeacherId) return null;
 
   const resolvedTenantId = normalizeTenantId(tenantId);
@@ -92,7 +120,7 @@ const validateHeadTeacher = async (tenantId, headTeacherId, branchScope = null) 
     throw new AppError('Tenant context is required to assign department head.', 403);
   }
 
-  const branchId = getScopedBranchId(branchScope);
+  const branchId = branchContext?.branchId || null;
   const teacher = await prisma.teacher.findFirst({
     where: {
       id: Number(headTeacherId),
@@ -110,7 +138,7 @@ const validateHeadTeacher = async (tenantId, headTeacherId, branchScope = null) 
   return teacher;
 };
 
-const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, branchScope = null) => {
+const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, branchContext = null) => {
   if (headTeacherId === undefined) return null;
 
   const resolvedTenantId = normalizeTenantId(tenantId);
@@ -120,8 +148,8 @@ const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, bra
     throw new AppError('Tenant context is required to assign department head.', 403);
   }
 
-  const branchId = getScopedBranchId(branchScope);
-  const branchScopeKey = getBranchScopeKey(branchScope);
+  const branchId = branchContext?.branchId || null;
+  const branchScopeKey = branchContext?.branchScopeKey || getBranchScopeKey(branchContext);
   const existingAssignment = await tx.departmentHeadAssignment.findFirst({
     where: {
       departmentId,
@@ -138,7 +166,7 @@ const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, bra
     return null;
   }
 
-  const teacher = await validateHeadTeacher(resolvedTenantId, headTeacherId, branchScope);
+  const teacher = await validateHeadTeacher(resolvedTenantId, headTeacherId, branchContext);
   const data = {
     departmentId,
     tenantId: resolvedTenantId,
@@ -159,8 +187,12 @@ const syncHeadAssignment = async (tx, departmentId, tenantId, headTeacherId, bra
 
 export const departmentsService = {
   async createDepartment(tenantId, payload, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, payload, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const existingDepartment = await prisma.department.findFirst({
       where: {
+        tenantId: resolvedTenantId,
+        branchId: branchContext.branchId,
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
       },
     });
@@ -173,6 +205,8 @@ export const departmentsService = {
       const createdDepartment = await tx.department.create({
         data: {
           name: payload.name,
+          tenantId: resolvedTenantId,
+          branchId: branchContext.branchId,
           code: payload.code || null,
           head: payload.head || null,
           members: payload.members ?? 0,
@@ -181,11 +215,11 @@ export const departmentsService = {
         select: departmentSelect,
       });
 
-      await syncHeadAssignment(tx, createdDepartment.id, tenantId, payload.headTeacherId, branchScope);
+      await syncHeadAssignment(tx, createdDepartment.id, tenantId, payload.headTeacherId, branchContext);
 
       return tx.department.findUnique({
         where: { id: createdDepartment.id },
-        select: buildDepartmentSelect(tenantId, branchScope),
+        select: buildDepartmentSelect(tenantId, branchContext),
       });
     });
 
@@ -193,6 +227,8 @@ export const departmentsService = {
   },
 
   async bulkCreateDepartments(tenantId, payload, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, payload, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const normalizedRows = payload.departments
       .map((item, index) => ({
         index,
@@ -235,6 +271,8 @@ export const departmentsService = {
 
     const existingDepartments = await prisma.department.findMany({
       where: {
+        tenantId: resolvedTenantId,
+        branchId: branchContext.branchId,
         OR: [
           { name: { in: normalizedRows.map((row) => row.name).filter(Boolean) } },
           { code: { in: normalizedRows.map((row) => row.code).filter(Boolean) } },
@@ -265,6 +303,8 @@ export const departmentsService = {
         const createdDepartment = await tx.department.create({
           data: {
             name: row.name,
+            tenantId: resolvedTenantId,
+            branchId: branchContext.branchId,
             code: row.code || null,
             head: row.headTeacherId ? null : row.head || null,
             members: row.members,
@@ -273,11 +313,11 @@ export const departmentsService = {
           select: departmentSelect,
         });
 
-        await syncHeadAssignment(tx, createdDepartment.id, tenantId, row.headTeacherId, branchScope);
+        await syncHeadAssignment(tx, createdDepartment.id, tenantId, row.headTeacherId, branchContext);
 
         const department = await tx.department.findUnique({
           where: { id: createdDepartment.id },
-          select: buildDepartmentSelect(tenantId, branchScope),
+          select: buildDepartmentSelect(tenantId, branchContext),
         });
         createdDepartments.push(mapDepartment(department));
       }
@@ -292,9 +332,13 @@ export const departmentsService = {
   },
 
   async getDepartments(tenantId, query, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, query, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
+      tenantId: resolvedTenantId,
+      branchId: branchContext.branchId,
       ...(query.search
         ? {
             OR: [
@@ -313,7 +357,7 @@ export const departmentsService = {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: buildDepartmentSelect(tenantId, branchScope),
+        select: buildDepartmentSelect(tenantId, branchContext),
       }),
       prisma.department.count({ where }),
     ]);
@@ -325,10 +369,12 @@ export const departmentsService = {
   },
 
   async getDepartmentById(tenantId, id, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, {}, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const departmentId = Number(id);
-    const department = await prisma.department.findUnique({
-      where: { id: departmentId },
-      select: buildDepartmentSelect(tenantId, branchScope),
+    const department = await prisma.department.findFirst({
+      where: { id: departmentId, tenantId: resolvedTenantId, branchId: branchContext.branchId },
+      select: buildDepartmentSelect(tenantId, branchContext),
     });
 
     if (!department) {
@@ -339,9 +385,11 @@ export const departmentsService = {
   },
 
   async updateDepartment(tenantId, id, payload, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, payload, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
     const departmentId = Number(id);
-    const existingDepartment = await prisma.department.findUnique({
-      where: { id: departmentId },
+    const existingDepartment = await prisma.department.findFirst({
+      where: { id: departmentId, tenantId: resolvedTenantId, branchId: branchContext.branchId },
     });
 
     if (!existingDepartment) {
@@ -351,6 +399,8 @@ export const departmentsService = {
     const duplicateDepartment = await prisma.department.findFirst({
       where: {
         id: { not: departmentId },
+        tenantId: resolvedTenantId,
+        branchId: branchContext.branchId,
         OR: [{ name: payload.name }, ...(payload.code ? [{ code: payload.code }] : [])],
       },
     });
@@ -364,6 +414,8 @@ export const departmentsService = {
         where: { id: departmentId },
         data: {
           name: payload.name,
+          tenantId: resolvedTenantId,
+          branchId: branchContext.branchId,
           code: payload.code || null,
           head: payload.head || null,
           members: payload.members ?? existingDepartment.members,
@@ -372,20 +424,23 @@ export const departmentsService = {
         select: departmentSelect,
       });
 
-      await syncHeadAssignment(tx, departmentId, tenantId, payload.headTeacherId, branchScope);
+      await syncHeadAssignment(tx, departmentId, tenantId, payload.headTeacherId, branchContext);
 
       return tx.department.findUnique({
         where: { id: departmentId },
-        select: buildDepartmentSelect(tenantId, branchScope),
+        select: buildDepartmentSelect(tenantId, branchContext),
       });
     });
 
     return mapDepartment(department);
   },
 
-  async deleteDepartment(id) {
-    const existingDepartment = await prisma.department.findUnique({
-      where: { id },
+  async deleteDepartment(tenantId, id, branchScope = null) {
+    const branchContext = await resolveDepartmentBranchContext(tenantId, {}, branchScope);
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const departmentId = Number(id);
+    const existingDepartment = await prisma.department.findFirst({
+      where: { id: departmentId, tenantId: resolvedTenantId, branchId: branchContext.branchId },
     });
 
     if (!existingDepartment) {
@@ -393,7 +448,7 @@ export const departmentsService = {
     }
 
     return prisma.department.delete({
-      where: { id },
+      where: { id: departmentId },
       select: departmentSelect,
     });
   },

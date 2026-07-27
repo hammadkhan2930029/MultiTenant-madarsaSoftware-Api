@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -36,28 +37,27 @@ const sectionSelect = {
   },
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
-
-const getRequestedBranchId = (payloadOrQuery = {}, branchScope = null) =>
-  getScopedBranchId(branchScope) || payloadOrQuery.branchId || null;
-
 const buildClassBranchWhere = (branchId) => (
-  branchId ? { class: { branchId: Number(branchId) } } : { class: { branchId: null } }
+  { class: { branchId: Number(branchId) } }
 );
 
 const getActiveClassBranchWhere = (branchId) => (
-  branchId
-    ? {
-        branchId: Number(branchId),
-        branch: { status: 'active' },
-      }
-    : { branchId: null }
+  {
+    branchId: Number(branchId),
+    branch: { status: 'active' },
+  }
 );
+
+const resolveSectionBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, payloadOrQuery, branchScope, {
+    requireActive: true,
+  });
+};
 
 export const sectionsService = {
   async createSection(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getRequestedBranchId(payload, branchScope);
+    const scopedBranchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
       where: {
         id: payload.classId,
@@ -94,7 +94,7 @@ export const sectionsService = {
 
   async bulkCreateSections(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const scopedBranchId = getRequestedBranchId(payload, branchScope);
+    const scopedBranchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
       where: {
         id: payload.classId,
@@ -182,7 +182,7 @@ export const sectionsService = {
   async getSections(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getRequestedBranchId(query, branchScope);
+    const branchId = await resolveSectionBranchId(resolvedTenantId, query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -217,7 +217,7 @@ export const sectionsService = {
 
   async getSectionById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getRequestedBranchId({}, branchScope);
+    const branchId = await resolveSectionBranchId(resolvedTenantId, {}, branchScope);
     const section = await prisma.section.findFirst({
       where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
       select: sectionSelect,
@@ -232,7 +232,7 @@ export const sectionsService = {
 
   async updateSection(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getRequestedBranchId(payload, branchScope);
+    const branchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const section = await prisma.section.findFirst({
       where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
     });
@@ -279,7 +279,7 @@ export const sectionsService = {
 
   async deleteSection(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getRequestedBranchId({}, branchScope);
+    const branchId = await resolveSectionBranchId(resolvedTenantId, {}, branchScope);
     const section = await prisma.section.findFirst({
       where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
     });

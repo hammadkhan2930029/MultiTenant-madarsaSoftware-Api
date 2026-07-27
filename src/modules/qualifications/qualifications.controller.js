@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { qualificationsService } from './qualifications.service.js';
 
 export const createQualification = asyncHandler(async (req, res) => {
-  const result = await qualificationsService.createQualification(req.body);
+  const result = await qualificationsService.createQualification(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createQualification = asyncHandler(async (req, res) => {
 });
 
 export const getQualifications = asyncHandler(async (req, res) => {
-  const result = await qualificationsService.getQualifications(req.query);
+  const result = await qualificationsService.getQualifications(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Qualifications fetched successfully.',
@@ -22,7 +22,7 @@ export const getQualifications = asyncHandler(async (req, res) => {
 });
 
 export const getQualificationById = asyncHandler(async (req, res) => {
-  const result = await qualificationsService.getQualificationById(req.params.id);
+  const result = await qualificationsService.getQualificationById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Qualification fetched successfully.',
@@ -31,7 +31,7 @@ export const getQualificationById = asyncHandler(async (req, res) => {
 });
 
 export const updateQualification = asyncHandler(async (req, res) => {
-  const result = await qualificationsService.updateQualification(req.params.id, req.body);
+  const result = await qualificationsService.updateQualification(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Qualification updated successfully.',
@@ -40,7 +40,7 @@ export const updateQualification = asyncHandler(async (req, res) => {
 });
 
 export const deleteQualification = asyncHandler(async (req, res) => {
-  const result = await qualificationsService.deleteQualification(req.params.id);
+  const result = await qualificationsService.deleteQualification(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Qualification deleted successfully.',

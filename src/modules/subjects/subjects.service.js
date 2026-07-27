@@ -1,15 +1,25 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const subjectSelect = {
   id: true,
   tenantId: true,
+  branchId: true,
   name: true,
   detail: true,
   status: true,
   createdAt: true,
   updatedAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
 };
 
 const normalizeTenantId = (tenantId) => {
@@ -22,9 +32,27 @@ const normalizeTenantId = (tenantId) => {
   return resolvedTenantId;
 };
 
-const getTenantSubject = async (tenantId, id) => {
+const validateBranchAccess = async (tenantId, branchId) => {
+  if (!branchId) {
+    throw new AppError('Branch context is required for subject management.', 403);
+  }
+
+  return branchScopeService.validateBranchBelongsToTenant({
+    tenantId,
+    branchId,
+    requireActive: true,
+  });
+};
+
+const resolveSubjectBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
+};
+
+const getTenantSubject = async (tenantId, id, branchId) => {
   const subject = await prisma.subject.findFirst({
-    where: { id: Number(id), tenantId },
+    where: { id: Number(id), tenantId, branchId },
     select: subjectSelect,
   });
 
@@ -36,19 +64,23 @@ const getTenantSubject = async (tenantId, id) => {
 };
 
 export const subjectsService = {
-  async createSubject(tenantId, payload) {
+  async createSubject(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, payload, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
+
     const existingSubject = await prisma.subject.findFirst({
-      where: { tenantId: resolvedTenantId, name: payload.name },
+      where: { tenantId: resolvedTenantId, branchId, name: payload.name },
     });
 
     if (existingSubject) {
-      throw new AppError('Subject with the same name already exists.', 409);
+      throw new AppError('Subject with the same name already exists in this branch.', 409);
     }
 
     return prisma.subject.create({
       data: {
         tenantId: resolvedTenantId,
+        branchId,
         name: payload.name,
         detail: payload.detail || null,
         status: payload.status || 'active',
@@ -57,8 +89,11 @@ export const subjectsService = {
     });
   },
 
-  async bulkCreateSubjects(tenantId, payload) {
+  async bulkCreateSubjects(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, payload, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
+
     const normalizedRows = payload.subjects
       .map((item, index) => ({
         index,
@@ -101,6 +136,7 @@ export const subjectsService = {
       const existingSubjects = await prisma.subject.findMany({
         where: {
           tenantId: resolvedTenantId,
+          branchId,
           name: { in: validRows.map((row) => row.name) },
         },
         select: { name: true },
@@ -128,6 +164,7 @@ export const subjectsService = {
         const createdSubject = await tx.subject.create({
           data: {
             tenantId: resolvedTenantId,
+            branchId,
             name: row.name,
             detail: row.detail || null,
             status: 'active',
@@ -144,12 +181,15 @@ export const subjectsService = {
     });
   },
 
-  async getSubjects(tenantId, query) {
+  async getSubjects(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, query, branchScope);
+    await validateBranchAccess(resolvedTenantId, branchId);
 
     const where = {
       tenantId: resolvedTenantId,
+      branchId,
       ...(query.search
         ? {
             OR: [
@@ -178,18 +218,22 @@ export const subjectsService = {
     };
   },
 
-  async getSubjectById(tenantId, id) {
+  async getSubjectById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getTenantSubject(resolvedTenantId, id);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, {}, branchScope);
+    return getTenantSubject(resolvedTenantId, id, branchId);
   },
 
-  async updateSubject(tenantId, id, payload) {
+  async updateSubject(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existingSubject = await getTenantSubject(resolvedTenantId, id);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, payload, branchScope);
+    const existingSubject = await getTenantSubject(resolvedTenantId, id, branchId);
+    await validateBranchAccess(resolvedTenantId, branchId);
 
     const duplicateSubject = await prisma.subject.findFirst({
       where: {
         tenantId: resolvedTenantId,
+        branchId,
         id: { not: Number(id) },
         name: payload.name,
       },
@@ -204,15 +248,17 @@ export const subjectsService = {
       data: {
         name: payload.name,
         detail: payload.detail || null,
+        branchId,
         status: payload.status || existingSubject.status,
       },
       select: subjectSelect,
     });
   },
 
-  async deleteSubject(tenantId, id) {
+  async deleteSubject(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantSubject(resolvedTenantId, id);
+    const branchId = await resolveSubjectBranchId(resolvedTenantId, {}, branchScope);
+    await getTenantSubject(resolvedTenantId, id, branchId);
 
     return prisma.subject.delete({
       where: { id: Number(id), tenantId: resolvedTenantId },

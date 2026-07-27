@@ -6,12 +6,14 @@ import {
   createSalaryEntry,
   getSalaryEntries,
   getSalaryEntryById,
+  getSalaryTeachers,
   updateSalaryEntry,
   deactivateSalaryEntry,
 } from './salaries.controller.js';
 import {
   createSalaryValidationSchema,
   listSalariesValidationSchema,
+  listSalaryTeachersValidationSchema,
   salaryIdValidationSchema,
   updateSalaryValidationSchema,
 } from './salaries.validation.js';
@@ -20,6 +22,7 @@ const router = Router();
 router.use(authMiddleware);
 router.post('/', requirePermission('salary.create'), validate(createSalaryValidationSchema), createSalaryEntry);
 router.get('/', requirePermission('salary.view'), validate(listSalariesValidationSchema), getSalaryEntries);
+router.get('/teachers', requirePermission('salary.view'), validate(listSalaryTeachersValidationSchema), getSalaryTeachers);
 router.get('/:id', requirePermission('salary.view'), validate(salaryIdValidationSchema), getSalaryEntryById);
 router.put('/:id', requirePermission('salary.edit'), validate(updateSalaryValidationSchema), updateSalaryEntry);
 router.patch('/:id/deactivate', requirePermission('salary.delete'), validate(salaryIdValidationSchema), deactivateSalaryEntry);

@@ -29,7 +29,10 @@ const buildDateRangeFilter = (fromDate, toDate, fieldName) =>
       }
     : {};
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveReportBranchId = async (tenantId, query = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, query, branchScope, {
+    requireActive: true,
+  });
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
@@ -92,16 +95,7 @@ export const reportsService = {
   async getStudentsReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const scopedBranchId = getScopedBranchId(branchScope);
-    const requestedBranchId = scopedBranchId || query.branchId || null;
-
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -141,15 +135,7 @@ export const reportsService = {
   async getAttendanceReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
-
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
 
     if (query.type === 'teacher') {
       const where = {
@@ -229,15 +215,7 @@ export const reportsService = {
   async getHifzProgressReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
-
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
     const studentWhere = {
       tenantId: resolvedTenantId,
       ...(query.studentId ? { id: query.studentId } : {}),
@@ -317,14 +295,7 @@ export const reportsService = {
 
   async getFundCollectionsReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
@@ -385,14 +356,7 @@ export const reportsService = {
 
   async getSalaryReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
@@ -437,14 +401,7 @@ export const reportsService = {
 
   async getMonthlyFinanceSummaryReport(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const requestedBranchId = getScopedBranchId(branchScope) || query.branchId || null;
-    if (requestedBranchId) {
-      await branchScopeService.validateBranchBelongsToTenant({
-        tenantId: resolvedTenantId,
-        branchId: requestedBranchId,
-        requireActive: true,
-      });
-    }
+    const requestedBranchId = await resolveReportBranchId(resolvedTenantId, query, branchScope);
     const whereFromDate = query.fromDate ? normalizeDate(query.fromDate) : undefined;
     const whereToDate = query.toDate ? normalizeDate(query.toDate) : undefined;
 

@@ -17,7 +17,6 @@ const normalizeId = (value) => {
 };
 
 const normalizeText = (value) => String(value || '').trim();
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
 const buildBranchScopeKey = (branchId) => `branch:${branchId}`;
 const buildAssignmentScopeKey = ({ teacherId, subjectId, classId, sectionId, responsibilityId }) =>
   [teacherId, subjectId, classId, sectionId, responsibilityId].map(String).join(':');
@@ -55,22 +54,15 @@ const responsibilitySelect = {
 };
 
 const resolveRequestedBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
-  const scopedBranchId = getScopedBranchId(branchScope);
-  const requestedBranchId = scopedBranchId || normalizeId(queryOrPayload.branchId);
-
-  if (!requestedBranchId) return null;
-
-  await branchScopeService.validateBranchBelongsToTenant({
-    tenantId,
-    branchId: requestedBranchId,
+  const branchId = await branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
     requireActive: true,
   });
 
-  return requestedBranchId;
+  return branchId;
 };
 
-const validateAssignmentReferences = async (tenantId, payload, branchScope = null) => {
-  const scopedBranchId = getScopedBranchId(branchScope);
+const validateAssignmentReferences = async (tenantId, payload, branchId = null) => {
+  const scopedBranchId = normalizeId(branchId);
   const classId = normalizeId(payload.classId);
   const sectionId = normalizeId(payload.sectionId);
   const teacherId = normalizeId(payload.teacherId);
@@ -197,7 +189,7 @@ const getOrCreateResponsibilities = async (tx, tenantId, branchId, payload, admi
 };
 
 const assertAssignmentInScope = async (tenantId, id, branchScope = null) => {
-  const scopedBranchId = getScopedBranchId(branchScope);
+  const scopedBranchId = await resolveRequestedBranchId(tenantId, {}, branchScope);
   const assignment = await prisma.teacherAssignment.findFirst({
     where: {
       id: Number(id),
@@ -305,7 +297,8 @@ export const teacherAssignmentsService = {
 
   async createTeacherAssignments(tenantId, payload, reqContext = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const references = await validateAssignmentReferences(resolvedTenantId, payload, branchScope);
+    const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
+    const references = await validateAssignmentReferences(resolvedTenantId, payload, requestedBranchId);
     const branchId = references.branchId;
     await branchScopeService.validateBranchBelongsToTenant({ tenantId: resolvedTenantId, branchId, requireActive: true });
     const subjects = await getActiveSubjects(resolvedTenantId, payload.subjectIds || []);
@@ -379,11 +372,12 @@ export const teacherAssignmentsService = {
   async updateTeacherAssignment(tenantId, id, payload, reqContext = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const existing = await assertAssignmentInScope(resolvedTenantId, id, branchScope);
+    const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
     const references = await validateAssignmentReferences(resolvedTenantId, {
       teacherId: payload.teacherId || existing.teacherId,
       classId: payload.classId || existing.classId,
       sectionId: payload.sectionId || existing.sectionId,
-    }, branchScope);
+    }, requestedBranchId);
     const branchId = references.branchId;
     const subject = (await getActiveSubjects(resolvedTenantId, [payload.subjectId || existing.subjectId]))[0];
     const responsibilityPayload = payload.responsibility

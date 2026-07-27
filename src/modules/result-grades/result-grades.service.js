@@ -1,10 +1,12 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const resultGradeSelect = {
   id: true,
   tenantId: true,
+  branchId: true,
   title: true,
   code: true,
   fromPercent: true,
@@ -12,6 +14,14 @@ const resultGradeSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+  branch: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      status: true,
+    },
+  },
 };
 
 const normalizeTenantId = (tenantId) => {
@@ -27,6 +37,8 @@ const normalizeTenantId = (tenantId) => {
 const formatResultGrade = (grade) => ({
   id: grade.id,
   tenantId: grade.tenantId,
+  branchId: grade.branchId,
+  branch: grade.branch || null,
   title: grade.title,
   code: grade.code || '',
   from: grade.fromPercent,
@@ -36,10 +48,17 @@ const formatResultGrade = (grade) => ({
   updatedAt: grade.updatedAt,
 });
 
-const ensureNoOverlap = async (tenantId, { from, to, excludeId }) => {
+const resolveResultGradeBranchId = async (tenantId, queryOrPayload = {}, branchScope = null) => {
+  return branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
+};
+
+const ensureNoOverlap = async (tenantId, branchId, { from, to, excludeId }) => {
   const overlappingGrade = await prisma.resultGrade.findFirst({
     where: {
       tenantId,
+      branchId,
       status: 'active',
       ...(excludeId ? { id: { not: Number(excludeId) } } : {}),
       fromPercent: { lte: to },
@@ -53,8 +72,9 @@ const ensureNoOverlap = async (tenantId, { from, to, excludeId }) => {
   }
 };
 
-const buildData = (tenantId, payload) => ({
+const buildData = (tenantId, branchId, payload) => ({
   tenantId,
+  branchId,
   title: payload.title,
   code: payload.code || null,
   fromPercent: payload.from,
@@ -62,9 +82,9 @@ const buildData = (tenantId, payload) => ({
   status: payload.status || 'active',
 });
 
-const getTenantResultGrade = async (tenantId, id) => {
+const getTenantResultGrade = async (tenantId, id, branchId) => {
   const result = await prisma.resultGrade.findFirst({
-    where: { id: Number(id), tenantId },
+    where: { id: Number(id), tenantId, branchId },
     select: resultGradeSelect,
   });
 
@@ -76,24 +96,27 @@ const getTenantResultGrade = async (tenantId, id) => {
 };
 
 export const resultGradesService = {
-  async createResultGrade(tenantId, payload) {
+  async createResultGrade(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureNoOverlap(resolvedTenantId, { from: payload.from, to: payload.to });
+    const branchId = await resolveResultGradeBranchId(resolvedTenantId, payload, branchScope);
+    await ensureNoOverlap(resolvedTenantId, branchId, { from: payload.from, to: payload.to });
 
     const result = await prisma.resultGrade.create({
-      data: buildData(resolvedTenantId, payload),
+      data: buildData(resolvedTenantId, branchId, payload),
       select: resultGradeSelect,
     });
 
     return formatResultGrade(result);
   },
 
-  async getResultGrades(tenantId, query) {
+  async getResultGrades(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveResultGradeBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
 
     const where = {
       tenantId: resolvedTenantId,
+      branchId,
       ...(query.search
         ? {
             OR: [
@@ -122,34 +145,37 @@ export const resultGradesService = {
     };
   },
 
-  async getResultGradeById(tenantId, id) {
+  async getResultGradeById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return formatResultGrade(await getTenantResultGrade(resolvedTenantId, id));
+    const branchId = await resolveResultGradeBranchId(resolvedTenantId, {}, branchScope);
+    return formatResultGrade(await getTenantResultGrade(resolvedTenantId, id, branchId));
   },
 
-  async updateResultGrade(tenantId, id, payload) {
+  async updateResultGrade(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const existingGrade = await getTenantResultGrade(resolvedTenantId, id);
+    const branchId = await resolveResultGradeBranchId(resolvedTenantId, payload, branchScope);
+    const existingGrade = await getTenantResultGrade(resolvedTenantId, id, branchId);
 
     if ((payload.status || existingGrade.status) === 'active') {
-      await ensureNoOverlap(resolvedTenantId, { from: payload.from, to: payload.to, excludeId: id });
+      await ensureNoOverlap(resolvedTenantId, branchId, { from: payload.from, to: payload.to, excludeId: id });
     }
 
     const result = await prisma.resultGrade.update({
-      where: { id: Number(id), tenantId: resolvedTenantId },
-      data: buildData(resolvedTenantId, payload),
+      where: { id: Number(id) },
+      data: buildData(resolvedTenantId, branchId, payload),
       select: resultGradeSelect,
     });
 
     return formatResultGrade(result);
   },
 
-  async deleteResultGrade(tenantId, id) {
+  async deleteResultGrade(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantResultGrade(resolvedTenantId, id);
+    const branchId = await resolveResultGradeBranchId(resolvedTenantId, {}, branchScope);
+    await getTenantResultGrade(resolvedTenantId, id, branchId);
 
     const result = await prisma.resultGrade.delete({
-      where: { id: Number(id), tenantId: resolvedTenantId },
+      where: { id: Number(id) },
       select: resultGradeSelect,
     });
 

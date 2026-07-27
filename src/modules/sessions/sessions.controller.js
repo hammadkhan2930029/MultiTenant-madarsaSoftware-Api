@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { sessionsService } from './sessions.service.js';
 
 export const createSession = asyncHandler(async (req, res) => {
-  const session = await sessionsService.createSession(req.body);
+  const session = await sessionsService.createSession(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSession = asyncHandler(async (req, res) => {
 });
 
 export const getSessions = asyncHandler(async (req, res) => {
-  const sessions = await sessionsService.getSessions(req.query);
+  const sessions = await sessionsService.getSessions(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Sessions fetched successfully.',
@@ -22,7 +22,7 @@ export const getSessions = asyncHandler(async (req, res) => {
 });
 
 export const getSessionById = asyncHandler(async (req, res) => {
-  const session = await sessionsService.getSessionById(Number(req.params.id));
+  const session = await sessionsService.getSessionById(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'Session fetched successfully.',
@@ -31,7 +31,7 @@ export const getSessionById = asyncHandler(async (req, res) => {
 });
 
 export const updateSession = asyncHandler(async (req, res) => {
-  const session = await sessionsService.updateSession(Number(req.params.id), req.body);
+  const session = await sessionsService.updateSession(req.tenantId, Number(req.params.id), req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Session updated successfully.',
@@ -40,7 +40,7 @@ export const updateSession = asyncHandler(async (req, res) => {
 });
 
 export const deleteSession = asyncHandler(async (req, res) => {
-  const session = await sessionsService.deleteSession(Number(req.params.id));
+  const session = await sessionsService.deleteSession(req.tenantId, Number(req.params.id), req.branchScope);
 
   return apiResponse(res, {
     message: 'Session deleted successfully.',

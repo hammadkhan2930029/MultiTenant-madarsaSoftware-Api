@@ -5,6 +5,7 @@ const qualificationBodySchema = z.object({
   category: z.string().trim().max(150, 'Qualification category is too long.').optional().or(z.literal('')),
   level: z.string().trim().max(150, 'Qualification level is too long.').optional().or(z.literal('')),
   status: z.enum(['active', 'inactive']).optional(),
+  branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
 });
 
 export const createQualificationValidationSchema = z.object({
@@ -19,6 +20,7 @@ export const listQualificationsValidationSchema = z.object({
   query: z.object({
     search: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
@@ -29,7 +31,9 @@ export const qualificationIdValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Qualification id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const updateQualificationValidationSchema = z.object({
@@ -37,5 +41,7 @@ export const updateQualificationValidationSchema = z.object({
   params: z.object({
     id: z.coerce.number().int().positive('Qualification id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });

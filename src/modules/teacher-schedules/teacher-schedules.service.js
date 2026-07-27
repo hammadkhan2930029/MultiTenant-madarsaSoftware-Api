@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { branchScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -28,7 +29,10 @@ const teacherScheduleSelect = {
   section: { select: { id: true, name: true } },
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveTeacherScheduleBranchId = (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 
 const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId, classId, sectionId }, branchId = null) => {
   const [teacher, session, academicClass, section] = await Promise.all([
@@ -67,7 +71,8 @@ const ensureTeacherScheduleReferences = async (tenantId, { teacherId, sessionId,
 export const teacherSchedulesService = {
   async createTeacherSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await ensureTeacherScheduleReferences(resolvedTenantId, payload, getScopedBranchId(branchScope));
+    const branchId = await resolveTeacherScheduleBranchId(resolvedTenantId, payload, branchScope);
+    await ensureTeacherScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.teacherSchedule.create({
       data: {
@@ -89,7 +94,7 @@ export const teacherSchedulesService = {
   async getTeacherSchedules(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+    const branchId = await resolveTeacherScheduleBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
       teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
@@ -121,7 +126,7 @@ export const teacherSchedulesService = {
 
   async updateTeacherSchedule(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveTeacherScheduleBranchId(resolvedTenantId, payload, branchScope);
     const existingSchedule = await prisma.teacherSchedule.findFirst({
       where: {
         id,
@@ -158,7 +163,7 @@ export const teacherSchedulesService = {
 
   async deleteTeacherSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveTeacherScheduleBranchId(resolvedTenantId, {}, branchScope);
     const schedule = await prisma.teacherSchedule.findFirst({
       where: {
         id,

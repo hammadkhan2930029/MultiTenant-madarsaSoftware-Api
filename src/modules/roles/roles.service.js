@@ -200,7 +200,7 @@ const buildRoleScopeWhere = (query = {}, requester = {}) => {
     const requesterBranchId = normalizeOptionalBranchId(requester?.branchId);
     const queryBranchId = normalizeOptionalBranchId(query.branchId);
 
-    if (requesterBranchId) {
+    if (isBranchScopedRequester(requester)) {
       return {
         sql: 'r.tenant_id = ? AND r.branch_id = ? AND r.role_scope_key = ?',
         values: [tenantId, requesterBranchId, requesterBranchId],

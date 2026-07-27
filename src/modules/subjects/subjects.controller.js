@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { subjectsService } from './subjects.service.js';
 
 export const createSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.createSubject(req.tenantId, req.body);
+  const result = await subjectsService.createSubject(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -13,7 +13,7 @@ export const createSubject = asyncHandler(async (req, res) => {
 });
 
 export const bulkCreateSubjects = asyncHandler(async (req, res) => {
-  const result = await subjectsService.bulkCreateSubjects(req.tenantId, req.body);
+  const result = await subjectsService.bulkCreateSubjects(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -23,7 +23,7 @@ export const bulkCreateSubjects = asyncHandler(async (req, res) => {
 });
 
 export const getSubjects = asyncHandler(async (req, res) => {
-  const result = await subjectsService.getSubjects(req.tenantId, req.query);
+  const result = await subjectsService.getSubjects(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Subjects fetched successfully.',
@@ -32,7 +32,7 @@ export const getSubjects = asyncHandler(async (req, res) => {
 });
 
 export const getSubjectById = asyncHandler(async (req, res) => {
-  const result = await subjectsService.getSubjectById(req.tenantId, req.params.id);
+  const result = await subjectsService.getSubjectById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Subject fetched successfully.',
@@ -41,7 +41,7 @@ export const getSubjectById = asyncHandler(async (req, res) => {
 });
 
 export const updateSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.updateSubject(req.tenantId, req.params.id, req.body);
+  const result = await subjectsService.updateSubject(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Subject updated successfully.',
@@ -50,7 +50,7 @@ export const updateSubject = asyncHandler(async (req, res) => {
 });
 
 export const deleteSubject = asyncHandler(async (req, res) => {
-  const result = await subjectsService.deleteSubject(req.tenantId, req.params.id);
+  const result = await subjectsService.deleteSubject(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Subject deleted successfully.',

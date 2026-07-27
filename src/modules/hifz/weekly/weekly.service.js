@@ -2,6 +2,7 @@ import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
 import { findTenantRecordOrThrow, normalizeTenantId } from '../../../utils/tenantGuard.js';
+import { branchScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
@@ -57,7 +58,10 @@ const normalizeDate = (value) => {
   return date;
 };
 
-const getScopedBranchId = (branchScope) => branchScope?.branchId || branchScope?.resolvedBranchId || null;
+const resolveHifzBranchId = (tenantId, queryOrPayload = {}, branchScope = null) =>
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope, {
+    requireActive: true,
+  });
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
@@ -88,7 +92,7 @@ const notFoundMessage = 'Weekly hifz entry not found.';
 export const weeklyHifzService = {
   async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
     await ensureStudent(resolvedTenantId, payload.studentId, branchId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
@@ -112,7 +116,7 @@ export const weeklyHifzService = {
   async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
-    const branchId = getScopedBranchId(branchScope) || query.branchId || null;
+    const branchId = await resolveHifzBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
       student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
@@ -137,7 +141,7 @@ export const weeklyHifzService = {
 
   async getEntryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    const branchId = getScopedBranchId(branchScope);
+    const branchId = await resolveHifzBranchId(resolvedTenantId, {}, branchScope);
     const entry = await prisma.hifzWeeklyEntry.findFirst({
       where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) } },
       select,
@@ -149,7 +153,8 @@ export const weeklyHifzService = {
   async updateEntry(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await this.getEntryById(resolvedTenantId, id, branchScope);
-    await ensureStudent(resolvedTenantId, payload.studentId, getScopedBranchId(branchScope));
+    const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
     const weekStartDate = normalizeDate(payload.weekStartDate);
     const weekEndDate = normalizeDate(payload.weekEndDate);
     const duplicate = await prisma.hifzWeeklyEntry.findFirst({
