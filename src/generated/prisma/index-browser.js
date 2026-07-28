@@ -765,6 +765,7 @@ exports.Prisma.HifzSiparaEntryScalarFieldEnum = {
 exports.Prisma.FinanceHeadScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   type: 'type',
   description: 'description',
@@ -776,6 +777,7 @@ exports.Prisma.FinanceHeadScalarFieldEnum = {
 exports.Prisma.FinanceExpenseCategoryScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   status: 'status',
   createdAt: 'createdAt',
@@ -882,6 +884,7 @@ exports.Prisma.FinancialRecordScalarFieldEnum = {
 exports.Prisma.StoreItemScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   itemName: 'itemName',
   category: 'category',
   description: 'description',
@@ -897,6 +900,7 @@ exports.Prisma.StoreItemScalarFieldEnum = {
 exports.Prisma.StoreUnitScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   shortName: 'shortName',
   description: 'description',
@@ -908,6 +912,7 @@ exports.Prisma.StoreUnitScalarFieldEnum = {
 exports.Prisma.StoreCategoryScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   name: 'name',
   description: 'description',
   status: 'status',
@@ -918,6 +923,7 @@ exports.Prisma.StoreCategoryScalarFieldEnum = {
 exports.Prisma.StoreSupplierScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  branchId: 'branchId',
   supplierName: 'supplierName',
   mobileNumber: 'mobileNumber',
   address: 'address',

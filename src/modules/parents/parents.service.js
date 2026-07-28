@@ -1,7 +1,8 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
@@ -172,6 +173,7 @@ export const parentsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const requestedBranchId = await resolveParentBranchId(resolvedTenantId, query, branchScope);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -188,7 +190,7 @@ export const parentsService = {
             ],
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
     };
 
     const [items, totalItems] = await Promise.all([

@@ -19,10 +19,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.post('/', requirePermission('fees.create'), validate(createHeadValidationSchema), createHead);
-router.get('/', requirePermission('fees.view'), validate(listHeadsValidationSchema), getHeads);
-router.get('/:id', requirePermission('fees.view'), validate(headIdValidationSchema), getHeadById);
-router.put('/:id', requirePermission('fees.update'), validate(updateHeadValidationSchema), updateHead);
-router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(headIdValidationSchema), deactivateHead);
+router.post('/', requirePermission('finance.heads.create', 'fees.create'), validate(createHeadValidationSchema), createHead);
+router.get('/', requirePermission('finance.heads.view', 'fees.view'), validate(listHeadsValidationSchema), getHeads);
+router.get('/:id', requirePermission('finance.heads.view', 'fees.view'), validate(headIdValidationSchema), getHeadById);
+router.put('/:id', requirePermission('finance.heads.update', 'fees.update'), validate(updateHeadValidationSchema), updateHead);
+router.patch('/:id/deactivate', requirePermission('finance.heads.delete', 'fees.delete'), validate(headIdValidationSchema), deactivateHead);
 
 export { router as headsRoutes };

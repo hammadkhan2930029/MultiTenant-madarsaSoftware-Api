@@ -23,6 +23,7 @@ export const createShiftValidationSchema = z.object({
 
 export const bulkCreateShiftsValidationSchema = z.object({
   body: z.object({
+    branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
     shifts: z.array(shiftBodySchema).min(1, 'At least one shift is required.').max(50, 'Too many shifts in one request.'),
   }),
   params: z.object({}).default({}),

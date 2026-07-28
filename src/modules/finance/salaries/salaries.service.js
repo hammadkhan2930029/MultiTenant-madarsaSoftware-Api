@@ -1,6 +1,7 @@
-import { prisma } from '../../../config/prisma.js';
+﻿import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../../utils/statusFilter.js';
 import { branchScopeService } from '../../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
@@ -79,7 +80,7 @@ const ensureTeacherIsEligibleForSalaryDate = (teacher, payload) => {
   const paymentDate = normalizeDate(payload.paymentDate);
 
   if (salaryDate < salaryStartMonth || paymentDate < startDate) {
-    throw new AppError('اس تاریخ یا مہینے میں استاد/عملہ ابھی شامل نہیں ہوا تھا۔', 400);
+    throw new AppError('Ø§Ø³ ØªØ§Ø±ÛŒØ® ÛŒØ§ Ù…ÛÛŒÙ†Û’ Ù…ÛŒÚº Ø§Ø³ØªØ§Ø¯/Ø¹Ù…Ù„Û Ø§Ø¨Ú¾ÛŒ Ø´Ø§Ù…Ù„ Ù†ÛÛŒÚº ÛÙˆØ§ ØªÚ¾Ø§Û”', 400);
   }
 };
 
@@ -96,7 +97,7 @@ const findSalaryExpenseHead = async (tenantId) => {
     select: { id: true, name: true, type: true },
   });
 
-  return expenseHeads.find((head) => /salary|payroll|تنخواہ/i.test(head.name || '')) || expenseHeads[0] || null;
+  return expenseHeads.find((head) => /salary|payroll|ØªÙ†Ø®ÙˆØ§Û/i.test(head.name || '')) || expenseHeads[0] || null;
 };
 
 const ensureReferences = async (tenantId, { teacherId, financeHeadId }, branchId = null) => {
@@ -116,10 +117,11 @@ export const salariesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const status = normalizeStatusFilter(query.status);
     const where = {
       tenantId: resolvedTenantId,
       ...(branchId ? { branchId } : {}),
-      status: query.status || 'active',
+      status,
       ...(query.staffType ? { staffType: query.staffType } : {}),
       ...(query.search
         ? {
@@ -152,6 +154,7 @@ export const salariesService = {
   async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
+    const status = normalizeStatusFilter(payload.status);
     const { financeHeadId, teacher } = await ensureReferences(resolvedTenantId, payload, branchId);
     ensureTeacherIsEligibleForSalaryDate(teacher, payload);
     const duplicate = await prisma.salaryEntry.findFirst({
@@ -177,13 +180,13 @@ export const salariesService = {
           paymentDate: normalizeDate(payload.paymentDate),
           paymentMethod: payload.paymentMethod || duplicate.paymentMethod || 'Cash',
           remarks: payload.remarks || null,
-          status: 'active',
+          status,
         },
         select,
       });
     }
     return prisma.salaryEntry.create({
-      data: { ...payload, financeHeadId, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || 'Cash', remarks: payload.remarks || null },
+      data: { ...payload, financeHeadId, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || 'Cash', remarks: payload.remarks || null, status },
       select,
     });
   },
@@ -191,6 +194,7 @@ export const salariesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const status = normalizeStatusFilter(query.status);
     const where = {
       tenantId: resolvedTenantId,
       ...(branchId ? { branchId } : {}),
@@ -206,7 +210,7 @@ export const salariesService = {
             },
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
     };
     const [items, totalItems] = await Promise.all([
       prisma.salaryEntry.findMany({ where, skip, take: limit, orderBy: [{ salaryYear: 'desc' }, { salaryMonth: 'desc' }], select }),
@@ -226,6 +230,7 @@ export const salariesService = {
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
+    const status = normalizeStatusFilter(payload.status, existing.status);
     const { financeHeadId, teacher } = await ensureReferences(resolvedTenantId, payload, branchId);
     ensureTeacherIsEligibleForSalaryDate(teacher, payload);
     const duplicate = await prisma.salaryEntry.findFirst({
@@ -242,7 +247,7 @@ export const salariesService = {
     if (duplicate) throw new AppError('Another salary entry for this teacher and month already exists.', 409);
     return prisma.salaryEntry.update({
       where: { id, tenantId: resolvedTenantId },
-      data: { ...payload, financeHeadId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || existing.paymentMethod || 'Cash', remarks: payload.remarks || null, status: payload.status || existing.status },
+      data: { ...payload, financeHeadId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || existing.paymentMethod || 'Cash', remarks: payload.remarks || null, status },
       select,
     });
   },

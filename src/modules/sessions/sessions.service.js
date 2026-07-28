@@ -1,6 +1,7 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const sessionSelect = {
@@ -95,6 +96,7 @@ export const sessionsService = {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveSessionBranchId(resolvedTenantId, query, branchScope);
     await validateBranchAccess(resolvedTenantId, branchId);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -106,7 +108,7 @@ export const sessionsService = {
             },
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
     };
 
     const [items, totalItems] = await Promise.all([

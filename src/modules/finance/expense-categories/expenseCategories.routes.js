@@ -19,10 +19,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.post('/', requirePermission('fees.create'), validate(createExpenseCategoryValidationSchema), createExpenseCategory);
-router.get('/', requirePermission('fees.view'), validate(listExpenseCategoriesValidationSchema), getExpenseCategories);
-router.get('/:id', requirePermission('fees.view'), validate(expenseCategoryIdValidationSchema), getExpenseCategoryById);
-router.put('/:id', requirePermission('fees.update'), validate(updateExpenseCategoryValidationSchema), updateExpenseCategory);
-router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(expenseCategoryIdValidationSchema), deactivateExpenseCategory);
+router.post('/', requirePermission('finance.heads.create', 'fees.create'), validate(createExpenseCategoryValidationSchema), createExpenseCategory);
+router.get('/', requirePermission('finance.heads.view', 'fees.view'), validate(listExpenseCategoriesValidationSchema), getExpenseCategories);
+router.get('/:id', requirePermission('finance.heads.view', 'fees.view'), validate(expenseCategoryIdValidationSchema), getExpenseCategoryById);
+router.put('/:id', requirePermission('finance.heads.update', 'fees.update'), validate(updateExpenseCategoryValidationSchema), updateExpenseCategory);
+router.patch('/:id/deactivate', requirePermission('finance.heads.delete', 'fees.delete'), validate(expenseCategoryIdValidationSchema), deactivateExpenseCategory);
 
 export { router as expenseCategoriesRoutes };

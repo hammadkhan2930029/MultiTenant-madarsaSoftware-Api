@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const bodySchema = z.object({
+  branchId: z.coerce.number().int().positive().optional().nullable(),
   teacherId: z.coerce.number().int().positive(),
   financeHeadId: z.coerce.number().int().positive().optional(),
   amount: z.coerce.number().positive('Amount must be positive.'),
@@ -23,6 +24,7 @@ export const listSalariesValidationSchema = z.object({
     fromDate: z.coerce.date().optional(),
     toDate: z.coerce.date().optional(),
     staffType: z.enum(['teacher', 'staff']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     status: z.enum(['active', 'inactive']).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),

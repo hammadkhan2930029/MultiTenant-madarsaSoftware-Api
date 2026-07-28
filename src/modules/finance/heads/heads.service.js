@@ -1,10 +1,12 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
+import { branchScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
   tenantId: true,
+  branchId: true,
   name: true,
   type: true,
   description: true,
@@ -23,9 +25,13 @@ const normalizeTenantId = (tenantId) => {
   return resolvedTenantId;
 };
 
-const getTenantHead = async (tenantId, id) => {
+const resolveFinanceBranchId = (tenantId, queryOrPayload = {}, branchScope = null) => (
+  branchScopeService.resolveOperationalBranchId(tenantId, queryOrPayload, branchScope)
+);
+
+const getTenantHead = async (tenantId, id, branchId) => {
   const head = await prisma.financeHead.findFirst({
-    where: { id, tenantId },
+    where: { id, tenantId, branchId },
     select,
   });
 
@@ -37,10 +43,11 @@ const getTenantHead = async (tenantId, id) => {
 };
 
 export const headsService = {
-  async createHead(tenantId, payload) {
+  async createHead(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.financeHead.findFirst({
-      where: { tenantId: resolvedTenantId, name: payload.name },
+      where: { tenantId: resolvedTenantId, branchId, name: payload.name },
     });
 
     if (existing) {
@@ -51,17 +58,20 @@ export const headsService = {
       data: {
         ...payload,
         tenantId: resolvedTenantId,
+        branchId,
         description: payload.description || null,
       },
       select,
     });
   },
 
-  async getHeads(tenantId, query) {
+  async getHeads(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveFinanceBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const where = {
       tenantId: resolvedTenantId,
+      branchId,
       ...(query.search ? { name: { contains: query.search } } : {}),
       ...(query.type ? { type: query.type } : {}),
       ...(query.status ? { status: query.status } : {}),
@@ -75,18 +85,20 @@ export const headsService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async getHeadById(tenantId, id) {
+  async getHeadById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    return getTenantHead(resolvedTenantId, id);
+    const branchId = await resolveFinanceBranchId(resolvedTenantId, {}, branchScope);
+    return getTenantHead(resolvedTenantId, id, branchId);
   },
 
-  async updateHead(tenantId, id, payload) {
+  async updateHead(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantHead(resolvedTenantId, id);
+    const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
+    await getTenantHead(resolvedTenantId, id, branchId);
 
     if (payload.name) {
       const duplicate = await prisma.financeHead.findFirst({
-        where: { tenantId: resolvedTenantId, id: { not: id }, name: payload.name },
+        where: { tenantId: resolvedTenantId, branchId, id: { not: id }, name: payload.name },
       });
 
       if (duplicate) {
@@ -95,16 +107,17 @@ export const headsService = {
     }
 
     return prisma.financeHead.update({
-      where: { id, tenantId: resolvedTenantId },
+      where: { id },
       data: { ...payload, description: payload.description || null },
       select,
     });
   },
 
-  async deactivateHead(tenantId, id) {
+  async deactivateHead(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
-    await getTenantHead(resolvedTenantId, id);
+    const branchId = await resolveFinanceBranchId(resolvedTenantId, {}, branchScope);
+    await getTenantHead(resolvedTenantId, id, branchId);
 
-    return prisma.financeHead.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
+    return prisma.financeHead.update({ where: { id }, data: { status: 'inactive' }, select });
   },
 };

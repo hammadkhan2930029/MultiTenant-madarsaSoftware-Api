@@ -29,6 +29,9 @@ model Tenant {
   parents                  Parent[]                   @relation("TenantParents")
   teachers                 Teacher[]                  @relation("TenantTeachers")
   branches                 Branch[]                   @relation("TenantBranches")
+  shifts                   Shift[]                    @relation("TenantShifts")
+  departments              Department[]               @relation("TenantDepartments")
+  qualifications           Qualification[]            @relation("TenantQualifications")
   classes                  AcademicClass[]            @relation("TenantClasses")
   sections                 Section[]                  @relation("TenantSections")
   assignments              StudentClassAssignment[]   @relation("TenantClassAssignments")
@@ -308,33 +311,48 @@ model SupportRequest {
   @@map("support_requests")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Shift {
   id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(150)
+  tenantId  Int?      @map("tenant_id")
+  branchId  Int?      @map("branch_id")
+  name      String    @db.VarChar(150)
   startTime String    @db.VarChar(10)
   endTime   String    @db.VarChar(10)
   type      String    @db.VarChar(50)
   status    String    @default("active") @db.VarChar(50)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  tenant    Tenant?   @relation("TenantShifts", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch    Branch?   @relation("BranchShifts", fields: [branchId], references: [id], onDelete: SetNull)
   teachers  Teacher[]
 
+  @@unique([tenantId, branchId, name])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("shifts")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Department {
   id              Int                        @id @default(autoincrement())
-  name            String                     @unique @db.VarChar(150)
-  code            String?                    @unique @db.VarChar(50)
+  tenantId        Int?                       @map("tenant_id")
+  branchId        Int?                       @map("branch_id")
+  name            String                     @db.VarChar(150)
+  code            String?                    @db.VarChar(50)
   head            String?                    @db.VarChar(150)
   members         Int                        @default(0)
   status          String                     @default("active") @db.VarChar(50)
   createdAt       DateTime                   @default(now())
   updatedAt       DateTime                   @updatedAt
+  tenant          Tenant?                    @relation("TenantDepartments", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch          Branch?                    @relation("BranchDepartments", fields: [branchId], references: [id], onDelete: SetNull)
   headAssignments DepartmentHeadAssignment[]
 
+  @@unique([tenantId, branchId, name])
+  @@unique([tenantId, branchId, code])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("departments")
 }
 
@@ -359,16 +377,23 @@ model DepartmentHeadAssignment {
   @@map("department_head_assignments")
 }
 
-/// Intentionally global master data shared by all tenants.
 model Qualification {
   id        Int      @id @default(autoincrement())
-  title     String   @unique @db.VarChar(150)
+  tenantId  Int?     @map("tenant_id")
+  branchId  Int?     @map("branch_id")
+  title     String   @db.VarChar(150)
   category  String?  @db.VarChar(150)
   level     String?  @db.VarChar(150)
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tenant    Tenant?  @relation("TenantQualifications", fields: [tenantId], references: [id], onDelete: SetNull)
+  branch    Branch?  @relation("BranchQualifications", fields: [branchId], references: [id], onDelete: SetNull)
 
+  @@unique([tenantId, branchId, title])
+  @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("qualifications")
 }
 
@@ -409,6 +434,9 @@ model Branch {
   creator                 Admin?                     @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   assignedAdmins          Admin[]                    @relation("AdminBranchAssignment")
   roles                   Role[]                     @relation("BranchRoles")
+  shifts                  Shift[]                    @relation("BranchShifts")
+  departments             Department[]               @relation("BranchDepartments")
+  qualifications          Qualification[]            @relation("BranchQualifications")
   students                Student[]                  @relation("BranchStudents")
   parents                 Parent[]                   @relation("BranchParents")
   teachers                Teacher[]                  @relation("BranchTeachers")
@@ -423,6 +451,7 @@ model Branch {
   departmentHeads         DepartmentHeadAssignment[]
   teacherResponsibilities TeacherResponsibility[]    @relation("BranchTeacherResponsibilities")
   teacherAssignments      TeacherAssignment[]        @relation("BranchTeacherAssignments")
+  resultGrades            ResultGrade[]              @relation("BranchResultGrades")
 
   @@unique([tenantId, name])
   @@unique([tenantId, code])
@@ -649,6 +678,7 @@ model ExamSchedule {
 model ResultGrade {
   id          Int      @id @default(autoincrement())
   tenantId    Int      @map("tenant_id")
+  branchId    Int?     @map("branch_id")
   title       String   @db.VarChar(150)
   code        String?  @db.VarChar(20)
   fromPercent Int
@@ -657,8 +687,11 @@ model ResultGrade {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tenant      Tenant   @relation("TenantResultGrades", fields: [tenantId], references: [id])
+  branch      Branch?  @relation("BranchResultGrades", fields: [branchId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status, fromPercent, toPercent])
   @@map("result_grades")
 }
@@ -1095,6 +1128,7 @@ model HifzSiparaEntry {
 model FinanceHead {
   id            Int                  @id @default(autoincrement())
   tenantId      Int                  @map("tenant_id")
+  branchId      Int?                 @map("branch_id")
   name          String               @db.VarChar(150)
   type          String               @db.VarChar(20)
   description   String?              @db.VarChar(255)
@@ -1105,22 +1139,27 @@ model FinanceHead {
   salaryEntries SalaryEntry[]
   transactions  FinanceTransaction[]
 
-  @@unique([tenantId, name])
+  @@unique([tenantId, branchId, name])
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@map("finance_heads")
 }
 
 model FinanceExpenseCategory {
   id        Int      @id @default(autoincrement())
   tenantId  Int      @map("tenant_id")
+  branchId  Int?     @map("branch_id")
   name      String   @db.VarChar(150)
   status    String   @default("active") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tenant    Tenant   @relation("TenantFinanceExpenseCategories", fields: [tenantId], references: [id], onDelete: Cascade)
 
-  @@unique([tenantId, name])
+  @@unique([tenantId, branchId, name])
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status])
   @@map("finance_expense_categories")
 }
@@ -1278,6 +1317,7 @@ model FinancialRecord {
 model StoreItem {
   id               Int                    @id @default(autoincrement())
   tenantId         Int                    @map("tenant_id")
+  branchId         Int?                   @map("branch_id")
   itemName         String                 @db.VarChar(150)
   category         String                 @db.VarChar(150)
   description      String?                @db.VarChar(255)
@@ -1295,8 +1335,10 @@ model StoreItem {
   damagedStocks    StoreDamagedStock[]
   stockAdjustments StoreStockAdjustment[]
 
-  @@unique([tenantId, itemCode], map: "store_items_tenant_item_code_uq")
+  @@unique([tenantId, branchId, itemCode], map: "store_items_tenant_branch_item_code_uq")
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([category])
   @@index([status])
   @@map("store_items")
@@ -1305,6 +1347,7 @@ model StoreItem {
 model StoreUnit {
   id          Int      @id @default(autoincrement())
   tenantId    Int      @map("tenant_id")
+  branchId    Int?     @map("branch_id")
   name        String   @db.VarChar(150)
   shortName   String   @db.VarChar(50)
   description String?  @db.VarChar(255)
@@ -1313,8 +1356,10 @@ model StoreUnit {
   updatedAt   DateTime @updatedAt
   tenant      Tenant   @relation("TenantStoreUnits", fields: [tenantId], references: [id])
 
-  @@unique([tenantId, shortName], map: "store_units_tenant_short_name_uq")
+  @@unique([tenantId, branchId, shortName], map: "store_units_tenant_branch_short_name_uq")
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status])
   @@map("store_units")
 }
@@ -1322,6 +1367,7 @@ model StoreUnit {
 model StoreCategory {
   id          Int      @id @default(autoincrement())
   tenantId    Int      @map("tenant_id")
+  branchId    Int?     @map("branch_id")
   name        String   @db.VarChar(150)
   description String?  @db.VarChar(255)
   status      String   @default("active") @db.VarChar(50)
@@ -1329,8 +1375,10 @@ model StoreCategory {
   updatedAt   DateTime @updatedAt
   tenant      Tenant   @relation("TenantStoreCategories", fields: [tenantId], references: [id])
 
-  @@unique([tenantId, name], map: "store_categories_tenant_name_uq")
+  @@unique([tenantId, branchId, name], map: "store_categories_tenant_branch_name_uq")
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status])
   @@map("store_categories")
 }
@@ -1338,6 +1386,7 @@ model StoreCategory {
 model StoreSupplier {
   id           Int                    @id @default(autoincrement())
   tenantId     Int                    @map("tenant_id")
+  branchId     Int?                   @map("branch_id")
   supplierName String                 @db.VarChar(150)
   mobileNumber String?                @db.VarChar(50)
   address      String?                @db.VarChar(255)
@@ -1350,8 +1399,10 @@ model StoreSupplier {
   purchases    StorePurchase[]
   payments     StoreSupplierPayment[]
 
-  @@unique([tenantId, supplierName], map: "store_suppliers_tenant_name_uq")
+  @@unique([tenantId, branchId, supplierName], map: "store_suppliers_tenant_branch_name_uq")
   @@index([tenantId])
+  @@index([branchId])
+  @@index([tenantId, branchId])
   @@index([status])
   @@map("store_suppliers")
 }

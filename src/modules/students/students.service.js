@@ -1,7 +1,8 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
@@ -373,6 +374,7 @@ export const studentsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const requestedBranchId = await resolveStudentBranchId(resolvedTenantId, query, branchScope);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -389,7 +391,7 @@ export const studentsService = {
             ],
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
       ...(query.gender ? { gender: query.gender } : {}),
       ...(query.classId || query.sectionId || query.sessionId
         ? {

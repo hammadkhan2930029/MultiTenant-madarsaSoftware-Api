@@ -31,7 +31,7 @@ export const getStoreApprovals = asyncHandler(async (req, res) => {
 });
 
 export const getStoreUnits = asyncHandler(async (req, res) => {
-  const result = await storeService.getUnits(req.tenantId, req.query);
+  const result = await storeService.getUnits(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store units fetched successfully.',
@@ -40,7 +40,7 @@ export const getStoreUnits = asyncHandler(async (req, res) => {
 });
 
 export const createStoreUnit = asyncHandler(async (req, res) => {
-  const result = await storeService.createUnit(req.tenantId, req.body);
+  const result = await storeService.createUnit(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -50,7 +50,7 @@ export const createStoreUnit = asyncHandler(async (req, res) => {
 });
 
 export const getStoreUnitById = asyncHandler(async (req, res) => {
-  const result = await storeService.getUnitById(req.tenantId, req.params.id);
+  const result = await storeService.getUnitById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store unit fetched successfully.',
@@ -59,7 +59,7 @@ export const getStoreUnitById = asyncHandler(async (req, res) => {
 });
 
 export const updateStoreUnit = asyncHandler(async (req, res) => {
-  const result = await storeService.updateUnit(req.tenantId, req.params.id, req.body);
+  const result = await storeService.updateUnit(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store unit updated successfully.',
@@ -68,7 +68,7 @@ export const updateStoreUnit = asyncHandler(async (req, res) => {
 });
 
 export const deleteStoreUnit = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteUnit(req.tenantId, req.params.id);
+  const result = await storeService.deleteUnit(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store unit deleted successfully.',
@@ -77,7 +77,7 @@ export const deleteStoreUnit = asyncHandler(async (req, res) => {
 });
 
 export const getStoreCategories = asyncHandler(async (req, res) => {
-  const result = await storeService.getCategories(req.tenantId, req.query);
+  const result = await storeService.getCategories(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store categories fetched successfully.',
@@ -86,7 +86,7 @@ export const getStoreCategories = asyncHandler(async (req, res) => {
 });
 
 export const createStoreCategory = asyncHandler(async (req, res) => {
-  const result = await storeService.createCategory(req.tenantId, req.body);
+  const result = await storeService.createCategory(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -96,7 +96,7 @@ export const createStoreCategory = asyncHandler(async (req, res) => {
 });
 
 export const getStoreCategoryById = asyncHandler(async (req, res) => {
-  const result = await storeService.getCategoryById(req.tenantId, req.params.id);
+  const result = await storeService.getCategoryById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store category fetched successfully.',
@@ -105,7 +105,7 @@ export const getStoreCategoryById = asyncHandler(async (req, res) => {
 });
 
 export const updateStoreCategory = asyncHandler(async (req, res) => {
-  const result = await storeService.updateCategory(req.tenantId, req.params.id, req.body);
+  const result = await storeService.updateCategory(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store category updated successfully.',
@@ -114,7 +114,7 @@ export const updateStoreCategory = asyncHandler(async (req, res) => {
 });
 
 export const deleteStoreCategory = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteCategory(req.tenantId, req.params.id);
+  const result = await storeService.deleteCategory(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store category deleted successfully.',
@@ -157,7 +157,7 @@ export const rejectStoreApproval = asyncHandler(async (req, res) => {
 });
 
 export const getStoreItems = asyncHandler(async (req, res) => {
-  const result = await storeService.getItems(req.tenantId, req.query);
+  const result = await storeService.getItems(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store items fetched successfully.',
@@ -166,7 +166,7 @@ export const getStoreItems = asyncHandler(async (req, res) => {
 });
 
 export const createStoreItem = asyncHandler(async (req, res) => {
-  const result = await storeService.createItem(req.tenantId, req.body);
+  const result = await storeService.createItem(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -176,7 +176,7 @@ export const createStoreItem = asyncHandler(async (req, res) => {
 });
 
 export const getStoreItemById = asyncHandler(async (req, res) => {
-  const result = await storeService.getItemById(req.tenantId, req.params.id);
+  const result = await storeService.getItemById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store item fetched successfully.',
@@ -185,7 +185,7 @@ export const getStoreItemById = asyncHandler(async (req, res) => {
 });
 
 export const updateStoreItem = asyncHandler(async (req, res) => {
-  const result = await storeService.updateItem(req.tenantId, req.params.id, req.body);
+  const result = await storeService.updateItem(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store item updated successfully.',
@@ -194,7 +194,7 @@ export const updateStoreItem = asyncHandler(async (req, res) => {
 });
 
 export const deleteStoreItem = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteItem(req.tenantId, req.params.id);
+  const result = await storeService.deleteItem(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store item deleted successfully.',
@@ -203,7 +203,7 @@ export const deleteStoreItem = asyncHandler(async (req, res) => {
 });
 
 export const getStoreSuppliers = asyncHandler(async (req, res) => {
-  const result = await storeService.getSuppliers(req.tenantId);
+  const result = await storeService.getSuppliers(req.tenantId, req.query, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store suppliers fetched successfully.',
@@ -212,7 +212,7 @@ export const getStoreSuppliers = asyncHandler(async (req, res) => {
 });
 
 export const createStoreSupplier = asyncHandler(async (req, res) => {
-  const result = await storeService.createSupplier(req.tenantId, req.body);
+  const result = await storeService.createSupplier(req.tenantId, req.body, req.branchScope);
 
   return apiResponse(res, {
     statusCode: 201,
@@ -222,7 +222,7 @@ export const createStoreSupplier = asyncHandler(async (req, res) => {
 });
 
 export const getStoreSupplierById = asyncHandler(async (req, res) => {
-  const result = await storeService.getSupplierById(req.tenantId, req.params.id);
+  const result = await storeService.getSupplierById(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store supplier fetched successfully.',
@@ -231,7 +231,7 @@ export const getStoreSupplierById = asyncHandler(async (req, res) => {
 });
 
 export const updateStoreSupplier = asyncHandler(async (req, res) => {
-  const result = await storeService.updateSupplier(req.tenantId, req.params.id, req.body);
+  const result = await storeService.updateSupplier(req.tenantId, req.params.id, req.body, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store supplier updated successfully.',
@@ -240,7 +240,7 @@ export const updateStoreSupplier = asyncHandler(async (req, res) => {
 });
 
 export const deleteStoreSupplier = asyncHandler(async (req, res) => {
-  const result = await storeService.deleteSupplier(req.tenantId, req.params.id);
+  const result = await storeService.deleteSupplier(req.tenantId, req.params.id, req.branchScope);
 
   return apiResponse(res, {
     message: 'Store supplier deleted successfully.',

@@ -6,6 +6,18 @@ const normalizeTenantId = (tenantId) => (
 
 const getRoleName = (access, admin) => access.role?.roleName || access.role?.role_name || admin.role;
 
+const getRoleScope = (access) => {
+  const role = access.role || {};
+  const explicitScope = role.scope || role.roleScope || role.role_scope;
+  if (explicitScope) return String(explicitScope).trim().toLowerCase();
+
+  const roleTenantId = normalizeTenantId(role.tenantId ?? role.tenant_id);
+  const roleBranchId = normalizeTenantId(role.branchId ?? role.branch_id);
+
+  if (roleTenantId === null) return 'system';
+  return roleBranchId ? 'branch' : 'tenant';
+};
+
 const assertTokenTenantMatch = ({ decodedToken, requestTenantId }) => {
   const tokenTenantId = normalizeTenantId(decodedToken.tenantId);
   const resolvedRequestTenantId = normalizeTenantId(requestTenantId);
@@ -62,10 +74,11 @@ const assertRoleTenantMatch = ({ access, tenantId, isSuperAdmin }) => {
 
 const buildAuthContext = ({ admin, access, tenantId }) => {
   const roleName = getRoleName(access, admin);
+  const roleScope = getRoleScope(access);
   const resolvedTenantId = normalizeTenantId(tenantId);
   const branchId = admin.branchId || admin.branch_id || null;
   const roleBranchId = normalizeTenantId(access.role?.branchId ?? access.role?.branch_id);
-  const isTenantAdminRole = roleName === 'admin' && resolvedTenantId !== null;
+  const isTenantAdminRole = resolvedTenantId !== null && (roleName === 'admin' || roleScope === 'tenant');
 
   const auth = {
     admin,
@@ -73,6 +86,7 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
     permissions: access.permissions,
     permissionKeys: access.permissionKeys,
     roleName,
+    roleScope,
     isSuperAdmin: roleName === 'super_admin' && resolvedTenantId === null,
     isTenantAdmin: isTenantAdminRole,
     tenantId: resolvedTenantId,
@@ -114,6 +128,7 @@ const buildSecurityContext = ({ req, decodedToken, admin, auth }) => ({
     branchId: auth.branchId,
     roleId: auth.role?.id || null,
     roleName: auth.roleName,
+    roleScope: auth.roleScope,
     isSuperAdmin: auth.isSuperAdmin,
     isTenantAdmin: auth.isTenantAdmin,
   },

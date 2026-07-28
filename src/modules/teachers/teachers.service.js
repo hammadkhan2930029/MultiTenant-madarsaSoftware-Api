@@ -1,6 +1,7 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/teachers/${file.filename}` : null);
@@ -210,7 +211,7 @@ export const teachersService = {
       });
 
       if (duplicateTeacher) {
-        throw new AppError('اسی فون نمبر یا شناختی کارڈ کے ساتھ استاد پہلے سے موجود ہے۔', 409);
+        throw new AppError('Ø§Ø³ÛŒ ÙÙˆÙ† Ù†Ù…Ø¨Ø± ÛŒØ§ Ø´Ù†Ø§Ø®ØªÛŒ Ú©Ø§Ø±Úˆ Ú©Û’ Ø³Ø§ØªÚ¾ Ø§Ø³ØªØ§Ø¯ Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409);
       }
     }
 
@@ -252,6 +253,7 @@ export const teachersService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveTeacherBranchId(resolvedTenantId, query, branchScope);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -266,7 +268,7 @@ export const teachersService = {
             ],
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
       ...(query.staffType ? { staffType: query.staffType } : {}),
       ...(query.subject ? { subject: { contains: query.subject } } : {}),
     };
@@ -297,7 +299,7 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     return teacher;
@@ -311,6 +313,7 @@ export const teachersService = {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
     const staffType = query.staffType || null;
+    const status = normalizeStatusFilter(query.status);
 
     const items = await prisma.$queryRaw`
       SELECT
@@ -326,7 +329,7 @@ export const teachersService = {
       LEFT JOIN admins admin ON admin.id = increment.createdById
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
-        AND increment.status = 'active'
+        AND increment.status = ${status}
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
@@ -340,7 +343,7 @@ export const teachersService = {
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       WHERE increment.tenant_id = ${resolvedTenantId}
         AND teacher.tenant_id = ${resolvedTenantId}
-        AND increment.status = 'active'
+        AND increment.status = ${status}
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
@@ -363,7 +366,7 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     const rows = await prisma.$queryRaw`
@@ -390,7 +393,7 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     const previousSalary = Number(teacher.basicSalary || 0);
@@ -459,7 +462,6 @@ export const teachersService = {
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       WHERE increment.id = ${incrementId}
         AND increment.tenant_id = ${resolvedTenantId}
-        AND increment.status = 'active'
         AND teacher.tenant_id = ${resolvedTenantId}
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
       LIMIT 1
@@ -474,24 +476,35 @@ export const teachersService = {
     const oldIncrementAmount = Number(existing.incrementAmount || 0);
     const incrementAmount = Number(payload.incrementAmount || 0);
     const newSalary = previousSalary + incrementAmount;
-    const salaryDifference = incrementAmount - oldIncrementAmount;
+    const currentStatus = existing.status || 'active';
+    const nextStatus = normalizeStatusFilter(payload.status, currentStatus);
+    let salaryDifference = 0;
+    if (currentStatus === 'active' && nextStatus === 'active') {
+      salaryDifference = incrementAmount - oldIncrementAmount;
+    } else if (currentStatus === 'active' && nextStatus === 'inactive') {
+      salaryDifference = -oldIncrementAmount;
+    } else if (currentStatus === 'inactive' && nextStatus === 'active') {
+      salaryDifference = incrementAmount;
+    }
 
     const [increment] = await prisma.$transaction(async (tx) => {
-      await tx.teacher.update({
-        where: { id: Number(existing.teacherId), tenantId: resolvedTenantId },
-        data: { basicSalary: { increment: salaryDifference } },
-        select: { id: true },
-      });
+      if (salaryDifference !== 0) {
+        await tx.teacher.update({
+          where: { id: Number(existing.teacherId), tenantId: resolvedTenantId },
+          data: { basicSalary: { increment: salaryDifference } },
+          select: { id: true },
+        });
+      }
 
       await tx.$executeRaw`
         UPDATE teacher_salary_increments
         SET incrementAmount = ${incrementAmount},
             newSalary = ${newSalary},
             effectiveDate = ${payload.effectiveDate},
-            reason = ${optionalString(payload.reason)}
+            reason = ${optionalString(payload.reason)},
+            status = ${nextStatus}
         WHERE id = ${incrementId}
           AND tenant_id = ${resolvedTenantId}
-          AND status = 'active'
       `;
 
       return tx.$queryRaw`
@@ -556,7 +569,7 @@ export const teachersService = {
     });
 
     if (!existingTeacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     const branchId = scopedBranchId || existingTeacher.branchId || null;
@@ -569,7 +582,7 @@ export const teachersService = {
       });
 
       if (duplicateTeacher) {
-        throw new AppError('اسی فون نمبر یا شناختی کارڈ کے ساتھ کوئی دوسرا استاد پہلے سے موجود ہے۔', 409);
+        throw new AppError('Ø§Ø³ÛŒ ÙÙˆÙ† Ù†Ù…Ø¨Ø± ÛŒØ§ Ø´Ù†Ø§Ø®ØªÛŒ Ú©Ø§Ø±Úˆ Ú©Û’ Ø³Ø§ØªÚ¾ Ú©ÙˆØ¦ÛŒ Ø¯ÙˆØ³Ø±Ø§ Ø§Ø³ØªØ§Ø¯ Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409);
       }
     }
 
@@ -616,11 +629,11 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     if (teacher.status === status) {
-      throw new AppError('استاد کی حالت پہلے ہی یہی ہے۔', 400);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ú©ÛŒ Ø­Ø§Ù„Øª Ù¾ÛÙ„Û’ ÛÛŒ ÛŒÛÛŒ ÛÛ’Û”', 400);
     }
 
     return prisma.teacher.update({
@@ -646,11 +659,11 @@ export const teachersService = {
     });
 
     if (!teacher) {
-      throw new AppError('استاد نہیں ملا۔', 404);
+      throw new AppError('Ø§Ø³ØªØ§Ø¯ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
     if (teacher._count.attendances || teacher._count.salaryEntries) {
-      throw new AppError('اس استاد کا حاضری یا تنخواہ ریکارڈ موجود ہے، حذف نہیں ہو سکتا۔', 400);
+      throw new AppError('Ø§Ø³ Ø§Ø³ØªØ§Ø¯ Ú©Ø§ Ø­Ø§Ø¶Ø±ÛŒ ÛŒØ§ ØªÙ†Ø®ÙˆØ§Û Ø±ÛŒÚ©Ø§Ø±Úˆ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’ØŒ Ø­Ø°Ù Ù†ÛÛŒÚº ÛÙˆ Ø³Ú©ØªØ§Û”', 400);
     }
 
     return prisma.teacher.delete({

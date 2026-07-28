@@ -18,6 +18,7 @@ export const createDepartmentValidationSchema = z.object({
 
 export const bulkCreateDepartmentsValidationSchema = z.object({
   body: z.object({
+    branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
     departments: z.array(departmentBodySchema).min(1, 'At least one department is required.').max(50, 'Too many departments in one request.'),
   }),
   params: z.object({}).default({}),

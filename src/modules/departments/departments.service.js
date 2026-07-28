@@ -1,6 +1,7 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const departmentSelect = {
@@ -242,7 +243,7 @@ export const departmentsService = {
       .filter((item) => item.name || item.code || item.head || item.headTeacherId);
 
     if (!normalizedRows.length) {
-      throw new AppError('کم از کم ایک شعبہ کی معلومات درج کریں۔', 400);
+      throw new AppError('Ú©Ù… Ø§Ø² Ú©Ù… Ø§ÛŒÚ© Ø´Ø¹Ø¨Û Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚºÛ”', 400);
     }
 
     const rowErrors = [];
@@ -251,19 +252,19 @@ export const departmentsService = {
 
     normalizedRows.forEach((row) => {
       if (!row.name) {
-        rowErrors.push({ index: row.index, message: 'شعبہ کا نام ضروری ہے۔' });
+        rowErrors.push({ index: row.index, message: 'Ø´Ø¹Ø¨Û Ú©Ø§ Ù†Ø§Ù… Ø¶Ø±ÙˆØ±ÛŒ ÛÛ’Û”' });
       }
 
       const nameKey = row.name.toLowerCase();
       if (row.name && seenNames.has(nameKey)) {
-        rowErrors.push({ index: row.index, message: 'یہ شعبہ اسی فارم میں دوبارہ درج ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´Ø¹Ø¨Û Ø§Ø³ÛŒ ÙØ§Ø±Ù… Ù…ÛŒÚº Ø¯ÙˆØ¨Ø§Ø±Û Ø¯Ø±Ø¬ ÛÛ’Û”' });
       } else if (row.name) {
         seenNames.set(nameKey, row.index);
       }
 
       const codeKey = row.code.toLowerCase();
       if (row.code && seenCodes.has(codeKey)) {
-        rowErrors.push({ index: row.index, message: 'یہ شعبہ کوڈ اسی فارم میں دوبارہ درج ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´Ø¹Ø¨Û Ú©ÙˆÚˆ Ø§Ø³ÛŒ ÙØ§Ø±Ù… Ù…ÛŒÚº Ø¯ÙˆØ¨Ø§Ø±Û Ø¯Ø±Ø¬ ÛÛ’Û”' });
       } else if (row.code) {
         seenCodes.set(codeKey, row.index);
       }
@@ -285,15 +286,15 @@ export const departmentsService = {
 
     normalizedRows.forEach((row) => {
       if (existingNames.has(row.name.toLowerCase())) {
-        rowErrors.push({ index: row.index, message: 'یہ شعبہ پہلے سے موجود ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´Ø¹Ø¨Û Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”' });
       }
       if (row.code && existingCodes.has(row.code.toLowerCase())) {
-        rowErrors.push({ index: row.index, message: 'یہ شعبہ کوڈ پہلے سے موجود ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´Ø¹Ø¨Û Ú©ÙˆÚˆ Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”' });
       }
     });
 
     if (rowErrors.length) {
-      throw new AppError('درج کردہ شعبہ جات میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+      throw new AppError('Ø¯Ø±Ø¬ Ú©Ø±Ø¯Û Ø´Ø¹Ø¨Û Ø¬Ø§Øª Ù…ÛŒÚº ØºÙ„Ø·ÛŒ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409, { rows: rowErrors });
     }
 
     const departments = await prisma.$transaction(async (tx) => {
@@ -335,6 +336,7 @@ export const departmentsService = {
     const branchContext = await resolveDepartmentBranchContext(tenantId, query, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -348,7 +350,7 @@ export const departmentsService = {
             ],
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
     };
 
     const [items, totalItems] = await Promise.all([

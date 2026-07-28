@@ -80,6 +80,7 @@ const ensureStoreItemsTable = async () => {
       CREATE TABLE IF NOT EXISTS store_items (
         id INTEGER NOT NULL AUTO_INCREMENT,
         tenant_id INTEGER NOT NULL,
+        branch_id INTEGER NULL,
         itemName VARCHAR(150) NOT NULL,
         category VARCHAR(150) NOT NULL,
         description VARCHAR(255) NULL,
@@ -90,8 +91,10 @@ const ensureStoreItemsTable = async () => {
         status VARCHAR(50) NOT NULL DEFAULT 'active',
         createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
         updatedAt DATETIME(3) NOT NULL,
-        UNIQUE INDEX store_items_tenant_item_code_uq(tenant_id, itemCode),
+        UNIQUE INDEX store_items_tenant_branch_item_code_uq(tenant_id, branch_id, itemCode),
         INDEX store_items_tenant_id_idx(tenant_id),
+        INDEX store_items_branch_id_idx(branch_id),
+        INDEX store_items_tenant_branch_idx(tenant_id, branch_id),
         INDEX store_items_category_idx(category),
         INDEX store_items_status_idx(status),
         PRIMARY KEY (id)
@@ -128,14 +131,17 @@ const ensureStoreUnitsTable = async () => {
         CREATE TABLE IF NOT EXISTS store_units (
           id INTEGER NOT NULL AUTO_INCREMENT,
           tenant_id INTEGER NOT NULL,
+          branch_id INTEGER NULL,
           name VARCHAR(150) NOT NULL,
           shortName VARCHAR(50) NOT NULL,
           description VARCHAR(255) NULL,
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_units_tenant_short_name_uq(tenant_id, shortName),
+          UNIQUE INDEX store_units_tenant_branch_short_name_uq(tenant_id, branch_id, shortName),
           INDEX store_units_tenant_id_idx(tenant_id),
+          INDEX store_units_branch_id_idx(branch_id),
+          INDEX store_units_tenant_branch_idx(tenant_id, branch_id),
           INDEX store_units_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
@@ -146,12 +152,12 @@ const ensureStoreUnitsTable = async () => {
   await storeUnitTablePromise;
 };
 
-const ensureDefaultStoreUnitsForTenant = async (tenantId) => {
+const ensureDefaultStoreUnitsForTenant = async (tenantId, branchId) => {
   await ensureStoreUnitsTable();
   const rows = await prisma.$queryRaw`
     SELECT COUNT(*) AS total
     FROM store_units
-    WHERE tenant_id = ${tenantId}
+    WHERE tenant_id = ${tenantId} AND branch_id = ${branchId}
   `;
 
   if (Number(rows?.[0]?.total || 0) > 0) {
@@ -161,8 +167,8 @@ const ensureDefaultStoreUnitsForTenant = async (tenantId) => {
   const now = new Date();
   for (const unit of DEFAULT_STORE_UNITS) {
     await prisma.$executeRaw`
-      INSERT INTO store_units (tenant_id, name, shortName, description, status, createdAt, updatedAt)
-      VALUES (${tenantId}, ${unit.name}, ${unit.shortName}, ${unit.description}, 'active', ${now}, ${now})
+      INSERT INTO store_units (tenant_id, branch_id, name, shortName, description, status, createdAt, updatedAt)
+      VALUES (${tenantId}, ${branchId}, ${unit.name}, ${unit.shortName}, ${unit.description}, 'active', ${now}, ${now})
     `;
   }
 };
@@ -174,13 +180,16 @@ const ensureStoreCategoriesTable = async () => {
         CREATE TABLE IF NOT EXISTS store_categories (
           id INTEGER NOT NULL AUTO_INCREMENT,
           tenant_id INTEGER NOT NULL,
+          branch_id INTEGER NULL,
           name VARCHAR(150) NOT NULL,
           description VARCHAR(255) NULL,
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_categories_tenant_name_uq(tenant_id, name),
+          UNIQUE INDEX store_categories_tenant_branch_name_uq(tenant_id, branch_id, name),
           INDEX store_categories_tenant_id_idx(tenant_id),
+          INDEX store_categories_branch_id_idx(branch_id),
+          INDEX store_categories_tenant_branch_idx(tenant_id, branch_id),
           INDEX store_categories_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
@@ -212,6 +221,7 @@ const ensureStorePurchaseTables = async () => {
         CREATE TABLE IF NOT EXISTS store_suppliers (
           id INTEGER NOT NULL AUTO_INCREMENT,
           tenant_id INTEGER NOT NULL,
+          branch_id INTEGER NULL,
           supplierName VARCHAR(150) NOT NULL,
           mobileNumber VARCHAR(50) NULL,
           address VARCHAR(255) NULL,
@@ -220,8 +230,10 @@ const ensureStorePurchaseTables = async () => {
           status VARCHAR(50) NOT NULL DEFAULT 'active',
           createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
           updatedAt DATETIME(3) NOT NULL,
-          UNIQUE INDEX store_suppliers_tenant_name_uq(tenant_id, supplierName),
+          UNIQUE INDEX store_suppliers_tenant_branch_name_uq(tenant_id, branch_id, supplierName),
           INDEX store_suppliers_tenant_id_idx(tenant_id),
+          INDEX store_suppliers_branch_id_idx(branch_id),
+          INDEX store_suppliers_tenant_branch_idx(tenant_id, branch_id),
           INDEX store_suppliers_status_idx(status),
           PRIMARY KEY (id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
@@ -451,10 +463,10 @@ const validatePaymentPayload = (payload) => {
   };
 };
 
-const ensureUniqueSupplierName = async (tenantId, supplierName, ignoredId = null) => {
+const ensureUniqueSupplierName = async (tenantId, branchId, supplierName, ignoredId = null) => {
   const rows = ignoredId
-    ? await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND supplierName = ${supplierName} AND id <> ${ignoredId} LIMIT 1`
-    : await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND supplierName = ${supplierName} LIMIT 1`;
+    ? await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND supplierName = ${supplierName} AND id <> ${ignoredId} LIMIT 1`
+    : await prisma.$queryRaw`SELECT id FROM store_suppliers WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND supplierName = ${supplierName} LIMIT 1`;
 
   if (rows.length) throw new AppError('یہ سپلائر پہلے سے موجود ہے۔', 409);
 };
@@ -1163,22 +1175,22 @@ const validatePurchasePayload = async (tenantId, payload) => {
   };
 };
 
-const ensureUniqueItemCode = async (tenantId, itemCode, ignoredId = null) => {
+const ensureUniqueItemCode = async (tenantId, branchId, itemCode, ignoredId = null) => {
   const rows = ignoredId
-    ? await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${itemCode} AND id <> ${ignoredId} LIMIT 1`
-    : await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${itemCode} LIMIT 1`;
+    ? await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND itemCode = ${itemCode} AND id <> ${ignoredId} LIMIT 1`
+    : await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND itemCode = ${itemCode} LIMIT 1`;
 
   if (rows.length) {
     throw new AppError('یہ آئٹم کوڈ پہلے سے موجود ہے۔', 409);
   }
 };
 
-const ensureActiveStoreCategory = async (tenantId, categoryName) => {
+const ensureActiveStoreCategory = async (tenantId, branchId, categoryName) => {
   await ensureStoreCategoriesTable();
   const rows = await prisma.$queryRaw`
     SELECT id, name, status
     FROM store_categories
-    WHERE tenant_id = ${tenantId} AND name = ${categoryName}
+    WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND name = ${categoryName}
     LIMIT 1
   `;
 
@@ -1187,42 +1199,42 @@ const ensureActiveStoreCategory = async (tenantId, categoryName) => {
   return rows[0];
 };
 
-const ensureUniqueItemNameInCategory = async (tenantId, itemName, categoryName, ignoredId = null) => {
+const ensureUniqueItemNameInCategory = async (tenantId, branchId, itemName, categoryName, ignoredId = null) => {
   const rows = ignoredId
     ? await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE tenant_id = ${tenantId} AND itemName = ${itemName} AND category = ${categoryName} AND id <> ${ignoredId}
+      WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND itemName = ${itemName} AND category = ${categoryName} AND id <> ${ignoredId}
       LIMIT 1
     `
     : await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE tenant_id = ${tenantId} AND itemName = ${itemName} AND category = ${categoryName}
+      WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND itemName = ${itemName} AND category = ${categoryName}
       LIMIT 1
     `;
 
   if (rows.length) throw new AppError('اسی کیٹیگری میں یہ شے پہلے سے موجود ہے۔', 409);
 };
 
-const getDefaultStoreUnit = async (tenantId) => {
-  await ensureDefaultStoreUnitsForTenant(tenantId);
+const getDefaultStoreUnit = async (tenantId, branchId) => {
+  await ensureDefaultStoreUnitsForTenant(tenantId, branchId);
   const rows = await prisma.$queryRaw`
     SELECT shortName
     FROM store_units
-    WHERE tenant_id = ${tenantId} AND status = 'active'
+    WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND status = 'active'
     ORDER BY id ASC
     LIMIT 1
   `;
   return rows[0]?.shortName || 'piece';
 };
 
-const generateItemCode = async (tenantId) => {
+const generateItemCode = async (tenantId, branchId) => {
   let code = '';
   let isUnique = false;
   while (!isUnique) {
     code = `ITEM-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const rows = await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND itemCode = ${code} LIMIT 1`;
+    const rows = await prisma.$queryRaw`SELECT id FROM store_items WHERE tenant_id = ${tenantId} AND branch_id = ${branchId} AND itemCode = ${code} LIMIT 1`;
     isUnique = rows.length === 0;
   }
   return code;
@@ -1288,8 +1300,9 @@ export const storeService = {
     return { total: toAmount(rows?.[0]?.total), startDate, endDate };
   },
 
-  async getUnits(tenantId, query = {}) {
+  async getUnits(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     await ensureStoreUnitsTable();
     const search = normalizeText(query.search);
     const activeOnly = query.activeOnly === true || query.activeOnly === 'true';
@@ -1298,6 +1311,7 @@ export const storeService = {
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
       WHERE tenant_id = ${resolvedTenantId}
+        AND branch_id = ${branchId}
         AND (${activeOnly} = false OR status = 'active')
         AND (${search} = '' OR name LIKE ${searchTerm} OR shortName LIKE ${searchTerm})
       ORDER BY name ASC
@@ -1306,48 +1320,51 @@ export const storeService = {
     return { items: rows.map(mapStoreUnit), meta: null };
   },
 
-  async getUnitById(tenantId, id) {
+  async getUnitById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
-      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('اکائی نہیں ملی۔', 404);
     return mapStoreUnit(rows[0]);
   },
 
-  async createUnit(tenantId, payload) {
+  async createUnit(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStoreUnitsTable();
     const data = validateUnitPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND shortName = ${data.shortName} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ مختصر نام پہلے سے موجود ہے۔', 409);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_units (tenant_id, name, shortName, description, status, createdAt, updatedAt)
-      VALUES (${resolvedTenantId}, ${data.name}, ${data.shortName}, ${data.description}, ${data.status}, ${now}, ${now})
+      INSERT INTO store_units (tenant_id, branch_id, name, shortName, description, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${branchId}, ${data.name}, ${data.shortName}, ${data.description}, ${data.status}, ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`
       SELECT id, name, shortName, description, status, createdAt, updatedAt
       FROM store_units
-      WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName}
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND shortName = ${data.shortName}
       LIMIT 1
     `;
     return mapStoreUnit(rows[0]);
   },
 
-  async updateUnit(tenantId, id, payload) {
+  async updateUnit(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
-    await this.getUnitById(resolvedTenantId, unitId);
+    await this.getUnitById(resolvedTenantId, unitId, { branchId });
     const data = validateUnitPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND shortName = ${data.shortName} AND id <> ${unitId} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_units WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND shortName = ${data.shortName} AND id <> ${unitId} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ مختصر نام پہلے سے موجود ہے۔', 409);
 
     await prisma.$executeRaw`
@@ -1357,22 +1374,23 @@ export const storeService = {
           description = ${data.description},
           status = ${data.status},
           updatedAt = ${new Date()}
-      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
-    return this.getUnitById(resolvedTenantId, unitId);
+    return this.getUnitById(resolvedTenantId, unitId, { branchId });
   },
 
-  async deleteUnit(tenantId, id) {
+  async deleteUnit(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreUnitsTable();
     const unitId = normalizeId(id);
-    const unit = await this.getUnitById(resolvedTenantId, unitId);
+    const unit = await this.getUnitById(resolvedTenantId, unitId, { branchId });
     await ensureStoreItemsTable();
 
     const linkedItems = await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE tenant_id = ${resolvedTenantId} AND unit = ${unit.name}
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND unit = ${unit.name}
       LIMIT 1
     `;
 
@@ -1382,13 +1400,14 @@ export const storeService = {
 
     await prisma.$executeRaw`
       DELETE FROM store_units
-      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${unitId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
     return { id: unitId };
   },
 
-  async getCategories(tenantId, query = {}) {
+  async getCategories(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     await ensureStoreCategoriesTable();
     const search = normalizeText(query.search);
     const activeOnly = query.activeOnly === true || query.activeOnly === 'true';
@@ -1397,6 +1416,7 @@ export const storeService = {
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
       WHERE tenant_id = ${resolvedTenantId}
+        AND branch_id = ${branchId}
         AND (${activeOnly} = false OR status = 'active')
         AND (${search} = '' OR name LIKE ${searchTerm})
       ORDER BY name ASC
@@ -1405,48 +1425,51 @@ export const storeService = {
     return { items: rows.map(mapStoreCategory), meta: null };
   },
 
-  async getCategoryById(tenantId, id) {
+  async getCategoryById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
-      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('کیٹیگری نہیں ملی۔', 404);
     return mapStoreCategory(rows[0]);
   },
 
-  async createCategory(tenantId, payload) {
+  async createCategory(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStoreCategoriesTable();
     const data = validateCategoryPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND name = ${data.name} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ کیٹیگری پہلے سے موجود ہے۔', 409);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_categories (tenant_id, name, description, status, createdAt, updatedAt)
-      VALUES (${resolvedTenantId}, ${data.name}, ${data.description}, ${data.status}, ${now}, ${now})
+      INSERT INTO store_categories (tenant_id, branch_id, name, description, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${branchId}, ${data.name}, ${data.description}, ${data.status}, ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`
       SELECT id, name, description, status, createdAt, updatedAt
       FROM store_categories
-      WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name}
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND name = ${data.name}
       LIMIT 1
     `;
     return mapStoreCategory(rows[0]);
   },
 
-  async updateCategory(tenantId, id, payload) {
+  async updateCategory(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
-    await this.getCategoryById(resolvedTenantId, categoryId);
+    await this.getCategoryById(resolvedTenantId, categoryId, { branchId });
     const data = validateCategoryPayload(payload);
-    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND name = ${data.name} AND id <> ${categoryId} LIMIT 1`;
+    const duplicate = await prisma.$queryRaw`SELECT id FROM store_categories WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND name = ${data.name} AND id <> ${categoryId} LIMIT 1`;
     if (duplicate.length) throw new AppError('یہ کیٹیگری پہلے سے موجود ہے۔', 409);
 
     await prisma.$executeRaw`
@@ -1455,22 +1478,23 @@ export const storeService = {
           description = ${data.description},
           status = ${data.status},
           updatedAt = ${new Date()}
-      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
-    return this.getCategoryById(resolvedTenantId, categoryId);
+    return this.getCategoryById(resolvedTenantId, categoryId, { branchId });
   },
 
-  async deleteCategory(tenantId, id) {
+  async deleteCategory(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreCategoriesTable();
     const categoryId = normalizeId(id);
-    const category = await this.getCategoryById(resolvedTenantId, categoryId);
+    const category = await this.getCategoryById(resolvedTenantId, categoryId, { branchId });
     await ensureStoreItemsTable();
 
     const linkedItems = await prisma.$queryRaw`
       SELECT id
       FROM store_items
-      WHERE tenant_id = ${resolvedTenantId} AND category = ${category.name}
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND category = ${category.name}
       LIMIT 1
     `;
 
@@ -1480,13 +1504,14 @@ export const storeService = {
 
     await prisma.$executeRaw`
       DELETE FROM store_categories
-      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${categoryId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
     return { id: categoryId };
   },
 
-  async getItems(tenantId, query = {}) {
+  async getItems(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     await ensureStoreItemsTable();
     await ensureStoreItemDescriptionColumn();
     const search = normalizeText(query.search);
@@ -1502,6 +1527,7 @@ export const storeService = {
       SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
       WHERE tenant_id = ${resolvedTenantId}
+        AND branch_id = ${branchId}
         AND (${includeInactive} = true OR status = 'active')
         AND (${status} = '' OR status = ${status})
         AND (${search} = '' OR itemName LIKE ${searchTerm} OR itemCode LIKE ${searchTerm})
@@ -1514,15 +1540,16 @@ export const storeService = {
     return { items: rows.map(mapItem), meta: null };
   },
 
-  async getItemById(tenantId, id) {
+  async getItemById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStoreItemsTable();
     await ensureStoreItemDescriptionColumn();
     const itemId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
       LIMIT 1
     `;
 
@@ -1530,53 +1557,55 @@ export const storeService = {
     return mapItem(rows[0]);
   },
 
-  async createItem(tenantId, payload) {
+  async createItem(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStoreItemDescriptionColumn();
     const data = validateItemPayload(payload);
-    await ensureActiveStoreCategory(resolvedTenantId, data.category);
-    await ensureUniqueItemNameInCategory(resolvedTenantId, data.itemName, data.category);
-    data.unit = data.unit || await getDefaultStoreUnit(resolvedTenantId);
-    data.itemCode = data.itemCode || await generateItemCode(resolvedTenantId);
-    await ensureUniqueItemCode(resolvedTenantId, data.itemCode);
+    await ensureActiveStoreCategory(resolvedTenantId, branchId, data.category);
+    await ensureUniqueItemNameInCategory(resolvedTenantId, branchId, data.itemName, data.category);
+    data.unit = data.unit || await getDefaultStoreUnit(resolvedTenantId, branchId);
+    data.itemCode = data.itemCode || await generateItemCode(resolvedTenantId, branchId);
+    await ensureUniqueItemCode(resolvedTenantId, branchId, data.itemCode);
     const now = new Date();
     const columnSet = await getStoreItemColumnSet();
 
     if (columnSet.has('barcode') || columnSet.has('openingStock')) {
       await prisma.$executeRaw`
-        INSERT INTO store_items (tenant_id, itemName, category, description, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
+        INSERT INTO store_items (tenant_id, branch_id, itemName, category, description, unit, itemCode, barcode, openingStock, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, NULL, ${data.quantity}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
       `;
     } else {
       await prisma.$executeRaw`
-        INSERT INTO store_items (tenant_id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
-        VALUES (${resolvedTenantId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
+        INSERT INTO store_items (tenant_id, branch_id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt)
+        VALUES (${resolvedTenantId}, ${branchId}, ${data.itemName}, ${data.category}, ${data.description}, ${data.unit}, ${data.itemCode}, ${data.quantity}, ${data.purchasePrice}, ${data.status}, ${now}, ${now})
       `;
     }
 
     const rows = await prisma.$queryRaw`
       SELECT id, itemName, category, description, unit, itemCode, currentStock, purchasePrice, status, createdAt, updatedAt
       FROM store_items
-      WHERE tenant_id = ${resolvedTenantId} AND itemCode = ${data.itemCode}
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND itemCode = ${data.itemCode}
       LIMIT 1
     `;
 
     return mapItem(rows[0]);
   },
 
-  async updateItem(tenantId, id, payload) {
+  async updateItem(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const itemId = normalizeId(id);
     await ensureStoreItemDescriptionColumn();
-    const existingItem = await this.getItemById(resolvedTenantId, itemId);
+    const existingItem = await this.getItemById(resolvedTenantId, itemId, { branchId });
     const data = validateItemPayload(payload);
-    await ensureActiveStoreCategory(resolvedTenantId, data.category);
-    await ensureUniqueItemNameInCategory(resolvedTenantId, data.itemName, data.category, itemId);
-    data.unit = data.unit || existingItem.unit || await getDefaultStoreUnit(resolvedTenantId);
-    data.itemCode = data.itemCode || existingItem.itemCode || await generateItemCode(resolvedTenantId);
+    await ensureActiveStoreCategory(resolvedTenantId, branchId, data.category);
+    await ensureUniqueItemNameInCategory(resolvedTenantId, branchId, data.itemName, data.category, itemId);
+    data.unit = data.unit || existingItem.unit || await getDefaultStoreUnit(resolvedTenantId, branchId);
+    data.itemCode = data.itemCode || existingItem.itemCode || await generateItemCode(resolvedTenantId, branchId);
     data.quantity = payload.quantity === undefined || payload.quantity === null || payload.quantity === '' ? existingItem.currentStock : data.quantity;
     data.purchasePrice = payload.purchasePrice === undefined || payload.purchasePrice === null || payload.purchasePrice === '' ? existingItem.purchasePrice : data.purchasePrice;
-    await ensureUniqueItemCode(resolvedTenantId, data.itemCode, itemId);
+    await ensureUniqueItemCode(resolvedTenantId, branchId, data.itemCode, itemId);
     const columnSet = await getStoreItemColumnSet();
 
     if (columnSet.has('barcode') || columnSet.has('openingStock')) {
@@ -1593,7 +1622,7 @@ export const storeService = {
             purchasePrice = ${data.purchasePrice},
             status = ${data.status},
             updatedAt = ${new Date()}
-        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
+        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
       `;
     } else {
       await prisma.$executeRaw`
@@ -1607,76 +1636,81 @@ export const storeService = {
             purchasePrice = ${data.purchasePrice},
             status = ${data.status},
             updatedAt = ${new Date()}
-        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
+        WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
       `;
     }
 
-    return this.getItemById(resolvedTenantId, itemId);
+    return this.getItemById(resolvedTenantId, itemId, { branchId });
   },
 
-  async deleteItem(tenantId, id) {
+  async deleteItem(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const itemId = normalizeId(id);
-    await this.getItemById(resolvedTenantId, itemId);
+    await this.getItemById(resolvedTenantId, itemId, { branchId });
     const dependencyCount = await getItemDependencyCount(resolvedTenantId, itemId);
 
     await prisma.$executeRaw`
       UPDATE store_items
       SET status = 'inactive', updatedAt = ${new Date()}
-      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${itemId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
 
     return { id: itemId, deleted: false, softDeleted: true, dependencyCount };
   },
 
-  async getSuppliers(tenantId) {
+  async getSuppliers(tenantId, query = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, query, branchScope);
     await ensureStorePurchaseTables();
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
       FROM store_suppliers
-      WHERE tenant_id = ${resolvedTenantId} AND status = 'active'
+      WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND status = 'active'
       ORDER BY supplierName ASC
     `;
     return { items: rows.map(mapSupplier), meta: null };
   },
 
-  async getSupplierById(tenantId, id) {
+  async getSupplierById(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
     const rows = await prisma.$queryRaw`
       SELECT id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt
       FROM store_suppliers
-      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND status = 'active'
+      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND status = 'active'
       LIMIT 1
     `;
     if (!rows.length) throw new AppError('سپلائر نہیں ملا۔', 404);
     return mapSupplier(rows[0]);
   },
 
-  async createSupplier(tenantId, payload) {
+  async createSupplier(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStorePurchaseTables();
     const data = validateSupplierPayload(payload);
-    await ensureUniqueSupplierName(resolvedTenantId, data.supplierName);
+    await ensureUniqueSupplierName(resolvedTenantId, branchId, data.supplierName);
     const now = new Date();
 
     await prisma.$executeRaw`
-      INSERT INTO store_suppliers (tenant_id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt)
-      VALUES (${resolvedTenantId}, ${data.supplierName}, ${data.mobileNumber}, ${data.address}, ${data.shopName}, ${data.balance}, 'active', ${now}, ${now})
+      INSERT INTO store_suppliers (tenant_id, branch_id, supplierName, mobileNumber, address, shopName, balance, status, createdAt, updatedAt)
+      VALUES (${resolvedTenantId}, ${branchId}, ${data.supplierName}, ${data.mobileNumber}, ${data.address}, ${data.shopName}, ${data.balance}, 'active', ${now}, ${now})
     `;
     const rows = await prisma.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
-    return this.getSupplierById(resolvedTenantId, Number(rows[0].id));
+    return this.getSupplierById(resolvedTenantId, Number(rows[0].id), { branchId });
   },
 
-  async updateSupplier(tenantId, id, payload) {
+  async updateSupplier(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(resolvedTenantId, supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId, { branchId });
     const data = validateSupplierPayload(payload);
-    await ensureUniqueSupplierName(resolvedTenantId, data.supplierName, supplierId);
+    await ensureUniqueSupplierName(resolvedTenantId, branchId, data.supplierName, supplierId);
 
     await prisma.$executeRaw`
       UPDATE store_suppliers
@@ -1686,18 +1720,19 @@ export const storeService = {
           shopName = ${data.shopName},
           balance = ${data.balance},
           updatedAt = ${new Date()}
-      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}
+      WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
 
-    return this.getSupplierById(resolvedTenantId, supplierId);
+    return this.getSupplierById(resolvedTenantId, supplierId, { branchId });
   },
 
-  async deleteSupplier(tenantId, id) {
+  async deleteSupplier(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(resolvedTenantId, supplierId);
-    await prisma.$executeRaw`UPDATE store_suppliers SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}`;
+    await this.getSupplierById(resolvedTenantId, supplierId, { branchId });
+    await prisma.$executeRaw`UPDATE store_suppliers SET status = 'inactive', updatedAt = ${new Date()} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}`;
     return { id: supplierId };
   },
 
@@ -1706,7 +1741,7 @@ export const storeService = {
     const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(resolvedTenantId, supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId, { branchId });
     const rows = await prisma.$queryRaw`
       SELECT p.*, s.supplierName, s.balance AS supplierBalance
       FROM store_purchases p
@@ -1743,7 +1778,7 @@ export const storeService = {
     const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(resolvedTenantId, supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId, { branchId });
     const rows = await prisma.$queryRaw`
       SELECT id, supplierId, amount, paymentDate, paymentMethod, note, status, createdAt, updatedAt
       FROM store_supplier_payments
@@ -1758,7 +1793,7 @@ export const storeService = {
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureStorePurchaseTables();
     const supplierId = normalizeId(id);
-    await this.getSupplierById(resolvedTenantId, supplierId);
+    await this.getSupplierById(resolvedTenantId, supplierId, { branchId });
     const data = validatePaymentPayload(payload);
     const now = new Date();
 
@@ -1769,7 +1804,7 @@ export const storeService = {
       `;
       const rows = await tx.$queryRaw`SELECT LAST_INSERT_ID() AS id`;
       const nextPaymentId = Number(rows[0].id);
-      await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${data.amount}, updatedAt = ${now} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId}`;
+      await tx.$executeRaw`UPDATE store_suppliers SET balance = balance - ${data.amount}, updatedAt = ${now} WHERE id = ${supplierId} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}`;
       await createSupplierPaymentFinanceTransaction(tx, resolvedTenantId, supplierId, nextPaymentId, data, branchId);
       return nextPaymentId;
     });

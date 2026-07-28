@@ -1,6 +1,7 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { normalizeTenantId } from '../../utils/tenantGuard.js';
 import { branchScopeService } from '../security/index.js';
 
@@ -88,7 +89,7 @@ export const shiftsService = {
       .filter((item) => item.name || item.startTime || item.endTime);
 
     if (!normalizedRows.length) {
-      throw new AppError('کم از کم ایک شفٹ کی معلومات درج کریں۔', 400);
+      throw new AppError('Ú©Ù… Ø§Ø² Ú©Ù… Ø§ÛŒÚ© Ø´ÙÙ¹ Ú©ÛŒ Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚºÛ”', 400);
     }
 
     const rowErrors = [];
@@ -96,15 +97,15 @@ export const shiftsService = {
 
     normalizedRows.forEach((row) => {
       if (!row.name) {
-        rowErrors.push({ index: row.index, message: 'شفٹ کا نام ضروری ہے۔' });
+        rowErrors.push({ index: row.index, message: 'Ø´ÙÙ¹ Ú©Ø§ Ù†Ø§Ù… Ø¶Ø±ÙˆØ±ÛŒ ÛÛ’Û”' });
       }
       if (!row.startTime || !row.endTime) {
-        rowErrors.push({ index: row.index, message: 'شفٹ کے اوقات درج کریں۔' });
+        rowErrors.push({ index: row.index, message: 'Ø´ÙÙ¹ Ú©Û’ Ø§ÙˆÙ‚Ø§Øª Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚºÛ”' });
       }
 
       const key = row.name.toLowerCase();
       if (row.name && seenNames.has(key)) {
-        rowErrors.push({ index: row.index, message: 'یہ شفٹ اسی فارم میں دوبارہ درج ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´ÙÙ¹ Ø§Ø³ÛŒ ÙØ§Ø±Ù… Ù…ÛŒÚº Ø¯ÙˆØ¨Ø§Ø±Û Ø¯Ø±Ø¬ ÛÛ’Û”' });
       } else if (row.name) {
         seenNames.set(key, row.index);
       }
@@ -122,12 +123,12 @@ export const shiftsService = {
 
     normalizedRows.forEach((row) => {
       if (existingNames.has(row.name.toLowerCase())) {
-        rowErrors.push({ index: row.index, message: 'یہ شفٹ پہلے سے موجود ہے۔' });
+        rowErrors.push({ index: row.index, message: 'ÛŒÛ Ø´ÙÙ¹ Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”' });
       }
     });
 
     if (rowErrors.length) {
-      throw new AppError('درج کردہ شفٹس میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+      throw new AppError('Ø¯Ø±Ø¬ Ú©Ø±Ø¯Û Ø´ÙÙ¹Ø³ Ù…ÛŒÚº ØºÙ„Ø·ÛŒ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409, { rows: rowErrors });
     }
 
     return prisma.$transaction(async (tx) => {
@@ -160,6 +161,7 @@ export const shiftsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveShiftBranchId(resolvedTenantId, query, branchScope);
     const { page, limit, skip } = getPagination(query.page, query.limit);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -172,7 +174,7 @@ export const shiftsService = {
             ],
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
     };
 
     const [items, totalItems] = await Promise.all([

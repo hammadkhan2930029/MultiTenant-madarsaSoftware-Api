@@ -1,6 +1,7 @@
-import { prisma } from '../../config/prisma.js';
+﻿import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
@@ -116,7 +117,7 @@ export const sectionsService = {
       .filter((item) => item.name);
 
     if (!normalizedRows.length) {
-      throw new AppError('کم از کم ایک سیکشن کا نام درج کریں۔', 400);
+      throw new AppError('Ú©Ù… Ø§Ø² Ú©Ù… Ø§ÛŒÚ© Ø³ÛŒÚ©Ø´Ù† Ú©Ø§ Ù†Ø§Ù… Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚºÛ”', 400);
     }
 
     const rowErrors = [];
@@ -127,7 +128,7 @@ export const sectionsService = {
       if (seenNames.has(key)) {
         rowErrors.push({
           index: row.index,
-          message: 'یہ سیکشن اسی فارم میں دوبارہ درج ہے۔',
+          message: 'ÛŒÛ Ø³ÛŒÚ©Ø´Ù† Ø§Ø³ÛŒ ÙØ§Ø±Ù… Ù…ÛŒÚº Ø¯ÙˆØ¨Ø§Ø±Û Ø¯Ø±Ø¬ ÛÛ’Û”',
         });
       } else {
         seenNames.set(key, row.index);
@@ -148,13 +149,13 @@ export const sectionsService = {
       if (existingNames.has(row.name.toLowerCase())) {
         rowErrors.push({
           index: row.index,
-          message: 'یہ سیکشن اس جماعت میں پہلے سے موجود ہے۔',
+          message: 'ÛŒÛ Ø³ÛŒÚ©Ø´Ù† Ø§Ø³ Ø¬Ù…Ø§Ø¹Øª Ù…ÛŒÚº Ù¾ÛÙ„Û’ Ø³Û’ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”',
         });
       }
     });
 
     if (rowErrors.length) {
-      throw new AppError('درج کردہ سیکشنز میں غلطی موجود ہے۔', 409, { rows: rowErrors });
+      throw new AppError('Ø¯Ø±Ø¬ Ú©Ø±Ø¯Û Ø³ÛŒÚ©Ø´Ù†Ø² Ù…ÛŒÚº ØºÙ„Ø·ÛŒ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409, { rows: rowErrors });
     }
 
     return prisma.$transaction(async (tx) => {
@@ -183,6 +184,7 @@ export const sectionsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveSectionBranchId(resolvedTenantId, query, branchScope);
+    const status = normalizeStatusFilter(query.status);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -194,7 +196,7 @@ export const sectionsService = {
             },
           }
         : {}),
-      ...(query.status ? { status: query.status } : {}),
+      status,
       ...(query.classId ? { classId: query.classId } : {}),
     };
 
