@@ -430,6 +430,7 @@ exports.Prisma.TeacherAssignmentScalarFieldEnum = {
   classId: 'classId',
   sectionId: 'sectionId',
   responsibilityId: 'responsibilityId',
+  note: 'note',
   assignmentScopeKey: 'assignmentScopeKey',
   status: 'status',
   createdBy: 'createdBy',
@@ -1254,6 +1255,7 @@ exports.Prisma.TeacherResponsibilityOrderByRelevanceFieldEnum = {
 
 exports.Prisma.TeacherAssignmentOrderByRelevanceFieldEnum = {
   branchScopeKey: 'branchScopeKey',
+  note: 'note',
   assignmentScopeKey: 'assignmentScopeKey',
   status: 'status'
 };

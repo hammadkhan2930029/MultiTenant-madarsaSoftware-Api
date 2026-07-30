@@ -34050,6 +34050,7 @@ export namespace Prisma {
     classId: number | null
     sectionId: number | null
     responsibilityId: number | null
+    note: string | null
     assignmentScopeKey: string | null
     status: string | null
     createdBy: number | null
@@ -34067,6 +34068,7 @@ export namespace Prisma {
     classId: number | null
     sectionId: number | null
     responsibilityId: number | null
+    note: string | null
     assignmentScopeKey: string | null
     status: string | null
     createdBy: number | null
@@ -34084,6 +34086,7 @@ export namespace Prisma {
     classId: number
     sectionId: number
     responsibilityId: number
+    note: number
     assignmentScopeKey: number
     status: number
     createdBy: number
@@ -34127,6 +34130,7 @@ export namespace Prisma {
     classId?: true
     sectionId?: true
     responsibilityId?: true
+    note?: true
     assignmentScopeKey?: true
     status?: true
     createdBy?: true
@@ -34144,6 +34148,7 @@ export namespace Prisma {
     classId?: true
     sectionId?: true
     responsibilityId?: true
+    note?: true
     assignmentScopeKey?: true
     status?: true
     createdBy?: true
@@ -34161,6 +34166,7 @@ export namespace Prisma {
     classId?: true
     sectionId?: true
     responsibilityId?: true
+    note?: true
     assignmentScopeKey?: true
     status?: true
     createdBy?: true
@@ -34261,10 +34267,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId: number | null
+    classId: number | null
+    sectionId: number | null
+    responsibilityId: number | null
+    note: string | null
     assignmentScopeKey: string
     status: string
     createdBy: number | null
@@ -34301,6 +34308,7 @@ export namespace Prisma {
     classId?: boolean
     sectionId?: boolean
     responsibilityId?: boolean
+    note?: boolean
     assignmentScopeKey?: boolean
     status?: boolean
     createdBy?: boolean
@@ -34309,10 +34317,10 @@ export namespace Prisma {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     branch?: boolean | BranchDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
-    subject?: boolean | SubjectDefaultArgs<ExtArgs>
-    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
-    section?: boolean | SectionDefaultArgs<ExtArgs>
-    responsibility?: boolean | TeacherResponsibilityDefaultArgs<ExtArgs>
+    subject?: boolean | TeacherAssignment$subjectArgs<ExtArgs>
+    class?: boolean | TeacherAssignment$classArgs<ExtArgs>
+    section?: boolean | TeacherAssignment$sectionArgs<ExtArgs>
+    responsibility?: boolean | TeacherAssignment$responsibilityArgs<ExtArgs>
     creator?: boolean | TeacherAssignment$creatorArgs<ExtArgs>
   }, ExtArgs["result"]["teacherAssignment"]>
 
@@ -34328,6 +34336,7 @@ export namespace Prisma {
     classId?: boolean
     sectionId?: boolean
     responsibilityId?: boolean
+    note?: boolean
     assignmentScopeKey?: boolean
     status?: boolean
     createdBy?: boolean
@@ -34335,15 +34344,15 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TeacherAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "branchScopeKey" | "teacherId" | "subjectId" | "classId" | "sectionId" | "responsibilityId" | "assignmentScopeKey" | "status" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherAssignment"]>
+  export type TeacherAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "branchScopeKey" | "teacherId" | "subjectId" | "classId" | "sectionId" | "responsibilityId" | "note" | "assignmentScopeKey" | "status" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherAssignment"]>
   export type TeacherAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     branch?: boolean | BranchDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
-    subject?: boolean | SubjectDefaultArgs<ExtArgs>
-    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
-    section?: boolean | SectionDefaultArgs<ExtArgs>
-    responsibility?: boolean | TeacherResponsibilityDefaultArgs<ExtArgs>
+    subject?: boolean | TeacherAssignment$subjectArgs<ExtArgs>
+    class?: boolean | TeacherAssignment$classArgs<ExtArgs>
+    section?: boolean | TeacherAssignment$sectionArgs<ExtArgs>
+    responsibility?: boolean | TeacherAssignment$responsibilityArgs<ExtArgs>
     creator?: boolean | TeacherAssignment$creatorArgs<ExtArgs>
   }
 
@@ -34353,10 +34362,10 @@ export namespace Prisma {
       tenant: Prisma.$TenantPayload<ExtArgs>
       branch: Prisma.$BranchPayload<ExtArgs>
       teacher: Prisma.$TeacherPayload<ExtArgs>
-      subject: Prisma.$SubjectPayload<ExtArgs>
-      class: Prisma.$AcademicClassPayload<ExtArgs>
-      section: Prisma.$SectionPayload<ExtArgs>
-      responsibility: Prisma.$TeacherResponsibilityPayload<ExtArgs>
+      subject: Prisma.$SubjectPayload<ExtArgs> | null
+      class: Prisma.$AcademicClassPayload<ExtArgs> | null
+      section: Prisma.$SectionPayload<ExtArgs> | null
+      responsibility: Prisma.$TeacherResponsibilityPayload<ExtArgs> | null
       creator: Prisma.$AdminPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -34365,10 +34374,11 @@ export namespace Prisma {
       branchId: number
       branchScopeKey: string
       teacherId: number
-      subjectId: number
-      classId: number
-      sectionId: number
-      responsibilityId: number
+      subjectId: number | null
+      classId: number | null
+      sectionId: number | null
+      responsibilityId: number | null
+      note: string | null
       assignmentScopeKey: string
       status: string
       createdBy: number | null
@@ -34717,10 +34727,10 @@ export namespace Prisma {
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    class<T extends AcademicClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClassDefaultArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    responsibility<T extends TeacherResponsibilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherResponsibilityDefaultArgs<ExtArgs>>): Prisma__TeacherResponsibilityClient<$Result.GetResult<Prisma.$TeacherResponsibilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subject<T extends TeacherAssignment$subjectArgs<ExtArgs> = {}>(args?: Subset<T, TeacherAssignment$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    class<T extends TeacherAssignment$classArgs<ExtArgs> = {}>(args?: Subset<T, TeacherAssignment$classArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    section<T extends TeacherAssignment$sectionArgs<ExtArgs> = {}>(args?: Subset<T, TeacherAssignment$sectionArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    responsibility<T extends TeacherAssignment$responsibilityArgs<ExtArgs> = {}>(args?: Subset<T, TeacherAssignment$responsibilityArgs<ExtArgs>>): Prisma__TeacherResponsibilityClient<$Result.GetResult<Prisma.$TeacherResponsibilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     creator<T extends TeacherAssignment$creatorArgs<ExtArgs> = {}>(args?: Subset<T, TeacherAssignment$creatorArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -34760,6 +34770,7 @@ export namespace Prisma {
     readonly classId: FieldRef<"TeacherAssignment", 'Int'>
     readonly sectionId: FieldRef<"TeacherAssignment", 'Int'>
     readonly responsibilityId: FieldRef<"TeacherAssignment", 'Int'>
+    readonly note: FieldRef<"TeacherAssignment", 'String'>
     readonly assignmentScopeKey: FieldRef<"TeacherAssignment", 'String'>
     readonly status: FieldRef<"TeacherAssignment", 'String'>
     readonly createdBy: FieldRef<"TeacherAssignment", 'Int'>
@@ -35105,6 +35116,82 @@ export namespace Prisma {
      * Limit how many TeacherAssignments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * TeacherAssignment.subject
+   */
+  export type TeacherAssignment$subjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Subject
+     */
+    select?: SubjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Subject
+     */
+    omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    where?: SubjectWhereInput
+  }
+
+  /**
+   * TeacherAssignment.class
+   */
+  export type TeacherAssignment$classArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AcademicClass
+     */
+    select?: AcademicClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AcademicClass
+     */
+    omit?: AcademicClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AcademicClassInclude<ExtArgs> | null
+    where?: AcademicClassWhereInput
+  }
+
+  /**
+   * TeacherAssignment.section
+   */
+  export type TeacherAssignment$sectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Section
+     */
+    select?: SectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Section
+     */
+    omit?: SectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectionInclude<ExtArgs> | null
+    where?: SectionWhereInput
+  }
+
+  /**
+   * TeacherAssignment.responsibility
+   */
+  export type TeacherAssignment$responsibilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeacherResponsibility
+     */
+    select?: TeacherResponsibilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TeacherResponsibility
+     */
+    omit?: TeacherResponsibilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherResponsibilityInclude<ExtArgs> | null
+    where?: TeacherResponsibilityWhereInput
   }
 
   /**
@@ -74888,6 +74975,7 @@ export namespace Prisma {
     classId: 'classId',
     sectionId: 'sectionId',
     responsibilityId: 'responsibilityId',
+    note: 'note',
     assignmentScopeKey: 'assignmentScopeKey',
     status: 'status',
     createdBy: 'createdBy',
@@ -75901,6 +75989,7 @@ export namespace Prisma {
 
   export const TeacherAssignmentOrderByRelevanceFieldEnum: {
     branchScopeKey: 'branchScopeKey',
+    note: 'note',
     assignmentScopeKey: 'assignmentScopeKey',
     status: 'status'
   };
@@ -78750,10 +78839,11 @@ export namespace Prisma {
     branchId?: IntFilter<"TeacherAssignment"> | number
     branchScopeKey?: StringFilter<"TeacherAssignment"> | string
     teacherId?: IntFilter<"TeacherAssignment"> | number
-    subjectId?: IntFilter<"TeacherAssignment"> | number
-    classId?: IntFilter<"TeacherAssignment"> | number
-    sectionId?: IntFilter<"TeacherAssignment"> | number
-    responsibilityId?: IntFilter<"TeacherAssignment"> | number
+    subjectId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    classId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    sectionId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    responsibilityId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    note?: StringNullableFilter<"TeacherAssignment"> | string | null
     assignmentScopeKey?: StringFilter<"TeacherAssignment"> | string
     status?: StringFilter<"TeacherAssignment"> | string
     createdBy?: IntNullableFilter<"TeacherAssignment"> | number | null
@@ -78762,10 +78852,10 @@ export namespace Prisma {
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
-    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
-    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
-    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
-    responsibility?: XOR<TeacherResponsibilityScalarRelationFilter, TeacherResponsibilityWhereInput>
+    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    class?: XOR<AcademicClassNullableScalarRelationFilter, AcademicClassWhereInput> | null
+    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    responsibility?: XOR<TeacherResponsibilityNullableScalarRelationFilter, TeacherResponsibilityWhereInput> | null
     creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
   }
 
@@ -78775,10 +78865,11 @@ export namespace Prisma {
     branchId?: SortOrder
     branchScopeKey?: SortOrder
     teacherId?: SortOrder
-    subjectId?: SortOrder
-    classId?: SortOrder
-    sectionId?: SortOrder
-    responsibilityId?: SortOrder
+    subjectId?: SortOrderInput | SortOrder
+    classId?: SortOrderInput | SortOrder
+    sectionId?: SortOrderInput | SortOrder
+    responsibilityId?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
     assignmentScopeKey?: SortOrder
     status?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -78805,10 +78896,11 @@ export namespace Prisma {
     branchId?: IntFilter<"TeacherAssignment"> | number
     branchScopeKey?: StringFilter<"TeacherAssignment"> | string
     teacherId?: IntFilter<"TeacherAssignment"> | number
-    subjectId?: IntFilter<"TeacherAssignment"> | number
-    classId?: IntFilter<"TeacherAssignment"> | number
-    sectionId?: IntFilter<"TeacherAssignment"> | number
-    responsibilityId?: IntFilter<"TeacherAssignment"> | number
+    subjectId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    classId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    sectionId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    responsibilityId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    note?: StringNullableFilter<"TeacherAssignment"> | string | null
     assignmentScopeKey?: StringFilter<"TeacherAssignment"> | string
     status?: StringFilter<"TeacherAssignment"> | string
     createdBy?: IntNullableFilter<"TeacherAssignment"> | number | null
@@ -78817,10 +78909,10 @@ export namespace Prisma {
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
-    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
-    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
-    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
-    responsibility?: XOR<TeacherResponsibilityScalarRelationFilter, TeacherResponsibilityWhereInput>
+    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    class?: XOR<AcademicClassNullableScalarRelationFilter, AcademicClassWhereInput> | null
+    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    responsibility?: XOR<TeacherResponsibilityNullableScalarRelationFilter, TeacherResponsibilityWhereInput> | null
     creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
   }, "id" | "tenantId_branchId_assignmentScopeKey">
 
@@ -78830,10 +78922,11 @@ export namespace Prisma {
     branchId?: SortOrder
     branchScopeKey?: SortOrder
     teacherId?: SortOrder
-    subjectId?: SortOrder
-    classId?: SortOrder
-    sectionId?: SortOrder
-    responsibilityId?: SortOrder
+    subjectId?: SortOrderInput | SortOrder
+    classId?: SortOrderInput | SortOrder
+    sectionId?: SortOrderInput | SortOrder
+    responsibilityId?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
     assignmentScopeKey?: SortOrder
     status?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -78855,10 +78948,11 @@ export namespace Prisma {
     branchId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
     branchScopeKey?: StringWithAggregatesFilter<"TeacherAssignment"> | string
     teacherId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
-    subjectId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
-    classId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
-    sectionId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
-    responsibilityId?: IntWithAggregatesFilter<"TeacherAssignment"> | number
+    subjectId?: IntNullableWithAggregatesFilter<"TeacherAssignment"> | number | null
+    classId?: IntNullableWithAggregatesFilter<"TeacherAssignment"> | number | null
+    sectionId?: IntNullableWithAggregatesFilter<"TeacherAssignment"> | number | null
+    responsibilityId?: IntNullableWithAggregatesFilter<"TeacherAssignment"> | number | null
+    note?: StringNullableWithAggregatesFilter<"TeacherAssignment"> | string | null
     assignmentScopeKey?: StringWithAggregatesFilter<"TeacherAssignment"> | string
     status?: StringWithAggregatesFilter<"TeacherAssignment"> | string
     createdBy?: IntNullableWithAggregatesFilter<"TeacherAssignment"> | number | null
@@ -85306,6 +85400,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -85313,10 +85408,10 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -85326,10 +85421,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -85339,6 +85435,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85346,10 +85443,10 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -85359,10 +85456,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -85376,10 +85474,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -85389,6 +85488,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateManyMutationInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85401,10 +85501,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -91995,14 +92096,24 @@ export namespace Prisma {
     createdBy?: SortOrder
   }
 
-  export type SubjectScalarRelationFilter = {
-    is?: SubjectWhereInput
-    isNot?: SubjectWhereInput
+  export type SubjectNullableScalarRelationFilter = {
+    is?: SubjectWhereInput | null
+    isNot?: SubjectWhereInput | null
   }
 
-  export type TeacherResponsibilityScalarRelationFilter = {
-    is?: TeacherResponsibilityWhereInput
-    isNot?: TeacherResponsibilityWhereInput
+  export type AcademicClassNullableScalarRelationFilter = {
+    is?: AcademicClassWhereInput | null
+    isNot?: AcademicClassWhereInput | null
+  }
+
+  export type SectionNullableScalarRelationFilter = {
+    is?: SectionWhereInput | null
+    isNot?: SectionWhereInput | null
+  }
+
+  export type TeacherResponsibilityNullableScalarRelationFilter = {
+    is?: TeacherResponsibilityWhereInput | null
+    isNot?: TeacherResponsibilityWhereInput | null
   }
 
   export type TeacherAssignmentOrderByRelevanceInput = {
@@ -92027,6 +92138,7 @@ export namespace Prisma {
     classId?: SortOrder
     sectionId?: SortOrder
     responsibilityId?: SortOrder
+    note?: SortOrder
     assignmentScopeKey?: SortOrder
     status?: SortOrder
     createdBy?: SortOrder
@@ -92056,6 +92168,7 @@ export namespace Prisma {
     classId?: SortOrder
     sectionId?: SortOrder
     responsibilityId?: SortOrder
+    note?: SortOrder
     assignmentScopeKey?: SortOrder
     status?: SortOrder
     createdBy?: SortOrder
@@ -92073,6 +92186,7 @@ export namespace Prisma {
     classId?: SortOrder
     sectionId?: SortOrder
     responsibilityId?: SortOrder
+    note?: SortOrder
     assignmentScopeKey?: SortOrder
     status?: SortOrder
     createdBy?: SortOrder
@@ -92092,9 +92206,9 @@ export namespace Prisma {
     createdBy?: SortOrder
   }
 
-  export type SectionNullableScalarRelationFilter = {
-    is?: SectionWhereInput | null
-    isNot?: SectionWhereInput | null
+  export type SubjectScalarRelationFilter = {
+    is?: SubjectWhereInput
+    isNot?: SubjectWhereInput
   }
 
   export type ExamScheduleOrderByRelevanceInput = {
@@ -100817,34 +100931,42 @@ export namespace Prisma {
     update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutTeachingAssignmentsInput, TeacherUpdateWithoutTeachingAssignmentsInput>, TeacherUncheckedUpdateWithoutTeachingAssignmentsInput>
   }
 
-  export type SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput = {
+  export type SubjectUpdateOneWithoutTeacherAssignmentsNestedInput = {
     create?: XOR<SubjectCreateWithoutTeacherAssignmentsInput, SubjectUncheckedCreateWithoutTeacherAssignmentsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutTeacherAssignmentsInput
     upsert?: SubjectUpsertWithoutTeacherAssignmentsInput
+    disconnect?: SubjectWhereInput | boolean
+    delete?: SubjectWhereInput | boolean
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutTeacherAssignmentsInput, SubjectUpdateWithoutTeacherAssignmentsInput>, SubjectUncheckedUpdateWithoutTeacherAssignmentsInput>
   }
 
-  export type AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput = {
+  export type AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput = {
     create?: XOR<AcademicClassCreateWithoutTeacherAssignmentsInput, AcademicClassUncheckedCreateWithoutTeacherAssignmentsInput>
     connectOrCreate?: AcademicClassCreateOrConnectWithoutTeacherAssignmentsInput
     upsert?: AcademicClassUpsertWithoutTeacherAssignmentsInput
+    disconnect?: AcademicClassWhereInput | boolean
+    delete?: AcademicClassWhereInput | boolean
     connect?: AcademicClassWhereUniqueInput
     update?: XOR<XOR<AcademicClassUpdateToOneWithWhereWithoutTeacherAssignmentsInput, AcademicClassUpdateWithoutTeacherAssignmentsInput>, AcademicClassUncheckedUpdateWithoutTeacherAssignmentsInput>
   }
 
-  export type SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput = {
+  export type SectionUpdateOneWithoutTeacherAssignmentsNestedInput = {
     create?: XOR<SectionCreateWithoutTeacherAssignmentsInput, SectionUncheckedCreateWithoutTeacherAssignmentsInput>
     connectOrCreate?: SectionCreateOrConnectWithoutTeacherAssignmentsInput
     upsert?: SectionUpsertWithoutTeacherAssignmentsInput
+    disconnect?: SectionWhereInput | boolean
+    delete?: SectionWhereInput | boolean
     connect?: SectionWhereUniqueInput
     update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutTeacherAssignmentsInput, SectionUpdateWithoutTeacherAssignmentsInput>, SectionUncheckedUpdateWithoutTeacherAssignmentsInput>
   }
 
-  export type TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput = {
+  export type TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput = {
     create?: XOR<TeacherResponsibilityCreateWithoutAssignmentsInput, TeacherResponsibilityUncheckedCreateWithoutAssignmentsInput>
     connectOrCreate?: TeacherResponsibilityCreateOrConnectWithoutAssignmentsInput
     upsert?: TeacherResponsibilityUpsertWithoutAssignmentsInput
+    disconnect?: TeacherResponsibilityWhereInput | boolean
+    delete?: TeacherResponsibilityWhereInput | boolean
     connect?: TeacherResponsibilityWhereUniqueInput
     update?: XOR<XOR<TeacherResponsibilityUpdateToOneWithWhereWithoutAssignmentsInput, TeacherResponsibilityUpdateWithoutAssignmentsInput>, TeacherResponsibilityUncheckedUpdateWithoutAssignmentsInput>
   }
@@ -105824,16 +105946,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutTenantInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -105842,10 +105965,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -107798,10 +107922,11 @@ export namespace Prisma {
     branchId?: IntFilter<"TeacherAssignment"> | number
     branchScopeKey?: StringFilter<"TeacherAssignment"> | string
     teacherId?: IntFilter<"TeacherAssignment"> | number
-    subjectId?: IntFilter<"TeacherAssignment"> | number
-    classId?: IntFilter<"TeacherAssignment"> | number
-    sectionId?: IntFilter<"TeacherAssignment"> | number
-    responsibilityId?: IntFilter<"TeacherAssignment"> | number
+    subjectId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    classId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    sectionId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    responsibilityId?: IntNullableFilter<"TeacherAssignment"> | number | null
+    note?: StringNullableFilter<"TeacherAssignment"> | string | null
     assignmentScopeKey?: StringFilter<"TeacherAssignment"> | string
     status?: StringFilter<"TeacherAssignment"> | string
     createdBy?: IntNullableFilter<"TeacherAssignment"> | number | null
@@ -108647,6 +108772,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutCreatorInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -108654,10 +108780,10 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
   }
 
   export type TeacherAssignmentUncheckedCreateWithoutCreatorInput = {
@@ -108666,10 +108792,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -114903,6 +115030,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutSubjectInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -114910,9 +115038,9 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -114922,9 +115050,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -116226,16 +116355,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutBranchInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -116244,10 +116374,11 @@ export namespace Prisma {
     tenantId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -117327,6 +117458,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutClassInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -117334,9 +117466,9 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -117346,9 +117478,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -118136,6 +118269,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutSectionInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -118143,9 +118277,9 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -118155,9 +118289,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -120684,6 +120819,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutResponsibilityInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -120691,9 +120827,9 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
     teacher: TeacherCreateNestedOneWithoutTeachingAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -120703,9 +120839,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -127605,16 +127742,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentCreateWithoutTeacherInput = {
     branchScopeKey: string
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutTeacherAssignmentsInput
     branch: BranchCreateNestedOneWithoutTeacherAssignmentsInput
-    subject: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
-    class: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
-    section: SectionCreateNestedOneWithoutTeacherAssignmentsInput
-    responsibility: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
+    subject?: SubjectCreateNestedOneWithoutTeacherAssignmentsInput
+    class?: AcademicClassCreateNestedOneWithoutTeacherAssignmentsInput
+    section?: SectionCreateNestedOneWithoutTeacherAssignmentsInput
+    responsibility?: TeacherResponsibilityCreateNestedOneWithoutAssignmentsInput
     creator?: AdminCreateNestedOneWithoutCreatedTeacherAssignmentsInput
   }
 
@@ -127623,10 +127761,11 @@ export namespace Prisma {
     tenantId: number
     branchId: number
     branchScopeKey: string
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -140169,10 +140308,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -142711,16 +142851,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutTenantInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -142729,10 +142870,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -142745,10 +142887,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -142933,10 +143076,11 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdAt?: Date | string
@@ -143453,6 +143597,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutCreatorInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143460,10 +143605,10 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
   }
 
   export type TeacherAssignmentUncheckedUpdateWithoutCreatorInput = {
@@ -143472,10 +143617,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143488,10 +143634,11 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143868,9 +144015,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -143977,6 +144125,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutSubjectInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143984,9 +144133,9 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -143996,9 +144145,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -144012,9 +144162,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -144302,10 +144453,11 @@ export namespace Prisma {
     tenantId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -145232,16 +145384,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutBranchInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -145250,10 +145403,11 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -145266,10 +145420,11 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -145420,9 +145575,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -145747,6 +145903,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutClassInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145754,9 +145911,9 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -145766,9 +145923,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -145782,9 +145940,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -145891,9 +146050,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -146178,6 +146338,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutSectionInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146185,9 +146346,9 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -146197,9 +146358,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -146213,9 +146375,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -146546,9 +146709,10 @@ export namespace Prisma {
     branchId: number
     branchScopeKey: string
     teacherId: number
-    subjectId: number
-    classId: number
-    sectionId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -146558,6 +146722,7 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutResponsibilityInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146565,9 +146730,9 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -146577,9 +146742,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -146593,9 +146759,10 @@ export namespace Prisma {
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
     teacherId?: IntFieldUpdateOperationsInput | number
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -147469,10 +147636,11 @@ export namespace Prisma {
     tenantId: number
     branchId: number
     branchScopeKey: string
-    subjectId: number
-    classId: number
-    sectionId: number
-    responsibilityId: number
+    subjectId?: number | null
+    classId?: number | null
+    sectionId?: number | null
+    responsibilityId?: number | null
+    note?: string | null
     assignmentScopeKey: string
     status?: string
     createdBy?: number | null
@@ -147675,16 +147843,17 @@ export namespace Prisma {
 
   export type TeacherAssignmentUpdateWithoutTeacherInput = {
     branchScopeKey?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
     branch?: BranchUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    subject?: SubjectUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    class?: AcademicClassUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    section?: SectionUpdateOneRequiredWithoutTeacherAssignmentsNestedInput
-    responsibility?: TeacherResponsibilityUpdateOneRequiredWithoutAssignmentsNestedInput
+    subject?: SubjectUpdateOneWithoutTeacherAssignmentsNestedInput
+    class?: AcademicClassUpdateOneWithoutTeacherAssignmentsNestedInput
+    section?: SectionUpdateOneWithoutTeacherAssignmentsNestedInput
+    responsibility?: TeacherResponsibilityUpdateOneWithoutAssignmentsNestedInput
     creator?: AdminUpdateOneWithoutCreatedTeacherAssignmentsNestedInput
   }
 
@@ -147693,10 +147862,11 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -147709,10 +147879,11 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     branchId?: IntFieldUpdateOperationsInput | number
     branchScopeKey?: StringFieldUpdateOperationsInput | string
-    subjectId?: IntFieldUpdateOperationsInput | number
-    classId?: IntFieldUpdateOperationsInput | number
-    sectionId?: IntFieldUpdateOperationsInput | number
-    responsibilityId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    classId?: NullableIntFieldUpdateOperationsInput | number | null
+    sectionId?: NullableIntFieldUpdateOperationsInput | number | null
+    responsibilityId?: NullableIntFieldUpdateOperationsInput | number | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     assignmentScopeKey?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null

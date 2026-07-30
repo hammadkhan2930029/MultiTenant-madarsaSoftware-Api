@@ -437,10 +437,12 @@ const mapSupplierPayment = (payment) => ({
 const validateSupplierPayload = (payload) => {
   const supplierName = normalizeText(payload.supplierName);
   if (!supplierName) throw new AppError('سپلائر کا نام ضروری ہے۔', 400);
+  const mobileNumber = normalizeText(payload.mobileNumber);
+  if (!mobileNumber) throw new AppError('موبائل نمبر ضروری ہے۔', 400);
 
   return {
     supplierName,
-    mobileNumber: normalizeText(payload.mobileNumber) || null,
+    mobileNumber,
     address: normalizeText(payload.address) || null,
     shopName: normalizeText(payload.shopName) || null,
     balance: normalizeNumber(payload.balance, 'بیلنس'),

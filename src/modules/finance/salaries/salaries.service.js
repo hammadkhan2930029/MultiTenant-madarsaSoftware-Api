@@ -43,6 +43,14 @@ const teacherLookupSelect = {
   appointmentDate: true,
   joiningDate: true,
   createdAt: true,
+  teachingAssignments: {
+    where: { status: 'active' },
+    select: {
+      responsibility: {
+        select: { id: true, name: true },
+      },
+    },
+  },
   branch: {
     select: {
       id: true,

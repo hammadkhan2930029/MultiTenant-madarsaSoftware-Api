@@ -154,6 +154,8 @@ const mapTeacherIncrement = (row) => ({
   staffType: row.staffType,
   department: row.department,
   jobTitle: row.jobTitle,
+  primaryAssignment: row.primaryAssignment,
+  assignedLabels: row.assignedLabels,
   currentSalary: row.currentSalary,
   previousSalary: row.previousSalary,
   incrementAmount: row.incrementAmount,
@@ -313,6 +315,9 @@ export const teachersService = {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const search = query.search ? `%${query.search}%` : null;
     const staffType = query.staffType || null;
+    const assignment = query.assignment || null;
+    const month = query.month || null;
+    const year = query.year || null;
     const status = normalizeStatusFilter(query.status);
 
     const items = await prisma.$queryRaw`
@@ -322,6 +327,19 @@ export const teachersService = {
         teacher.staffType,
         teacher.department,
         teacher.jobTitle,
+        teacher.subject AS primaryAssignment,
+        (
+          SELECT GROUP_CONCAT(DISTINCT CASE
+            WHEN teacher.staffType = 'staff' THEN responsibility.name
+            ELSE subject.name
+          END SEPARATOR ', ')
+          FROM teacher_assignments assignmentRow
+          LEFT JOIN subjects subject ON subject.id = assignmentRow.subject_id
+          LEFT JOIN teacher_responsibilities responsibility ON responsibility.id = assignmentRow.responsibility_id
+          WHERE assignmentRow.teacher_id = teacher.id
+            AND assignmentRow.tenant_id = ${resolvedTenantId}
+            AND assignmentRow.status = 'active'
+        ) AS assignedLabels,
         teacher.basicSalary AS currentSalary,
         admin.name AS createdByName
       FROM teacher_salary_increments increment
@@ -333,12 +351,31 @@ export const teachersService = {
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
+        AND (
+          ${assignment} IS NULL
+          OR teacher.subject = ${assignment}
+          OR EXISTS (
+            SELECT 1
+            FROM teacher_assignments assignmentFilter
+            LEFT JOIN subjects subjectFilter ON subjectFilter.id = assignmentFilter.subject_id
+            LEFT JOIN teacher_responsibilities responsibilityFilter ON responsibilityFilter.id = assignmentFilter.responsibility_id
+            WHERE assignmentFilter.teacher_id = teacher.id
+              AND assignmentFilter.tenant_id = ${resolvedTenantId}
+              AND assignmentFilter.status = 'active'
+              AND (
+                (teacher.staffType = 'teacher' AND subjectFilter.name = ${assignment})
+                OR (teacher.staffType = 'staff' AND responsibilityFilter.name = ${assignment})
+              )
+          )
+        )
+        AND (${month} IS NULL OR MONTH(increment.effectiveDate) = ${month})
+        AND (${year} IS NULL OR YEAR(increment.effectiveDate) = ${year})
       ORDER BY increment.effectiveDate DESC, increment.createdAt DESC, increment.id DESC
       LIMIT ${limit} OFFSET ${skip}
     `;
 
     const totalRows = await prisma.$queryRaw`
-      SELECT COUNT(*) AS total
+      SELECT COUNT(*) AS total, COALESCE(SUM(increment.incrementAmount), 0) AS totalIncrement
       FROM teacher_salary_increments increment
       INNER JOIN teachers teacher ON teacher.id = increment.teacherId
       WHERE increment.tenant_id = ${resolvedTenantId}
@@ -347,11 +384,34 @@ export const teachersService = {
         AND (${branchId} IS NULL OR teacher.branch_id = ${branchId})
         AND (${search} IS NULL OR teacher.fullName LIKE ${search} OR teacher.department LIKE ${search} OR teacher.jobTitle LIKE ${search} OR increment.reason LIKE ${search})
         AND (${staffType} IS NULL OR teacher.staffType = ${staffType})
+        AND (
+          ${assignment} IS NULL
+          OR teacher.subject = ${assignment}
+          OR EXISTS (
+            SELECT 1
+            FROM teacher_assignments assignmentFilter
+            LEFT JOIN subjects subjectFilter ON subjectFilter.id = assignmentFilter.subject_id
+            LEFT JOIN teacher_responsibilities responsibilityFilter ON responsibilityFilter.id = assignmentFilter.responsibility_id
+            WHERE assignmentFilter.teacher_id = teacher.id
+              AND assignmentFilter.tenant_id = ${resolvedTenantId}
+              AND assignmentFilter.status = 'active'
+              AND (
+                (teacher.staffType = 'teacher' AND subjectFilter.name = ${assignment})
+                OR (teacher.staffType = 'staff' AND responsibilityFilter.name = ${assignment})
+              )
+          )
+        )
+        AND (${month} IS NULL OR MONTH(increment.effectiveDate) = ${month})
+        AND (${year} IS NULL OR YEAR(increment.effectiveDate) = ${year})
     `;
 
     return {
       items: items.map(mapTeacherIncrement),
       meta: buildPaginationMeta({ totalItems: Number(totalRows[0]?.total || 0), page, limit }),
+      stats: {
+        totalRecords: Number(totalRows[0]?.total || 0),
+        totalIncrement: Number(totalRows[0]?.totalIncrement || 0),
+      },
     };
   },
 

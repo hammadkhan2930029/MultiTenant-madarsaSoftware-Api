@@ -30,6 +30,7 @@ const teacherAssignmentSelect = {
   classId: true,
   sectionId: true,
   responsibilityId: true,
+  note: true,
   status: true,
   createdBy: true,
   createdAt: true,
@@ -66,9 +67,10 @@ const validateAssignmentReferences = async (tenantId, payload, branchId = null) 
   const classId = normalizeId(payload.classId);
   const sectionId = normalizeId(payload.sectionId);
   const teacherId = normalizeId(payload.teacherId);
+  const staffType = payload.staffType === 'staff' ? 'staff' : 'teacher';
 
   const [academicClass, section, teacher] = await Promise.all([
-    prisma.academicClass.findFirst({
+    staffType === 'teacher' ? prisma.academicClass.findFirst({
       where: {
         id: classId,
         tenantId,
@@ -77,16 +79,16 @@ const validateAssignmentReferences = async (tenantId, payload, branchId = null) 
         branch: { status: 'active' },
       },
       select: { id: true, branchId: true, name: true },
-    }),
-    prisma.section.findFirst({
+    }) : Promise.resolve(null),
+    staffType === 'teacher' ? prisma.section.findFirst({
       where: { id: sectionId, tenantId, classId, status: 'active' },
       select: { id: true, classId: true, name: true },
-    }),
+    }) : Promise.resolve(null),
     prisma.teacher.findFirst({
       where: {
         id: teacherId,
         tenantId,
-        staffType: 'teacher',
+        staffType,
         status: 'active',
         ...(scopedBranchId ? { branchId: scopedBranchId } : {}),
       },
@@ -94,24 +96,29 @@ const validateAssignmentReferences = async (tenantId, payload, branchId = null) 
     }),
   ]);
 
-  if (!academicClass) {
-    throw new AppError('منتخب جماعت دستیاب نہیں ہے۔', 403);
-  }
-  if (!section) {
-    throw new AppError('منتخب سیکشن اس جماعت میں دستیاب نہیں ہے۔', 403);
-  }
   if (!teacher) {
-    throw new AppError('فعال استاد دستیاب نہیں ہے۔', 403);
+    throw new AppError(staffType === 'staff' ? 'فعال عملہ دستیاب نہیں ہے۔' : 'فعال استاد دستیاب نہیں ہے۔', 403);
   }
-  if (!teacher.branchId || teacher.branchId !== academicClass.branchId) {
-    throw new AppError('منتخب استاد اس جماعت کی برانچ سے متعلق نہیں ہے۔', 403);
+  if (staffType === 'teacher') {
+    if (!academicClass) {
+      throw new AppError('منتخب جماعت دستیاب نہیں ہے۔', 403);
+    }
+    if (!section) {
+      throw new AppError('منتخب سیکشن اس جماعت میں دستیاب نہیں ہے۔', 403);
+    }
+    if (!teacher.branchId || teacher.branchId !== academicClass.branchId) {
+      throw new AppError('منتخب استاد اس جماعت کی برانچ سے متعلق نہیں ہے۔', 403);
+    }
+  } else if (!teacher.branchId) {
+    throw new AppError('منتخب عملہ کسی فعال برانچ سے منسلک نہیں ہے۔', 403);
   }
 
   return {
     teacher,
     academicClass,
     section,
-    branchId: academicClass.branchId,
+    staffType,
+    branchId: staffType === 'staff' ? teacher.branchId : academicClass.branchId,
   };
 };
 
@@ -262,6 +269,7 @@ export const teacherAssignmentsService = {
       ...(query.classId ? { classId: Number(query.classId) } : {}),
       ...(query.sectionId ? { sectionId: Number(query.sectionId) } : {}),
       ...(query.responsibilityId ? { responsibilityId: Number(query.responsibilityId) } : {}),
+      ...(query.staffType ? { teacher: { staffType: query.staffType } } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
         ? {
@@ -301,10 +309,14 @@ export const teacherAssignmentsService = {
     const references = await validateAssignmentReferences(resolvedTenantId, payload, requestedBranchId);
     const branchId = references.branchId;
     await branchScopeService.validateBranchBelongsToTenant({ tenantId: resolvedTenantId, branchId, requireActive: true });
-    const subjects = await getActiveSubjects(resolvedTenantId, payload.subjectIds || []);
+    const subjects = references.staffType === 'teacher'
+      ? await getActiveSubjects(resolvedTenantId, payload.subjectIds || [])
+      : [null];
 
     return prisma.$transaction(async (tx) => {
-      const responsibilities = await getOrCreateResponsibilities(tx, resolvedTenantId, branchId, payload, reqContext?.adminId || null);
+      const responsibilities = references.staffType === 'staff'
+        ? await getOrCreateResponsibilities(tx, resolvedTenantId, branchId, payload, reqContext?.adminId || null)
+        : [null];
       const rows = [];
       const rowErrors = [];
       const seenKeys = new Set();
@@ -313,10 +325,10 @@ export const teacherAssignmentsService = {
         for (const responsibility of responsibilities) {
           const assignmentScopeKey = buildAssignmentScopeKey({
             teacherId: references.teacher.id,
-            subjectId: subject.id,
-            classId: references.academicClass.id,
-            sectionId: references.section.id,
-            responsibilityId: responsibility.id,
+            subjectId: subject?.id || null,
+            classId: references.academicClass?.id || null,
+            sectionId: references.section?.id || null,
+            responsibilityId: responsibility?.id || null,
           });
 
           if (seenKeys.has(assignmentScopeKey)) continue;
@@ -328,7 +340,7 @@ export const teacherAssignmentsService = {
           });
 
           if (duplicate?.status === 'active') {
-            rowErrors.push({ subjectId: subject.id, responsibilityId: responsibility.id, message: 'یہ تقسیم پہلے سے موجود ہے۔' });
+            rowErrors.push({ subjectId: subject?.id || null, responsibilityId: responsibility?.id || null, message: 'یہ تقسیم پہلے سے موجود ہے۔' });
             continue;
           }
 
@@ -347,10 +359,11 @@ export const teacherAssignmentsService = {
               branchId,
               branchScopeKey: buildBranchScopeKey(branchId),
               teacherId: references.teacher.id,
-              subjectId: subject.id,
-              classId: references.academicClass.id,
-              sectionId: references.section.id,
-              responsibilityId: responsibility.id,
+              subjectId: subject?.id || null,
+              classId: references.academicClass?.id || null,
+              sectionId: references.section?.id || null,
+              responsibilityId: responsibility?.id || null,
+              note: normalizeText(payload.note) || null,
               assignmentScopeKey,
               status: payload.status || 'active',
               createdBy: reqContext?.adminId || null,
@@ -372,27 +385,33 @@ export const teacherAssignmentsService = {
   async updateTeacherAssignment(tenantId, id, payload, reqContext = {}, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const existing = await assertAssignmentInScope(resolvedTenantId, id, branchScope);
-    const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
+    const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, { ...payload, branchId: payload.branchId || existing.branchId }, branchScope);
     const references = await validateAssignmentReferences(resolvedTenantId, {
       teacherId: payload.teacherId || existing.teacherId,
+      staffType: existing.teacher.staffType,
       classId: payload.classId || existing.classId,
       sectionId: payload.sectionId || existing.sectionId,
     }, requestedBranchId);
     const branchId = references.branchId;
-    const subject = (await getActiveSubjects(resolvedTenantId, [payload.subjectId || existing.subjectId]))[0];
-    const responsibilityPayload = payload.responsibility
-      ? { responsibilityIds: [], responsibilities: [payload.responsibility] }
-      : { responsibilityIds: [payload.responsibilityId || existing.responsibilityId].filter(Boolean), responsibilities: [] };
-    const responsibilities = await prisma.$transaction((tx) =>
-      getOrCreateResponsibilities(tx, resolvedTenantId, branchId, responsibilityPayload, reqContext?.adminId || null)
-    );
-    const responsibility = responsibilities[0];
+    const subject = references.staffType === 'teacher'
+      ? (await getActiveSubjects(resolvedTenantId, [payload.subjectId || existing.subjectId]))[0]
+      : null;
+    let responsibility = null;
+    if (references.staffType === 'staff') {
+      const responsibilityPayload = payload.responsibility
+        ? { responsibilityIds: [], responsibilities: [payload.responsibility] }
+        : { responsibilityIds: [payload.responsibilityId || existing.responsibilityId].filter(Boolean), responsibilities: [] };
+      const responsibilities = await prisma.$transaction((tx) =>
+        getOrCreateResponsibilities(tx, resolvedTenantId, branchId, responsibilityPayload, reqContext?.adminId || null)
+      );
+      responsibility = responsibilities[0];
+    }
     const assignmentScopeKey = buildAssignmentScopeKey({
       teacherId: references.teacher.id,
-      subjectId: subject.id,
-      classId: references.academicClass.id,
-      sectionId: references.section.id,
-      responsibilityId: responsibility.id,
+      subjectId: subject?.id || null,
+      classId: references.academicClass?.id || null,
+      sectionId: references.section?.id || null,
+      responsibilityId: responsibility?.id || null,
     });
 
     const duplicate = await prisma.teacherAssignment.findFirst({
@@ -416,10 +435,11 @@ export const teacherAssignmentsService = {
         branchId,
         branchScopeKey: buildBranchScopeKey(branchId),
         teacherId: references.teacher.id,
-        subjectId: subject.id,
-        classId: references.academicClass.id,
-        sectionId: references.section.id,
-        responsibilityId: responsibility.id,
+        subjectId: subject?.id || null,
+        classId: references.academicClass?.id || null,
+        sectionId: references.section?.id || null,
+        responsibilityId: responsibility?.id || null,
+        note: payload.note === undefined ? existing.note : normalizeText(payload.note) || null,
         assignmentScopeKey,
         status: payload.status || existing.status,
       },

@@ -70,12 +70,18 @@ export const subjectsService = {
     const branchId = await resolveSubjectBranchId(resolvedTenantId, payload, branchScope);
     await validateBranchAccess(resolvedTenantId, branchId);
 
+    const detail = String(payload.detail || '').trim();
     const existingSubject = await prisma.subject.findFirst({
-      where: { tenantId: resolvedTenantId, branchId, name: payload.name },
+      where: {
+        tenantId: resolvedTenantId,
+        branchId,
+        name: payload.name,
+        detail: detail || null,
+      },
     });
 
     if (existingSubject) {
-      throw new AppError('Subject with the same name already exists in this branch.', 409);
+      throw new AppError('یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔', 409);
     }
 
     return prisma.subject.create({
@@ -83,7 +89,7 @@ export const subjectsService = {
         tenantId: resolvedTenantId,
         branchId,
         name: payload.name,
-        detail: payload.detail || null,
+        detail: detail || null,
         status: payload.status || 'active',
       },
       select: subjectSelect,
@@ -108,7 +114,7 @@ export const subjectsService = {
     }
 
     const rowErrors = [];
-    const seenNames = new Map();
+    const seenSubjects = new Map();
     const validRows = [];
 
     normalizedRows.forEach((row) => {
@@ -120,16 +126,16 @@ export const subjectsService = {
         return;
       }
 
-      const key = row.name.toLowerCase();
-      if (seenNames.has(key)) {
+      const key = `${row.name.toLowerCase()}::${row.detail.toLowerCase()}`;
+      if (seenSubjects.has(key)) {
         rowErrors.push({
           index: row.index,
-          message: 'This subject is duplicated in the same form.',
+          message: 'یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔',
         });
         return;
       }
 
-      seenNames.set(key, row.index);
+      seenSubjects.set(key, row.index);
       validRows.push(row);
     });
 
@@ -140,22 +146,30 @@ export const subjectsService = {
           branchId,
           name: { in: validRows.map((row) => row.name) },
         },
-        select: { name: true },
+        select: { name: true, detail: true },
       });
-      const existingNames = new Set(existingSubjects.map((item) => item.name.toLowerCase()));
+      const existingKeys = new Set(existingSubjects.map((item) =>
+        `${item.name.toLowerCase()}::${String(item.detail || '').trim().toLowerCase()}`
+      ));
 
       validRows.forEach((row) => {
-        if (existingNames.has(row.name.toLowerCase())) {
+        const key = `${row.name.toLowerCase()}::${row.detail.toLowerCase()}`;
+        if (existingKeys.has(key)) {
           rowErrors.push({
             index: row.index,
-            message: 'This subject already exists.',
+            message: 'یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔',
           });
         }
       });
     }
 
     if (rowErrors.length) {
-      throw new AppError('Submitted subjects contain validation errors.', 409, { rows: rowErrors });
+      const hasDuplicate = rowErrors.some((error) => error.message === 'یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔');
+      throw new AppError(
+        hasDuplicate ? 'یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔' : 'Submitted subjects contain validation errors.',
+        409,
+        { rows: rowErrors },
+      );
     }
 
     return prisma.$transaction(async (tx) => {
@@ -232,24 +246,26 @@ export const subjectsService = {
     const existingSubject = await getTenantSubject(resolvedTenantId, id, branchId);
     await validateBranchAccess(resolvedTenantId, branchId);
 
+    const detail = String(payload.detail || '').trim();
     const duplicateSubject = await prisma.subject.findFirst({
       where: {
         tenantId: resolvedTenantId,
         branchId,
         id: { not: Number(id) },
         name: payload.name,
+        detail: detail || null,
       },
     });
 
     if (duplicateSubject) {
-      throw new AppError('Another subject with the same name already exists.', 409);
+      throw new AppError('یہ مضمون پہلے سے موجود ہے۔ تفصیل منفرد ہونی چاہیے ہے۔', 409);
     }
 
     return prisma.subject.update({
       where: { id: Number(id), tenantId: resolvedTenantId },
       data: {
         name: payload.name,
-        detail: payload.detail || null,
+        detail: detail || null,
         branchId,
         status: payload.status || existingSubject.status,
       },

@@ -8,16 +8,24 @@ const textArray = z.array(z.string().trim().min(1).max(150)).default([]);
 export const createTeacherAssignmentValidationSchema = z.object({
   body: z.object({
     teacherId: id('استاد منتخب کریں۔'),
-    subjectIds: z.array(id('مضمون درست منتخب کریں۔')).min(1, 'کم از کم ایک مضمون منتخب کریں۔'),
-    classId: id('جماعت منتخب کریں۔'),
-    sectionId: id('سیکشن منتخب کریں۔'),
+    staffType: z.enum(['teacher', 'staff']).default('teacher'),
+    subjectIds: z.array(id('مضمون درست منتخب کریں۔')).optional().default([]),
+    classId: optionalId(),
+    sectionId: optionalId(),
     responsibilityIds: z.array(id('ذمہ داری درست منتخب کریں۔')).optional().default([]),
     responsibilities: textArray,
+    note: z.string().trim().max(255, 'نوٹ بہت لمبا ہے۔').optional(),
     status: z.enum(['active', 'inactive']).optional(),
     branchId: optionalId(),
-  }).refine((value) => value.responsibilityIds.length || value.responsibilities.length, {
-    message: 'کم از کم ایک ذمہ داری درج کریں۔',
-    path: ['responsibilities'],
+  }).superRefine((value, ctx) => {
+    if (value.staffType === 'teacher') {
+      if (!value.subjectIds.length) ctx.addIssue({ code: 'custom', message: 'کم از کم ایک مضمون منتخب کریں۔', path: ['subjectIds'] });
+      if (!value.classId) ctx.addIssue({ code: 'custom', message: 'جماعت منتخب کریں۔', path: ['classId'] });
+      if (!value.sectionId) ctx.addIssue({ code: 'custom', message: 'سیکشن منتخب کریں۔', path: ['sectionId'] });
+    }
+    if (value.staffType === 'staff' && !value.responsibilityIds.length && !value.responsibilities.length) {
+      ctx.addIssue({ code: 'custom', message: 'ذمہ داری درج کریں۔', path: ['responsibilities'] });
+    }
   }),
   params: z.object({}).default({}),
   query: z.object({}).default({}),
@@ -31,6 +39,7 @@ export const updateTeacherAssignmentValidationSchema = z.object({
     sectionId: optionalId(),
     responsibilityId: optionalId(),
     responsibility: nonEmptyText('ذمہ داری درج کریں۔').optional(),
+    note: z.string().trim().max(255, 'نوٹ بہت لمبا ہے۔').optional(),
     status: z.enum(['active', 'inactive']).optional(),
     branchId: optionalId(),
   }),
@@ -50,6 +59,7 @@ export const listTeacherAssignmentsValidationSchema = z.object({
     classId: optionalId(),
     sectionId: optionalId(),
     responsibilityId: optionalId(),
+    staffType: z.enum(['teacher', 'staff']).optional(),
     branchId: optionalId(),
     status: z.enum(['active', 'inactive']).optional(),
     page: z.coerce.number().int().positive().optional(),
