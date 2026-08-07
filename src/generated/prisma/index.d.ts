@@ -7366,6 +7366,7 @@ export namespace Prisma {
     customDomain: string | null
     status: string | null
     branchEnabled: boolean | null
+    publicWebsiteEnabled: boolean | null
     branchLimit: number | null
     ownerAdminId: number | null
     referralCode: string | null
@@ -7383,6 +7384,7 @@ export namespace Prisma {
     customDomain: string | null
     status: string | null
     branchEnabled: boolean | null
+    publicWebsiteEnabled: boolean | null
     branchLimit: number | null
     ownerAdminId: number | null
     referralCode: string | null
@@ -7400,6 +7402,7 @@ export namespace Prisma {
     customDomain: number
     status: number
     branchEnabled: number
+    publicWebsiteEnabled: number
     branchLimit: number
     ownerAdminId: number
     referralCode: number
@@ -7433,6 +7436,7 @@ export namespace Prisma {
     customDomain?: true
     status?: true
     branchEnabled?: true
+    publicWebsiteEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
     referralCode?: true
@@ -7450,6 +7454,7 @@ export namespace Prisma {
     customDomain?: true
     status?: true
     branchEnabled?: true
+    publicWebsiteEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
     referralCode?: true
@@ -7467,6 +7472,7 @@ export namespace Prisma {
     customDomain?: true
     status?: true
     branchEnabled?: true
+    publicWebsiteEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
     referralCode?: true
@@ -7571,6 +7577,7 @@ export namespace Prisma {
     customDomain: string | null
     status: string
     branchEnabled: boolean
+    publicWebsiteEnabled: boolean
     branchLimit: number | null
     ownerAdminId: number | null
     referralCode: string
@@ -7607,6 +7614,7 @@ export namespace Prisma {
     customDomain?: boolean
     status?: boolean
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: boolean
     ownerAdminId?: boolean
     referralCode?: boolean
@@ -7684,6 +7692,7 @@ export namespace Prisma {
     customDomain?: boolean
     status?: boolean
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: boolean
     ownerAdminId?: boolean
     referralCode?: boolean
@@ -7693,7 +7702,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantCode" | "name" | "subdomain" | "customDomain" | "status" | "branchEnabled" | "branchLimit" | "ownerAdminId" | "referralCode" | "referredByTenantId" | "referredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
+  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantCode" | "name" | "subdomain" | "customDomain" | "status" | "branchEnabled" | "publicWebsiteEnabled" | "branchLimit" | "ownerAdminId" | "referralCode" | "referredByTenantId" | "referredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
   export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     referredBy?: boolean | Tenant$referredByArgs<ExtArgs>
     referredTenants?: boolean | Tenant$referredTenantsArgs<ExtArgs>
@@ -7824,6 +7833,7 @@ export namespace Prisma {
       customDomain: string | null
       status: string
       branchEnabled: boolean
+      publicWebsiteEnabled: boolean
       branchLimit: number | null
       ownerAdminId: number | null
       referralCode: string
@@ -8264,6 +8274,7 @@ export namespace Prisma {
     readonly customDomain: FieldRef<"Tenant", 'String'>
     readonly status: FieldRef<"Tenant", 'String'>
     readonly branchEnabled: FieldRef<"Tenant", 'Boolean'>
+    readonly publicWebsiteEnabled: FieldRef<"Tenant", 'Boolean'>
     readonly branchLimit: FieldRef<"Tenant", 'Int'>
     readonly ownerAdminId: FieldRef<"Tenant", 'Int'>
     readonly referralCode: FieldRef<"Tenant", 'String'>
@@ -74705,6 +74716,7 @@ export namespace Prisma {
     customDomain: 'customDomain',
     status: 'status',
     branchEnabled: 'branchEnabled',
+    publicWebsiteEnabled: 'publicWebsiteEnabled',
     branchLimit: 'branchLimit',
     ownerAdminId: 'ownerAdminId',
     referralCode: 'referralCode',
@@ -76594,6 +76606,7 @@ export namespace Prisma {
     customDomain?: StringNullableFilter<"Tenant"> | string | null
     status?: StringFilter<"Tenant"> | string
     branchEnabled?: BoolFilter<"Tenant"> | boolean
+    publicWebsiteEnabled?: BoolFilter<"Tenant"> | boolean
     branchLimit?: IntNullableFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
     referralCode?: StringFilter<"Tenant"> | string
@@ -76668,6 +76681,7 @@ export namespace Prisma {
     customDomain?: SortOrderInput | SortOrder
     status?: SortOrder
     branchEnabled?: SortOrder
+    publicWebsiteEnabled?: SortOrder
     branchLimit?: SortOrderInput | SortOrder
     ownerAdminId?: SortOrderInput | SortOrder
     referralCode?: SortOrder
@@ -76747,6 +76761,7 @@ export namespace Prisma {
     name?: StringFilter<"Tenant"> | string
     status?: StringFilter<"Tenant"> | string
     branchEnabled?: BoolFilter<"Tenant"> | boolean
+    publicWebsiteEnabled?: BoolFilter<"Tenant"> | boolean
     branchLimit?: IntNullableFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
     referredByTenantId?: IntNullableFilter<"Tenant"> | number | null
@@ -76820,6 +76835,7 @@ export namespace Prisma {
     customDomain?: SortOrderInput | SortOrder
     status?: SortOrder
     branchEnabled?: SortOrder
+    publicWebsiteEnabled?: SortOrder
     branchLimit?: SortOrderInput | SortOrder
     ownerAdminId?: SortOrderInput | SortOrder
     referralCode?: SortOrder
@@ -76845,6 +76861,7 @@ export namespace Prisma {
     customDomain?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     status?: StringWithAggregatesFilter<"Tenant"> | string
     branchEnabled?: BoolWithAggregatesFilter<"Tenant"> | boolean
+    publicWebsiteEnabled?: BoolWithAggregatesFilter<"Tenant"> | boolean
     branchLimit?: IntNullableWithAggregatesFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableWithAggregatesFilter<"Tenant"> | number | null
     referralCode?: StringWithAggregatesFilter<"Tenant"> | string
@@ -83088,6 +83105,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -83161,6 +83179,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -83233,6 +83252,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -83306,6 +83326,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -83379,6 +83400,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -83395,6 +83417,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -83411,6 +83434,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -90608,6 +90632,7 @@ export namespace Prisma {
     customDomain?: SortOrder
     status?: SortOrder
     branchEnabled?: SortOrder
+    publicWebsiteEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
     referralCode?: SortOrder
@@ -90632,6 +90657,7 @@ export namespace Prisma {
     customDomain?: SortOrder
     status?: SortOrder
     branchEnabled?: SortOrder
+    publicWebsiteEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
     referralCode?: SortOrder
@@ -90649,6 +90675,7 @@ export namespace Prisma {
     customDomain?: SortOrder
     status?: SortOrder
     branchEnabled?: SortOrder
+    publicWebsiteEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
     referralCode?: SortOrder
@@ -103887,6 +103914,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -103959,6 +103987,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -104035,6 +104064,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -104107,6 +104137,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -106549,6 +106580,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -106621,6 +106653,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -106712,6 +106745,7 @@ export namespace Prisma {
     customDomain?: StringNullableFilter<"Tenant"> | string | null
     status?: StringFilter<"Tenant"> | string
     branchEnabled?: BoolFilter<"Tenant"> | boolean
+    publicWebsiteEnabled?: BoolFilter<"Tenant"> | boolean
     branchLimit?: IntNullableFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
     referralCode?: StringFilter<"Tenant"> | string
@@ -108678,6 +108712,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -108750,6 +108785,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -109548,6 +109584,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -109620,6 +109657,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -110253,6 +110291,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -110325,6 +110364,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -110700,6 +110740,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -110772,6 +110813,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -111128,6 +111170,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -111200,6 +111243,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -111353,6 +111397,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -111425,6 +111470,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -111638,6 +111684,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -111710,6 +111757,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -111867,6 +111915,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -111939,6 +111988,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -112010,6 +112060,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -112082,6 +112133,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -112169,6 +112221,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -112241,6 +112294,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -112312,6 +112366,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -112384,6 +112439,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -112603,6 +112659,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -112675,6 +112732,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -112890,6 +112948,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -112962,6 +113021,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -113181,6 +113241,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -113253,6 +113314,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -113468,6 +113530,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -113540,6 +113603,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -113782,6 +113846,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -113854,6 +113919,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -114015,6 +114081,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -114087,6 +114154,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -114271,6 +114339,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -114343,6 +114412,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -114534,6 +114604,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -114606,6 +114677,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -114879,6 +114951,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -114951,6 +115024,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -115184,6 +115258,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -115256,6 +115331,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -115411,6 +115487,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -115483,6 +115560,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -115628,6 +115706,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -115700,6 +115779,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -115982,6 +116062,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -116054,6 +116135,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -116247,6 +116329,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -116319,6 +116402,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -117356,6 +117440,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -117428,6 +117513,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -117889,6 +117975,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -117961,6 +118048,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -118442,6 +118530,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -118514,6 +118603,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -118787,6 +118877,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -118859,6 +118950,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -119269,6 +119361,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -119341,6 +119434,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -119568,6 +119662,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -119640,6 +119735,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -120002,6 +120098,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -120074,6 +120171,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -120299,6 +120397,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -120371,6 +120470,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -120568,6 +120668,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -120640,6 +120741,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -120839,6 +120941,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -120911,6 +121014,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -121190,6 +121294,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -121262,6 +121367,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -121549,6 +121655,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -121621,6 +121728,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -121883,6 +121991,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -121955,6 +122064,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -122186,6 +122296,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -122258,6 +122369,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -122691,6 +122803,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -122763,6 +122876,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -123222,6 +123336,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -123294,6 +123409,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -123521,6 +123637,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -123593,6 +123710,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -123828,6 +123946,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -123900,6 +124019,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -124055,6 +124175,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -124127,6 +124248,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -124272,6 +124394,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -124344,6 +124467,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -124672,6 +124796,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -124744,6 +124869,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -125059,6 +125185,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -125131,6 +125258,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -125292,6 +125420,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -125364,6 +125493,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -125958,6 +126088,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -126030,6 +126161,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -126329,6 +126461,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -126401,6 +126534,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -126575,6 +126709,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -126647,6 +126782,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -126818,6 +126954,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -126890,6 +127027,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -127035,6 +127173,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -127107,6 +127246,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -127326,6 +127466,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -127398,6 +127539,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -127613,6 +127755,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -127685,6 +127828,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -128044,6 +128188,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -128116,6 +128261,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -128667,6 +128813,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -128739,6 +128886,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -129066,6 +129214,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -129138,6 +129287,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -129315,6 +129465,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -129387,6 +129538,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -129620,6 +129772,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -129692,6 +129845,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -129921,6 +130075,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -129993,6 +130148,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -130316,6 +130472,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -130388,6 +130545,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -130719,6 +130877,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -130791,6 +130950,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -131028,6 +131188,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -131100,6 +131261,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -131333,6 +131495,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -131405,6 +131568,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -131586,6 +131750,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -131658,6 +131823,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -131829,6 +131995,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -131901,6 +132068,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -132082,6 +132250,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -132154,6 +132323,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -132325,6 +132495,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -132397,6 +132568,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -132578,6 +132750,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -132650,6 +132823,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -132821,6 +132995,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -132893,6 +133068,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -133074,6 +133250,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -133146,6 +133323,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -133317,6 +133495,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -133389,6 +133568,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -133562,6 +133742,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -133634,6 +133815,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -133737,6 +133919,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -133809,6 +133992,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -133896,6 +134080,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -133968,6 +134153,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -134039,6 +134225,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -134111,6 +134298,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -134292,6 +134480,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -134364,6 +134553,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -134535,6 +134725,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -134607,6 +134798,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -134694,6 +134886,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -134766,6 +134959,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -134837,6 +135031,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -134909,6 +135104,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -135108,6 +135304,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -135180,6 +135377,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -135375,6 +135573,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -135447,6 +135646,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -135564,6 +135764,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -135636,6 +135837,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -135743,6 +135945,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -135815,6 +136018,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -135966,6 +136170,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -136038,6 +136243,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -136179,6 +136385,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -136251,6 +136458,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -136539,6 +136747,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -136611,6 +136820,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -136762,6 +136972,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -136834,6 +137045,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -136921,6 +137133,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -136993,6 +137206,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -137064,6 +137278,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137136,6 +137351,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137223,6 +137439,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -137295,6 +137512,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -137366,6 +137584,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137438,6 +137657,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137607,6 +137827,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -137679,6 +137900,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -137782,6 +138004,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137854,6 +138077,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -137975,6 +138199,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -138047,6 +138272,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -138158,6 +138384,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -138230,6 +138457,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -138386,6 +138614,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -138458,6 +138687,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -138585,6 +138815,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -138657,6 +138888,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -138830,6 +139062,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -138902,6 +139135,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -139071,6 +139305,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -139143,6 +139378,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -139311,6 +139547,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -139383,6 +139620,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -139520,6 +139758,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -139592,6 +139831,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -139765,6 +140005,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -139837,6 +140078,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140006,6 +140248,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140078,6 +140321,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140209,6 +140453,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140281,6 +140526,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140402,6 +140648,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140474,6 +140721,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140561,6 +140809,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140633,6 +140882,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140704,6 +140954,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140776,6 +141027,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -140907,6 +141159,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -140979,6 +141232,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -141101,6 +141355,7 @@ export namespace Prisma {
     customDomain?: string | null
     status?: string
     branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
     referralCode: string
@@ -141940,6 +142195,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -142012,6 +142268,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string
@@ -142084,6 +142341,7 @@ export namespace Prisma {
     customDomain?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
     referralCode?: StringFieldUpdateOperationsInput | string

@@ -129,6 +129,7 @@ exports.Prisma.TenantScalarFieldEnum = {
   customDomain: 'customDomain',
   status: 'status',
   branchEnabled: 'branchEnabled',
+  publicWebsiteEnabled: 'publicWebsiteEnabled',
   branchLimit: 'branchLimit',
   ownerAdminId: 'ownerAdminId',
   referralCode: 'referralCode',

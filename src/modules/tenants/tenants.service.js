@@ -19,6 +19,7 @@ const mapTenant = (tenant) => ({
   customDomain: tenant.customDomain,
   status: tenant.status,
   branchEnabled: Boolean(tenant.branchEnabled ?? tenant.branch_enabled),
+  publicWebsiteEnabled: Boolean(tenant.publicWebsiteEnabled ?? tenant.public_website_enabled),
   branchLimit: tenant.branchLimit ?? tenant.branch_limit ?? null,
   ownerAdminId: tenant.ownerAdminId,
   referralCode: tenant.referralCode,
@@ -347,6 +348,7 @@ const mapTenantBranchSummary = ({ tenant, tenantAdmin, madrassaProfile = null, s
     madrassaProfile,
     status: tenant.status,
     branchEnabled,
+    publicWebsiteEnabled: Boolean(tenant.publicWebsiteEnabled ?? tenant.public_website_enabled),
     branchLimit,
     branchesCreated,
     remainingBranches: getRemainingBranches({ branchEnabled, branchLimit, branchesCreated }),
@@ -630,6 +632,7 @@ export const tenantsService = {
             customDomain,
             status: payload.status || 'active',
             branchEnabled: Boolean(payload.branchEnabled),
+            publicWebsiteEnabled: Boolean(payload.publicWebsiteEnabled),
             branchLimit: payload.branchEnabled ? payload.branchLimit : payload.branchLimit || null,
             referralCode,
             referredByTenantId: referrer?.id || null,
@@ -821,6 +824,9 @@ export const tenantsService = {
     const branchEnabled = Object.prototype.hasOwnProperty.call(payload, 'branchEnabled')
       ? Boolean(payload.branchEnabled)
       : existingTenant.branchEnabled;
+    const publicWebsiteEnabled = Object.prototype.hasOwnProperty.call(payload, 'publicWebsiteEnabled')
+      ? Boolean(payload.publicWebsiteEnabled)
+      : existingTenant.publicWebsiteEnabled;
     const branchLimit = Object.prototype.hasOwnProperty.call(payload, 'branchLimit')
       ? payload.branchLimit
       : existingTenant.branchLimit;
@@ -858,6 +864,7 @@ export const tenantsService = {
           customDomain,
           ownerAdminId,
           branchEnabled,
+          publicWebsiteEnabled,
           branchLimit: branchEnabled ? branchLimit : branchLimit || null,
           ...(shouldUpdateReferrer
             ? {

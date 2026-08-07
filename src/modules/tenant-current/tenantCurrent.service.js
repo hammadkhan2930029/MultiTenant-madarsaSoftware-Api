@@ -15,6 +15,7 @@ const mapCurrentTenantBranding = (tenant) => {
       customDomain: tenant.customDomain,
       status: tenant.status,
       branchEnabled: tenant.branchEnabled,
+      publicWebsiteEnabled: tenant.publicWebsiteEnabled,
       branchLimit: tenant.branchLimit,
       referralCode: tenant.referralCode,
       referralLink: buildReferralLink(tenant.referralCode),
@@ -39,6 +40,7 @@ const mapCurrentTenantBranding = (tenant) => {
       theme: {},
       settings: {
         branchEnabled: tenant.branchEnabled,
+        publicWebsiteEnabled: tenant.publicWebsiteEnabled,
         branchLimit: tenant.branchLimit,
       },
     },

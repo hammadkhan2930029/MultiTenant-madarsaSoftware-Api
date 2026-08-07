@@ -17,6 +17,7 @@ model Tenant {
   customDomain        String?                  @unique
   status              String                   @default("active")
   branchEnabled       Boolean                  @default(false) @map("branch_enabled")
+  publicWebsiteEnabled Boolean                 @default(false) @map("public_website_enabled")
   branchLimit         Int?                     @map("branch_limit")
   ownerAdminId        Int?
   referralCode        String                   @unique @map("referral_code") @db.VarChar(20)

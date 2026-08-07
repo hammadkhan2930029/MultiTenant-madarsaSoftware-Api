@@ -103,6 +103,7 @@ const tenantBaseSchema = {
   status: tenantStatusSchema.optional(),
   ownerAdminId: z.coerce.number().int().positive().optional().nullable(),
   branchEnabled: z.boolean().optional(),
+  publicWebsiteEnabled: z.boolean().optional(),
   branchLimit: branchLimitSchema,
 };
 
@@ -171,6 +172,7 @@ export const updateTenantValidationSchema = z.object({
     admin: updateTenantAdminSchema,
     profile: initialProfileSchema,
     branchEnabled: tenantBaseSchema.branchEnabled,
+    publicWebsiteEnabled: tenantBaseSchema.publicWebsiteEnabled,
     branchLimit: tenantBaseSchema.branchLimit,
   }).superRefine(validateBranchSettings),
   params: tenantIdValidationSchema.shape.params,
