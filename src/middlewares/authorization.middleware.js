@@ -1,6 +1,7 @@
 import { AppError } from '../utils/appError.js';
 import { authorizationService } from '../modules/rbac/authorization.service.js';
 import { normalizePermissions } from '../modules/rbac/rbac.utils.js';
+import { getSupportingReadPermissions } from '../modules/rbac/rbac.constants.js';
 
 export const requireSuperAdmin = (req, _res, next) => {
   if (req.auth?.isSuperAdmin) {
@@ -87,3 +88,6 @@ export const requireAllPermissions = (...permissions) => {
 };
 
 export const requirePermission = requireAnyPermission;
+
+export const requireResourceRead = (resource, primaryPermission) =>
+  requireAnyPermission(primaryPermission, ...getSupportingReadPermissions(resource));

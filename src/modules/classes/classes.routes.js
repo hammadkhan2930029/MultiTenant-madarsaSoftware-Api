@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { requirePermission } from '../../middlewares/authorization.middleware.js';
+import { requirePermission, requireResourceRead } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   createClass,
@@ -24,8 +24,8 @@ router.use(authMiddleware);
 
 router.post('/', requirePermission('classes.create'), validate(createClassValidationSchema), createClass);
 router.post('/bulk', requirePermission('classes.create'), validate(bulkCreateClassesValidationSchema), bulkCreateClasses);
-router.get('/', requirePermission('classes.view'), validate(listClassesValidationSchema), getClasses);
-router.get('/:id', requirePermission('classes.view'), validate(classIdValidationSchema), getClassById);
+router.get('/', requireResourceRead('classes', 'classes.view'), validate(listClassesValidationSchema), getClasses);
+router.get('/:id', requireResourceRead('classes', 'classes.view'), validate(classIdValidationSchema), getClassById);
 router.patch('/:id', requirePermission('classes.edit'), validate(updateClassValidationSchema), updateClass);
 router.delete('/:id', requirePermission('classes.delete'), validate(classIdValidationSchema), deleteClass);
 

@@ -31,7 +31,7 @@ router.post(
   changePassword
 );
 router.get('/me', authMiddleware, validate(currentAdminValidationSchema), getCurrentAdminProfile);
-router.get('/profile', authMiddleware, requirePermission('settings.view'), validate(madrassaProfileValidationSchema), getMadrassaProfile);
+router.get('/profile', authMiddleware, validate(madrassaProfileValidationSchema), getMadrassaProfile);
 router.put(
   '/profile',
   authMiddleware,

@@ -32,6 +32,23 @@ const tenantCodeSchema = z
   .max(100)
   .regex(/^[a-z0-9][a-z0-9_-]*$/, 'Tenant code can include lowercase letters, numbers, underscores, and hyphens.');
 
+const referredByCodeSchema = z.preprocess(
+  (value) => {
+    const normalized = String(value || '').trim().toUpperCase();
+    return normalized || undefined;
+  },
+  z.string().max(20, 'Referral code is too long.').regex(/^MDS-[A-Z0-9]+$/, 'Please enter a valid referral code.').optional()
+);
+
+const editableReferredByCodeSchema = z.preprocess(
+  (value) => {
+    if (value === undefined) return undefined;
+    const normalized = String(value || '').trim().toUpperCase();
+    return normalized || null;
+  },
+  z.string().max(20, 'Referral code is too long.').regex(/^MDS-[A-Z0-9]+$/, 'Please enter a valid referral code.').nullable().optional()
+);
+
 const optionalStringField = (max, message) =>
   z.union([z.string().trim().max(max, message), z.literal(''), z.undefined(), z.null()]).transform((value) =>
     value === '' ? undefined : value
@@ -102,6 +119,7 @@ const validateBranchSettings = (value, context) => {
 export const createTenantValidationSchema = z.object({
   body: z.object({
     ...tenantBaseSchema,
+    referredByCode: referredByCodeSchema,
     admin: tenantAdminSchema,
     profile: initialProfileSchema,
   }).superRefine(validateBranchSettings),
@@ -148,6 +166,7 @@ export const updateTenantValidationSchema = z.object({
     customDomain: tenantBaseSchema.customDomain,
     status: tenantStatusSchema.optional(),
     ownerAdminId: tenantBaseSchema.ownerAdminId,
+    referredByCode: editableReferredByCodeSchema,
     adminPassword: z.string().min(8, 'Tenant admin password must be at least 8 characters.').max(100, 'Tenant admin password is too long.').optional(),
     admin: updateTenantAdminSchema,
     profile: initialProfileSchema,

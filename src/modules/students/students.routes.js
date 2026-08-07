@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { requirePermission } from '../../middlewares/authorization.middleware.js';
+import { requirePermission, requireResourceRead } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import { studentImageUpload } from '../../middlewares/upload.middleware.js';
 import { parseJsonFields } from '../../middlewares/parseJsonFields.middleware.js';
@@ -35,22 +35,22 @@ router.post(
   validate(createStudentValidationSchema),
   createStudent
 );
-router.get('/', requirePermission('students.view'), validate(listStudentsValidationSchema), getStudents);
-router.get('/next-admission-number', requirePermission('students.view'), getNextAdmissionNumber);
-router.get('/:id', requirePermission('students.view'), validate(studentIdValidationSchema), getStudentById);
+router.get('/', requireResourceRead('students', 'students.view'), validate(listStudentsValidationSchema), getStudents);
+router.get('/next-admission-number', requireResourceRead('students', 'students.view'), getNextAdmissionNumber);
+router.get('/:id', requireResourceRead('students', 'students.view'), validate(studentIdValidationSchema), getStudentById);
 router.put(
   '/:id',
-  requirePermission('students.update'),
+  requirePermission('students.edit'),
   studentImageUpload.single('image'),
   parseJsonFields(['parents']),
   validate(updateStudentValidationSchema),
   updateStudent
 );
 router.delete('/:id', requirePermission('students.delete'), validate(studentIdValidationSchema), deleteStudent);
-router.post('/:id/assign-class', requirePermission('students.update'), validate(assignStudentClassValidationSchema), assignClassToStudent);
+router.post('/:id/assign-class', requirePermission('students.edit'), validate(assignStudentClassValidationSchema), assignClassToStudent);
 router.patch(
   '/class-assignments/:assignmentId/remove',
-  requirePermission('students.update'),
+  requirePermission('students.edit'),
   validate(classAssignmentIdValidationSchema),
   removeClassAssignment
 );

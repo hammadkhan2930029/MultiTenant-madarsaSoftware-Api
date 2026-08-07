@@ -1,10 +1,12 @@
 import bcrypt from 'bcryptjs';
+import { randomInt } from 'node:crypto';
 import { Prisma } from '../../generated/prisma/index.js';
 import { env } from '../../config/env.js';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { normalizeDomainName } from '../../utils/domain.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
+import { buildReferralLink } from '../../utils/referral.js';
 import { ensureDefaultBranch } from '../branches/branches.service.js';
 import { seedDefaultTenantRoles } from '../roles/tenantRoleSeeder.service.js';
 import { auditService } from '../security/index.js';
@@ -19,12 +21,55 @@ const mapTenant = (tenant) => ({
   branchEnabled: Boolean(tenant.branchEnabled ?? tenant.branch_enabled),
   branchLimit: tenant.branchLimit ?? tenant.branch_limit ?? null,
   ownerAdminId: tenant.ownerAdminId,
+  referralCode: tenant.referralCode,
+  referralLink: buildReferralLink(tenant.referralCode),
+  referredByTenantId: tenant.referredByTenantId || null,
+  referredAt: tenant.referredAt || null,
+  referredBy: tenant.referredBy ? {
+    id: tenant.referredBy.id,
+    name: tenant.referredBy.name,
+    referralCode: tenant.referredBy.referralCode,
+  } : null,
+  referredTenantsCount: tenant._count?.referredTenants || 0,
   createdAt: tenant.createdAt,
   updatedAt: tenant.updatedAt,
 });
 
 const emptyToNull = (value) => (value ? value : null);
 const normalizeOptionalDomain = (value) => emptyToNull(normalizeDomainName(value));
+const REFERRAL_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const TENANT_REFERRAL_INCLUDE = {
+  referredBy: { select: { id: true, name: true, referralCode: true } },
+  _count: { select: { referredTenants: true } },
+};
+
+const generateReferralCode = async (client) => {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    let suffix = '';
+    for (let index = 0; index < 8; index += 1) {
+      suffix += REFERRAL_ALPHABET[randomInt(REFERRAL_ALPHABET.length)];
+    }
+
+    const referralCode = `MDS-${suffix}`;
+    const existing = await client.tenant.findUnique({ where: { referralCode }, select: { id: true } });
+    if (!existing) return referralCode;
+  }
+
+  throw new AppError('Unable to generate a unique referral code. Please try again.', 503);
+};
+
+const getReferrerByCode = async (client, referredByCode) => {
+  if (!referredByCode) return null;
+
+  const referrer = await client.tenant.findUnique({
+    where: { referralCode: referredByCode },
+    select: { id: true, name: true, referralCode: true, status: true },
+  });
+
+  if (!referrer) throw new AppError('Referral code was not found.', 400);
+  if (referrer.status !== 'active') throw new AppError('The referring madrassa is inactive.', 400);
+  return referrer;
+};
 
 const mapTenantAdmin = (admin) => ({
   id: admin.id,
@@ -289,6 +334,12 @@ const mapTenantBranchSummary = ({ tenant, tenantAdmin, madrassaProfile = null, s
     name: tenant.name,
     tenantName: tenant.name,
     tenantCode: tenant.tenantCode,
+    referralCode: tenant.referralCode,
+    referralLink: buildReferralLink(tenant.referralCode),
+    referredByTenantId: tenant.referredByTenantId || null,
+    referredAt: tenant.referredAt || null,
+    referredBy: tenant.referredBy || null,
+    referredTenantsCount: tenant._count?.referredTenants || 0,
     subdomain: tenant.subdomain,
     customDomain: tenant.customDomain,
     link: buildTenantLink(tenant),
@@ -323,6 +374,7 @@ const validateBranchSettingsAgainstCount = ({ branchEnabled, branchLimit, branch
 const getTenantOrThrow = async (id, client = prisma) => {
   const tenant = await client.tenant.findUnique({
     where: { id: Number(id) },
+    include: TENANT_REFERRAL_INCLUDE,
   });
 
   if (!tenant) {
@@ -355,6 +407,7 @@ export const tenantsService = {
     const [tenants, totalItems] = await Promise.all([
       prisma.tenant.findMany({
         where,
+        include: TENANT_REFERRAL_INCLUDE,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
@@ -553,7 +606,7 @@ export const tenantsService = {
     });
   },
 
-  async createTenant(payload) {
+  async createTenant(payload, requester = {}) {
     const subdomain = emptyToNull(payload.subdomain);
     const customDomain = normalizeOptionalDomain(payload.customDomain);
     const adminPayload = payload.admin || {};
@@ -566,6 +619,8 @@ export const tenantsService = {
     try {
       return await prisma.$transaction(async (tx) => {
         const hashedPassword = await bcrypt.hash(adminPayload.password, 12);
+        const referrer = await getReferrerByCode(tx, payload.referredByCode);
+        const referralCode = await generateReferralCode(tx);
 
         const tenant = await tx.tenant.create({
           data: {
@@ -576,6 +631,9 @@ export const tenantsService = {
             status: payload.status || 'active',
             branchEnabled: Boolean(payload.branchEnabled),
             branchLimit: payload.branchEnabled ? payload.branchLimit : payload.branchLimit || null,
+            referralCode,
+            referredByTenantId: referrer?.id || null,
+            referredAt: referrer ? new Date() : null,
           },
         });
         const seededRoles = await seedDefaultTenantRoles(tx, tenant.id);
@@ -647,8 +705,26 @@ export const tenantsService = {
           tx
         );
 
+        await auditService.recordAuditLog(tx, {
+          tenantId: tenant.id,
+          actorUserId: requester?.admin?.id || null,
+          roleId: requester?.audit?.roleId || requester?.admin?.roleId || requester?.admin?.role_id || null,
+          action: 'tenant.created',
+          module: 'tenants',
+          targetType: 'tenant',
+          targetId: tenant.id,
+          newValue: {
+            tenantCode: tenant.tenantCode,
+            referralCode,
+            referredByTenantId: referrer?.id || null,
+          },
+          ipAddress: requester?.audit?.ipAddress || null,
+          userAgent: requester?.audit?.userAgent || null,
+        });
+
         return {
           ...mapTenant(updatedTenant),
+          referredBy: referrer ? { id: referrer.id, name: referrer.name, referralCode: referrer.referralCode } : null,
           tenantAdmin: mapTenantAdmin(tenantAdmin),
           madrassaProfile: mapMadrassaProfile(madrassaProfile),
         };
@@ -688,6 +764,7 @@ export const tenantsService = {
     const [items, totalItems] = await Promise.all([
       prisma.tenant.findMany({
         where,
+        include: TENANT_REFERRAL_INCLUDE,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
@@ -704,6 +781,7 @@ export const tenantsService = {
   async getTenantById(id) {
     const tenant = await prisma.tenant.findUnique({
       where: { id },
+      include: TENANT_REFERRAL_INCLUDE,
     });
 
     if (!tenant) {
@@ -765,6 +843,13 @@ export const tenantsService = {
     await assertOwnerExists(ownerAdminId);
 
     return prisma.$transaction(async (tx) => {
+      const shouldUpdateReferrer = Object.prototype.hasOwnProperty.call(payload, 'referredByCode');
+      const referrer = shouldUpdateReferrer ? await getReferrerByCode(tx, payload.referredByCode) : null;
+
+      if (referrer?.id === existingTenant.id) {
+        throw new AppError('A madrassa cannot refer itself.', 400);
+      }
+
       const tenant = await tx.tenant.update({
         where: { id },
         data: {
@@ -774,8 +859,17 @@ export const tenantsService = {
           ownerAdminId,
           branchEnabled,
           branchLimit: branchEnabled ? branchLimit : branchLimit || null,
+          ...(shouldUpdateReferrer
+            ? {
+                referredByTenantId: referrer?.id || null,
+                referredAt: referrer
+                  ? (existingTenant.referredByTenantId === referrer.id ? existingTenant.referredAt : new Date())
+                  : null,
+              }
+            : {}),
           ...(payload.status ? { status: payload.status } : {}),
         },
+        include: TENANT_REFERRAL_INCLUDE,
       });
 
       if (payload.adminPassword) {

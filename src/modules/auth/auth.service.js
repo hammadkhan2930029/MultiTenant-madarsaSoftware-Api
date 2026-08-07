@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { generateAdminToken } from '../../utils/jwt.js';
+import { buildReferralLink } from '../../utils/referral.js';
 import { getAdminRoleAndPermissions } from '../roles/roleAccess.service.js';
 import { supportService } from '../support/support.service.js';
 
@@ -66,6 +67,22 @@ const withFeeVoucherNoSeq = async (profile) => {
   if (!profile?.tenantId) return { ...profile, feeVoucherNoSeq: '' };
   const feeVoucherNoSeq = await getFeeVoucherNoSeq(profile.tenantId);
   return { ...profile, feeVoucherNoSeq: feeVoucherNoSeq || DEFAULT_FEE_VOUCHER_NUMBER };
+};
+
+const withTenantReferralCode = async (profile) => {
+  const [profileWithSequence, tenant] = await Promise.all([
+    withFeeVoucherNoSeq(profile),
+    prisma.tenant.findUnique({
+      where: { id: profile.tenantId },
+      select: { referralCode: true },
+    }),
+  ]);
+
+  return {
+    ...profileWithSequence,
+    referralCode: tenant?.referralCode || null,
+    referralLink: buildReferralLink(tenant?.referralCode),
+  };
 };
 
 const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
@@ -493,7 +510,7 @@ export const authService = {
       select: madrassaProfileSelect,
     });
 
-    return withFeeVoucherNoSeq(profile);
+    return withTenantReferralCode(profile);
   },
 
   async updateMadrassaProfile(admin, tenantId, payload, file) {
@@ -525,6 +542,6 @@ export const authService = {
     });
 
     await setFeeVoucherNoSeq(resolvedTenantId, payload.feeVoucherNoSeq);
-    return withFeeVoucherNoSeq(profile);
+    return withTenantReferralCode(profile);
   },
 };

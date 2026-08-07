@@ -131,6 +131,9 @@ exports.Prisma.TenantScalarFieldEnum = {
   branchEnabled: 'branchEnabled',
   branchLimit: 'branchLimit',
   ownerAdminId: 'ownerAdminId',
+  referralCode: 'referralCode',
+  referredByTenantId: 'referredByTenantId',
+  referredAt: 'referredAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1086,7 +1089,8 @@ exports.Prisma.TenantOrderByRelevanceFieldEnum = {
   name: 'name',
   subdomain: 'subdomain',
   customDomain: 'customDomain',
-  status: 'status'
+  status: 'status',
+  referralCode: 'referralCode'
 };
 
 exports.Prisma.AdminOrderByRelevanceFieldEnum = {

@@ -9,7 +9,7 @@ const buildRequester = (req) => ({
 });
 
 export const createTenant = asyncHandler(async (req, res) => {
-  const result = await tenantsService.createTenant(req.body);
+  const result = await tenantsService.createTenant(req.body, buildRequester(req));
 
   return apiResponse(res, {
     statusCode: 201,

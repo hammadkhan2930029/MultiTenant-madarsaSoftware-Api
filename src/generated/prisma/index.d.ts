@@ -5584,6 +5584,7 @@ export namespace Prisma {
    */
 
   export type TenantCountOutputType = {
+    referredTenants: number
     admins: number
     roles: number
     rolePermissions: number
@@ -5641,6 +5642,7 @@ export namespace Prisma {
   }
 
   export type TenantCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredTenants?: boolean | TenantCountOutputTypeCountReferredTenantsArgs
     admins?: boolean | TenantCountOutputTypeCountAdminsArgs
     roles?: boolean | TenantCountOutputTypeCountRolesArgs
     rolePermissions?: boolean | TenantCountOutputTypeCountRolePermissionsArgs
@@ -5706,6 +5708,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the TenantCountOutputType
      */
     select?: TenantCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TenantCountOutputType without action
+   */
+  export type TenantCountOutputTypeCountReferredTenantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TenantWhereInput
   }
 
   /**
@@ -7339,12 +7348,14 @@ export namespace Prisma {
     id: number | null
     branchLimit: number | null
     ownerAdminId: number | null
+    referredByTenantId: number | null
   }
 
   export type TenantSumAggregateOutputType = {
     id: number | null
     branchLimit: number | null
     ownerAdminId: number | null
+    referredByTenantId: number | null
   }
 
   export type TenantMinAggregateOutputType = {
@@ -7357,6 +7368,9 @@ export namespace Prisma {
     branchEnabled: boolean | null
     branchLimit: number | null
     ownerAdminId: number | null
+    referralCode: string | null
+    referredByTenantId: number | null
+    referredAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7371,6 +7385,9 @@ export namespace Prisma {
     branchEnabled: boolean | null
     branchLimit: number | null
     ownerAdminId: number | null
+    referralCode: string | null
+    referredByTenantId: number | null
+    referredAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7385,6 +7402,9 @@ export namespace Prisma {
     branchEnabled: number
     branchLimit: number
     ownerAdminId: number
+    referralCode: number
+    referredByTenantId: number
+    referredAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7395,12 +7415,14 @@ export namespace Prisma {
     id?: true
     branchLimit?: true
     ownerAdminId?: true
+    referredByTenantId?: true
   }
 
   export type TenantSumAggregateInputType = {
     id?: true
     branchLimit?: true
     ownerAdminId?: true
+    referredByTenantId?: true
   }
 
   export type TenantMinAggregateInputType = {
@@ -7413,6 +7435,9 @@ export namespace Prisma {
     branchEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
+    referralCode?: true
+    referredByTenantId?: true
+    referredAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7427,6 +7452,9 @@ export namespace Prisma {
     branchEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
+    referralCode?: true
+    referredByTenantId?: true
+    referredAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7441,6 +7469,9 @@ export namespace Prisma {
     branchEnabled?: true
     branchLimit?: true
     ownerAdminId?: true
+    referralCode?: true
+    referredByTenantId?: true
+    referredAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7542,6 +7573,9 @@ export namespace Prisma {
     branchEnabled: boolean
     branchLimit: number | null
     ownerAdminId: number | null
+    referralCode: string
+    referredByTenantId: number | null
+    referredAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: TenantCountAggregateOutputType | null
@@ -7575,8 +7609,13 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: boolean
     ownerAdminId?: boolean
+    referralCode?: boolean
+    referredByTenantId?: boolean
+    referredAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referredBy?: boolean | Tenant$referredByArgs<ExtArgs>
+    referredTenants?: boolean | Tenant$referredTenantsArgs<ExtArgs>
     admins?: boolean | Tenant$adminsArgs<ExtArgs>
     roles?: boolean | Tenant$rolesArgs<ExtArgs>
     rolePermissions?: boolean | Tenant$rolePermissionsArgs<ExtArgs>
@@ -7647,12 +7686,17 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: boolean
     ownerAdminId?: boolean
+    referralCode?: boolean
+    referredByTenantId?: boolean
+    referredAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantCode" | "name" | "subdomain" | "customDomain" | "status" | "branchEnabled" | "branchLimit" | "ownerAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
+  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantCode" | "name" | "subdomain" | "customDomain" | "status" | "branchEnabled" | "branchLimit" | "ownerAdminId" | "referralCode" | "referredByTenantId" | "referredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
   export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredBy?: boolean | Tenant$referredByArgs<ExtArgs>
+    referredTenants?: boolean | Tenant$referredTenantsArgs<ExtArgs>
     admins?: boolean | Tenant$adminsArgs<ExtArgs>
     roles?: boolean | Tenant$rolesArgs<ExtArgs>
     rolePermissions?: boolean | Tenant$rolePermissionsArgs<ExtArgs>
@@ -7714,6 +7758,8 @@ export namespace Prisma {
   export type $TenantPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tenant"
     objects: {
+      referredBy: Prisma.$TenantPayload<ExtArgs> | null
+      referredTenants: Prisma.$TenantPayload<ExtArgs>[]
       admins: Prisma.$AdminPayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
       rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
@@ -7780,6 +7826,9 @@ export namespace Prisma {
       branchEnabled: boolean
       branchLimit: number | null
       ownerAdminId: number | null
+      referralCode: string
+      referredByTenantId: number | null
+      referredAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["tenant"]>
@@ -8122,6 +8171,8 @@ export namespace Prisma {
    */
   export interface Prisma__TenantClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    referredBy<T extends Tenant$referredByArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$referredByArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    referredTenants<T extends Tenant$referredTenantsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$referredTenantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     admins<T extends Tenant$adminsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Tenant$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rolePermissions<T extends Tenant$rolePermissionsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8215,6 +8266,9 @@ export namespace Prisma {
     readonly branchEnabled: FieldRef<"Tenant", 'Boolean'>
     readonly branchLimit: FieldRef<"Tenant", 'Int'>
     readonly ownerAdminId: FieldRef<"Tenant", 'Int'>
+    readonly referralCode: FieldRef<"Tenant", 'String'>
+    readonly referredByTenantId: FieldRef<"Tenant", 'Int'>
+    readonly referredAt: FieldRef<"Tenant", 'DateTime'>
     readonly createdAt: FieldRef<"Tenant", 'DateTime'>
     readonly updatedAt: FieldRef<"Tenant", 'DateTime'>
   }
@@ -8557,6 +8611,49 @@ export namespace Prisma {
      * Limit how many Tenants to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Tenant.referredBy
+   */
+  export type Tenant$referredByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tenant
+     */
+    select?: TenantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tenant
+     */
+    omit?: TenantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TenantInclude<ExtArgs> | null
+    where?: TenantWhereInput
+  }
+
+  /**
+   * Tenant.referredTenants
+   */
+  export type Tenant$referredTenantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tenant
+     */
+    select?: TenantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tenant
+     */
+    omit?: TenantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TenantInclude<ExtArgs> | null
+    where?: TenantWhereInput
+    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
+    cursor?: TenantWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
   }
 
   /**
@@ -74610,6 +74707,9 @@ export namespace Prisma {
     branchEnabled: 'branchEnabled',
     branchLimit: 'branchLimit',
     ownerAdminId: 'ownerAdminId',
+    referralCode: 'referralCode',
+    referredByTenantId: 'referredByTenantId',
+    referredAt: 'referredAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -75751,7 +75851,8 @@ export namespace Prisma {
     name: 'name',
     subdomain: 'subdomain',
     customDomain: 'customDomain',
-    status: 'status'
+    status: 'status',
+    referralCode: 'referralCode'
   };
 
   export type TenantOrderByRelevanceFieldEnum = (typeof TenantOrderByRelevanceFieldEnum)[keyof typeof TenantOrderByRelevanceFieldEnum]
@@ -76495,8 +76596,13 @@ export namespace Prisma {
     branchEnabled?: BoolFilter<"Tenant"> | boolean
     branchLimit?: IntNullableFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
+    referralCode?: StringFilter<"Tenant"> | string
+    referredByTenantId?: IntNullableFilter<"Tenant"> | number | null
+    referredAt?: DateTimeNullableFilter<"Tenant"> | Date | string | null
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+    referredBy?: XOR<TenantNullableScalarRelationFilter, TenantWhereInput> | null
+    referredTenants?: TenantListRelationFilter
     admins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
@@ -76564,8 +76670,13 @@ export namespace Prisma {
     branchEnabled?: SortOrder
     branchLimit?: SortOrderInput | SortOrder
     ownerAdminId?: SortOrderInput | SortOrder
+    referralCode?: SortOrder
+    referredByTenantId?: SortOrderInput | SortOrder
+    referredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    referredBy?: TenantOrderByWithRelationInput
+    referredTenants?: TenantOrderByRelationAggregateInput
     admins?: AdminOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
     rolePermissions?: RolePermissionOrderByRelationAggregateInput
@@ -76629,6 +76740,7 @@ export namespace Prisma {
     tenantCode?: string
     subdomain?: string
     customDomain?: string
+    referralCode?: string
     AND?: TenantWhereInput | TenantWhereInput[]
     OR?: TenantWhereInput[]
     NOT?: TenantWhereInput | TenantWhereInput[]
@@ -76637,8 +76749,12 @@ export namespace Prisma {
     branchEnabled?: BoolFilter<"Tenant"> | boolean
     branchLimit?: IntNullableFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
+    referredByTenantId?: IntNullableFilter<"Tenant"> | number | null
+    referredAt?: DateTimeNullableFilter<"Tenant"> | Date | string | null
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+    referredBy?: XOR<TenantNullableScalarRelationFilter, TenantWhereInput> | null
+    referredTenants?: TenantListRelationFilter
     admins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
@@ -76694,7 +76810,7 @@ export namespace Prisma {
     teacherResponsibilities?: TeacherResponsibilityListRelationFilter
     teacherAssignments?: TeacherAssignmentListRelationFilter
     cities?: CityListRelationFilter
-  }, "id" | "tenantCode" | "subdomain" | "customDomain">
+  }, "id" | "tenantCode" | "subdomain" | "customDomain" | "referralCode">
 
   export type TenantOrderByWithAggregationInput = {
     id?: SortOrder
@@ -76706,6 +76822,9 @@ export namespace Prisma {
     branchEnabled?: SortOrder
     branchLimit?: SortOrderInput | SortOrder
     ownerAdminId?: SortOrderInput | SortOrder
+    referralCode?: SortOrder
+    referredByTenantId?: SortOrderInput | SortOrder
+    referredAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TenantCountOrderByAggregateInput
@@ -76728,6 +76847,9 @@ export namespace Prisma {
     branchEnabled?: BoolWithAggregatesFilter<"Tenant"> | boolean
     branchLimit?: IntNullableWithAggregatesFilter<"Tenant"> | number | null
     ownerAdminId?: IntNullableWithAggregatesFilter<"Tenant"> | number | null
+    referralCode?: StringWithAggregatesFilter<"Tenant"> | string
+    referredByTenantId?: IntNullableWithAggregatesFilter<"Tenant"> | number | null
+    referredAt?: DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
   }
@@ -78048,7 +78170,6 @@ export namespace Prisma {
 
   export type SubjectWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    tenantId_branchId_name?: SubjectTenantIdBranchIdNameCompoundUniqueInput
     AND?: SubjectWhereInput | SubjectWhereInput[]
     OR?: SubjectWhereInput[]
     NOT?: SubjectWhereInput | SubjectWhereInput[]
@@ -78064,7 +78185,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleListRelationFilter
     examResultSubjects?: ExamResultSubjectListRelationFilter
     teacherAssignments?: TeacherAssignmentListRelationFilter
-  }, "id" | "tenantId_branchId_name">
+  }, "id">
 
   export type SubjectOrderByWithAggregationInput = {
     id?: SortOrder
@@ -82969,8 +83090,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -83038,8 +83163,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -83106,8 +83235,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -83175,8 +83308,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -83244,6 +83381,9 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -83257,6 +83397,8 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -83271,6 +83413,9 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -89862,6 +90007,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -89871,6 +90027,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type TenantNullableScalarRelationFilter = {
+    is?: TenantWhereInput | null
+    isNot?: TenantWhereInput | null
+  }
+
+  export type TenantListRelationFilter = {
+    every?: TenantWhereInput
+    some?: TenantWhereInput
+    none?: TenantWhereInput
   }
 
   export type AdminListRelationFilter = {
@@ -90207,6 +90374,10 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
+  export type TenantOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type AdminOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -90439,6 +90610,9 @@ export namespace Prisma {
     branchEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
+    referralCode?: SortOrder
+    referredByTenantId?: SortOrder
+    referredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -90447,6 +90621,7 @@ export namespace Prisma {
     id?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
+    referredByTenantId?: SortOrder
   }
 
   export type TenantMaxOrderByAggregateInput = {
@@ -90459,6 +90634,9 @@ export namespace Prisma {
     branchEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
+    referralCode?: SortOrder
+    referredByTenantId?: SortOrder
+    referredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -90473,6 +90651,9 @@ export namespace Prisma {
     branchEnabled?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
+    referralCode?: SortOrder
+    referredByTenantId?: SortOrder
+    referredAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -90481,6 +90662,7 @@ export namespace Prisma {
     id?: SortOrder
     branchLimit?: SortOrder
     ownerAdminId?: SortOrder
+    referredByTenantId?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -90559,6 +90741,20 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -90571,11 +90767,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type TenantNullableScalarRelationFilter = {
-    is?: TenantWhereInput | null
-    isNot?: TenantWhereInput | null
   }
 
   export type RoleNullableScalarRelationFilter = {
@@ -91548,12 +91739,6 @@ export namespace Prisma {
     fields: SubjectOrderByRelevanceFieldEnum | SubjectOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
-  }
-
-  export type SubjectTenantIdBranchIdNameCompoundUniqueInput = {
-    tenantId: number
-    branchId: number
-    name: string
   }
 
   export type SubjectCountOrderByAggregateInput = {
@@ -92573,17 +92758,6 @@ export namespace Prisma {
     percentage?: SortOrder
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -92731,20 +92905,6 @@ export namespace Prisma {
     branchId?: SortOrder
     admissionFee?: SortOrder
     monthlyFee?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -95177,6 +95337,19 @@ export namespace Prisma {
     adjustedStock?: SortOrder
   }
 
+  export type TenantCreateNestedOneWithoutReferredTenantsInput = {
+    create?: XOR<TenantCreateWithoutReferredTenantsInput, TenantUncheckedCreateWithoutReferredTenantsInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredTenantsInput
+    connect?: TenantWhereUniqueInput
+  }
+
+  export type TenantCreateNestedManyWithoutReferredByInput = {
+    create?: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput> | TenantCreateWithoutReferredByInput[] | TenantUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredByInput | TenantCreateOrConnectWithoutReferredByInput[]
+    createMany?: TenantCreateManyReferredByInputEnvelope
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+  }
+
   export type AdminCreateNestedManyWithoutTenantInput = {
     create?: XOR<AdminCreateWithoutTenantInput, AdminUncheckedCreateWithoutTenantInput> | AdminCreateWithoutTenantInput[] | AdminUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: AdminCreateOrConnectWithoutTenantInput | AdminCreateOrConnectWithoutTenantInput[]
@@ -95559,6 +95732,13 @@ export namespace Prisma {
     connectOrCreate?: CityCreateOrConnectWithoutTenantInput | CityCreateOrConnectWithoutTenantInput[]
     createMany?: CityCreateManyTenantInputEnvelope
     connect?: CityWhereUniqueInput | CityWhereUniqueInput[]
+  }
+
+  export type TenantUncheckedCreateNestedManyWithoutReferredByInput = {
+    create?: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput> | TenantCreateWithoutReferredByInput[] | TenantUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredByInput | TenantCreateOrConnectWithoutReferredByInput[]
+    createMany?: TenantCreateManyReferredByInputEnvelope
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
   }
 
   export type AdminUncheckedCreateNestedManyWithoutTenantInput = {
@@ -95965,8 +96145,36 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type TenantUpdateOneWithoutReferredTenantsNestedInput = {
+    create?: XOR<TenantCreateWithoutReferredTenantsInput, TenantUncheckedCreateWithoutReferredTenantsInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredTenantsInput
+    upsert?: TenantUpsertWithoutReferredTenantsInput
+    disconnect?: TenantWhereInput | boolean
+    delete?: TenantWhereInput | boolean
+    connect?: TenantWhereUniqueInput
+    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutReferredTenantsInput, TenantUpdateWithoutReferredTenantsInput>, TenantUncheckedUpdateWithoutReferredTenantsInput>
+  }
+
+  export type TenantUpdateManyWithoutReferredByNestedInput = {
+    create?: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput> | TenantCreateWithoutReferredByInput[] | TenantUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredByInput | TenantCreateOrConnectWithoutReferredByInput[]
+    upsert?: TenantUpsertWithWhereUniqueWithoutReferredByInput | TenantUpsertWithWhereUniqueWithoutReferredByInput[]
+    createMany?: TenantCreateManyReferredByInputEnvelope
+    set?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    disconnect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    delete?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    update?: TenantUpdateWithWhereUniqueWithoutReferredByInput | TenantUpdateWithWhereUniqueWithoutReferredByInput[]
+    updateMany?: TenantUpdateManyWithWhereWithoutReferredByInput | TenantUpdateManyWithWhereWithoutReferredByInput[]
+    deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
   }
 
   export type AdminUpdateManyWithoutTenantNestedInput = {
@@ -96741,6 +96949,20 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type TenantUncheckedUpdateManyWithoutReferredByNestedInput = {
+    create?: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput> | TenantCreateWithoutReferredByInput[] | TenantUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: TenantCreateOrConnectWithoutReferredByInput | TenantCreateOrConnectWithoutReferredByInput[]
+    upsert?: TenantUpsertWithWhereUniqueWithoutReferredByInput | TenantUpsertWithWhereUniqueWithoutReferredByInput[]
+    createMany?: TenantCreateManyReferredByInputEnvelope
+    set?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    disconnect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    delete?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+    update?: TenantUpdateWithWhereUniqueWithoutReferredByInput | TenantUpdateWithWhereUniqueWithoutReferredByInput[]
+    updateMany?: TenantUpdateManyWithWhereWithoutReferredByInput | TenantUpdateManyWithWhereWithoutReferredByInput[]
+    deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
   }
 
   export type AdminUncheckedUpdateManyWithoutTenantNestedInput = {
@@ -101385,10 +101607,6 @@ export namespace Prisma {
     connect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
@@ -103414,6 +103632,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -103523,6 +103752,20 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -103610,17 +103853,6 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -103630,20 +103862,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -103660,6 +103878,307 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type TenantCreateWithoutReferredTenantsInput = {
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    admins?: AdminCreateNestedManyWithoutTenantInput
+    roles?: RoleCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
+    students?: StudentCreateNestedManyWithoutTenantInput
+    parents?: ParentCreateNestedManyWithoutTenantInput
+    teachers?: TeacherCreateNestedManyWithoutTenantInput
+    branches?: BranchCreateNestedManyWithoutTenantInput
+    shifts?: ShiftCreateNestedManyWithoutTenantInput
+    departments?: DepartmentCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassCreateNestedManyWithoutTenantInput
+    sections?: SectionCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutTenantInput
+    subjects?: SubjectCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTenantInput
+    cities?: CityCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutReferredTenantsInput = {
+    id?: number
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
+    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
+    students?: StudentUncheckedCreateNestedManyWithoutTenantInput
+    parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
+    teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
+    branches?: BranchUncheckedCreateNestedManyWithoutTenantInput
+    shifts?: ShiftUncheckedCreateNestedManyWithoutTenantInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassUncheckedCreateNestedManyWithoutTenantInput
+    sections?: SectionUncheckedCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionUncheckedCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeUncheckedCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectUncheckedCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadUncheckedCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionUncheckedCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemUncheckedCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitUncheckedCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryUncheckedCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierUncheckedCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseUncheckedCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemUncheckedCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueUncheckedCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnUncheckedCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentUncheckedCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    cities?: CityUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutReferredTenantsInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutReferredTenantsInput, TenantUncheckedCreateWithoutReferredTenantsInput>
+  }
+
+  export type TenantCreateWithoutReferredByInput = {
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
+    admins?: AdminCreateNestedManyWithoutTenantInput
+    roles?: RoleCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
+    students?: StudentCreateNestedManyWithoutTenantInput
+    parents?: ParentCreateNestedManyWithoutTenantInput
+    teachers?: TeacherCreateNestedManyWithoutTenantInput
+    branches?: BranchCreateNestedManyWithoutTenantInput
+    shifts?: ShiftCreateNestedManyWithoutTenantInput
+    departments?: DepartmentCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassCreateNestedManyWithoutTenantInput
+    sections?: SectionCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutTenantInput
+    subjects?: SubjectCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTenantInput
+    cities?: CityCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutReferredByInput = {
+    id?: number
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
+    admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
+    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
+    students?: StudentUncheckedCreateNestedManyWithoutTenantInput
+    parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
+    teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
+    branches?: BranchUncheckedCreateNestedManyWithoutTenantInput
+    shifts?: ShiftUncheckedCreateNestedManyWithoutTenantInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassUncheckedCreateNestedManyWithoutTenantInput
+    sections?: SectionUncheckedCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionUncheckedCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeUncheckedCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectUncheckedCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadUncheckedCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionUncheckedCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemUncheckedCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitUncheckedCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryUncheckedCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierUncheckedCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseUncheckedCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemUncheckedCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueUncheckedCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnUncheckedCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentUncheckedCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    cities?: CityUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutReferredByInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput>
+  }
+
+  export type TenantCreateManyReferredByInputEnvelope = {
+    data: TenantCreateManyReferredByInput | TenantCreateManyReferredByInput[]
+    skipDuplicates?: boolean
   }
 
   export type AdminCreateWithoutTenantInput = {
@@ -106012,6 +106531,196 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TenantUpsertWithoutReferredTenantsInput = {
+    update: XOR<TenantUpdateWithoutReferredTenantsInput, TenantUncheckedUpdateWithoutReferredTenantsInput>
+    create: XOR<TenantCreateWithoutReferredTenantsInput, TenantUncheckedCreateWithoutReferredTenantsInput>
+    where?: TenantWhereInput
+  }
+
+  export type TenantUpdateToOneWithWhereWithoutReferredTenantsInput = {
+    where?: TenantWhereInput
+    data: XOR<TenantUpdateWithoutReferredTenantsInput, TenantUncheckedUpdateWithoutReferredTenantsInput>
+  }
+
+  export type TenantUpdateWithoutReferredTenantsInput = {
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    admins?: AdminUpdateManyWithoutTenantNestedInput
+    roles?: RoleUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
+    students?: StudentUpdateManyWithoutTenantNestedInput
+    parents?: ParentUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUpdateManyWithoutTenantNestedInput
+    branches?: BranchUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUpdateManyWithoutTenantNestedInput
+    sections?: SectionUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTenantNestedInput
+    cities?: CityUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutReferredTenantsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
+    students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
+    parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUncheckedUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUncheckedUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUncheckedUpdateManyWithoutTenantNestedInput
+    sections?: SectionUncheckedUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUncheckedUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUncheckedUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUncheckedUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUncheckedUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUncheckedUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUncheckedUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUncheckedUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUncheckedUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUncheckedUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUncheckedUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUncheckedUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    cities?: CityUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUpsertWithWhereUniqueWithoutReferredByInput = {
+    where: TenantWhereUniqueInput
+    update: XOR<TenantUpdateWithoutReferredByInput, TenantUncheckedUpdateWithoutReferredByInput>
+    create: XOR<TenantCreateWithoutReferredByInput, TenantUncheckedCreateWithoutReferredByInput>
+  }
+
+  export type TenantUpdateWithWhereUniqueWithoutReferredByInput = {
+    where: TenantWhereUniqueInput
+    data: XOR<TenantUpdateWithoutReferredByInput, TenantUncheckedUpdateWithoutReferredByInput>
+  }
+
+  export type TenantUpdateManyWithWhereWithoutReferredByInput = {
+    where: TenantScalarWhereInput
+    data: XOR<TenantUpdateManyMutationInput, TenantUncheckedUpdateManyWithoutReferredByInput>
+  }
+
+  export type TenantScalarWhereInput = {
+    AND?: TenantScalarWhereInput | TenantScalarWhereInput[]
+    OR?: TenantScalarWhereInput[]
+    NOT?: TenantScalarWhereInput | TenantScalarWhereInput[]
+    id?: IntFilter<"Tenant"> | number
+    tenantCode?: StringFilter<"Tenant"> | string
+    name?: StringFilter<"Tenant"> | string
+    subdomain?: StringNullableFilter<"Tenant"> | string | null
+    customDomain?: StringNullableFilter<"Tenant"> | string | null
+    status?: StringFilter<"Tenant"> | string
+    branchEnabled?: BoolFilter<"Tenant"> | boolean
+    branchLimit?: IntNullableFilter<"Tenant"> | number | null
+    ownerAdminId?: IntNullableFilter<"Tenant"> | number | null
+    referralCode?: StringFilter<"Tenant"> | string
+    referredByTenantId?: IntNullableFilter<"Tenant"> | number | null
+    referredAt?: DateTimeNullableFilter<"Tenant"> | Date | string | null
+    createdAt?: DateTimeFilter<"Tenant"> | Date | string
+    updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+  }
+
   export type AdminUpsertWithWhereUniqueWithoutTenantInput = {
     where: AdminWhereUniqueInput
     update: XOR<AdminUpdateWithoutTenantInput, AdminUncheckedUpdateWithoutTenantInput>
@@ -107971,8 +108680,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
@@ -108039,8 +108752,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
@@ -108833,8 +109550,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
@@ -108901,8 +109622,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
@@ -109530,8 +110255,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
@@ -109598,8 +110327,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
@@ -109969,8 +110702,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
@@ -110037,8 +110774,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
@@ -110389,8 +111130,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
@@ -110457,8 +111202,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
@@ -110606,8 +111355,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
@@ -110674,8 +111427,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
@@ -110883,8 +111640,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -110951,8 +111712,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -111104,8 +111869,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -111172,8 +111941,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -111239,8 +112012,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -111307,8 +112084,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -111390,8 +112171,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -111458,8 +112243,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -111525,8 +112314,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -111593,8 +112386,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -111808,8 +112605,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -111876,8 +112677,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -112087,8 +112892,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -112155,8 +112964,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -112370,8 +113183,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -112438,8 +113255,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -112649,8 +113470,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -112717,8 +113542,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -112955,8 +113784,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -113023,8 +113856,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -113180,8 +114017,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -113248,8 +114089,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -113428,8 +114273,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -113496,8 +114345,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -113683,8 +114536,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -113751,8 +114608,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -114020,8 +114881,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -114088,8 +114953,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -114317,8 +115186,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -114385,8 +115258,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -114536,8 +115413,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -114604,8 +115485,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -114745,8 +115630,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -114813,8 +115702,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -115091,8 +115984,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -115159,8 +116056,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -115348,8 +116249,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -115416,8 +116321,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -116449,8 +117358,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -116517,8 +117430,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -116974,8 +117891,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -117042,8 +117963,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -117519,8 +118444,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -117587,8 +118516,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -117856,8 +118789,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -117924,8 +118861,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -118330,8 +119271,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -118398,8 +119343,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -118621,8 +119570,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -118689,8 +119642,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -119047,8 +120004,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -119115,8 +120076,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -119336,8 +120301,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -119404,8 +120373,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -119597,8 +120570,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -119665,8 +120642,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -119860,8 +120841,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -119928,8 +120913,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -120203,8 +121192,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -120271,8 +121264,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -120554,8 +121551,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -120622,8 +121623,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -120880,8 +121885,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -120948,8 +121957,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -121175,8 +122188,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -121243,8 +122260,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -121672,8 +122693,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -121740,8 +122765,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -122195,8 +123224,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -122263,8 +123296,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -122486,8 +123523,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -122554,8 +123595,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -122785,8 +123830,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -122853,8 +123902,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -123004,8 +124057,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -123072,8 +124129,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -123213,8 +124274,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -123281,8 +124346,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -123605,8 +124674,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -123673,8 +124746,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -123984,8 +125061,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -124052,8 +125133,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -124209,8 +125294,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -124277,8 +125366,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -124867,8 +125960,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -124935,8 +126032,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -125230,8 +126331,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -125298,8 +126403,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -125468,8 +126577,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -125536,8 +126649,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -125703,8 +126820,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -125771,8 +126892,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -125912,8 +127037,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -125980,8 +127109,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -126195,8 +127328,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -126263,8 +127400,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -126474,8 +127615,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -126542,8 +127687,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -126897,8 +128046,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -126965,8 +128118,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -127512,8 +128669,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -127580,8 +128741,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -127903,8 +129068,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -127971,8 +129140,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -128144,8 +129317,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -128212,8 +129389,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -128441,8 +129622,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -128509,8 +129694,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -128734,8 +129923,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -128802,8 +129995,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -129121,8 +130318,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -129189,8 +130390,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -129516,8 +130721,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -129584,8 +130793,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -129817,8 +131030,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -129885,8 +131102,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -130114,8 +131335,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -130182,8 +131407,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -130359,8 +131588,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -130427,8 +131660,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -130594,8 +131831,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -130662,8 +131903,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -130839,8 +132084,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -130907,8 +132156,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -131074,8 +132327,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -131142,8 +132399,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -131319,8 +132580,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -131387,8 +132652,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -131554,8 +132823,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -131622,8 +132895,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -131799,8 +133076,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -131867,8 +133148,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -132034,8 +133319,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -132102,8 +133391,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -132271,8 +133564,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -132339,8 +133636,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -132438,8 +133739,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -132506,8 +133811,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -132589,8 +133898,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -132657,8 +133970,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -132724,8 +134041,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -132792,8 +134113,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -132969,8 +134294,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -133037,8 +134366,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -133204,8 +134537,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -133272,8 +134609,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -133355,8 +134696,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -133423,8 +134768,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -133490,8 +134839,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -133558,8 +134911,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -133753,8 +135110,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -133821,8 +135182,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -134012,8 +135377,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -134080,8 +135449,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -134193,8 +135566,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -134261,8 +135638,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -134364,8 +135745,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -134432,8 +135817,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -134579,8 +135968,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -134647,8 +136040,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -134784,8 +136181,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -134852,8 +136253,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -135136,8 +136541,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -135204,8 +136613,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -135351,8 +136764,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -135419,8 +136836,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -135502,8 +136923,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -135570,8 +136995,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -135637,8 +137066,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -135705,8 +137138,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -135788,8 +137225,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -135856,8 +137297,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -135923,8 +137368,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -135991,8 +137440,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -136156,8 +137609,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -136224,8 +137681,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -136323,8 +137784,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -136391,8 +137856,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -136508,8 +137977,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -136576,8 +138049,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -136683,8 +138160,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -136751,8 +138232,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -136903,8 +138388,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -136971,8 +138460,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -137094,8 +138587,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -137162,8 +138659,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -137331,8 +138832,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -137399,8 +138904,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -137564,8 +139073,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -137632,8 +139145,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -137796,8 +139313,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -137864,8 +139385,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -137997,8 +139522,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -138065,8 +139594,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -138234,8 +139767,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -138302,8 +139839,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -138467,8 +140008,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -138535,8 +140080,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -138662,8 +140211,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -138730,8 +140283,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -138847,8 +140404,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -138915,8 +140476,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -138998,8 +140563,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -139066,8 +140635,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -139133,8 +140706,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
@@ -139201,8 +140778,12 @@ export namespace Prisma {
     branchEnabled?: boolean
     branchLimit?: number | null
     ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
@@ -139328,8 +140909,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
@@ -139396,8 +140981,12 @@ export namespace Prisma {
     branchEnabled?: BoolFieldUpdateOperationsInput | boolean
     branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
     ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
@@ -139502,6 +141091,22 @@ export namespace Prisma {
     stockIssues?: StoreStockIssueUncheckedUpdateManyWithoutItemNestedInput
     returns?: StoreReturnUncheckedUpdateManyWithoutItemNestedInput
     damagedStocks?: StoreDamagedStockUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type TenantCreateManyReferredByInput = {
+    id?: number
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AdminCreateManyTenantInput = {
@@ -140326,6 +141931,165 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type TenantUpdateWithoutReferredByInput = {
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
+    admins?: AdminUpdateManyWithoutTenantNestedInput
+    roles?: RoleUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
+    students?: StudentUpdateManyWithoutTenantNestedInput
+    parents?: ParentUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUpdateManyWithoutTenantNestedInput
+    branches?: BranchUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUpdateManyWithoutTenantNestedInput
+    sections?: SectionUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTenantNestedInput
+    cities?: CityUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutReferredByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
+    admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
+    students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
+    parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUncheckedUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUncheckedUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUncheckedUpdateManyWithoutTenantNestedInput
+    sections?: SectionUncheckedUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUncheckedUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUncheckedUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUncheckedUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUncheckedUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUncheckedUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUncheckedUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUncheckedUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUncheckedUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUncheckedUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUncheckedUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUncheckedUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    cities?: CityUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateManyWithoutReferredByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AdminUpdateWithoutTenantInput = {

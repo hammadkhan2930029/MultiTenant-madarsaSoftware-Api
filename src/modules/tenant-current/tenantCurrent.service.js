@@ -1,5 +1,6 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
+import { buildReferralLink } from '../../utils/referral.js';
 
 const mapCurrentTenantBranding = (tenant) => {
   const profile = tenant?.profile?.status === 'active' ? tenant.profile : null;
@@ -15,6 +16,8 @@ const mapCurrentTenantBranding = (tenant) => {
       status: tenant.status,
       branchEnabled: tenant.branchEnabled,
       branchLimit: tenant.branchLimit,
+      referralCode: tenant.referralCode,
+      referralLink: buildReferralLink(tenant.referralCode),
     },
     madrassa: profile
       ? {

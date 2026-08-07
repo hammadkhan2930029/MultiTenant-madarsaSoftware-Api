@@ -5,6 +5,16 @@ const permissionValueSchema = z.union([
   z.string().trim().min(1, 'Permission key is required.').max(150, 'Permission key is too long.'),
 ]);
 
+const roleNameSchema = z
+  .string()
+  .trim()
+  .min(2, 'Role name is required.')
+  .max(100, 'Role name is too long.')
+  .regex(
+    /^[\p{L}\p{M}\p{N} _-]+$/u,
+    'Role name can only contain Urdu or English letters, numbers, spaces, hyphens, and underscores.',
+  );
+
 const permissionsBodySchema = {
   permissions: z.array(permissionValueSchema).optional(),
   permissionIds: z.array(z.coerce.number().int().positive('Permission id must be a valid number.')).optional(),
@@ -14,20 +24,8 @@ const permissionsBodySchema = {
 const roleBodyShape = {
   tenantId: z.coerce.number().int().positive('Tenant id must be a valid number.').optional(),
   branchId: z.coerce.number().int().positive('Branch id must be a valid number.').optional().nullable(),
-  name: z
-    .string()
-    .trim()
-    .min(2, 'Role name is required.')
-    .max(100, 'Role name is too long.')
-    .regex(/^[a-zA-Z0-9 _-]+$/, 'Role name can only contain letters, numbers, spaces, hyphens, and underscores.')
-    .optional(),
-  roleName: z
-    .string()
-    .trim()
-    .min(2, 'Role name is required.')
-    .max(100, 'Role name is too long.')
-    .regex(/^[a-zA-Z0-9 _-]+$/, 'Role name can only contain letters, numbers, spaces, hyphens, and underscores.')
-    .optional(),
+  name: roleNameSchema.optional(),
+  roleName: roleNameSchema.optional(),
   description: z.string().trim().max(255, 'Role description is too long.').optional().or(z.literal('')),
   status: z.enum(['active', 'inactive']).optional(),
   ...permissionsBodySchema,

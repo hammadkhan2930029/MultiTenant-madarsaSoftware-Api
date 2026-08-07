@@ -40,6 +40,7 @@ export const env = {
   tenantSystemHosts: parseCsv(process.env.TENANT_SYSTEM_HOSTS || 'localhost,127.0.0.1,::1'),
   tenantSystemSubdomains: parseCsv(process.env.TENANT_SYSTEM_SUBDOMAINS || 'api,app,admin,www,demoapi'),
   defaultTenantCode: process.env.DEFAULT_TENANT_CODE || 'default',
+  referralPublicBaseUrl: process.env.REFERRAL_PUBLIC_BASE_URL || 'https://madrasasoftware.com/contact',
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,

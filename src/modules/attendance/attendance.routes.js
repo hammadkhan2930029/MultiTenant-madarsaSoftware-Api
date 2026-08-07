@@ -21,9 +21,9 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post('/students', requirePermission('attendance.mark'), validate(markStudentAttendanceValidationSchema), markStudentAttendance);
-router.get('/students', requirePermission('attendance.view'), validate(getStudentAttendanceValidationSchema), getStudentAttendance);
-router.post('/teachers', requirePermission('attendance.mark', 'teachers.attendance.view'), validate(markTeacherAttendanceValidationSchema), markTeacherAttendance);
+router.post('/students', requirePermission('attendance.create', 'attendance.edit'), validate(markStudentAttendanceValidationSchema), markStudentAttendance);
+router.get('/students', requirePermission('attendance.view', 'attendance.create', 'attendance.edit', 'attendance.history.view'), validate(getStudentAttendanceValidationSchema), getStudentAttendance);
+router.post('/teachers', requirePermission('attendance.create', 'teachers.attendance.create', 'teachers.attendance.view'), validate(markTeacherAttendanceValidationSchema), markTeacherAttendance);
 router.get('/teachers', requirePermission('attendance.view', 'teachers.attendance.view'), validate(getTeacherAttendanceValidationSchema), getTeacherAttendance);
 router.delete('/teachers', requirePermission('attendance.delete', 'teachers.attendance.view'), validate(deleteTeacherAttendanceValidationSchema), deleteTeacherAttendance);
 

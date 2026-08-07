@@ -1,17 +1,28 @@
 import { TENANT_ADMIN_BYPASS_BLOCKED_PREFIXES } from './rbac.constants.js';
 
+const GRANTED_PERMISSION_ALIASES = {
+  'admissions.create': ['students.create'],
+  'admissions.edit': ['students.edit', 'students.update'],
+  'admissions.update': ['students.edit', 'students.update'],
+};
+
 export const normalizePermissions = (permissions = []) => (
   Array.isArray(permissions) ? permissions.flat().filter(Boolean) : [permissions].filter(Boolean)
 );
 
-export const getPermissionKeys = (auth = {}) => (
-  normalizePermissions(
+export const getPermissionKeys = (auth = {}) => {
+  const assignedPermissions = normalizePermissions(
     auth.permissionKeys ||
       auth.permissions?.map?.((permission) => (
         typeof permission === 'string' ? permission : permission?.permissionKey
       ))
-  )
-);
+  );
+
+  return Array.from(new Set(assignedPermissions.flatMap((permission) => [
+    permission,
+    ...(GRANTED_PERMISSION_ALIASES[permission] || []),
+  ])));
+};
 
 export const isSuperAdmin = (auth = {}) => Boolean(auth?.isSuperAdmin);
 

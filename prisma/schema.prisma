@@ -19,8 +19,13 @@ model Tenant {
   branchEnabled       Boolean                  @default(false) @map("branch_enabled")
   branchLimit         Int?                     @map("branch_limit")
   ownerAdminId        Int?
+  referralCode        String                   @unique @map("referral_code") @db.VarChar(20)
+  referredByTenantId  Int?                     @map("referred_by_tenant_id")
+  referredAt          DateTime?                @map("referred_at")
   createdAt           DateTime                 @default(now())
   updatedAt           DateTime                 @updatedAt
+  referredBy          Tenant?                  @relation("TenantReferrals", fields: [referredByTenantId], references: [id], onDelete: SetNull)
+  referredTenants     Tenant[]                 @relation("TenantReferrals")
   admins              Admin[]                  @relation("TenantAdmins")
   roles               Role[]                   @relation("TenantRoles")
   rolePermissions     RolePermission[]         @relation("TenantRolePermissions")
@@ -77,6 +82,7 @@ model Tenant {
   teacherAssignments  TeacherAssignment[]      @relation("TenantTeacherAssignments")
   cities              City[]                   @relation("TenantCities")
 
+  @@index([referredByTenantId])
   @@map("tenant")
 }
 

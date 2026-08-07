@@ -1,5 +1,5 @@
 import { AppError } from '../../utils/appError.js';
-import { MODULE_PERMISSION_MAP } from './rbac.constants.js';
+import { getSupportingReadPermissions, MODULE_PERMISSION_MAP } from './rbac.constants.js';
 import {
   hasAllPermissions,
   hasAnyPermission,
@@ -25,7 +25,7 @@ const getRequiredPermissionForRequest = (req) => {
   if (req.originalUrl.startsWith('/api/auth/change-password')) return null;
   if (req.originalUrl.startsWith('/api/auth/me')) return null;
   if (req.originalUrl.startsWith('/api/auth/profile')) {
-    return req.method === 'GET' ? 'settings.view' : 'settings.update';
+    return req.method === 'GET' ? null : 'settings.update';
   }
   if (req.originalUrl.startsWith('/api/tenants')) return null;
 
@@ -41,7 +41,7 @@ const getRequiredPermissionForRequest = (req) => {
     return action === 'view' ? 'users.view' : 'users.manage';
   }
   if (req.originalUrl.startsWith('/api/students') && /\/(assign-class|class-assignments)(\/|$)/i.test(req.originalUrl)) {
-    return 'students.update';
+    return 'students.edit';
   }
   if (req.originalUrl.startsWith('/api/teachers') && /\/increments(\/|$)/i.test(req.originalUrl)) {
     return req.method === 'GET' ? ['teachers.view', 'teachers.salary_increments.view'] : 'teachers.update';
@@ -67,8 +67,12 @@ const getRequiredPermissionForRequest = (req) => {
     return ['exams.view', 'exam_results.create'];
   }
   if (req.originalUrl.startsWith('/api/attendance')) {
-    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') return 'attendance.mark';
-    return action === 'view' ? 'attendance.view' : `attendance.${action}`;
+    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+      return ['attendance.create', 'attendance.edit', 'teachers.attendance.create', 'teachers.attendance.view'];
+    }
+    return action === 'view'
+      ? ['attendance.view', 'attendance.create', 'attendance.edit', 'attendance.history.view', 'teachers.attendance.view']
+      : `attendance.${action}`;
   }
   if (req.originalUrl.startsWith('/api/hifz/')) {
     const [, , hifzSegment] = req.originalUrl.split('/').filter(Boolean);
@@ -115,7 +119,12 @@ const getRequiredPermissionForRequest = (req) => {
   if (moduleName === 'support' && action !== 'view') return 'support.create';
   if (moduleName === 'suggestions' && action !== 'view') return 'suggestions.create';
 
-  return `${moduleName}.${action}`;
+  const primaryPermission = `${moduleName}.${action}`;
+  if (action === 'view') {
+    return [primaryPermission, ...getSupportingReadPermissions(apiSegment)];
+  }
+
+  return primaryPermission;
 };
 
 const assertAnyPermission = (auth, permissions = []) => {
