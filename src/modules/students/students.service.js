@@ -186,7 +186,7 @@ const ensureAssignmentReferences = async (tenantId, { branchId, classId, section
     prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
     prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
     prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
-    prisma.academicSession.findUnique({ where: { id: sessionId } }),
+    prisma.academicSession.findFirst({ where: { id: sessionId, tenantId, status: 'active' } }),
   ]);
 
   if (!branch) throw new AppError('Selected branch is inactive or not available.', 403);
@@ -200,6 +200,10 @@ const ensureAssignmentReferences = async (tenantId, { branchId, classId, section
 
   if (section.classId !== classId) {
     throw new AppError('Selected section does not belong to the selected class.', 400);
+  }
+
+  if (session.branchId && session.branchId !== branchId) {
+    throw new AppError('Selected session does not belong to the selected branch.', 400);
   }
 
   return { branch, academicClass, section, session };
@@ -307,6 +311,16 @@ export const studentsService = {
   async createStudent(tenantId, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
+    const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
+
+    if (shouldSaveAssignment) {
+      await ensureAssignmentReferences(resolvedTenantId, {
+        branchId: scopedBranchId,
+        sessionId: body.sessionId,
+        classId: body.classId,
+        sectionId: body.sectionId,
+      });
+    }
 
     body.admissionNumber = optionalString(body.admissionNumber) || (await getNextAdmissionNumber(resolvedTenantId));
 
@@ -359,6 +373,19 @@ export const studentsService = {
 
       if (Array.isArray(body.parents) && body.parents.length > 0) {
         await upsertStudentParents(tx, resolvedTenantId, createdStudent.id, body.parents, scopedBranchId);
+      }
+
+      if (shouldSaveAssignment) {
+        await tx.studentClassAssignment.create({
+          data: {
+            studentId: createdStudent.id,
+            tenantId: resolvedTenantId,
+            branchId: scopedBranchId,
+            classId: body.classId,
+            sectionId: body.sectionId,
+            sessionId: body.sessionId,
+          },
+        });
       }
 
       return tx.student.findUnique({
@@ -448,6 +475,16 @@ export const studentsService = {
   async updateStudent(tenantId, id, { body, file, branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
+    const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
+
+    if (shouldSaveAssignment) {
+      await ensureAssignmentReferences(resolvedTenantId, {
+        branchId: scopedBranchId,
+        sessionId: body.sessionId,
+        classId: body.classId,
+        sectionId: body.sectionId,
+      });
+    }
     const existingStudent = await prisma.student.findFirst({
       where: {
         id,
@@ -510,6 +547,35 @@ export const studentsService = {
 
       if (Array.isArray(body.parents)) {
         await upsertStudentParents(tx, resolvedTenantId, id, body.parents, scopedBranchId || existingStudent.branchId);
+      }
+
+      if (shouldSaveAssignment) {
+        const currentAssignment = await tx.studentClassAssignment.findFirst({
+          where: { tenantId: resolvedTenantId, studentId: id, status: 'active' },
+          orderBy: { assignedAt: 'desc' },
+        });
+        const assignmentChanged = !currentAssignment
+          || currentAssignment.branchId !== scopedBranchId
+          || currentAssignment.sessionId !== body.sessionId
+          || currentAssignment.classId !== body.classId
+          || currentAssignment.sectionId !== body.sectionId;
+
+        if (assignmentChanged) {
+          await tx.studentClassAssignment.updateMany({
+            where: { tenantId: resolvedTenantId, studentId: id, status: 'active' },
+            data: { status: 'inactive' },
+          });
+          await tx.studentClassAssignment.create({
+            data: {
+              studentId: id,
+              tenantId: resolvedTenantId,
+              branchId: scopedBranchId,
+              classId: body.classId,
+              sectionId: body.sectionId,
+              sessionId: body.sessionId,
+            },
+          });
+        }
       }
 
       return tx.student.findUnique({
