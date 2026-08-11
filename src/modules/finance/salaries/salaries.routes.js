@@ -21,9 +21,9 @@ import {
 const router = Router();
 router.use(authMiddleware);
 router.post('/', requirePermission('salary.create'), validate(createSalaryValidationSchema), createSalaryEntry);
-router.get('/', requirePermission('salary.view'), validate(listSalariesValidationSchema), getSalaryEntries);
-router.get('/teachers', requirePermission('salary.view'), validate(listSalaryTeachersValidationSchema), getSalaryTeachers);
-router.get('/:id', requirePermission('salary.view'), validate(salaryIdValidationSchema), getSalaryEntryById);
+router.get('/', requirePermission('salary.view', 'salary.create', 'salary.edit'), validate(listSalariesValidationSchema), getSalaryEntries);
+router.get('/teachers', requirePermission('salary.view', 'salary.create', 'salary.edit'), validate(listSalaryTeachersValidationSchema), getSalaryTeachers);
+router.get('/:id', requirePermission('salary.view', 'salary.edit'), validate(salaryIdValidationSchema), getSalaryEntryById);
 router.put('/:id', requirePermission('salary.edit'), validate(updateSalaryValidationSchema), updateSalaryEntry);
 router.patch('/:id/deactivate', requirePermission('salary.delete'), validate(salaryIdValidationSchema), deactivateSalaryEntry);
 

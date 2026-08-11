@@ -652,31 +652,34 @@ model TeacherAssignment {
 }
 
 model ExamSchedule {
-  id          Int             @id @default(autoincrement())
-  tenantId    Int             @map("tenant_id")
-  examName    String          @db.VarChar(150)
-  sessionId   Int
-  classId     Int
-  sectionId   Int?            @map("section_id")
-  subjectId   Int
-  examDate    DateTime
-  startTime   String          @db.VarChar(10)
-  endTime     String          @db.VarChar(10)
-  totalMarks  Int?
-  room        String?         @db.VarChar(100)
-  invigilator String?         @db.VarChar(150)
-  notes       String?         @db.VarChar(255)
-  status      String          @default("active") @db.VarChar(50)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  tenant      Tenant          @relation("TenantExamSchedules", fields: [tenantId], references: [id])
-  session     AcademicSession @relation(fields: [sessionId], references: [id])
-  class       AcademicClass   @relation(fields: [classId], references: [id])
-  section     Section?        @relation(fields: [sectionId], references: [id])
-  subject     Subject         @relation(fields: [subjectId], references: [id])
+  id                   Int             @id @default(autoincrement())
+  tenantId             Int             @map("tenant_id")
+  examName             String          @db.VarChar(150)
+  sessionId            Int
+  classId              Int
+  sectionId            Int?            @map("section_id")
+  subjectId            Int
+  examDate             DateTime
+  startTime            String          @db.VarChar(10)
+  endTime              String          @db.VarChar(10)
+  totalMarks           Int?
+  room                 String?         @db.VarChar(100)
+  invigilator          String?         @db.VarChar(150)
+  invigilatorTeacherId Int?            @map("invigilator_teacher_id")
+  notes                String?         @db.VarChar(255)
+  status               String          @default("active") @db.VarChar(50)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  tenant               Tenant          @relation("TenantExamSchedules", fields: [tenantId], references: [id])
+  session              AcademicSession @relation(fields: [sessionId], references: [id])
+  class                AcademicClass   @relation(fields: [classId], references: [id])
+  section              Section?        @relation(fields: [sectionId], references: [id])
+  subject              Subject         @relation(fields: [subjectId], references: [id])
+  invigilatorTeacher   Teacher?        @relation("TeacherExamInvigilation", fields: [invigilatorTeacherId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
   @@index([sectionId])
+  @@index([invigilatorTeacherId])
   @@index([sessionId, classId, subjectId])
   @@index([sessionId, classId, sectionId])
   @@index([examDate, status])
@@ -926,6 +929,7 @@ model Teacher {
   branch              Branch?                    @relation("BranchTeachers", fields: [branchId], references: [id], onDelete: SetNull)
   departmentHeads     DepartmentHeadAssignment[]
   teachingAssignments TeacherAssignment[]
+  invigilatedExams    ExamSchedule[]             @relation("TeacherExamInvigilation")
 
   @@unique([tenantId, phone])
   @@unique([tenantId, cnic])
@@ -1134,35 +1138,39 @@ model HifzSiparaEntry {
 }
 
 model FinanceHead {
-  id            Int                  @id @default(autoincrement())
-  tenantId      Int                  @map("tenant_id")
-  branchId      Int?                 @map("branch_id")
-  name          String               @db.VarChar(150)
-  type          String               @db.VarChar(20)
-  description   String?              @db.VarChar(255)
-  status        String               @default("active") @db.VarChar(50)
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  tenant        Tenant               @relation("TenantFinanceHeads", fields: [tenantId], references: [id])
-  salaryEntries SalaryEntry[]
-  transactions  FinanceTransaction[]
+  id                Int                     @id @default(autoincrement())
+  tenantId          Int                     @map("tenant_id")
+  branchId          Int?                    @map("branch_id")
+  expenseCategoryId Int?                    @map("expense_category_id")
+  name              String                  @db.VarChar(150)
+  type              String                  @db.VarChar(20)
+  description       String?                 @db.VarChar(255)
+  status            String                  @default("active") @db.VarChar(50)
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  tenant            Tenant                  @relation("TenantFinanceHeads", fields: [tenantId], references: [id])
+  expenseCategory   FinanceExpenseCategory? @relation(fields: [expenseCategoryId], references: [id], onDelete: SetNull)
+  salaryEntries     SalaryEntry[]
+  transactions      FinanceTransaction[]
 
   @@unique([tenantId, branchId, name])
   @@index([tenantId])
   @@index([branchId])
+  @@index([expenseCategoryId])
   @@index([tenantId, branchId])
   @@map("finance_heads")
 }
 
 model FinanceExpenseCategory {
-  id        Int      @id @default(autoincrement())
-  tenantId  Int      @map("tenant_id")
-  branchId  Int?     @map("branch_id")
-  name      String   @db.VarChar(150)
-  status    String   @default("active") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tenant    Tenant   @relation("TenantFinanceExpenseCategories", fields: [tenantId], references: [id], onDelete: Cascade)
+  id           Int           @id @default(autoincrement())
+  tenantId     Int           @map("tenant_id")
+  branchId     Int?          @map("branch_id")
+  name         String        @db.VarChar(150)
+  status       String        @default("active") @db.VarChar(50)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tenant       Tenant        @relation("TenantFinanceExpenseCategories", fields: [tenantId], references: [id], onDelete: Cascade)
+  financeHeads FinanceHead[]
 
   @@unique([tenantId, branchId, name])
   @@index([tenantId])
@@ -1208,26 +1216,27 @@ model StudentFeeVoucher {
 }
 
 model FundCollection {
-  id                Int      @id @default(autoincrement())
-  tenantId          Int      @map("tenant_id")
-  branchId          Int?     @map("branch_id")
-  collectionGroupId String   @db.VarChar(100)
-  donorName         String   @db.VarChar(150)
-  careOf            String?  @db.VarChar(150)
-  phone             String?  @db.VarChar(50)
-  paymentMode       String   @db.VarChar(50)
-  donationType      String   @db.VarChar(100)
-  donationSubType   String   @db.VarChar(100)
-  purpose           String?  @db.VarChar(255)
-  amount            Decimal  @db.Decimal(10, 2)
-  receiptNo         String?  @db.VarChar(100)
-  details           String?  @db.VarChar(255)
+  id                Int       @id @default(autoincrement())
+  tenantId          Int       @map("tenant_id")
+  branchId          Int?      @map("branch_id")
+  collectionGroupId String    @db.VarChar(100)
+  donorName         String    @db.VarChar(150)
+  careOf            String?   @db.VarChar(150)
+  phone             String?   @db.VarChar(50)
+  paymentMode       String    @db.VarChar(50)
+  donationType      String    @db.VarChar(100)
+  donationSubType   String    @db.VarChar(100)
+  purpose           String?   @db.VarChar(255)
+  amount            Decimal   @db.Decimal(10, 2)
+  receiptNo         String?   @db.VarChar(100)
+  details           String?   @db.VarChar(255)
   paymentDate       DateTime
-  remarks           String?  @db.VarChar(255)
-  status            String   @default("active") @db.VarChar(50)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation("TenantFundCollections", fields: [tenantId], references: [id])
+  chequeDate        DateTime? @map("cheque_date")
+  remarks           String?   @db.VarChar(255)
+  status            String    @default("active") @db.VarChar(50)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation("TenantFundCollections", fields: [tenantId], references: [id])
 
   @@index([tenantId])
   @@index([branchId])

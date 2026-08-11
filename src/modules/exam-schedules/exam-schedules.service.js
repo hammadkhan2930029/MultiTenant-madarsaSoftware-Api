@@ -13,6 +13,8 @@ const examScheduleSelect = {
   totalMarks: true,
   room: true,
   invigilator: true,
+  invigilatorTeacherId: true,
+  invigilatorTeacher: { select: { id: true, fullName: true } },
   notes: true,
   status: true,
   createdAt: true,
@@ -79,6 +81,27 @@ const ensureExamScheduleReferences = async (tenantId, { sessionId, classId, sect
   }
 };
 
+const resolveInvigilator = async (tenantId, invigilatorTeacherId, branchId = null) => {
+  if (!invigilatorTeacherId) return { invigilatorTeacherId: null, invigilator: null };
+
+  const teacher = await prisma.teacher.findFirst({
+    where: {
+      id: invigilatorTeacherId,
+      tenantId,
+      status: 'active',
+      staffType: 'teacher',
+      ...(branchId ? { branchId } : {}),
+    },
+    select: { id: true, fullName: true },
+  });
+
+  if (!teacher) {
+    throw new AppError('منتخب نگران موجودہ برانچ کا فعال استاد نہیں ہے۔', 404);
+  }
+
+  return { invigilatorTeacherId: teacher.id, invigilator: teacher.fullName };
+};
+
 const getTenantExamSchedule = async (tenantId, id, branchId = null) => {
   const schedule = await prisma.examSchedule.findFirst({
     where: { id, tenantId, class: { tenantId, ...(branchId ? { branchId } : {}) } },
@@ -97,6 +120,7 @@ export const examSchedulesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
     await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
+    const invigilator = await resolveInvigilator(resolvedTenantId, payload.invigilatorTeacherId, branchId);
 
     return prisma.examSchedule.create({
       data: {
@@ -111,7 +135,7 @@ export const examSchedulesService = {
         endTime: payload.endTime,
         totalMarks: payload.totalMarks,
         room: payload.room,
-        invigilator: payload.invigilator,
+        ...invigilator,
         notes: payload.notes,
         status: payload.status || 'active',
       },
@@ -176,6 +200,7 @@ export const examSchedulesService = {
     const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
     await getTenantExamSchedule(resolvedTenantId, id, branchId);
     await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
+    const invigilator = await resolveInvigilator(resolvedTenantId, payload.invigilatorTeacherId, branchId);
 
     return prisma.examSchedule.update({
       where: { id, tenantId: resolvedTenantId },
@@ -190,7 +215,7 @@ export const examSchedulesService = {
         endTime: payload.endTime,
         totalMarks: payload.totalMarks,
         room: payload.room,
-        invigilator: payload.invigilator,
+        ...invigilator,
         notes: payload.notes,
         status: payload.status || 'active',
       },

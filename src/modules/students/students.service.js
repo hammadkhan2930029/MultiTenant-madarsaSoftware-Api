@@ -168,6 +168,10 @@ const buildStudentSelect = (branchId) => ({
     orderBy: { assignedAt: 'desc' },
     select: {
       id: true,
+      branchId: true,
+      classId: true,
+      sectionId: true,
+      sessionId: true,
       status: true,
       assignedAt: true,
       branch: { select: { id: true, name: true, code: true } },

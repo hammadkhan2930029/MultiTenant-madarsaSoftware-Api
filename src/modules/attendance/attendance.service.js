@@ -94,6 +94,29 @@ const normalizeDate = (value) => {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 };
 
+const buildAttendanceDateFilter = (query = {}) => {
+  if (query.date) return normalizeDate(query.date);
+
+  if (query.startDate || query.endDate) {
+    return {
+      ...(query.startDate ? { gte: normalizeDate(query.startDate) } : {}),
+      ...(query.endDate ? { lte: normalizeDate(query.endDate) } : {}),
+    };
+  }
+
+  if (query.month || query.year) {
+    const year = Number(query.year || new Date().getUTCFullYear());
+    const startMonth = query.month ? Number(query.month) - 1 : 0;
+    const endMonth = query.month ? startMonth + 1 : 12;
+    return {
+      gte: new Date(Date.UTC(year, startMonth, 1)),
+      lt: new Date(Date.UTC(year, endMonth, 1)),
+    };
+  }
+
+  return undefined;
+};
+
 const getTeacherStartDate = (teacher) => {
   const value = teacher?.joiningDate || teacher?.appointmentDate || teacher?.createdAt;
   return value ? normalizeDate(value) : null;
@@ -217,14 +240,7 @@ export const attendanceService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveStudentAttendanceBranchId(resolvedTenantId, query, branchScope);
-    const dateFilter = query.date
-      ? normalizeDate(query.date)
-      : query.startDate || query.endDate
-        ? {
-            ...(query.startDate ? { gte: normalizeDate(query.startDate) } : {}),
-            ...(query.endDate ? { lte: normalizeDate(query.endDate) } : {}),
-          }
-        : undefined;
+    const dateFilter = buildAttendanceDateFilter(query);
 
     const where = {
       tenantId: resolvedTenantId,
@@ -292,12 +308,13 @@ export const attendanceService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, query, branchScope);
+    const dateFilter = buildAttendanceDateFilter(query);
 
     const where = {
       tenantId: resolvedTenantId,
       teacher: { tenantId: resolvedTenantId },
       branch: { tenantId: resolvedTenantId },
-      ...(query.date ? { date: normalizeDate(query.date) } : {}),
+      ...(dateFilter ? { date: dateFilter } : {}),
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(branchId ? { branchId } : {}),
       ...(query.status ? { status: query.status } : {}),

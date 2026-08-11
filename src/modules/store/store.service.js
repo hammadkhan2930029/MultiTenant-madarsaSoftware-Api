@@ -844,7 +844,7 @@ const getBranchStockQuantitySql = (tenantId, branchId) => {
 };
 
 const mapReportRows = (rows) =>
-  rows.map((row) => {
+  (Array.isArray(rows) ? rows : []).map((row) => {
     const nextRow = { ...row };
     for (const key of Object.keys(nextRow)) {
       if (typeof nextRow[key] === 'bigint') nextRow[key] = Number(nextRow[key]);

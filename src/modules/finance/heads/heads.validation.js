@@ -8,6 +8,7 @@ const bodySchema = z.object({
   description: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),
   branchId: branchIdSchema,
+  expenseCategoryId: z.union([z.coerce.number().int().positive(), z.literal(''), z.null(), z.undefined()]).transform((value) => (value ? Number(value) : null)),
 });
 
 export const createHeadValidationSchema = z.object({ body: bodySchema, params: z.object({}).default({}), query: z.object({}).default({}) });

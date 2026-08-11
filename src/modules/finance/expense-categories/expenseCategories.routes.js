@@ -20,8 +20,8 @@ const router = Router();
 
 router.use(authMiddleware);
 router.post('/', requirePermission('finance.heads.create', 'fees.create'), validate(createExpenseCategoryValidationSchema), createExpenseCategory);
-router.get('/', requirePermission('finance.heads.view', 'fees.view'), validate(listExpenseCategoriesValidationSchema), getExpenseCategories);
-router.get('/:id', requirePermission('finance.heads.view', 'fees.view'), validate(expenseCategoryIdValidationSchema), getExpenseCategoryById);
+router.get('/', requirePermission('finance.heads.view', 'finance.heads.create', 'finance.heads.update', 'fees.view'), validate(listExpenseCategoriesValidationSchema), getExpenseCategories);
+router.get('/:id', requirePermission('finance.heads.view', 'finance.heads.update', 'fees.view'), validate(expenseCategoryIdValidationSchema), getExpenseCategoryById);
 router.put('/:id', requirePermission('finance.heads.update', 'fees.update'), validate(updateExpenseCategoryValidationSchema), updateExpenseCategory);
 router.patch('/:id/deactivate', requirePermission('finance.heads.delete', 'fees.delete'), validate(expenseCategoryIdValidationSchema), deactivateExpenseCategory);
 

@@ -7,12 +7,14 @@ const select = {
   id: true,
   tenantId: true,
   branchId: true,
+  expenseCategoryId: true,
   name: true,
   type: true,
   description: true,
   status: true,
   createdAt: true,
   updatedAt: true,
+  expenseCategory: { select: { id: true, name: true, status: true } },
 };
 
 const normalizeTenantId = (tenantId) => {
@@ -42,10 +44,22 @@ const getTenantHead = async (tenantId, id, branchId) => {
   return head;
 };
 
+const resolveExpenseCategoryId = async (tenantId, branchId, type, expenseCategoryId) => {
+  if (type !== 'expense' || !expenseCategoryId) return null;
+
+  const category = await prisma.financeExpenseCategory.findFirst({
+    where: { id: expenseCategoryId, tenantId, branchId, status: 'active' },
+    select: { id: true },
+  });
+  if (!category) throw new AppError('Active expense category not found for this branch.', 404);
+  return category.id;
+};
+
 export const headsService = {
   async createHead(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
+    const expenseCategoryId = await resolveExpenseCategoryId(resolvedTenantId, branchId, payload.type, payload.expenseCategoryId);
     const existing = await prisma.financeHead.findFirst({
       where: { tenantId: resolvedTenantId, branchId, name: payload.name },
     });
@@ -59,6 +73,7 @@ export const headsService = {
         ...payload,
         tenantId: resolvedTenantId,
         branchId,
+        expenseCategoryId,
         description: payload.description || null,
       },
       select,
@@ -94,7 +109,9 @@ export const headsService = {
   async updateHead(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
-    await getTenantHead(resolvedTenantId, id, branchId);
+    const currentHead = await getTenantHead(resolvedTenantId, id, branchId);
+    const nextType = payload.type || currentHead.type;
+    const expenseCategoryId = await resolveExpenseCategoryId(resolvedTenantId, branchId, nextType, payload.expenseCategoryId);
 
     if (payload.name) {
       const duplicate = await prisma.financeHead.findFirst({
@@ -108,7 +125,7 @@ export const headsService = {
 
     return prisma.financeHead.update({
       where: { id },
-      data: { ...payload, description: payload.description || null },
+      data: { ...payload, expenseCategoryId, description: payload.description || null },
       select,
     });
   },

@@ -35,8 +35,10 @@ export const SUPPORTING_READ_PERMISSIONS = {
     'students.create', 'students.edit', 'students.update', 'teachers.attendance.view',
     'teachers.attendance.create', 'teachers.assignments.view',
     'teachers.assignments.create', 'students.schedule.view', 'salary.view', 'salary.create',
+    'exams.view', 'exams.create', 'exams.update',
   ],
   subjects: [
+    'teachers.create', 'teachers.edit', 'teachers.update',
     'students.schedule.view', 'teachers.assignments.view', 'teachers.assignments.create',
     'exams.view', 'exams.create', 'exam_results.view', 'exam_results.create',
   ],

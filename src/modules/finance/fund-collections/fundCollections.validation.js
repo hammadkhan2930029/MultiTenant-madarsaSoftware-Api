@@ -8,6 +8,11 @@ const contactNumberSchema = z
   .transform((value) => value.replace(/[\s-]/g, ''))
   .refine((value) => /^(03\d{9}|\+923\d{9}|923\d{9})$/.test(value), 'درست رابطہ نمبر درج کریں، مثلاً 03001234567۔');
 
+const optionalDateSchema = z.preprocess(
+  (value) => (value === '' || value === null || value === undefined ? undefined : value),
+  z.coerce.date().optional(),
+);
+
 const bodySchema = z.object({
   collectionGroupId: z.string().trim().min(1, 'رسید ٹریکنگ نمبر ضروری ہے۔').max(100, 'رسید ٹریکنگ نمبر بہت لمبا ہے۔'),
   donorName: z.string().trim().min(1, 'نام دہندہ ضروری ہے۔').max(150, 'نام دہندہ بہت لمبا ہے۔'),
@@ -21,8 +26,17 @@ const bodySchema = z.object({
   receiptNo: z.union([z.string().trim().max(100), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   details: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   paymentDate: z.coerce.date({ message: 'ادائیگی کی تاریخ ضروری ہے۔' }),
+  chequeDate: optionalDateSchema,
   remarks: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),
+}).superRefine((data, ctx) => {
+  if (data.paymentMode === 'چیک' && !data.chequeDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['chequeDate'],
+      message: 'چیک کی تاریخ ضروری ہے۔',
+    });
+  }
 });
 
 export const createFundCollectionValidationSchema = z.object({ body: bodySchema, params: z.object({}).default({}), query: z.object({}).default({}) });

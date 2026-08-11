@@ -14,6 +14,7 @@ const examScheduleBodySchema = z.object({
   totalMarks: z.preprocess(emptyToUndefined, z.coerce.number().int().positive('کل نمبر لازمی اور درست ہونے چاہئیں۔')),
   room: z.preprocess(emptyToUndefined, z.string().trim().max(100).optional()),
   invigilator: z.preprocess(emptyToUndefined, z.string().trim().max(150).optional()),
+  invigilatorTeacherId: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().optional()),
   notes: z.preprocess(emptyToUndefined, z.string().trim().max(255).optional()),
   status: z.enum(['active', 'inactive']).optional(),
 });

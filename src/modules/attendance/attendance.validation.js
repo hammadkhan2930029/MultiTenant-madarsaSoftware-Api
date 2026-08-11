@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 const attendanceStatus = z.enum(['Present', 'Absent', 'Leave', 'Late']);
+const attendanceMonth = z.coerce.number().int().min(1).max(12).optional();
+const attendanceYear = z.coerce.number().int().min(1900).max(2200).optional();
 
 const optionalRemarks = z
   .union([z.string().trim().max(255, 'نوٹ بہت لمبا ہے۔'), z.literal(''), z.undefined()])
@@ -27,6 +29,8 @@ export const getStudentAttendanceValidationSchema = z.object({
     date: z.coerce.date().optional(),
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional(),
+    month: attendanceMonth,
+    year: attendanceYear,
     studentId: z.coerce.number().int().positive().optional(),
     branchId: z.coerce.number().int().positive().optional(),
     classId: z.coerce.number().int().positive().optional(),
@@ -54,6 +58,10 @@ export const getTeacherAttendanceValidationSchema = z.object({
   params: z.object({}).default({}),
   query: z.object({
     date: z.coerce.date().optional(),
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
+    month: attendanceMonth,
+    year: attendanceYear,
     teacherId: z.coerce.number().int().positive().optional(),
     branchId: z.coerce.number().int().positive().optional(),
     status: attendanceStatus.optional(),

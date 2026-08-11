@@ -98,25 +98,52 @@ const resolveBranchId = async (tenantId, payloadOrQuery = {}, branchScope = null
   });
 };
 
-const findSalaryExpenseHead = async (tenantId) => {
+const findSalaryExpenseHead = async (tenantId, branchId = null, staffType = 'teacher') => {
   const expenseHeads = await prisma.financeHead.findMany({
-    where: { tenantId, type: 'expense', status: 'active' },
+    where: {
+      tenantId,
+      type: 'expense',
+      status: 'active',
+      ...(branchId ? { OR: [{ branchId }, { branchId: null }] } : { branchId: null }),
+    },
     orderBy: { createdAt: 'asc' },
-    select: { id: true, name: true, type: true },
+    select: { id: true, branchId: true, name: true, type: true, status: true },
   });
 
-  return expenseHeads.find((head) => /salary|payroll|ØªÙ†Ø®ÙˆØ§Û/i.test(head.name || '')) || expenseHeads[0] || null;
+  const scopedHeads = expenseHeads.sort((first, second) => Number(second.branchId === branchId) - Number(first.branchId === branchId));
+  const preferredPattern = staffType === 'staff'
+    ? /staff|other staff|عملہ|دیگر عملے/i
+    : /teacher|ustad|استاد|اساتذہ|اساتزہ/i;
+
+  return scopedHeads.find((head) => preferredPattern.test(head.name || ''))
+    || scopedHeads.find((head) => /salary|payroll|تنخواہ|سیلری/i.test(head.name || ''))
+    || scopedHeads[0]
+    || null;
 };
 
 const ensureReferences = async (tenantId, { teacherId, financeHeadId }, branchId = null) => {
-  const [teacher, selectedHead] = await Promise.all([
-    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchId ? { branchId } : {}) } }),
-    financeHeadId ? prisma.financeHead.findFirst({ where: { id: financeHeadId, tenantId } }) : Promise.resolve(null),
-  ]);
+  const teacher = await prisma.teacher.findFirst({
+    where: { id: teacherId, tenantId, status: 'active', ...(branchId ? { branchId } : {}) },
+  });
   if (!teacher) throw new AppError('Teacher not found.', 404);
-  const head = selectedHead || await findSalaryExpenseHead(tenantId);
+
+  const selectedHead = financeHeadId
+    ? await prisma.financeHead.findFirst({
+        where: {
+          id: financeHeadId,
+          tenantId,
+          type: 'expense',
+          status: 'active',
+          ...(branchId ? { OR: [{ branchId }, { branchId: null }] } : { branchId: null }),
+        },
+      })
+    : null;
+  if (financeHeadId && !selectedHead) {
+    throw new AppError('Selected finance head is not an active expense head for this branch.', 400);
+  }
+
+  const head = selectedHead || await findSalaryExpenseHead(tenantId, branchId, teacher.staffType);
   if (!head) throw new AppError('Finance head not found.', 404);
-  if (head.type !== 'expense') throw new AppError('Selected finance head must be an expense head.', 400);
   return { financeHeadId: head.id, teacher };
 };
 
