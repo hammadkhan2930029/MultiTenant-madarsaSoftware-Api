@@ -19,10 +19,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.get('/', requirePermission('fees.view'), validate(listFinancialValidationSchema), getFinancialRecords);
-router.get('/summary', requirePermission('fees.view'), validate(listFinancialValidationSchema), getFinancialSummary);
-router.post('/', requirePermission('fees.create'), validate(createFinancialValidationSchema), createFinancialRecord);
-router.put('/:id', requirePermission('fees.update'), validate(updateFinancialValidationSchema), updateFinancialRecord);
-router.delete('/:id', requirePermission('fees.delete'), validate(financialIdValidationSchema), deleteFinancialRecord);
+router.get('/', requirePermission('finance.transactions.view', 'reports.view'), validate(listFinancialValidationSchema), getFinancialRecords);
+router.get('/summary', requirePermission('finance.transactions.view', 'reports.view'), validate(listFinancialValidationSchema), getFinancialSummary);
+router.post('/', requirePermission('finance.transactions.create'), validate(createFinancialValidationSchema), createFinancialRecord);
+router.put('/:id', requirePermission('finance.transactions.update', 'finance.transactions.create'), validate(updateFinancialValidationSchema), updateFinancialRecord);
+router.delete('/:id', requirePermission('finance.transactions.delete', 'finance.transactions.create'), validate(financialIdValidationSchema), deleteFinancialRecord);
 
 export { router as financialRoutes };

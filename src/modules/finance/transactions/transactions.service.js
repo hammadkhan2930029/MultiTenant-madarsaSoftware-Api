@@ -287,7 +287,7 @@ export const transactionsService = {
     };
 
     const [items, totalItems] = await Promise.all([
-      prisma.financeTransaction.findMany({ where, skip, take: limit, orderBy: { transactionDate: 'desc' }, select }),
+      prisma.financeTransaction.findMany({ where, skip, take: limit, orderBy: [{ transactionDate: 'desc' }, { id: 'desc' }], select }),
       prisma.financeTransaction.count({ where }),
     ]);
 

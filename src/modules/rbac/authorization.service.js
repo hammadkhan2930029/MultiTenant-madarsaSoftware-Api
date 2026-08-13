@@ -85,6 +85,30 @@ const getRequiredPermissionForRequest = (req) => {
     if (req.method === 'PATCH' && /\/payment(\/|$)/i.test(req.originalUrl)) return 'fees.create';
     return action === 'view' ? 'fees.view' : `fees.${action}`;
   }
+  if (req.originalUrl.startsWith('/api/finance/transactions')) {
+    if (action === 'view') return 'finance.transactions.view';
+    if (action === 'update') return ['finance.transactions.update', 'finance.transactions.create'];
+    if (action === 'delete') return ['finance.transactions.delete', 'finance.transactions.create'];
+    return `finance.transactions.${action}`;
+  }
+  if (req.originalUrl.startsWith('/api/finance/expense-categories') || req.originalUrl.startsWith('/api/finance/heads')) {
+    if (action === 'view') return ['finance.heads.view', 'finance.heads.create', 'finance.heads.update', 'finance.heads.delete', 'fees.view'];
+    if (action === 'create') return ['finance.heads.create', 'fees.create'];
+    if (action === 'update') return ['finance.heads.update', 'finance.heads.create', 'fees.update'];
+    if (action === 'delete') return ['finance.heads.delete', 'finance.heads.create', 'fees.delete'];
+  }
+  if (req.originalUrl.startsWith('/api/finance/fund-collections')) {
+    if (action === 'view') return ['funds.view', 'funds.create'];
+    if (action === 'update') return ['funds.edit', 'funds.create'];
+    if (action === 'delete') return ['funds.delete', 'funds.create'];
+    return `funds.${action}`;
+  }
+  if (req.originalUrl.startsWith('/api/finance/financial')) {
+    if (action === 'view') return ['finance.transactions.view', 'reports.view'];
+    if (action === 'update') return ['finance.transactions.update', 'finance.transactions.create'];
+    if (action === 'delete') return ['finance.transactions.delete', 'finance.transactions.create'];
+    return `finance.transactions.${action}`;
+  }
   if (req.originalUrl.startsWith('/api/finance/salaries')) {
     if (action === 'view') return 'salary.view';
     if (action === 'update') return 'salary.edit';

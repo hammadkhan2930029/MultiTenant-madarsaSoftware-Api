@@ -467,6 +467,13 @@ const assertNotCurrentRequesterRole = (role, requester = {}) => {
   }
 };
 
+const assertNotCurrentRequesterRoleModification = (role, requester = {}) => {
+  const requesterRoleId = requester?.role?.id || requester?.admin?.roleId || requester?.admin?.role_id || null;
+  if (requesterRoleId && Number(role?.id) === Number(requesterRoleId)) {
+    throw new AppError('You cannot modify the role or permissions assigned to your own account.', 403);
+  }
+};
+
 const getPermissionsByIds = async (client, permissionIds = []) => {
   const ids = permissionIds.map((id) => Number(id)).filter(Number.isInteger);
   if (!ids.length) return [];
@@ -810,6 +817,7 @@ export const rolesService = {
       assertCanAccessRole(existingRole, requester);
       assertSystemRoleCanBeChanged(existingRole);
       assertBranchRoleCanBeChanged(existingRole, requester);
+      assertNotCurrentRequesterRoleModification(existingRole, requester);
 
       if (!requester?.isSuperAdmin && normalizeOptionalTenantId(existingRole.tenant_id) === null) {
         const tenantId = normalizeOptionalTenantId(requester?.tenantId);
@@ -1018,6 +1026,7 @@ export const rolesService = {
       assertCanAccessRole(existingRole, requester);
       assertPermissionsCanBeChanged(existingRole, requester);
       assertBranchRoleCanBeChanged(existingRole, requester);
+      assertNotCurrentRequesterRoleModification(existingRole, requester);
 
       if (!requester?.isSuperAdmin && normalizeOptionalTenantId(existingRole.tenant_id) === null) {
         const tenantId = normalizeOptionalTenantId(requester?.tenantId);

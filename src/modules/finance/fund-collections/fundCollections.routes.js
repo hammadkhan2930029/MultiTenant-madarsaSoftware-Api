@@ -18,10 +18,10 @@ import {
 
 const router = Router();
 router.use(authMiddleware);
-router.post('/', requirePermission('fees.create'), validate(createFundCollectionValidationSchema), createFundCollection);
-router.get('/', requirePermission('fees.view'), validate(listFundCollectionsValidationSchema), getFundCollections);
-router.get('/:id', requirePermission('fees.view'), validate(fundCollectionIdValidationSchema), getFundCollectionById);
-router.put('/:id', requirePermission('fees.update'), validate(updateFundCollectionValidationSchema), updateFundCollection);
-router.patch('/:id/deactivate', requirePermission('fees.delete'), validate(fundCollectionIdValidationSchema), deactivateFundCollection);
+router.post('/', requirePermission('funds.create'), validate(createFundCollectionValidationSchema), createFundCollection);
+router.get('/', requirePermission('funds.view', 'funds.create'), validate(listFundCollectionsValidationSchema), getFundCollections);
+router.get('/:id', requirePermission('funds.view', 'funds.create'), validate(fundCollectionIdValidationSchema), getFundCollectionById);
+router.put('/:id', requirePermission('funds.edit', 'funds.create'), validate(updateFundCollectionValidationSchema), updateFundCollection);
+router.patch('/:id/deactivate', requirePermission('funds.delete', 'funds.create'), validate(fundCollectionIdValidationSchema), deactivateFundCollection);
 
 export { router as fundCollectionsRoutes };

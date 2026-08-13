@@ -125,7 +125,7 @@ export const fundCollectionsService = {
     };
 
     const [items, totalItems] = await Promise.all([
-      prisma.fundCollection.findMany({ where, skip, take: limit, orderBy: { paymentDate: 'desc' }, select }),
+      prisma.fundCollection.findMany({ where, skip, take: limit, orderBy: [{ paymentDate: 'desc' }, { id: 'desc' }], select }),
       prisma.fundCollection.count({ where }),
     ]);
 

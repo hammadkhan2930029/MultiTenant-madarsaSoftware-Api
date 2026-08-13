@@ -248,7 +248,7 @@ export const salariesService = {
       status,
     };
     const [items, totalItems] = await Promise.all([
-      prisma.salaryEntry.findMany({ where, skip, take: limit, orderBy: [{ salaryYear: 'desc' }, { salaryMonth: 'desc' }], select }),
+      prisma.salaryEntry.findMany({ where, skip, take: limit, orderBy: [{ salaryYear: 'desc' }, { salaryMonth: 'desc' }, { id: 'desc' }], select }),
       prisma.salaryEntry.count({ where }),
     ]);
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };

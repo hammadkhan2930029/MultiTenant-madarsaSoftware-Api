@@ -674,6 +674,9 @@ export const usersService = {
         ? await ensureAssignableBranch(payload.branchId, tenantId, tx)
         : normalizeBranchId(existingUser.branch_id);
       assertNotSelfDeactivate(id, payload, requester);
+      if (Object.prototype.hasOwnProperty.call(payload, 'roleId')) {
+        assertNotSelfRoleChange(id, requester);
+      }
 
       if (payload.email || payload.username) {
         await ensureUniqueUser({ email: nextEmail, username: nextUsername, tenantId, excludeId: id }, tx);

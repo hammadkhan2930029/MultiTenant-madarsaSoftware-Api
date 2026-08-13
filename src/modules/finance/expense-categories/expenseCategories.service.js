@@ -90,7 +90,7 @@ export const expenseCategoriesService = {
         AND branch_id = ${branchId}
         AND (${search} = '' OR name LIKE ${searchLike})
         AND (${status} = '' OR status = ${status})
-      ORDER BY createdAt DESC
+      ORDER BY createdAt DESC, id DESC
       LIMIT ${limit} OFFSET ${skip}
     `;
 
