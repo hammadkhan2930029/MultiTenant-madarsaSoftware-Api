@@ -140,7 +140,17 @@ export const reportsService = {
 
     if (query.type === 'teacher') {
       const where = {
-        teacher: { tenantId: resolvedTenantId },
+        teacher: {
+          tenantId: resolvedTenantId,
+          ...(classScopeService.isRestricted(branchScope) ? {
+            teachingAssignments: {
+              some: {
+                status: 'active',
+                classId: { in: classScopeService.normalizeClassIds(branchScope) },
+              },
+            },
+          } : {}),
+        },
         branch: { tenantId: resolvedTenantId },
         ...(query.status ? { status: query.status } : {}),
         ...(requestedBranchId ? { branchId: requestedBranchId } : {}),

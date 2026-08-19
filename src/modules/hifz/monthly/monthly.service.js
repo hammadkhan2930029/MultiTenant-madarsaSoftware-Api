@@ -2,7 +2,7 @@ import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
 import { findTenantRecordOrThrow, normalizeTenantId } from '../../../utils/tenantGuard.js';
-import { branchScopeService } from '../../security/index.js';
+import { branchScopeService, classScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
@@ -31,9 +31,13 @@ const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   return { OR: [{ branchId }, { assignments: { some: { tenantId, branchId, status: 'active' } } }] };
 };
 
-const ensureStudent = async (tenantId, studentId, branchId = null) => {
+const buildStudentClassVisibilityWhere = (tenantId, branchScope = null) => classScopeService.isRestricted(branchScope)
+  ? { assignments: { some: { tenantId, status: 'active', classId: { in: classScopeService.normalizeClassIds(branchScope) } } } }
+  : {};
+
+const ensureStudent = async (tenantId, studentId, branchId = null, branchScope = null) => {
   const student = await prisma.student.findFirst({
-    where: { id: studentId, tenantId, ...buildStudentBranchVisibilityWhere(tenantId, branchId) },
+    where: { id: studentId, tenantId, ...buildStudentBranchVisibilityWhere(tenantId, branchId), ...buildStudentClassVisibilityWhere(tenantId, branchScope) },
   });
   if (!student) throw new AppError('Student not found.', 404);
 };
@@ -50,7 +54,7 @@ export const monthlyHifzService = {
   async createEntry(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
-    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId, branchScope);
 
     return prisma.hifzMonthlyEntry.upsert({
       where: {
@@ -73,7 +77,7 @@ export const monthlyHifzService = {
     const branchId = await resolveHifzBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
-      student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
+      student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId), ...buildStudentClassVisibilityWhere(resolvedTenantId, branchScope) },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.month ? { month: query.month } : {}),
       ...(query.year ? { year: query.year } : {}),
@@ -91,7 +95,7 @@ export const monthlyHifzService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveHifzBranchId(resolvedTenantId, {}, branchScope);
     const entry = await prisma.hifzMonthlyEntry.findFirst({
-      where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) } },
+      where: { id, tenantId: resolvedTenantId, student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId), ...buildStudentClassVisibilityWhere(resolvedTenantId, branchScope) } },
       select,
     });
     if (!entry) throw new AppError(notFoundMessage, 404);
@@ -102,7 +106,7 @@ export const monthlyHifzService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     await this.getEntryById(resolvedTenantId, id, branchScope);
     const branchId = await resolveHifzBranchId(resolvedTenantId, payload, branchScope);
-    await ensureStudent(resolvedTenantId, payload.studentId, branchId);
+    await ensureStudent(resolvedTenantId, payload.studentId, branchId, branchScope);
     const duplicate = await prisma.hifzMonthlyEntry.findFirst({
       where: { tenantId: resolvedTenantId, id: { not: id }, studentId: payload.studentId, month: payload.month, year: payload.year },
     });

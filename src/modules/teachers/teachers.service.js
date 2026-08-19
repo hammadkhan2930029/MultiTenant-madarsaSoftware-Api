@@ -2,7 +2,7 @@
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/teachers/${file.filename}` : null);
 const optionalString = (value) => (value ? value : null);
@@ -147,6 +147,17 @@ const resolveTeacherBranchId = (tenantId, queryOrPayload = {}, branchScope = nul
     requireActive: true,
   });
 
+const buildTeacherClassScopeWhere = (branchScope = null) => classScopeService.isRestricted(branchScope)
+  ? {
+      teachingAssignments: {
+        some: {
+          status: 'active',
+          classId: { in: classScopeService.normalizeClassIds(branchScope) },
+        },
+      },
+    }
+  : {};
+
 const mapTeacherIncrement = (row) => ({
   id: row.id,
   teacherId: row.teacherId,
@@ -202,6 +213,9 @@ const ensureShiftExists = async (shiftId) => {
 
 export const teachersService = {
   async createTeacher(tenantId, { body, file, branchScope = null }) {
+    if (classScopeService.isRestricted(branchScope)) {
+      throw new AppError('Class-scoped roles cannot create an unassigned teacher.', 403);
+    }
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherBranchId(resolvedTenantId, body, branchScope);
 
@@ -260,6 +274,7 @@ export const teachersService = {
     const where = {
       tenantId: resolvedTenantId,
       ...(branchId ? { branchId } : {}),
+      ...buildTeacherClassScopeWhere(branchScope),
       ...(query.search
         ? {
             OR: [
@@ -296,7 +311,7 @@ export const teachersService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherBranchId(resolvedTenantId, {}, branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...buildTeacherClassScopeWhere(branchScope) },
       select: teacherSelect,
     });
 
@@ -625,7 +640,7 @@ export const teachersService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveTeacherBranchId(resolvedTenantId, body, branchScope);
     const existingTeacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...(scopedBranchId ? { branchId: scopedBranchId } : {}) },
+      where: { id, tenantId: resolvedTenantId, ...(scopedBranchId ? { branchId: scopedBranchId } : {}), ...buildTeacherClassScopeWhere(branchScope) },
     });
 
     if (!existingTeacher) {
@@ -685,7 +700,7 @@ export const teachersService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherBranchId(resolvedTenantId, {}, branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...buildTeacherClassScopeWhere(branchScope) },
     });
 
     if (!teacher) {
@@ -707,7 +722,7 @@ export const teachersService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherBranchId(resolvedTenantId, {}, branchScope);
     const teacher = await prisma.teacher.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
+      where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...buildTeacherClassScopeWhere(branchScope) },
       include: {
         _count: {
           select: {
