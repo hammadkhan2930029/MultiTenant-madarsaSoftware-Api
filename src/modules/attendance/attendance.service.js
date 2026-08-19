@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -201,6 +201,7 @@ const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId
 
 export const attendanceService = {
   async markStudentAttendance(tenantId, payload, branchScope = null) {
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveStudentAttendanceBranchId(resolvedTenantId, payload, branchScope);
     await ensureStudentAttendanceReferences(resolvedTenantId, { ...payload, branchId }, Boolean(branchScope?.isBranchScoped));
@@ -252,6 +253,7 @@ export const attendanceService = {
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(branchId ? { branchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...(query.status ? { status: query.status } : {}),
     };

@@ -3,7 +3,7 @@ import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   if (!branchId) return {};
@@ -42,7 +42,33 @@ const buildParentBranchVisibilityWhere = (tenantId, branchId) => {
   };
 };
 
-const buildParentSelect = (tenantId, branchId) => ({
+const buildStudentClassScopeWhere = (branchScope = null) => (
+  classScopeService.isRestricted(branchScope)
+    ? {
+        assignments: {
+          some: {
+            status: 'active',
+            classId: { in: classScopeService.normalizeClassIds(branchScope) },
+          },
+        },
+      }
+    : {}
+);
+
+const buildParentClassScopeWhere = (tenantId, branchScope = null) => (
+  classScopeService.isRestricted(branchScope)
+    ? {
+        students: {
+          some: {
+            tenantId,
+            student: buildStudentClassScopeWhere(branchScope),
+          },
+        },
+      }
+    : {}
+);
+
+const buildParentSelect = (tenantId, branchId, branchScope = null) => ({
   id: true,
   tenantId: true,
   branchId: true,
@@ -58,11 +84,14 @@ const buildParentSelect = (tenantId, branchId) => ({
   createdAt: true,
   updatedAt: true,
   students: {
-    ...(branchId
+    ...((branchId || classScopeService.isRestricted(branchScope))
       ? {
           where: {
             tenantId,
-            student: buildStudentBranchVisibilityWhere(tenantId, branchId),
+            student: {
+              ...buildStudentBranchVisibilityWhere(tenantId, branchId),
+              ...buildStudentClassScopeWhere(branchScope),
+            },
           },
         }
       : {}),
@@ -128,6 +157,9 @@ const buildDuplicateParentWhere = (tenantId, payload, excludeId) => ({
 
 export const parentsService = {
   async createParent(tenantId, payload, branchScope = null) {
+    if (classScopeService.isRestricted(branchScope)) {
+      throw new AppError('Create parents through a student in an assigned class.', 403);
+    }
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveParentBranchId(resolvedTenantId, payload, branchScope);
     const familyNumber = payload.familyNumber || (await getNextFamilyNumber(resolvedTenantId));
@@ -165,7 +197,7 @@ export const parentsService = {
 
     return prisma.parent.findUnique({
       where: { id: createdParent.id },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId),
+      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
   },
 
@@ -179,6 +211,7 @@ export const parentsService = {
       tenantId: resolvedTenantId,
       AND: [
         buildParentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
+        buildParentClassScopeWhere(resolvedTenantId, branchScope),
       ].filter((item) => Object.keys(item).length),
       ...(query.search
         ? {
@@ -199,7 +232,7 @@ export const parentsService = {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: buildParentSelect(resolvedTenantId, requestedBranchId),
+        select: buildParentSelect(resolvedTenantId, requestedBranchId, branchScope),
       }),
       prisma.parent.count({ where }),
     ]);
@@ -218,8 +251,9 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
       },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId),
+      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
 
     if (!parent) {
@@ -237,6 +271,7 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
       },
     });
 
@@ -269,7 +304,7 @@ export const parentsService = {
         address: payload.address || null,
         status: payload.status || existingParent.status,
       },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId),
+      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
   },
 
@@ -281,6 +316,7 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
       },
     });
 
@@ -295,7 +331,7 @@ export const parentsService = {
     return prisma.parent.update({
       where: { id, tenantId: resolvedTenantId },
       data: { status: 'inactive' },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId),
+      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
   },
 
@@ -307,6 +343,7 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
       },
       select: {
         id: true,
@@ -328,7 +365,7 @@ export const parentsService = {
 
     return prisma.parent.delete({
       where: { id, tenantId: resolvedTenantId },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId),
+      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
   },
 };

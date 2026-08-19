@@ -2,7 +2,7 @@
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -95,6 +95,9 @@ const resolveInchargeTeacherId = async (tenantId, branchId, inchargeTeacherId) =
 
 export const classesService = {
   async createClass(tenantId, payload, branchScope = null) {
+    if (classScopeService.isRestricted(branchScope)) {
+      throw new AppError('A class-scoped role cannot create additional classes.', 403);
+    }
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, payload, branchScope);
     await validateBranchAccess(resolvedTenantId, branchId);
@@ -124,6 +127,9 @@ export const classesService = {
   },
 
   async bulkCreateClasses(tenantId, payload, branchScope = null) {
+    if (classScopeService.isRestricted(branchScope)) {
+      throw new AppError('A class-scoped role cannot create additional classes.', 403);
+    }
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, payload, branchScope);
     await validateBranchAccess(resolvedTenantId, branchId);
@@ -246,6 +252,7 @@ export const classesService = {
         : {}),
       status,
       branchId,
+      ...classScopeService.buildClassIdWhere(branchScope, 'id'),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -266,6 +273,7 @@ export const classesService = {
   },
 
   async getClassById(tenantId, id, branchScope = null) {
+    classScopeService.assertClassAccess(id, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, {}, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
@@ -291,6 +299,7 @@ export const classesService = {
   },
 
   async updateClass(tenantId, id, payload, branchScope = null) {
+    classScopeService.assertClassAccess(id, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
@@ -333,6 +342,7 @@ export const classesService = {
   },
 
   async deleteClass(tenantId, id, branchScope = null) {
+    classScopeService.assertClassAccess(id, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, {}, branchScope);
     const academicClass = await prisma.academicClass.findFirst({

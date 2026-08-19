@@ -3,7 +3,7 @@ import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
 const DEFAULT_ADMISSION_NUMBER = '0001';
@@ -107,7 +107,20 @@ const buildParentBranchVisibilityWhere = (tenantId, branchId) => {
   };
 };
 
-const buildStudentSelect = (branchId) => ({
+const buildStudentClassScopeWhere = (branchScope = null) => (
+  classScopeService.isRestricted(branchScope)
+    ? {
+        assignments: {
+          some: {
+            status: 'active',
+            classId: { in: classScopeService.normalizeClassIds(branchScope) },
+          },
+        },
+      }
+    : {}
+);
+
+const buildStudentSelect = (branchId, branchScope = null) => ({
   id: true,
   tenantId: true,
   branchId: true,
@@ -164,7 +177,12 @@ const buildStudentSelect = (branchId) => ({
     },
   },
   assignments: {
-    ...(branchId ? { where: { branchId } } : {}),
+    ...((branchId || classScopeService.isRestricted(branchScope)) ? {
+      where: {
+        ...(branchId ? { branchId } : {}),
+        ...classScopeService.buildClassIdWhere(branchScope),
+      },
+    } : {}),
     orderBy: { assignedAt: 'desc' },
     select: {
       id: true,
@@ -317,7 +335,12 @@ export const studentsService = {
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
     const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
 
+    if (classScopeService.isRestricted(branchScope) && !shouldSaveAssignment) {
+      throw new AppError('A class-scoped user must admit the student into an assigned class.', 403);
+    }
+
     if (shouldSaveAssignment) {
+      classScopeService.assertClassAccess(body.classId, branchScope);
       await ensureAssignmentReferences(resolvedTenantId, {
         branchId: scopedBranchId,
         sessionId: body.sessionId,
@@ -394,7 +417,7 @@ export const studentsService = {
 
       return tx.student.findUnique({
         where: { id: createdStudent.id },
-        select: buildStudentSelect(scopedBranchId),
+        select: buildStudentSelect(scopedBranchId, branchScope),
       });
     });
 
@@ -411,6 +434,7 @@ export const studentsService = {
       tenantId: resolvedTenantId,
       AND: [
         buildStudentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
+        buildStudentClassScopeWhere(branchScope),
       ].filter((item) => Object.keys(item).length),
       ...(query.search
         ? {
@@ -446,7 +470,7 @@ export const studentsService = {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: buildStudentSelect(requestedBranchId),
+        select: buildStudentSelect(requestedBranchId, branchScope),
       }),
       prisma.student.count({ where }),
     ]);
@@ -465,8 +489,9 @@ export const studentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
       },
-      select: buildStudentSelect(scopedBranchId),
+      select: buildStudentSelect(scopedBranchId, branchScope),
     });
 
     if (!student) {
@@ -482,6 +507,7 @@ export const studentsService = {
     const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
 
     if (shouldSaveAssignment) {
+      classScopeService.assertClassAccess(body.classId, branchScope);
       await ensureAssignmentReferences(resolvedTenantId, {
         branchId: scopedBranchId,
         sessionId: body.sessionId,
@@ -494,6 +520,7 @@ export const studentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
       },
     });
 
@@ -584,7 +611,7 @@ export const studentsService = {
 
       return tx.student.findUnique({
         where: { id },
-        select: buildStudentSelect(scopedBranchId),
+        select: buildStudentSelect(scopedBranchId, branchScope),
       });
     });
 
@@ -599,6 +626,7 @@ export const studentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
       },
     });
 
@@ -622,12 +650,13 @@ export const studentsService = {
       return tx.student.update({
         where: { id, tenantId: resolvedTenantId },
         data: { status: 'inactive' },
-        select: buildStudentSelect(scopedBranchId),
+        select: buildStudentSelect(scopedBranchId, branchScope),
       });
     });
   },
 
   async assignClassToStudent(tenantId, studentId, payload, branchScope = null) {
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const requestedBranchId = await resolveStudentBranchId(resolvedTenantId, payload, branchScope);
     const scopedBranchId = requestedBranchId;
@@ -637,6 +666,7 @@ export const studentsService = {
         id: studentId,
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
       },
       include: {
         assignments: {
@@ -724,6 +754,7 @@ export const studentsService = {
     ) {
       throw new AppError('Class assignment not found.', 404);
     }
+    classScopeService.assertClassAccess(assignment.classId, branchScope);
 
     return prisma.studentClassAssignment.update({
       where: { id: assignmentId, tenantId: resolvedTenantId },

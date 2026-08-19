@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const examScheduleSelect = {
   id: true,
@@ -102,9 +102,9 @@ const resolveInvigilator = async (tenantId, invigilatorTeacherId, branchId = nul
   return { invigilatorTeacherId: teacher.id, invigilator: teacher.fullName };
 };
 
-const getTenantExamSchedule = async (tenantId, id, branchId = null) => {
+const getTenantExamSchedule = async (tenantId, id, branchId = null, branchScope = null) => {
   const schedule = await prisma.examSchedule.findFirst({
-    where: { id, tenantId, class: { tenantId, ...(branchId ? { branchId } : {}) } },
+    where: { id, tenantId, ...classScopeService.buildClassIdWhere(branchScope), class: { tenantId, ...(branchId ? { branchId } : {}) } },
     select: examScheduleSelect,
   });
 
@@ -119,6 +119,7 @@ export const examSchedulesService = {
   async createExamSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
     const invigilator = await resolveInvigilator(resolvedTenantId, payload.invigilatorTeacherId, branchId);
 
@@ -153,6 +154,7 @@ export const examSchedulesService = {
       subject: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...(query.subjectId ? { subjectId: query.subjectId } : {}),
       ...(query.fromDate || query.toDate
@@ -198,7 +200,8 @@ export const examSchedulesService = {
   async updateExamSchedule(tenantId, id, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveExamScheduleBranchId(resolvedTenantId, payload, branchScope);
-    await getTenantExamSchedule(resolvedTenantId, id, branchId);
+    await getTenantExamSchedule(resolvedTenantId, id, branchId, branchScope);
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureExamScheduleReferences(resolvedTenantId, payload, branchId);
     const invigilator = await resolveInvigilator(resolvedTenantId, payload.invigilatorTeacherId, branchId);
 
@@ -226,7 +229,7 @@ export const examSchedulesService = {
   async deleteExamSchedule(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveExamScheduleBranchId(resolvedTenantId, {}, branchScope);
-    await getTenantExamSchedule(resolvedTenantId, id, branchId);
+    await getTenantExamSchedule(resolvedTenantId, id, branchId, branchScope);
 
     return prisma.examSchedule.update({
       where: { id, tenantId: resolvedTenantId },

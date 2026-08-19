@@ -184,6 +184,7 @@ exports.Prisma.RoleScalarFieldEnum = {
   description: 'description',
   status: 'status',
   isSystemRole: 'isSystemRole',
+  classScopeMode: 'classScopeMode',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
   createdAt: 'createdAt',
@@ -208,6 +209,15 @@ exports.Prisma.RolePermissionScalarFieldEnum = {
   tenantId: 'tenantId',
   roleId: 'roleId',
   permissionId: 'permissionId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RoleClassScopeScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  roleId: 'roleId',
+  classId: 'classId',
   createdAt: 'createdAt'
 };
 
@@ -1132,7 +1142,8 @@ exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
 exports.Prisma.RoleOrderByRelevanceFieldEnum = {
   roleName: 'roleName',
   description: 'description',
-  status: 'status'
+  status: 'status',
+  classScopeMode: 'classScopeMode'
 };
 
 exports.Prisma.PermissionOrderByRelevanceFieldEnum = {
@@ -1596,6 +1607,7 @@ exports.Prisma.ModelName = {
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
+  RoleClassScope: 'RoleClassScope',
   MadrassaProfile: 'MadrassaProfile',
   City: 'City',
   Suggestion: 'Suggestion',

@@ -26,6 +26,7 @@ const mapRole = (row) => ({
   description: row.description,
   status: row.status || 'active',
   isSystemRole: Boolean(row.is_system_role),
+  classScopeMode: row.class_scope_mode || 'all',
   createdBy: toNumber(row.created_by),
   updatedBy: toNumber(row.updated_by),
   createdAt: row.created_at,
@@ -260,6 +261,7 @@ const getRoleRowById = async (client, id) => {
       r.description,
       r.status,
       r.is_system_role,
+      r.class_scope_mode,
       r.created_by,
       r.updated_by,
       r.created_at,
@@ -268,7 +270,7 @@ const getRoleRowById = async (client, id) => {
     FROM roles r
     LEFT JOIN admins a ON a.role_id = r.id
     WHERE r.id = ${id}
-    GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
+    GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.class_scope_mode, r.created_by, r.updated_by, r.created_at, r.updated_at
     LIMIT 1
   `;
 
@@ -409,6 +411,82 @@ const getRolePermissions = async (client, roleId) => {
   `;
 
   return rows.map(mapPermission);
+};
+
+const getRoleClassScopes = async (client, roleId) => {
+  const rows = await client.roleClassScope.findMany({
+    where: { roleId: Number(roleId) },
+    select: {
+      classId: true,
+      class: { select: { id: true, name: true, branchId: true, status: true } },
+    },
+    orderBy: { class: { name: 'asc' } },
+  });
+
+  return {
+    classIds: rows.map((row) => Number(row.classId)),
+    classes: rows.map((row) => row.class),
+  };
+};
+
+const hasClassScopePayload = (payload = {}) => (
+  Object.prototype.hasOwnProperty.call(payload, 'classScopeMode') ||
+  Object.prototype.hasOwnProperty.call(payload, 'classIds')
+);
+
+const resolveClassScopePayload = async (client, payload, tenantId, branchId, fallbackMode = 'all') => {
+  const mode = payload.classScopeMode || fallbackMode || 'all';
+  const classIds = [...new Set((payload.classIds || []).map(Number).filter((id) => Number.isInteger(id) && id > 0))];
+
+  if (mode === 'all') return { mode, classIds: [] };
+  if (!tenantId || !branchId) {
+    throw new AppError('Selected class scope requires a tenant branch role.', 400);
+  }
+  if (!classIds.length) {
+    throw new AppError('Select at least one class for this role.', 400);
+  }
+
+  const validClasses = await client.academicClass.findMany({
+    where: { id: { in: classIds }, tenantId, branchId, status: 'active' },
+    select: { id: true },
+  });
+  if (validClasses.length !== classIds.length) {
+    throw new AppError('One or more selected classes do not belong to this tenant and branch.', 403);
+  }
+
+  return { mode, classIds };
+};
+
+const assertClassScopeBoundary = async (scope, requester = {}) => {
+  if (requester?.classScopeMode !== 'selected') return;
+
+  const requesterClassIds = new Set((requester.classIds || []).map(Number));
+  if (scope.mode !== 'selected' || scope.classIds.some((classId) => !requesterClassIds.has(Number(classId)))) {
+    await denyRoleEscalation(requester, 'class scope boundary exceeded', {
+      requestedClassScopeMode: scope.mode,
+      requestedClassIds: scope.classIds,
+    });
+  }
+};
+
+const replaceRoleClassScopes = async (client, role, scope) => {
+  const roleId = Number(role.id);
+  await client.roleClassScope.deleteMany({ where: { roleId } });
+  await client.role.update({
+    where: { id: roleId },
+    data: { classScopeMode: scope.mode },
+  });
+
+  if (scope.mode === 'selected') {
+    await client.roleClassScope.createMany({
+      data: scope.classIds.map((classId) => ({
+        tenantId: Number(role.tenant_id),
+        branchId: Number(role.branch_id),
+        roleId,
+        classId,
+      })),
+    });
+  }
 };
 
 const collectPermissionInputs = (payload = {}) => {
@@ -637,10 +715,12 @@ const assertPermissionsCanBeChanged = (role, requester = {}) => {
 const buildRoleResponse = async (client, id) => {
   const role = await assertRoleExists(client, id);
   const permissions = await getRolePermissions(client, id);
+  const classScopes = await getRoleClassScopes(client, id);
 
   return {
     ...mapRole(role),
     permissions,
+    ...classScopes,
   };
 };
 
@@ -700,6 +780,8 @@ export const rolesService = {
     return prisma.$transaction(async (tx) => {
       const permissionIds = await resolvePermissionIds(tx, payload);
       await assertPermissionBoundary(tx, permissionIds, requester);
+      const classScope = await resolveClassScopePayload(tx, payload, roleTenantId, roleBranchId);
+      await assertClassScopeBoundary(classScope, requester);
 
       await tx.$executeRaw`
         INSERT INTO roles (tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by)
@@ -709,6 +791,7 @@ export const rolesService = {
       const createdRole = await getRoleByName(tx, roleName, roleTenantId, roleBranchId);
 
       await replaceRolePermissions(tx, Number(createdRole.id), permissionIds);
+      await replaceRoleClassScopes(tx, createdRole, classScope);
 
       const createdResponse = await buildRoleResponse(tx, Number(createdRole.id));
       await logRoleAudit(tx, requester, {
@@ -762,6 +845,7 @@ export const rolesService = {
         r.description,
         r.status,
         r.is_system_role,
+        r.class_scope_mode,
         r.created_by,
         r.updated_by,
         r.created_at,
@@ -774,7 +858,7 @@ export const rolesService = {
         AND (? IS NULL
           OR r.role_name LIKE CONCAT('%', ?, '%')
           OR r.description LIKE CONCAT('%', ?, '%'))
-      GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.created_by, r.updated_by, r.created_at, r.updated_at
+      GROUP BY r.id, r.tenant_id, r.branch_id, r.role_scope_key, r.role_name, r.description, r.status, r.is_system_role, r.class_scope_mode, r.created_by, r.updated_by, r.created_at, r.updated_at
       ORDER BY r.is_system_role DESC, r.created_at DESC
       LIMIT ? OFFSET ?
     `, ...scope.values, status, status, search, search, search, limit, skip);
@@ -889,6 +973,18 @@ export const rolesService = {
         const permissionIds = await resolvePermissionIds(tx, payload);
         await assertPermissionBoundary(tx, permissionIds, requester);
         await replaceRolePermissions(tx, id, permissionIds);
+      }
+
+      if (hasClassScopePayload(payload)) {
+        const classScope = await resolveClassScopePayload(
+          tx,
+          payload,
+          roleTenantId,
+          roleBranchId,
+          existingRole.class_scope_mode || 'all',
+        );
+        await assertClassScopeBoundary(classScope, requester);
+        await replaceRoleClassScopes(tx, existingRole, classScope);
       }
 
       const updatedResponse = await buildRoleResponse(tx, id);

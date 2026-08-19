@@ -95,6 +95,11 @@ export const authMiddleware = asyncHandler(async (req, _res, next) => {
     auth,
   });
   branchScopeService.applyBranchScopeToRequest(req);
+  req.branchScope = {
+    ...req.branchScope,
+    classScopeMode: auth.classScopeMode || 'all',
+    classIds: auth.classScopeMode === 'selected' ? (auth.classIds || []) : [],
+  };
 
   try {
     enforceRoutePermission(req);

@@ -2,7 +2,7 @@
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -57,6 +57,7 @@ const resolveSectionBranchId = async (tenantId, payloadOrQuery = {}, branchScope
 
 export const sectionsService = {
   async createSection(tenantId, payload, branchScope = null) {
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
@@ -94,6 +95,7 @@ export const sectionsService = {
   },
 
   async bulkCreateSections(tenantId, payload, branchScope = null) {
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const academicClass = await prisma.academicClass.findFirst({
@@ -198,6 +200,7 @@ export const sectionsService = {
         : {}),
       status,
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -221,7 +224,7 @@ export const sectionsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveSectionBranchId(resolvedTenantId, {}, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId), ...classScopeService.buildClassIdWhere(branchScope) },
       select: sectionSelect,
     });
 
@@ -233,10 +236,11 @@ export const sectionsService = {
   },
 
   async updateSection(tenantId, id, payload, branchScope = null) {
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveSectionBranchId(resolvedTenantId, payload, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId), ...classScopeService.buildClassIdWhere(branchScope) },
     });
 
     if (!section) {
@@ -283,7 +287,7 @@ export const sectionsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveSectionBranchId(resolvedTenantId, {}, branchScope);
     const section = await prisma.section.findFirst({
-      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId) },
+      where: { id, tenantId: resolvedTenantId, ...buildClassBranchWhere(branchId), ...classScopeService.buildClassIdWhere(branchScope) },
     });
 
     if (!section) {

@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -72,6 +72,7 @@ export const teacherSchedulesService = {
   async createTeacherSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherScheduleBranchId(resolvedTenantId, payload, branchScope);
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureTeacherScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.teacherSchedule.create({
@@ -103,6 +104,7 @@ export const teacherSchedulesService = {
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       status: query.status || 'active',
     };
@@ -131,6 +133,7 @@ export const teacherSchedulesService = {
       where: {
         id,
         tenantId: resolvedTenantId,
+        ...classScopeService.buildClassIdWhere(branchScope),
         teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         section: { tenantId: resolvedTenantId },
@@ -141,6 +144,7 @@ export const teacherSchedulesService = {
       throw new AppError('Ø´ÛŒÚˆÙˆÙ„ Ù†ÛÛŒÚº Ù…Ù„Ø§Û”', 404);
     }
 
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureTeacherScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.teacherSchedule.update({
@@ -168,6 +172,7 @@ export const teacherSchedulesService = {
       where: {
         id,
         tenantId: resolvedTenantId,
+        ...classScopeService.buildClassIdWhere(branchScope),
         teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
         section: { tenantId: resolvedTenantId },

@@ -44,6 +44,11 @@ export type Permission = $Result.DefaultSelection<Prisma.$PermissionPayload>
  */
 export type RolePermission = $Result.DefaultSelection<Prisma.$RolePermissionPayload>
 /**
+ * Model RoleClassScope
+ * 
+ */
+export type RoleClassScope = $Result.DefaultSelection<Prisma.$RoleClassScopePayload>
+/**
  * Model MadrassaProfile
  * 
  */
@@ -481,6 +486,16 @@ export class PrismaClient<
     * ```
     */
   get rolePermission(): Prisma.RolePermissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.roleClassScope`: Exposes CRUD operations for the **RoleClassScope** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RoleClassScopes
+    * const roleClassScopes = await prisma.roleClassScope.findMany()
+    * ```
+    */
+  get roleClassScope(): Prisma.RoleClassScopeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.madrassaProfile`: Exposes CRUD operations for the **MadrassaProfile** model.
@@ -1448,6 +1463,7 @@ export namespace Prisma {
     Role: 'Role',
     Permission: 'Permission',
     RolePermission: 'RolePermission',
+    RoleClassScope: 'RoleClassScope',
     MadrassaProfile: 'MadrassaProfile',
     City: 'City',
     Suggestion: 'Suggestion',
@@ -1518,7 +1534,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "admin" | "auditLog" | "role" | "permission" | "rolePermission" | "madrassaProfile" | "city" | "suggestion" | "supportRequest" | "shift" | "department" | "departmentHeadAssignment" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "teacherResponsibility" | "teacherAssignment" | "examSchedule" | "resultGrade" | "examResult" | "examResultSubject" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "teacherSalaryIncrement" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "financeExpenseCategory" | "studentFeeVoucher" | "fundCollection" | "salaryEntry" | "financeTransaction" | "financialRecord" | "storeItem" | "storeUnit" | "storeCategory" | "storeSupplier" | "storeSupplierPayment" | "storePurchase" | "storePurchaseItem" | "storeStockIssue" | "storeReturn" | "storeDamagedStock" | "storeApprovalLog" | "storeStockAdjustment"
+      modelProps: "tenant" | "admin" | "auditLog" | "role" | "permission" | "rolePermission" | "roleClassScope" | "madrassaProfile" | "city" | "suggestion" | "supportRequest" | "shift" | "department" | "departmentHeadAssignment" | "qualification" | "subject" | "branch" | "academicClass" | "section" | "academicSession" | "studentSchedule" | "teacherSchedule" | "teacherResponsibility" | "teacherAssignment" | "examSchedule" | "resultGrade" | "examResult" | "examResultSubject" | "student" | "parent" | "studentParent" | "studentClassAssignment" | "teacher" | "teacherSalaryIncrement" | "studentAttendance" | "teacherAttendance" | "hifzDailyEntry" | "hifzWeeklyEntry" | "hifzMonthlyEntry" | "hifzSiparaEntry" | "financeHead" | "financeExpenseCategory" | "studentFeeVoucher" | "fundCollection" | "salaryEntry" | "financeTransaction" | "financialRecord" | "storeItem" | "storeUnit" | "storeCategory" | "storeSupplier" | "storeSupplierPayment" | "storePurchase" | "storePurchaseItem" | "storeStockIssue" | "storeReturn" | "storeDamagedStock" | "storeApprovalLog" | "storeStockAdjustment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1915,6 +1931,72 @@ export namespace Prisma {
           count: {
             args: Prisma.RolePermissionCountArgs<ExtArgs>
             result: $Utils.Optional<RolePermissionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RoleClassScope: {
+        payload: Prisma.$RoleClassScopePayload<ExtArgs>
+        fields: Prisma.RoleClassScopeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoleClassScopeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoleClassScopeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          findFirst: {
+            args: Prisma.RoleClassScopeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoleClassScopeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          findMany: {
+            args: Prisma.RoleClassScopeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>[]
+          }
+          create: {
+            args: Prisma.RoleClassScopeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          createMany: {
+            args: Prisma.RoleClassScopeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.RoleClassScopeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          update: {
+            args: Prisma.RoleClassScopeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoleClassScopeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoleClassScopeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RoleClassScopeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleClassScopePayload>
+          }
+          aggregate: {
+            args: Prisma.RoleClassScopeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRoleClassScope>
+          }
+          groupBy: {
+            args: Prisma.RoleClassScopeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoleClassScopeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoleClassScopeCountArgs<ExtArgs>
+            result: $Utils.Optional<RoleClassScopeCountAggregateOutputType> | number
           }
         }
       }
@@ -5452,6 +5534,7 @@ export namespace Prisma {
     role?: RoleOmit
     permission?: PermissionOmit
     rolePermission?: RolePermissionOmit
+    roleClassScope?: RoleClassScopeOmit
     madrassaProfile?: MadrassaProfileOmit
     city?: CityOmit
     suggestion?: SuggestionOmit
@@ -5588,6 +5671,7 @@ export namespace Prisma {
     admins: number
     roles: number
     rolePermissions: number
+    roleClassScopes: number
     students: number
     parents: number
     teachers: number
@@ -5646,6 +5730,7 @@ export namespace Prisma {
     admins?: boolean | TenantCountOutputTypeCountAdminsArgs
     roles?: boolean | TenantCountOutputTypeCountRolesArgs
     rolePermissions?: boolean | TenantCountOutputTypeCountRolePermissionsArgs
+    roleClassScopes?: boolean | TenantCountOutputTypeCountRoleClassScopesArgs
     students?: boolean | TenantCountOutputTypeCountStudentsArgs
     parents?: boolean | TenantCountOutputTypeCountParentsArgs
     teachers?: boolean | TenantCountOutputTypeCountTeachersArgs
@@ -5736,6 +5821,13 @@ export namespace Prisma {
    */
   export type TenantCountOutputTypeCountRolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RolePermissionWhereInput
+  }
+
+  /**
+   * TenantCountOutputType without action
+   */
+  export type TenantCountOutputTypeCountRoleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleClassScopeWhereInput
   }
 
   /**
@@ -6224,11 +6316,13 @@ export namespace Prisma {
   export type RoleCountOutputType = {
     admins: number
     rolePermissions: number
+    classScopes: number
   }
 
   export type RoleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admins?: boolean | RoleCountOutputTypeCountAdminsArgs
     rolePermissions?: boolean | RoleCountOutputTypeCountRolePermissionsArgs
+    classScopes?: boolean | RoleCountOutputTypeCountClassScopesArgs
   }
 
   // Custom InputTypes
@@ -6254,6 +6348,13 @@ export namespace Prisma {
    */
   export type RoleCountOutputTypeCountRolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RolePermissionWhereInput
+  }
+
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleClassScopeWhereInput
   }
 
 
@@ -6406,6 +6507,7 @@ export namespace Prisma {
   export type BranchCountOutputType = {
     assignedAdmins: number
     roles: number
+    roleClassScopes: number
     shifts: number
     departments: number
     qualifications: number
@@ -6429,6 +6531,7 @@ export namespace Prisma {
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedAdmins?: boolean | BranchCountOutputTypeCountAssignedAdminsArgs
     roles?: boolean | BranchCountOutputTypeCountRolesArgs
+    roleClassScopes?: boolean | BranchCountOutputTypeCountRoleClassScopesArgs
     shifts?: boolean | BranchCountOutputTypeCountShiftsArgs
     departments?: boolean | BranchCountOutputTypeCountDepartmentsArgs
     qualifications?: boolean | BranchCountOutputTypeCountQualificationsArgs
@@ -6472,6 +6575,13 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoleWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountRoleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleClassScopeWhereInput
   }
 
   /**
@@ -6614,6 +6724,7 @@ export namespace Prisma {
     examSchedules: number
     examResults: number
     teacherAssignments: number
+    roleClassScopes: number
   }
 
   export type AcademicClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6625,6 +6736,7 @@ export namespace Prisma {
     examSchedules?: boolean | AcademicClassCountOutputTypeCountExamSchedulesArgs
     examResults?: boolean | AcademicClassCountOutputTypeCountExamResultsArgs
     teacherAssignments?: boolean | AcademicClassCountOutputTypeCountTeacherAssignmentsArgs
+    roleClassScopes?: boolean | AcademicClassCountOutputTypeCountRoleClassScopesArgs
   }
 
   // Custom InputTypes
@@ -6692,6 +6804,13 @@ export namespace Prisma {
    */
   export type AcademicClassCountOutputTypeCountTeacherAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TeacherAssignmentWhereInput
+  }
+
+  /**
+   * AcademicClassCountOutputType without action
+   */
+  export type AcademicClassCountOutputTypeCountRoleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleClassScopeWhereInput
   }
 
 
@@ -7676,6 +7795,7 @@ export namespace Prisma {
     admins?: boolean | Tenant$adminsArgs<ExtArgs>
     roles?: boolean | Tenant$rolesArgs<ExtArgs>
     rolePermissions?: boolean | Tenant$rolePermissionsArgs<ExtArgs>
+    roleClassScopes?: boolean | Tenant$roleClassScopesArgs<ExtArgs>
     profile?: boolean | Tenant$profileArgs<ExtArgs>
     students?: boolean | Tenant$studentsArgs<ExtArgs>
     parents?: boolean | Tenant$parentsArgs<ExtArgs>
@@ -7758,6 +7878,7 @@ export namespace Prisma {
     admins?: boolean | Tenant$adminsArgs<ExtArgs>
     roles?: boolean | Tenant$rolesArgs<ExtArgs>
     rolePermissions?: boolean | Tenant$rolePermissionsArgs<ExtArgs>
+    roleClassScopes?: boolean | Tenant$roleClassScopesArgs<ExtArgs>
     profile?: boolean | Tenant$profileArgs<ExtArgs>
     students?: boolean | Tenant$studentsArgs<ExtArgs>
     parents?: boolean | Tenant$parentsArgs<ExtArgs>
@@ -7821,6 +7942,7 @@ export namespace Prisma {
       admins: Prisma.$AdminPayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
       rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+      roleClassScopes: Prisma.$RoleClassScopePayload<ExtArgs>[]
       profile: Prisma.$MadrassaProfilePayload<ExtArgs> | null
       students: Prisma.$StudentPayload<ExtArgs>[]
       parents: Prisma.$ParentPayload<ExtArgs>[]
@@ -8235,6 +8357,7 @@ export namespace Prisma {
     admins<T extends Tenant$adminsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Tenant$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rolePermissions<T extends Tenant$rolePermissionsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roleClassScopes<T extends Tenant$roleClassScopesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$roleClassScopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     profile<T extends Tenant$profileArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$profileArgs<ExtArgs>>): Prisma__MadrassaProfileClient<$Result.GetResult<Prisma.$MadrassaProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends Tenant$studentsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     parents<T extends Tenant$parentsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$parentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ParentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8786,6 +8909,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Tenant.roleClassScopes
+   */
+  export type Tenant$roleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    where?: RoleClassScopeWhereInput
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    cursor?: RoleClassScopeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
   }
 
   /**
@@ -12703,6 +12850,7 @@ export namespace Prisma {
     description: string | null
     status: string | null
     isSystemRole: boolean | null
+    classScopeMode: string | null
     createdBy: number | null
     updatedBy: number | null
     createdAt: Date | null
@@ -12718,6 +12866,7 @@ export namespace Prisma {
     description: string | null
     status: string | null
     isSystemRole: boolean | null
+    classScopeMode: string | null
     createdBy: number | null
     updatedBy: number | null
     createdAt: Date | null
@@ -12733,6 +12882,7 @@ export namespace Prisma {
     description: number
     status: number
     isSystemRole: number
+    classScopeMode: number
     createdBy: number
     updatedBy: number
     createdAt: number
@@ -12768,6 +12918,7 @@ export namespace Prisma {
     description?: true
     status?: true
     isSystemRole?: true
+    classScopeMode?: true
     createdBy?: true
     updatedBy?: true
     createdAt?: true
@@ -12783,6 +12934,7 @@ export namespace Prisma {
     description?: true
     status?: true
     isSystemRole?: true
+    classScopeMode?: true
     createdBy?: true
     updatedBy?: true
     createdAt?: true
@@ -12798,6 +12950,7 @@ export namespace Prisma {
     description?: true
     status?: true
     isSystemRole?: true
+    classScopeMode?: true
     createdBy?: true
     updatedBy?: true
     createdAt?: true
@@ -12900,6 +13053,7 @@ export namespace Prisma {
     description: string | null
     status: string
     isSystemRole: boolean
+    classScopeMode: string
     createdBy: number | null
     updatedBy: number | null
     createdAt: Date
@@ -12934,6 +13088,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     isSystemRole?: boolean
+    classScopeMode?: boolean
     createdBy?: boolean
     updatedBy?: boolean
     createdAt?: boolean
@@ -12944,6 +13099,7 @@ export namespace Prisma {
     updater?: boolean | Role$updaterArgs<ExtArgs>
     admins?: boolean | Role$adminsArgs<ExtArgs>
     rolePermissions?: boolean | Role$rolePermissionsArgs<ExtArgs>
+    classScopes?: boolean | Role$classScopesArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
@@ -12958,13 +13114,14 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     isSystemRole?: boolean
+    classScopeMode?: boolean
     createdBy?: boolean
     updatedBy?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "roleScopeKey" | "roleName" | "description" | "status" | "isSystemRole" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "roleScopeKey" | "roleName" | "description" | "status" | "isSystemRole" | "classScopeMode" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | Role$tenantArgs<ExtArgs>
     branch?: boolean | Role$branchArgs<ExtArgs>
@@ -12972,6 +13129,7 @@ export namespace Prisma {
     updater?: boolean | Role$updaterArgs<ExtArgs>
     admins?: boolean | Role$adminsArgs<ExtArgs>
     rolePermissions?: boolean | Role$rolePermissionsArgs<ExtArgs>
+    classScopes?: boolean | Role$classScopesArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -12984,6 +13142,7 @@ export namespace Prisma {
       updater: Prisma.$AdminPayload<ExtArgs> | null
       admins: Prisma.$AdminPayload<ExtArgs>[]
       rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+      classScopes: Prisma.$RoleClassScopePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12994,6 +13153,7 @@ export namespace Prisma {
       description: string | null
       status: string
       isSystemRole: boolean
+      classScopeMode: string
       createdBy: number | null
       updatedBy: number | null
       createdAt: Date
@@ -13344,6 +13504,7 @@ export namespace Prisma {
     updater<T extends Role$updaterArgs<ExtArgs> = {}>(args?: Subset<T, Role$updaterArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     admins<T extends Role$adminsArgs<ExtArgs> = {}>(args?: Subset<T, Role$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rolePermissions<T extends Role$rolePermissionsArgs<ExtArgs> = {}>(args?: Subset<T, Role$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    classScopes<T extends Role$classScopesArgs<ExtArgs> = {}>(args?: Subset<T, Role$classScopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13381,6 +13542,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Role", 'String'>
     readonly status: FieldRef<"Role", 'String'>
     readonly isSystemRole: FieldRef<"Role", 'Boolean'>
+    readonly classScopeMode: FieldRef<"Role", 'String'>
     readonly createdBy: FieldRef<"Role", 'Int'>
     readonly updatedBy: FieldRef<"Role", 'Int'>
     readonly createdAt: FieldRef<"Role", 'DateTime'>
@@ -13849,6 +14011,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RolePermissionScalarFieldEnum | RolePermissionScalarFieldEnum[]
+  }
+
+  /**
+   * Role.classScopes
+   */
+  export type Role$classScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    where?: RoleClassScopeWhereInput
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    cursor?: RoleClassScopeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
   }
 
   /**
@@ -15917,6 +16103,1008 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: RolePermissionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RoleClassScope
+   */
+
+  export type AggregateRoleClassScope = {
+    _count: RoleClassScopeCountAggregateOutputType | null
+    _avg: RoleClassScopeAvgAggregateOutputType | null
+    _sum: RoleClassScopeSumAggregateOutputType | null
+    _min: RoleClassScopeMinAggregateOutputType | null
+    _max: RoleClassScopeMaxAggregateOutputType | null
+  }
+
+  export type RoleClassScopeAvgAggregateOutputType = {
+    id: number | null
+    tenantId: number | null
+    branchId: number | null
+    roleId: number | null
+    classId: number | null
+  }
+
+  export type RoleClassScopeSumAggregateOutputType = {
+    id: number | null
+    tenantId: number | null
+    branchId: number | null
+    roleId: number | null
+    classId: number | null
+  }
+
+  export type RoleClassScopeMinAggregateOutputType = {
+    id: number | null
+    tenantId: number | null
+    branchId: number | null
+    roleId: number | null
+    classId: number | null
+    createdAt: Date | null
+  }
+
+  export type RoleClassScopeMaxAggregateOutputType = {
+    id: number | null
+    tenantId: number | null
+    branchId: number | null
+    roleId: number | null
+    classId: number | null
+    createdAt: Date | null
+  }
+
+  export type RoleClassScopeCountAggregateOutputType = {
+    id: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    classId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RoleClassScopeAvgAggregateInputType = {
+    id?: true
+    tenantId?: true
+    branchId?: true
+    roleId?: true
+    classId?: true
+  }
+
+  export type RoleClassScopeSumAggregateInputType = {
+    id?: true
+    tenantId?: true
+    branchId?: true
+    roleId?: true
+    classId?: true
+  }
+
+  export type RoleClassScopeMinAggregateInputType = {
+    id?: true
+    tenantId?: true
+    branchId?: true
+    roleId?: true
+    classId?: true
+    createdAt?: true
+  }
+
+  export type RoleClassScopeMaxAggregateInputType = {
+    id?: true
+    tenantId?: true
+    branchId?: true
+    roleId?: true
+    classId?: true
+    createdAt?: true
+  }
+
+  export type RoleClassScopeCountAggregateInputType = {
+    id?: true
+    tenantId?: true
+    branchId?: true
+    roleId?: true
+    classId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RoleClassScopeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoleClassScope to aggregate.
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleClassScopes to fetch.
+     */
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoleClassScopeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleClassScopes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleClassScopes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RoleClassScopes
+    **/
+    _count?: true | RoleClassScopeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RoleClassScopeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RoleClassScopeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoleClassScopeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoleClassScopeMaxAggregateInputType
+  }
+
+  export type GetRoleClassScopeAggregateType<T extends RoleClassScopeAggregateArgs> = {
+        [P in keyof T & keyof AggregateRoleClassScope]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRoleClassScope[P]>
+      : GetScalarType<T[P], AggregateRoleClassScope[P]>
+  }
+
+
+
+
+  export type RoleClassScopeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleClassScopeWhereInput
+    orderBy?: RoleClassScopeOrderByWithAggregationInput | RoleClassScopeOrderByWithAggregationInput[]
+    by: RoleClassScopeScalarFieldEnum[] | RoleClassScopeScalarFieldEnum
+    having?: RoleClassScopeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoleClassScopeCountAggregateInputType | true
+    _avg?: RoleClassScopeAvgAggregateInputType
+    _sum?: RoleClassScopeSumAggregateInputType
+    _min?: RoleClassScopeMinAggregateInputType
+    _max?: RoleClassScopeMaxAggregateInputType
+  }
+
+  export type RoleClassScopeGroupByOutputType = {
+    id: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    classId: number
+    createdAt: Date
+    _count: RoleClassScopeCountAggregateOutputType | null
+    _avg: RoleClassScopeAvgAggregateOutputType | null
+    _sum: RoleClassScopeSumAggregateOutputType | null
+    _min: RoleClassScopeMinAggregateOutputType | null
+    _max: RoleClassScopeMaxAggregateOutputType | null
+  }
+
+  type GetRoleClassScopeGroupByPayload<T extends RoleClassScopeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoleClassScopeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoleClassScopeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoleClassScopeGroupByOutputType[P]>
+            : GetScalarType<T[P], RoleClassScopeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoleClassScopeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    branchId?: boolean
+    roleId?: boolean
+    classId?: boolean
+    createdAt?: boolean
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roleClassScope"]>
+
+
+
+  export type RoleClassScopeSelectScalar = {
+    id?: boolean
+    tenantId?: boolean
+    branchId?: boolean
+    roleId?: boolean
+    classId?: boolean
+    createdAt?: boolean
+  }
+
+  export type RoleClassScopeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "roleId" | "classId" | "createdAt", ExtArgs["result"]["roleClassScope"]>
+  export type RoleClassScopeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+    class?: boolean | AcademicClassDefaultArgs<ExtArgs>
+  }
+
+  export type $RoleClassScopePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RoleClassScope"
+    objects: {
+      tenant: Prisma.$TenantPayload<ExtArgs>
+      branch: Prisma.$BranchPayload<ExtArgs>
+      role: Prisma.$RolePayload<ExtArgs>
+      class: Prisma.$AcademicClassPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      tenantId: number
+      branchId: number
+      roleId: number
+      classId: number
+      createdAt: Date
+    }, ExtArgs["result"]["roleClassScope"]>
+    composites: {}
+  }
+
+  type RoleClassScopeGetPayload<S extends boolean | null | undefined | RoleClassScopeDefaultArgs> = $Result.GetResult<Prisma.$RoleClassScopePayload, S>
+
+  type RoleClassScopeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoleClassScopeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoleClassScopeCountAggregateInputType | true
+    }
+
+  export interface RoleClassScopeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RoleClassScope'], meta: { name: 'RoleClassScope' } }
+    /**
+     * Find zero or one RoleClassScope that matches the filter.
+     * @param {RoleClassScopeFindUniqueArgs} args - Arguments to find a RoleClassScope
+     * @example
+     * // Get one RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoleClassScopeFindUniqueArgs>(args: SelectSubset<T, RoleClassScopeFindUniqueArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RoleClassScope that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoleClassScopeFindUniqueOrThrowArgs} args - Arguments to find a RoleClassScope
+     * @example
+     * // Get one RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoleClassScopeFindUniqueOrThrowArgs>(args: SelectSubset<T, RoleClassScopeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoleClassScope that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeFindFirstArgs} args - Arguments to find a RoleClassScope
+     * @example
+     * // Get one RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoleClassScopeFindFirstArgs>(args?: SelectSubset<T, RoleClassScopeFindFirstArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoleClassScope that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeFindFirstOrThrowArgs} args - Arguments to find a RoleClassScope
+     * @example
+     * // Get one RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoleClassScopeFindFirstOrThrowArgs>(args?: SelectSubset<T, RoleClassScopeFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RoleClassScopes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RoleClassScopes
+     * const roleClassScopes = await prisma.roleClassScope.findMany()
+     * 
+     * // Get first 10 RoleClassScopes
+     * const roleClassScopes = await prisma.roleClassScope.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roleClassScopeWithIdOnly = await prisma.roleClassScope.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoleClassScopeFindManyArgs>(args?: SelectSubset<T, RoleClassScopeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RoleClassScope.
+     * @param {RoleClassScopeCreateArgs} args - Arguments to create a RoleClassScope.
+     * @example
+     * // Create one RoleClassScope
+     * const RoleClassScope = await prisma.roleClassScope.create({
+     *   data: {
+     *     // ... data to create a RoleClassScope
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoleClassScopeCreateArgs>(args: SelectSubset<T, RoleClassScopeCreateArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RoleClassScopes.
+     * @param {RoleClassScopeCreateManyArgs} args - Arguments to create many RoleClassScopes.
+     * @example
+     * // Create many RoleClassScopes
+     * const roleClassScope = await prisma.roleClassScope.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoleClassScopeCreateManyArgs>(args?: SelectSubset<T, RoleClassScopeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a RoleClassScope.
+     * @param {RoleClassScopeDeleteArgs} args - Arguments to delete one RoleClassScope.
+     * @example
+     * // Delete one RoleClassScope
+     * const RoleClassScope = await prisma.roleClassScope.delete({
+     *   where: {
+     *     // ... filter to delete one RoleClassScope
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoleClassScopeDeleteArgs>(args: SelectSubset<T, RoleClassScopeDeleteArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RoleClassScope.
+     * @param {RoleClassScopeUpdateArgs} args - Arguments to update one RoleClassScope.
+     * @example
+     * // Update one RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoleClassScopeUpdateArgs>(args: SelectSubset<T, RoleClassScopeUpdateArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RoleClassScopes.
+     * @param {RoleClassScopeDeleteManyArgs} args - Arguments to filter RoleClassScopes to delete.
+     * @example
+     * // Delete a few RoleClassScopes
+     * const { count } = await prisma.roleClassScope.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoleClassScopeDeleteManyArgs>(args?: SelectSubset<T, RoleClassScopeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoleClassScopes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RoleClassScopes
+     * const roleClassScope = await prisma.roleClassScope.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoleClassScopeUpdateManyArgs>(args: SelectSubset<T, RoleClassScopeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one RoleClassScope.
+     * @param {RoleClassScopeUpsertArgs} args - Arguments to update or create a RoleClassScope.
+     * @example
+     * // Update or create a RoleClassScope
+     * const roleClassScope = await prisma.roleClassScope.upsert({
+     *   create: {
+     *     // ... data to create a RoleClassScope
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RoleClassScope we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoleClassScopeUpsertArgs>(args: SelectSubset<T, RoleClassScopeUpsertArgs<ExtArgs>>): Prisma__RoleClassScopeClient<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RoleClassScopes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeCountArgs} args - Arguments to filter RoleClassScopes to count.
+     * @example
+     * // Count the number of RoleClassScopes
+     * const count = await prisma.roleClassScope.count({
+     *   where: {
+     *     // ... the filter for the RoleClassScopes we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoleClassScopeCountArgs>(
+      args?: Subset<T, RoleClassScopeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoleClassScopeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RoleClassScope.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoleClassScopeAggregateArgs>(args: Subset<T, RoleClassScopeAggregateArgs>): Prisma.PrismaPromise<GetRoleClassScopeAggregateType<T>>
+
+    /**
+     * Group by RoleClassScope.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleClassScopeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoleClassScopeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoleClassScopeGroupByArgs['orderBy'] }
+        : { orderBy?: RoleClassScopeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoleClassScopeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoleClassScopeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RoleClassScope model
+   */
+  readonly fields: RoleClassScopeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RoleClassScope.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoleClassScopeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    class<T extends AcademicClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClassDefaultArgs<ExtArgs>>): Prisma__AcademicClassClient<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RoleClassScope model
+   */
+  interface RoleClassScopeFieldRefs {
+    readonly id: FieldRef<"RoleClassScope", 'Int'>
+    readonly tenantId: FieldRef<"RoleClassScope", 'Int'>
+    readonly branchId: FieldRef<"RoleClassScope", 'Int'>
+    readonly roleId: FieldRef<"RoleClassScope", 'Int'>
+    readonly classId: FieldRef<"RoleClassScope", 'Int'>
+    readonly createdAt: FieldRef<"RoleClassScope", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RoleClassScope findUnique
+   */
+  export type RoleClassScopeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleClassScope to fetch.
+     */
+    where: RoleClassScopeWhereUniqueInput
+  }
+
+  /**
+   * RoleClassScope findUniqueOrThrow
+   */
+  export type RoleClassScopeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleClassScope to fetch.
+     */
+    where: RoleClassScopeWhereUniqueInput
+  }
+
+  /**
+   * RoleClassScope findFirst
+   */
+  export type RoleClassScopeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleClassScope to fetch.
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleClassScopes to fetch.
+     */
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoleClassScopes.
+     */
+    cursor?: RoleClassScopeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleClassScopes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleClassScopes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoleClassScopes.
+     */
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
+  }
+
+  /**
+   * RoleClassScope findFirstOrThrow
+   */
+  export type RoleClassScopeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleClassScope to fetch.
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleClassScopes to fetch.
+     */
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoleClassScopes.
+     */
+    cursor?: RoleClassScopeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleClassScopes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleClassScopes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoleClassScopes.
+     */
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
+  }
+
+  /**
+   * RoleClassScope findMany
+   */
+  export type RoleClassScopeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleClassScopes to fetch.
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleClassScopes to fetch.
+     */
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RoleClassScopes.
+     */
+    cursor?: RoleClassScopeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleClassScopes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleClassScopes.
+     */
+    skip?: number
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
+  }
+
+  /**
+   * RoleClassScope create
+   */
+  export type RoleClassScopeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RoleClassScope.
+     */
+    data: XOR<RoleClassScopeCreateInput, RoleClassScopeUncheckedCreateInput>
+  }
+
+  /**
+   * RoleClassScope createMany
+   */
+  export type RoleClassScopeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RoleClassScopes.
+     */
+    data: RoleClassScopeCreateManyInput | RoleClassScopeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoleClassScope update
+   */
+  export type RoleClassScopeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RoleClassScope.
+     */
+    data: XOR<RoleClassScopeUpdateInput, RoleClassScopeUncheckedUpdateInput>
+    /**
+     * Choose, which RoleClassScope to update.
+     */
+    where: RoleClassScopeWhereUniqueInput
+  }
+
+  /**
+   * RoleClassScope updateMany
+   */
+  export type RoleClassScopeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RoleClassScopes.
+     */
+    data: XOR<RoleClassScopeUpdateManyMutationInput, RoleClassScopeUncheckedUpdateManyInput>
+    /**
+     * Filter which RoleClassScopes to update
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * Limit how many RoleClassScopes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoleClassScope upsert
+   */
+  export type RoleClassScopeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RoleClassScope to update in case it exists.
+     */
+    where: RoleClassScopeWhereUniqueInput
+    /**
+     * In case the RoleClassScope found by the `where` argument doesn't exist, create a new RoleClassScope with this data.
+     */
+    create: XOR<RoleClassScopeCreateInput, RoleClassScopeUncheckedCreateInput>
+    /**
+     * In case the RoleClassScope was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoleClassScopeUpdateInput, RoleClassScopeUncheckedUpdateInput>
+  }
+
+  /**
+   * RoleClassScope delete
+   */
+  export type RoleClassScopeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    /**
+     * Filter which RoleClassScope to delete.
+     */
+    where: RoleClassScopeWhereUniqueInput
+  }
+
+  /**
+   * RoleClassScope deleteMany
+   */
+  export type RoleClassScopeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoleClassScopes to delete
+     */
+    where?: RoleClassScopeWhereInput
+    /**
+     * Limit how many RoleClassScopes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoleClassScope without action
+   */
+  export type RoleClassScopeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
   }
 
 
@@ -25949,6 +27137,7 @@ export namespace Prisma {
     creator?: boolean | Branch$creatorArgs<ExtArgs>
     assignedAdmins?: boolean | Branch$assignedAdminsArgs<ExtArgs>
     roles?: boolean | Branch$rolesArgs<ExtArgs>
+    roleClassScopes?: boolean | Branch$roleClassScopesArgs<ExtArgs>
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     departments?: boolean | Branch$departmentsArgs<ExtArgs>
     qualifications?: boolean | Branch$qualificationsArgs<ExtArgs>
@@ -25991,6 +27180,7 @@ export namespace Prisma {
     creator?: boolean | Branch$creatorArgs<ExtArgs>
     assignedAdmins?: boolean | Branch$assignedAdminsArgs<ExtArgs>
     roles?: boolean | Branch$rolesArgs<ExtArgs>
+    roleClassScopes?: boolean | Branch$roleClassScopesArgs<ExtArgs>
     shifts?: boolean | Branch$shiftsArgs<ExtArgs>
     departments?: boolean | Branch$departmentsArgs<ExtArgs>
     qualifications?: boolean | Branch$qualificationsArgs<ExtArgs>
@@ -26019,6 +27209,7 @@ export namespace Prisma {
       creator: Prisma.$AdminPayload<ExtArgs> | null
       assignedAdmins: Prisma.$AdminPayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
+      roleClassScopes: Prisma.$RoleClassScopePayload<ExtArgs>[]
       shifts: Prisma.$ShiftPayload<ExtArgs>[]
       departments: Prisma.$DepartmentPayload<ExtArgs>[]
       qualifications: Prisma.$QualificationPayload<ExtArgs>[]
@@ -26393,6 +27584,7 @@ export namespace Prisma {
     creator<T extends Branch$creatorArgs<ExtArgs> = {}>(args?: Subset<T, Branch$creatorArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignedAdmins<T extends Branch$assignedAdminsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$assignedAdminsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Branch$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roleClassScopes<T extends Branch$roleClassScopesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$roleClassScopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     shifts<T extends Branch$shiftsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     departments<T extends Branch$departmentsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$departmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     qualifications<T extends Branch$qualificationsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$qualificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -26857,6 +28049,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.roleClassScopes
+   */
+  export type Branch$roleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    where?: RoleClassScopeWhereInput
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    cursor?: RoleClassScopeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
   }
 
   /**
@@ -27555,6 +28771,7 @@ export namespace Prisma {
     examSchedules?: boolean | AcademicClass$examSchedulesArgs<ExtArgs>
     examResults?: boolean | AcademicClass$examResultsArgs<ExtArgs>
     teacherAssignments?: boolean | AcademicClass$teacherAssignmentsArgs<ExtArgs>
+    roleClassScopes?: boolean | AcademicClass$roleClassScopesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicClass"]>
 
@@ -27584,6 +28801,7 @@ export namespace Prisma {
     examSchedules?: boolean | AcademicClass$examSchedulesArgs<ExtArgs>
     examResults?: boolean | AcademicClass$examResultsArgs<ExtArgs>
     teacherAssignments?: boolean | AcademicClass$teacherAssignmentsArgs<ExtArgs>
+    roleClassScopes?: boolean | AcademicClass$roleClassScopesArgs<ExtArgs>
     _count?: boolean | AcademicClassCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -27601,6 +28819,7 @@ export namespace Prisma {
       examSchedules: Prisma.$ExamSchedulePayload<ExtArgs>[]
       examResults: Prisma.$ExamResultPayload<ExtArgs>[]
       teacherAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
+      roleClassScopes: Prisma.$RoleClassScopePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -27962,6 +29181,7 @@ export namespace Prisma {
     examSchedules<T extends AcademicClass$examSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$examSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examResults<T extends AcademicClass$examResultsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$examResultsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teacherAssignments<T extends AcademicClass$teacherAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$teacherAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roleClassScopes<T extends AcademicClass$roleClassScopesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$roleClassScopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleClassScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28550,6 +29770,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TeacherAssignmentScalarFieldEnum | TeacherAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * AcademicClass.roleClassScopes
+   */
+  export type AcademicClass$roleClassScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleClassScope
+     */
+    select?: RoleClassScopeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleClassScope
+     */
+    omit?: RoleClassScopeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleClassScopeInclude<ExtArgs> | null
+    where?: RoleClassScopeWhereInput
+    orderBy?: RoleClassScopeOrderByWithRelationInput | RoleClassScopeOrderByWithRelationInput[]
+    cursor?: RoleClassScopeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoleClassScopeScalarFieldEnum | RoleClassScopeScalarFieldEnum[]
   }
 
   /**
@@ -75040,6 +76284,7 @@ export namespace Prisma {
     description: 'description',
     status: 'status',
     isSystemRole: 'isSystemRole',
+    classScopeMode: 'classScopeMode',
     createdBy: 'createdBy',
     updatedBy: 'updatedBy',
     createdAt: 'createdAt',
@@ -75074,6 +76319,18 @@ export namespace Prisma {
   };
 
   export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
+
+
+  export const RoleClassScopeScalarFieldEnum: {
+    id: 'id',
+    tenantId: 'tenantId',
+    branchId: 'branchId',
+    roleId: 'roleId',
+    classId: 'classId',
+    createdAt: 'createdAt'
+  };
+
+  export type RoleClassScopeScalarFieldEnum = (typeof RoleClassScopeScalarFieldEnum)[keyof typeof RoleClassScopeScalarFieldEnum]
 
 
   export const MadrassaProfileScalarFieldEnum: {
@@ -76180,7 +77437,8 @@ export namespace Prisma {
   export const RoleOrderByRelevanceFieldEnum: {
     roleName: 'roleName',
     description: 'description',
-    status: 'status'
+    status: 'status',
+    classScopeMode: 'classScopeMode'
   };
 
   export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
@@ -76883,6 +78141,7 @@ export namespace Prisma {
     admins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
     profile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
     students?: StudentListRelationFilter
     parents?: ParentListRelationFilter
@@ -76958,6 +78217,7 @@ export namespace Prisma {
     admins?: AdminOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
     rolePermissions?: RolePermissionOrderByRelationAggregateInput
+    roleClassScopes?: RoleClassScopeOrderByRelationAggregateInput
     profile?: MadrassaProfileOrderByWithRelationInput
     students?: StudentOrderByRelationAggregateInput
     parents?: ParentOrderByRelationAggregateInput
@@ -77037,6 +78297,7 @@ export namespace Prisma {
     admins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
     profile?: XOR<MadrassaProfileNullableScalarRelationFilter, MadrassaProfileWhereInput> | null
     students?: StudentListRelationFilter
     parents?: ParentListRelationFilter
@@ -77410,6 +78671,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Role"> | string | null
     status?: StringFilter<"Role"> | string
     isSystemRole?: BoolFilter<"Role"> | boolean
+    classScopeMode?: StringFilter<"Role"> | string
     createdBy?: IntNullableFilter<"Role"> | number | null
     updatedBy?: IntNullableFilter<"Role"> | number | null
     createdAt?: DateTimeFilter<"Role"> | Date | string
@@ -77420,6 +78682,7 @@ export namespace Prisma {
     updater?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     admins?: AdminListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
+    classScopes?: RoleClassScopeListRelationFilter
   }
 
   export type RoleOrderByWithRelationInput = {
@@ -77431,6 +78694,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     isSystemRole?: SortOrder
+    classScopeMode?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     updatedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -77441,6 +78705,7 @@ export namespace Prisma {
     updater?: AdminOrderByWithRelationInput
     admins?: AdminOrderByRelationAggregateInput
     rolePermissions?: RolePermissionOrderByRelationAggregateInput
+    classScopes?: RoleClassScopeOrderByRelationAggregateInput
     _relevance?: RoleOrderByRelevanceInput
   }
 
@@ -77457,6 +78722,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Role"> | string | null
     status?: StringFilter<"Role"> | string
     isSystemRole?: BoolFilter<"Role"> | boolean
+    classScopeMode?: StringFilter<"Role"> | string
     createdBy?: IntNullableFilter<"Role"> | number | null
     updatedBy?: IntNullableFilter<"Role"> | number | null
     createdAt?: DateTimeFilter<"Role"> | Date | string
@@ -77467,6 +78733,7 @@ export namespace Prisma {
     updater?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     admins?: AdminListRelationFilter
     rolePermissions?: RolePermissionListRelationFilter
+    classScopes?: RoleClassScopeListRelationFilter
   }, "id" | "tenantId_roleScopeKey_roleName">
 
   export type RoleOrderByWithAggregationInput = {
@@ -77478,6 +78745,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     isSystemRole?: SortOrder
+    classScopeMode?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     updatedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -77501,6 +78769,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Role"> | string | null
     status?: StringWithAggregatesFilter<"Role"> | string
     isSystemRole?: BoolWithAggregatesFilter<"Role"> | boolean
+    classScopeMode?: StringWithAggregatesFilter<"Role"> | string
     createdBy?: IntNullableWithAggregatesFilter<"Role"> | number | null
     updatedBy?: IntNullableWithAggregatesFilter<"Role"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
@@ -77652,6 +78921,78 @@ export namespace Prisma {
     roleId?: IntWithAggregatesFilter<"RolePermission"> | number
     permissionId?: IntWithAggregatesFilter<"RolePermission"> | number
     createdAt?: DateTimeWithAggregatesFilter<"RolePermission"> | Date | string
+  }
+
+  export type RoleClassScopeWhereInput = {
+    AND?: RoleClassScopeWhereInput | RoleClassScopeWhereInput[]
+    OR?: RoleClassScopeWhereInput[]
+    NOT?: RoleClassScopeWhereInput | RoleClassScopeWhereInput[]
+    id?: IntFilter<"RoleClassScope"> | number
+    tenantId?: IntFilter<"RoleClassScope"> | number
+    branchId?: IntFilter<"RoleClassScope"> | number
+    roleId?: IntFilter<"RoleClassScope"> | number
+    classId?: IntFilter<"RoleClassScope"> | number
+    createdAt?: DateTimeFilter<"RoleClassScope"> | Date | string
+    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+  }
+
+  export type RoleClassScopeOrderByWithRelationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+    createdAt?: SortOrder
+    tenant?: TenantOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
+    role?: RoleOrderByWithRelationInput
+    class?: AcademicClassOrderByWithRelationInput
+  }
+
+  export type RoleClassScopeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    roleId_classId?: RoleClassScopeRoleIdClassIdCompoundUniqueInput
+    AND?: RoleClassScopeWhereInput | RoleClassScopeWhereInput[]
+    OR?: RoleClassScopeWhereInput[]
+    NOT?: RoleClassScopeWhereInput | RoleClassScopeWhereInput[]
+    tenantId?: IntFilter<"RoleClassScope"> | number
+    branchId?: IntFilter<"RoleClassScope"> | number
+    roleId?: IntFilter<"RoleClassScope"> | number
+    classId?: IntFilter<"RoleClassScope"> | number
+    createdAt?: DateTimeFilter<"RoleClassScope"> | Date | string
+    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    class?: XOR<AcademicClassScalarRelationFilter, AcademicClassWhereInput>
+  }, "id" | "roleId_classId">
+
+  export type RoleClassScopeOrderByWithAggregationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+    createdAt?: SortOrder
+    _count?: RoleClassScopeCountOrderByAggregateInput
+    _avg?: RoleClassScopeAvgOrderByAggregateInput
+    _max?: RoleClassScopeMaxOrderByAggregateInput
+    _min?: RoleClassScopeMinOrderByAggregateInput
+    _sum?: RoleClassScopeSumOrderByAggregateInput
+  }
+
+  export type RoleClassScopeScalarWhereWithAggregatesInput = {
+    AND?: RoleClassScopeScalarWhereWithAggregatesInput | RoleClassScopeScalarWhereWithAggregatesInput[]
+    OR?: RoleClassScopeScalarWhereWithAggregatesInput[]
+    NOT?: RoleClassScopeScalarWhereWithAggregatesInput | RoleClassScopeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RoleClassScope"> | number
+    tenantId?: IntWithAggregatesFilter<"RoleClassScope"> | number
+    branchId?: IntWithAggregatesFilter<"RoleClassScope"> | number
+    roleId?: IntWithAggregatesFilter<"RoleClassScope"> | number
+    classId?: IntWithAggregatesFilter<"RoleClassScope"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"RoleClassScope"> | Date | string
   }
 
   export type MadrassaProfileWhereInput = {
@@ -78516,6 +79857,7 @@ export namespace Prisma {
     creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     assignedAdmins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
     shifts?: ShiftListRelationFilter
     departments?: DepartmentListRelationFilter
     qualifications?: QualificationListRelationFilter
@@ -78551,6 +79893,7 @@ export namespace Prisma {
     creator?: AdminOrderByWithRelationInput
     assignedAdmins?: AdminOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
+    roleClassScopes?: RoleClassScopeOrderByRelationAggregateInput
     shifts?: ShiftOrderByRelationAggregateInput
     departments?: DepartmentOrderByRelationAggregateInput
     qualifications?: QualificationOrderByRelationAggregateInput
@@ -78592,6 +79935,7 @@ export namespace Prisma {
     creator?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     assignedAdmins?: AdminListRelationFilter
     roles?: RoleListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
     shifts?: ShiftListRelationFilter
     departments?: DepartmentListRelationFilter
     qualifications?: QualificationListRelationFilter
@@ -78669,6 +80013,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleListRelationFilter
     examResults?: ExamResultListRelationFilter
     teacherAssignments?: TeacherAssignmentListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
   }
 
   export type AcademicClassOrderByWithRelationInput = {
@@ -78691,6 +80036,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleOrderByRelationAggregateInput
     examResults?: ExamResultOrderByRelationAggregateInput
     teacherAssignments?: TeacherAssignmentOrderByRelationAggregateInput
+    roleClassScopes?: RoleClassScopeOrderByRelationAggregateInput
     _relevance?: AcademicClassOrderByRelevanceInput
   }
 
@@ -78718,6 +80064,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleListRelationFilter
     examResults?: ExamResultListRelationFilter
     teacherAssignments?: TeacherAssignmentListRelationFilter
+    roleClassScopes?: RoleClassScopeListRelationFilter
   }, "id" | "branchId_name">
 
   export type AcademicClassOrderByWithAggregationInput = {
@@ -83419,6 +84766,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -83493,6 +84841,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -83566,6 +84915,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -83640,6 +84990,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -84041,6 +85392,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -84049,6 +85401,7 @@ export namespace Prisma {
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateInput = {
@@ -84060,12 +85413,14 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUpdateInput = {
@@ -84074,6 +85429,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -84082,6 +85438,7 @@ export namespace Prisma {
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
@@ -84093,12 +85450,14 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleCreateManyInput = {
@@ -84110,6 +85469,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
@@ -84122,6 +85482,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -84135,6 +85496,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -84280,6 +85642,62 @@ export namespace Prisma {
     tenantId?: NullableIntFieldUpdateOperationsInput | number | null
     roleId?: IntFieldUpdateOperationsInput | number
     permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeCreateInput = {
+    createdAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutRoleClassScopesInput
+    branch: BranchCreateNestedOneWithoutRoleClassScopesInput
+    role: RoleCreateNestedOneWithoutClassScopesInput
+    class: AcademicClassCreateNestedOneWithoutRoleClassScopesInput
+  }
+
+  export type RoleClassScopeUncheckedCreateInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    role?: RoleUpdateOneRequiredWithoutClassScopesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutRoleClassScopesNestedInput
+  }
+
+  export type RoleClassScopeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeCreateManyInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -85142,6 +86560,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -85175,6 +86594,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -85207,6 +86627,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -85240,6 +86661,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -85312,6 +86734,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateInput = {
@@ -85331,6 +86754,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUpdateInput = {
@@ -85349,6 +86773,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateInput = {
@@ -85368,6 +86793,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassCreateManyInput = {
@@ -90421,6 +91847,12 @@ export namespace Prisma {
     none?: RolePermissionWhereInput
   }
 
+  export type RoleClassScopeListRelationFilter = {
+    every?: RoleClassScopeWhereInput
+    some?: RoleClassScopeWhereInput
+    none?: RoleClassScopeWhereInput
+  }
+
   export type MadrassaProfileNullableScalarRelationFilter = {
     is?: MadrassaProfileWhereInput | null
     isNot?: MadrassaProfileWhereInput | null
@@ -90750,6 +92182,10 @@ export namespace Prisma {
   }
 
   export type RolePermissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RoleClassScopeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -91390,6 +92826,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     isSystemRole?: SortOrder
+    classScopeMode?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
     createdAt?: SortOrder
@@ -91414,6 +92851,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     isSystemRole?: SortOrder
+    classScopeMode?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
     createdAt?: SortOrder
@@ -91429,6 +92867,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     isSystemRole?: SortOrder
+    classScopeMode?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
     createdAt?: SortOrder
@@ -91552,14 +92991,72 @@ export namespace Prisma {
     permissionId?: SortOrder
   }
 
-  export type AdminScalarRelationFilter = {
-    is?: AdminWhereInput
-    isNot?: AdminWhereInput
-  }
-
   export type TenantScalarRelationFilter = {
     is?: TenantWhereInput
     isNot?: TenantWhereInput
+  }
+
+  export type BranchScalarRelationFilter = {
+    is?: BranchWhereInput
+    isNot?: BranchWhereInput
+  }
+
+  export type AcademicClassScalarRelationFilter = {
+    is?: AcademicClassWhereInput
+    isNot?: AcademicClassWhereInput
+  }
+
+  export type RoleClassScopeRoleIdClassIdCompoundUniqueInput = {
+    roleId: number
+    classId: number
+  }
+
+  export type RoleClassScopeCountOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RoleClassScopeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+  }
+
+  export type RoleClassScopeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RoleClassScopeMinOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RoleClassScopeSumOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    branchId?: SortOrder
+    roleId?: SortOrder
+    classId?: SortOrder
+  }
+
+  export type AdminScalarRelationFilter = {
+    is?: AdminWhereInput
+    isNot?: AdminWhereInput
   }
 
   export type MadrassaProfileOrderByRelevanceInput = {
@@ -92219,11 +93716,6 @@ export namespace Prisma {
     createdBy?: SortOrder
   }
 
-  export type BranchScalarRelationFilter = {
-    is?: BranchWhereInput
-    isNot?: BranchWhereInput
-  }
-
   export type TeacherNullableScalarRelationFilter = {
     is?: TeacherWhereInput | null
     isNot?: TeacherWhereInput | null
@@ -92285,11 +93777,6 @@ export namespace Prisma {
     tenantId?: SortOrder
     branchId?: SortOrder
     inchargeTeacherId?: SortOrder
-  }
-
-  export type AcademicClassScalarRelationFilter = {
-    is?: AcademicClassWhereInput
-    isNot?: AcademicClassWhereInput
   }
 
   export type SectionOrderByRelevanceInput = {
@@ -95765,6 +97252,13 @@ export namespace Prisma {
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
   }
 
+  export type RoleClassScopeCreateNestedManyWithoutTenantInput = {
+    create?: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput> | RoleClassScopeCreateWithoutTenantInput[] | RoleClassScopeUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutTenantInput | RoleClassScopeCreateOrConnectWithoutTenantInput[]
+    createMany?: RoleClassScopeCreateManyTenantInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+  }
+
   export type MadrassaProfileCreateNestedOneWithoutTenantInput = {
     create?: XOR<MadrassaProfileCreateWithoutTenantInput, MadrassaProfileUncheckedCreateWithoutTenantInput>
     connectOrCreate?: MadrassaProfileCreateOrConnectWithoutTenantInput
@@ -96154,6 +97648,13 @@ export namespace Prisma {
     connectOrCreate?: RolePermissionCreateOrConnectWithoutTenantInput | RolePermissionCreateOrConnectWithoutTenantInput[]
     createMany?: RolePermissionCreateManyTenantInputEnvelope
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput = {
+    create?: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput> | RoleClassScopeCreateWithoutTenantInput[] | RoleClassScopeUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutTenantInput | RoleClassScopeCreateOrConnectWithoutTenantInput[]
+    createMany?: RoleClassScopeCreateManyTenantInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
   }
 
   export type MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput = {
@@ -96611,6 +98112,20 @@ export namespace Prisma {
     update?: RolePermissionUpdateWithWhereUniqueWithoutTenantInput | RolePermissionUpdateWithWhereUniqueWithoutTenantInput[]
     updateMany?: RolePermissionUpdateManyWithWhereWithoutTenantInput | RolePermissionUpdateManyWithWhereWithoutTenantInput[]
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput> | RoleClassScopeCreateWithoutTenantInput[] | RoleClassScopeUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutTenantInput | RoleClassScopeCreateOrConnectWithoutTenantInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutTenantInput | RoleClassScopeUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: RoleClassScopeCreateManyTenantInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutTenantInput | RoleClassScopeUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutTenantInput | RoleClassScopeUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type MadrassaProfileUpdateOneWithoutTenantNestedInput = {
@@ -97399,6 +98914,20 @@ export namespace Prisma {
     update?: RolePermissionUpdateWithWhereUniqueWithoutTenantInput | RolePermissionUpdateWithWhereUniqueWithoutTenantInput[]
     updateMany?: RolePermissionUpdateManyWithWhereWithoutTenantInput | RolePermissionUpdateManyWithWhereWithoutTenantInput[]
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput> | RoleClassScopeCreateWithoutTenantInput[] | RoleClassScopeUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutTenantInput | RoleClassScopeCreateOrConnectWithoutTenantInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutTenantInput | RoleClassScopeUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: RoleClassScopeCreateManyTenantInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutTenantInput | RoleClassScopeUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutTenantInput | RoleClassScopeUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput = {
@@ -98737,6 +100266,13 @@ export namespace Prisma {
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
   }
 
+  export type RoleClassScopeCreateNestedManyWithoutRoleInput = {
+    create?: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput> | RoleClassScopeCreateWithoutRoleInput[] | RoleClassScopeUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutRoleInput | RoleClassScopeCreateOrConnectWithoutRoleInput[]
+    createMany?: RoleClassScopeCreateManyRoleInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+  }
+
   export type AdminUncheckedCreateNestedManyWithoutAssignedRoleInput = {
     create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
     connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
@@ -98749,6 +100285,13 @@ export namespace Prisma {
     connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
     createMany?: RolePermissionCreateManyRoleInputEnvelope
     connect?: RolePermissionWhereUniqueInput | RolePermissionWhereUniqueInput[]
+  }
+
+  export type RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput = {
+    create?: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput> | RoleClassScopeCreateWithoutRoleInput[] | RoleClassScopeUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutRoleInput | RoleClassScopeCreateOrConnectWithoutRoleInput[]
+    createMany?: RoleClassScopeCreateManyRoleInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
   }
 
   export type TenantUpdateOneWithoutRolesNestedInput = {
@@ -98819,6 +100362,20 @@ export namespace Prisma {
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
   }
 
+  export type RoleClassScopeUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput> | RoleClassScopeCreateWithoutRoleInput[] | RoleClassScopeUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutRoleInput | RoleClassScopeCreateOrConnectWithoutRoleInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutRoleInput | RoleClassScopeUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: RoleClassScopeCreateManyRoleInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutRoleInput | RoleClassScopeUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutRoleInput | RoleClassScopeUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
+  }
+
   export type AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput = {
     create?: XOR<AdminCreateWithoutAssignedRoleInput, AdminUncheckedCreateWithoutAssignedRoleInput> | AdminCreateWithoutAssignedRoleInput[] | AdminUncheckedCreateWithoutAssignedRoleInput[]
     connectOrCreate?: AdminCreateOrConnectWithoutAssignedRoleInput | AdminCreateOrConnectWithoutAssignedRoleInput[]
@@ -98845,6 +100402,20 @@ export namespace Prisma {
     update?: RolePermissionUpdateWithWhereUniqueWithoutRoleInput | RolePermissionUpdateWithWhereUniqueWithoutRoleInput[]
     updateMany?: RolePermissionUpdateManyWithWhereWithoutRoleInput | RolePermissionUpdateManyWithWhereWithoutRoleInput[]
     deleteMany?: RolePermissionScalarWhereInput | RolePermissionScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput> | RoleClassScopeCreateWithoutRoleInput[] | RoleClassScopeUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutRoleInput | RoleClassScopeCreateOrConnectWithoutRoleInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutRoleInput | RoleClassScopeUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: RoleClassScopeCreateManyRoleInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutRoleInput | RoleClassScopeUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutRoleInput | RoleClassScopeUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type RolePermissionCreateNestedManyWithoutPermissionInput = {
@@ -98931,6 +100502,62 @@ export namespace Prisma {
     upsert?: PermissionUpsertWithoutRolePermissionsInput
     connect?: PermissionWhereUniqueInput
     update?: XOR<XOR<PermissionUpdateToOneWithWhereWithoutRolePermissionsInput, PermissionUpdateWithoutRolePermissionsInput>, PermissionUncheckedUpdateWithoutRolePermissionsInput>
+  }
+
+  export type TenantCreateNestedOneWithoutRoleClassScopesInput = {
+    create?: XOR<TenantCreateWithoutRoleClassScopesInput, TenantUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutRoleClassScopesInput
+    connect?: TenantWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutRoleClassScopesInput = {
+    create?: XOR<BranchCreateWithoutRoleClassScopesInput, BranchUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutRoleClassScopesInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type RoleCreateNestedOneWithoutClassScopesInput = {
+    create?: XOR<RoleCreateWithoutClassScopesInput, RoleUncheckedCreateWithoutClassScopesInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutClassScopesInput
+    connect?: RoleWhereUniqueInput
+  }
+
+  export type AcademicClassCreateNestedOneWithoutRoleClassScopesInput = {
+    create?: XOR<AcademicClassCreateWithoutRoleClassScopesInput, AcademicClassUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutRoleClassScopesInput
+    connect?: AcademicClassWhereUniqueInput
+  }
+
+  export type TenantUpdateOneRequiredWithoutRoleClassScopesNestedInput = {
+    create?: XOR<TenantCreateWithoutRoleClassScopesInput, TenantUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutRoleClassScopesInput
+    upsert?: TenantUpsertWithoutRoleClassScopesInput
+    connect?: TenantWhereUniqueInput
+    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutRoleClassScopesInput, TenantUpdateWithoutRoleClassScopesInput>, TenantUncheckedUpdateWithoutRoleClassScopesInput>
+  }
+
+  export type BranchUpdateOneRequiredWithoutRoleClassScopesNestedInput = {
+    create?: XOR<BranchCreateWithoutRoleClassScopesInput, BranchUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutRoleClassScopesInput
+    upsert?: BranchUpsertWithoutRoleClassScopesInput
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutRoleClassScopesInput, BranchUpdateWithoutRoleClassScopesInput>, BranchUncheckedUpdateWithoutRoleClassScopesInput>
+  }
+
+  export type RoleUpdateOneRequiredWithoutClassScopesNestedInput = {
+    create?: XOR<RoleCreateWithoutClassScopesInput, RoleUncheckedCreateWithoutClassScopesInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutClassScopesInput
+    upsert?: RoleUpsertWithoutClassScopesInput
+    connect?: RoleWhereUniqueInput
+    update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutClassScopesInput, RoleUpdateWithoutClassScopesInput>, RoleUncheckedUpdateWithoutClassScopesInput>
+  }
+
+  export type AcademicClassUpdateOneRequiredWithoutRoleClassScopesNestedInput = {
+    create?: XOR<AcademicClassCreateWithoutRoleClassScopesInput, AcademicClassUncheckedCreateWithoutRoleClassScopesInput>
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutRoleClassScopesInput
+    upsert?: AcademicClassUpsertWithoutRoleClassScopesInput
+    connect?: AcademicClassWhereUniqueInput
+    update?: XOR<XOR<AcademicClassUpdateToOneWithWhereWithoutRoleClassScopesInput, AcademicClassUpdateWithoutRoleClassScopesInput>, AcademicClassUncheckedUpdateWithoutRoleClassScopesInput>
   }
 
   export type AdminCreateNestedOneWithoutMadrassaProfileInput = {
@@ -99489,6 +101116,13 @@ export namespace Prisma {
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
   }
 
+  export type RoleClassScopeCreateNestedManyWithoutBranchInput = {
+    create?: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput> | RoleClassScopeCreateWithoutBranchInput[] | RoleClassScopeUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutBranchInput | RoleClassScopeCreateOrConnectWithoutBranchInput[]
+    createMany?: RoleClassScopeCreateManyBranchInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+  }
+
   export type ShiftCreateNestedManyWithoutBranchInput = {
     create?: XOR<ShiftCreateWithoutBranchInput, ShiftUncheckedCreateWithoutBranchInput> | ShiftCreateWithoutBranchInput[] | ShiftUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: ShiftCreateOrConnectWithoutBranchInput | ShiftCreateOrConnectWithoutBranchInput[]
@@ -99627,6 +101261,13 @@ export namespace Prisma {
     connectOrCreate?: RoleCreateOrConnectWithoutBranchInput | RoleCreateOrConnectWithoutBranchInput[]
     createMany?: RoleCreateManyBranchInputEnvelope
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+  }
+
+  export type RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput> | RoleClassScopeCreateWithoutBranchInput[] | RoleClassScopeUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutBranchInput | RoleClassScopeCreateOrConnectWithoutBranchInput[]
+    createMany?: RoleClassScopeCreateManyBranchInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
   }
 
   export type ShiftUncheckedCreateNestedManyWithoutBranchInput = {
@@ -99799,6 +101440,20 @@ export namespace Prisma {
     update?: RoleUpdateWithWhereUniqueWithoutBranchInput | RoleUpdateWithWhereUniqueWithoutBranchInput[]
     updateMany?: RoleUpdateManyWithWhereWithoutBranchInput | RoleUpdateManyWithWhereWithoutBranchInput[]
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput> | RoleClassScopeCreateWithoutBranchInput[] | RoleClassScopeUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutBranchInput | RoleClassScopeCreateOrConnectWithoutBranchInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutBranchInput | RoleClassScopeUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: RoleClassScopeCreateManyBranchInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutBranchInput | RoleClassScopeUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutBranchInput | RoleClassScopeUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type ShiftUpdateManyWithoutBranchNestedInput = {
@@ -100079,6 +101734,20 @@ export namespace Prisma {
     update?: RoleUpdateWithWhereUniqueWithoutBranchInput | RoleUpdateWithWhereUniqueWithoutBranchInput[]
     updateMany?: RoleUpdateManyWithWhereWithoutBranchInput | RoleUpdateManyWithWhereWithoutBranchInput[]
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput> | RoleClassScopeCreateWithoutBranchInput[] | RoleClassScopeUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutBranchInput | RoleClassScopeCreateOrConnectWithoutBranchInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutBranchInput | RoleClassScopeUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: RoleClassScopeCreateManyBranchInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutBranchInput | RoleClassScopeUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutBranchInput | RoleClassScopeUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type ShiftUncheckedUpdateManyWithoutBranchNestedInput = {
@@ -100407,6 +102076,13 @@ export namespace Prisma {
     connect?: TeacherAssignmentWhereUniqueInput | TeacherAssignmentWhereUniqueInput[]
   }
 
+  export type RoleClassScopeCreateNestedManyWithoutClassInput = {
+    create?: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput> | RoleClassScopeCreateWithoutClassInput[] | RoleClassScopeUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutClassInput | RoleClassScopeCreateOrConnectWithoutClassInput[]
+    createMany?: RoleClassScopeCreateManyClassInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+  }
+
   export type SectionUncheckedCreateNestedManyWithoutClassInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -100461,6 +102137,13 @@ export namespace Prisma {
     connectOrCreate?: TeacherAssignmentCreateOrConnectWithoutClassInput | TeacherAssignmentCreateOrConnectWithoutClassInput[]
     createMany?: TeacherAssignmentCreateManyClassInputEnvelope
     connect?: TeacherAssignmentWhereUniqueInput | TeacherAssignmentWhereUniqueInput[]
+  }
+
+  export type RoleClassScopeUncheckedCreateNestedManyWithoutClassInput = {
+    create?: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput> | RoleClassScopeCreateWithoutClassInput[] | RoleClassScopeUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutClassInput | RoleClassScopeCreateOrConnectWithoutClassInput[]
+    createMany?: RoleClassScopeCreateManyClassInputEnvelope
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
   }
 
   export type TenantUpdateOneRequiredWithoutClassesNestedInput = {
@@ -100601,6 +102284,20 @@ export namespace Prisma {
     deleteMany?: TeacherAssignmentScalarWhereInput | TeacherAssignmentScalarWhereInput[]
   }
 
+  export type RoleClassScopeUpdateManyWithoutClassNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput> | RoleClassScopeCreateWithoutClassInput[] | RoleClassScopeUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutClassInput | RoleClassScopeCreateOrConnectWithoutClassInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutClassInput | RoleClassScopeUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: RoleClassScopeCreateManyClassInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutClassInput | RoleClassScopeUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutClassInput | RoleClassScopeUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
+  }
+
   export type SectionUncheckedUpdateManyWithoutClassNestedInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -100711,6 +102408,20 @@ export namespace Prisma {
     update?: TeacherAssignmentUpdateWithWhereUniqueWithoutClassInput | TeacherAssignmentUpdateWithWhereUniqueWithoutClassInput[]
     updateMany?: TeacherAssignmentUpdateManyWithWhereWithoutClassInput | TeacherAssignmentUpdateManyWithWhereWithoutClassInput[]
     deleteMany?: TeacherAssignmentScalarWhereInput | TeacherAssignmentScalarWhereInput[]
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput = {
+    create?: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput> | RoleClassScopeCreateWithoutClassInput[] | RoleClassScopeUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: RoleClassScopeCreateOrConnectWithoutClassInput | RoleClassScopeCreateOrConnectWithoutClassInput[]
+    upsert?: RoleClassScopeUpsertWithWhereUniqueWithoutClassInput | RoleClassScopeUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: RoleClassScopeCreateManyClassInputEnvelope
+    set?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    disconnect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    delete?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    connect?: RoleClassScopeWhereUniqueInput | RoleClassScopeWhereUniqueInput[]
+    update?: RoleClassScopeUpdateWithWhereUniqueWithoutClassInput | RoleClassScopeUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: RoleClassScopeUpdateManyWithWhereWithoutClassInput | RoleClassScopeUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
   }
 
   export type TenantCreateNestedOneWithoutSectionsInput = {
@@ -104466,6 +106177,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -104539,6 +106251,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -104616,6 +106329,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -104689,6 +106403,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -104828,6 +106543,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     branch?: BranchCreateNestedOneWithoutRolesInput
@@ -104835,6 +106551,7 @@ export namespace Prisma {
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutTenantInput = {
@@ -104845,12 +106562,14 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutTenantInput = {
@@ -104883,6 +106602,31 @@ export namespace Prisma {
 
   export type RolePermissionCreateManyTenantInputEnvelope = {
     data: RolePermissionCreateManyTenantInput | RolePermissionCreateManyTenantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RoleClassScopeCreateWithoutTenantInput = {
+    createdAt?: Date | string
+    branch: BranchCreateNestedOneWithoutRoleClassScopesInput
+    role: RoleCreateNestedOneWithoutClassScopesInput
+    class: AcademicClassCreateNestedOneWithoutRoleClassScopesInput
+  }
+
+  export type RoleClassScopeUncheckedCreateWithoutTenantInput = {
+    id?: number
+    branchId: number
+    roleId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateOrConnectWithoutTenantInput = {
+    where: RoleClassScopeWhereUniqueInput
+    create: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput>
+  }
+
+  export type RoleClassScopeCreateManyTenantInputEnvelope = {
+    data: RoleClassScopeCreateManyTenantInput | RoleClassScopeCreateManyTenantInput[]
     skipDuplicates?: boolean
   }
 
@@ -105170,6 +106914,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -105202,6 +106947,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -105348,6 +107094,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutTenantInput = {
@@ -105366,6 +107113,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutTenantInput = {
@@ -107146,6 +108894,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -107219,6 +108968,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -107376,6 +109126,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Role"> | string | null
     status?: StringFilter<"Role"> | string
     isSystemRole?: BoolFilter<"Role"> | boolean
+    classScopeMode?: StringFilter<"Role"> | string
     createdBy?: IntNullableFilter<"Role"> | number | null
     updatedBy?: IntNullableFilter<"Role"> | number | null
     createdAt?: DateTimeFilter<"Role"> | Date | string
@@ -107407,6 +109158,34 @@ export namespace Prisma {
     roleId?: IntFilter<"RolePermission"> | number
     permissionId?: IntFilter<"RolePermission"> | number
     createdAt?: DateTimeFilter<"RolePermission"> | Date | string
+  }
+
+  export type RoleClassScopeUpsertWithWhereUniqueWithoutTenantInput = {
+    where: RoleClassScopeWhereUniqueInput
+    update: XOR<RoleClassScopeUpdateWithoutTenantInput, RoleClassScopeUncheckedUpdateWithoutTenantInput>
+    create: XOR<RoleClassScopeCreateWithoutTenantInput, RoleClassScopeUncheckedCreateWithoutTenantInput>
+  }
+
+  export type RoleClassScopeUpdateWithWhereUniqueWithoutTenantInput = {
+    where: RoleClassScopeWhereUniqueInput
+    data: XOR<RoleClassScopeUpdateWithoutTenantInput, RoleClassScopeUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type RoleClassScopeUpdateManyWithWhereWithoutTenantInput = {
+    where: RoleClassScopeScalarWhereInput
+    data: XOR<RoleClassScopeUpdateManyMutationInput, RoleClassScopeUncheckedUpdateManyWithoutTenantInput>
+  }
+
+  export type RoleClassScopeScalarWhereInput = {
+    AND?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
+    OR?: RoleClassScopeScalarWhereInput[]
+    NOT?: RoleClassScopeScalarWhereInput | RoleClassScopeScalarWhereInput[]
+    id?: IntFilter<"RoleClassScope"> | number
+    tenantId?: IntFilter<"RoleClassScope"> | number
+    branchId?: IntFilter<"RoleClassScope"> | number
+    roleId?: IntFilter<"RoleClassScope"> | number
+    classId?: IntFilter<"RoleClassScope"> | number
+    createdAt?: DateTimeFilter<"RoleClassScope"> | Date | string
   }
 
   export type MadrassaProfileUpsertWithoutTenantInput = {
@@ -109282,6 +111061,7 @@ export namespace Prisma {
     referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -109355,6 +111135,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -109420,6 +111201,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -109427,6 +111209,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedRolesInput
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutAdminsInput = {
@@ -109438,11 +111221,13 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutAdminsInput = {
@@ -109461,6 +111246,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutBranchesInput
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -109493,6 +111279,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -109662,6 +111449,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -109694,6 +111482,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -109730,6 +111519,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -109737,6 +111527,7 @@ export namespace Prisma {
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutCreatorInput = {
@@ -109748,11 +111539,13 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutCreatorInput = {
@@ -109771,6 +111564,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -109778,6 +111572,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutUpdaterInput = {
@@ -109789,11 +111584,13 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutUpdaterInput = {
@@ -110154,6 +111951,7 @@ export namespace Prisma {
     referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -110227,6 +112025,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -110298,6 +112097,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -110305,6 +112105,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutAdminsInput = {
@@ -110316,11 +112117,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type BranchUpsertWithoutAssignedAdminsInput = {
@@ -110345,6 +112148,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutBranchesNestedInput
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -110377,6 +112181,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -110861,6 +112666,7 @@ export namespace Prisma {
     referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -110934,6 +112740,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -111004,6 +112811,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutBranchesInput
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -111036,6 +112844,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -111281,6 +113090,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoleClassScopeCreateWithoutRoleInput = {
+    createdAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutRoleClassScopesInput
+    branch: BranchCreateNestedOneWithoutRoleClassScopesInput
+    class: AcademicClassCreateNestedOneWithoutRoleClassScopesInput
+  }
+
+  export type RoleClassScopeUncheckedCreateWithoutRoleInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateOrConnectWithoutRoleInput = {
+    where: RoleClassScopeWhereUniqueInput
+    create: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput>
+  }
+
+  export type RoleClassScopeCreateManyRoleInputEnvelope = {
+    data: RoleClassScopeCreateManyRoleInput | RoleClassScopeCreateManyRoleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TenantUpsertWithoutRolesInput = {
     update: XOR<TenantUpdateWithoutRolesInput, TenantUncheckedUpdateWithoutRolesInput>
     create: XOR<TenantCreateWithoutRolesInput, TenantUncheckedCreateWithoutRolesInput>
@@ -111310,6 +113144,7 @@ export namespace Prisma {
     referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -111383,6 +113218,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -111459,6 +113295,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutBranchesNestedInput
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -111491,6 +113328,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -111683,6 +113521,22 @@ export namespace Prisma {
     data: XOR<RolePermissionUpdateManyMutationInput, RolePermissionUncheckedUpdateManyWithoutRoleInput>
   }
 
+  export type RoleClassScopeUpsertWithWhereUniqueWithoutRoleInput = {
+    where: RoleClassScopeWhereUniqueInput
+    update: XOR<RoleClassScopeUpdateWithoutRoleInput, RoleClassScopeUncheckedUpdateWithoutRoleInput>
+    create: XOR<RoleClassScopeCreateWithoutRoleInput, RoleClassScopeUncheckedCreateWithoutRoleInput>
+  }
+
+  export type RoleClassScopeUpdateWithWhereUniqueWithoutRoleInput = {
+    where: RoleClassScopeWhereUniqueInput
+    data: XOR<RoleClassScopeUpdateWithoutRoleInput, RoleClassScopeUncheckedUpdateWithoutRoleInput>
+  }
+
+  export type RoleClassScopeUpdateManyWithWhereWithoutRoleInput = {
+    where: RoleClassScopeScalarWhereInput
+    data: XOR<RoleClassScopeUpdateManyMutationInput, RoleClassScopeUncheckedUpdateManyWithoutRoleInput>
+  }
+
   export type RolePermissionCreateWithoutPermissionInput = {
     createdAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolePermissionsInput
@@ -111740,6 +113594,7 @@ export namespace Prisma {
     referredTenants?: TenantCreateNestedManyWithoutReferredByInput
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -111813,6 +113668,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -111878,6 +113734,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -111885,6 +113742,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedRolesInput
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutRolePermissionsInput = {
@@ -111896,11 +113754,13 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutRolePermissionsInput = {
@@ -111967,6 +113827,7 @@ export namespace Prisma {
     referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -112040,6 +113901,7 @@ export namespace Prisma {
     referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -112111,6 +113973,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -112118,6 +113981,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutRolePermissionsInput = {
@@ -112129,11 +113993,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type PermissionUpsertWithoutRolePermissionsInput = {
@@ -112170,6 +114036,638 @@ export namespace Prisma {
     action?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TenantCreateWithoutRoleClassScopesInput = {
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: TenantCreateNestedOneWithoutReferredTenantsInput
+    referredTenants?: TenantCreateNestedManyWithoutReferredByInput
+    admins?: AdminCreateNestedManyWithoutTenantInput
+    roles?: RoleCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
+    students?: StudentCreateNestedManyWithoutTenantInput
+    parents?: ParentCreateNestedManyWithoutTenantInput
+    teachers?: TeacherCreateNestedManyWithoutTenantInput
+    branches?: BranchCreateNestedManyWithoutTenantInput
+    shifts?: ShiftCreateNestedManyWithoutTenantInput
+    departments?: DepartmentCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassCreateNestedManyWithoutTenantInput
+    sections?: SectionCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutTenantInput
+    subjects?: SubjectCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTenantInput
+    cities?: CityCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutRoleClassScopesInput = {
+    id?: number
+    tenantCode: string
+    name: string
+    subdomain?: string | null
+    customDomain?: string | null
+    status?: string
+    branchEnabled?: boolean
+    publicWebsiteEnabled?: boolean
+    branchLimit?: number | null
+    ownerAdminId?: number | null
+    referralCode: string
+    referredByTenantId?: number | null
+    referredAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredTenants?: TenantUncheckedCreateNestedManyWithoutReferredByInput
+    admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
+    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
+    students?: StudentUncheckedCreateNestedManyWithoutTenantInput
+    parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
+    teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
+    branches?: BranchUncheckedCreateNestedManyWithoutTenantInput
+    shifts?: ShiftUncheckedCreateNestedManyWithoutTenantInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutTenantInput
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutTenantInput
+    classes?: AcademicClassUncheckedCreateNestedManyWithoutTenantInput
+    sections?: SectionUncheckedCreateNestedManyWithoutTenantInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutTenantInput
+    sessions?: AcademicSessionUncheckedCreateNestedManyWithoutTenantInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutTenantInput
+    resultGrades?: ResultGradeUncheckedCreateNestedManyWithoutTenantInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutTenantInput
+    examResultSubjects?: ExamResultSubjectUncheckedCreateNestedManyWithoutTenantInput
+    financeHeads?: FinanceHeadUncheckedCreateNestedManyWithoutTenantInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedCreateNestedManyWithoutTenantInput
+    feeVouchers?: StudentFeeVoucherUncheckedCreateNestedManyWithoutTenantInput
+    fundCollections?: FundCollectionUncheckedCreateNestedManyWithoutTenantInput
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTenantInput
+    financeTransactions?: FinanceTransactionUncheckedCreateNestedManyWithoutTenantInput
+    financialRecords?: FinancialRecordUncheckedCreateNestedManyWithoutTenantInput
+    storeItems?: StoreItemUncheckedCreateNestedManyWithoutTenantInput
+    storeUnits?: StoreUnitUncheckedCreateNestedManyWithoutTenantInput
+    storeCategories?: StoreCategoryUncheckedCreateNestedManyWithoutTenantInput
+    storeSuppliers?: StoreSupplierUncheckedCreateNestedManyWithoutTenantInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedCreateNestedManyWithoutTenantInput
+    storePurchases?: StorePurchaseUncheckedCreateNestedManyWithoutTenantInput
+    storePurchaseItems?: StorePurchaseItemUncheckedCreateNestedManyWithoutTenantInput
+    storeStockIssues?: StoreStockIssueUncheckedCreateNestedManyWithoutTenantInput
+    storeReturns?: StoreReturnUncheckedCreateNestedManyWithoutTenantInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedCreateNestedManyWithoutTenantInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedCreateNestedManyWithoutTenantInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedCreateNestedManyWithoutTenantInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedCreateNestedManyWithoutTenantInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedCreateNestedManyWithoutTenantInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutTenantInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutTenantInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutTenantInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTenantInput
+    studentParents?: StudentParentUncheckedCreateNestedManyWithoutTenantInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    teacherAttendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTenantInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTenantInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedCreateNestedManyWithoutTenantInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTenantInput
+    cities?: CityUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutRoleClassScopesInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutRoleClassScopesInput, TenantUncheckedCreateWithoutRoleClassScopesInput>
+  }
+
+  export type BranchCreateWithoutRoleClassScopesInput = {
+    name: string
+    code?: string | null
+    address?: string | null
+    contact?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutBranchesInput
+    creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
+    assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
+    roles?: RoleCreateNestedManyWithoutBranchInput
+    shifts?: ShiftCreateNestedManyWithoutBranchInput
+    departments?: DepartmentCreateNestedManyWithoutBranchInput
+    qualifications?: QualificationCreateNestedManyWithoutBranchInput
+    students?: StudentCreateNestedManyWithoutBranchInput
+    parents?: ParentCreateNestedManyWithoutBranchInput
+    teachers?: TeacherCreateNestedManyWithoutBranchInput
+    classes?: AcademicClassCreateNestedManyWithoutBranchInput
+    subjects?: SubjectCreateNestedManyWithoutBranchInput
+    sessions?: AcademicSessionCreateNestedManyWithoutBranchInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutBranchInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutBranchInput
+    teacherAttendances?: TeacherAttendanceCreateNestedManyWithoutBranchInput
+    suggestions?: SuggestionCreateNestedManyWithoutBranchInput
+    supportRequests?: SupportRequestCreateNestedManyWithoutBranchInput
+    departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutBranchInput
+    teacherResponsibilities?: TeacherResponsibilityCreateNestedManyWithoutBranchInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutBranchInput
+    resultGrades?: ResultGradeCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutRoleClassScopesInput = {
+    id?: number
+    tenantId: number
+    name: string
+    code?: string | null
+    address?: string | null
+    contact?: string | null
+    createdBy?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
+    roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
+    students?: StudentUncheckedCreateNestedManyWithoutBranchInput
+    parents?: ParentUncheckedCreateNestedManyWithoutBranchInput
+    teachers?: TeacherUncheckedCreateNestedManyWithoutBranchInput
+    classes?: AcademicClassUncheckedCreateNestedManyWithoutBranchInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutBranchInput
+    sessions?: AcademicSessionUncheckedCreateNestedManyWithoutBranchInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutBranchInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutBranchInput
+    teacherAttendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutBranchInput
+    suggestions?: SuggestionUncheckedCreateNestedManyWithoutBranchInput
+    supportRequests?: SupportRequestUncheckedCreateNestedManyWithoutBranchInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutBranchInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedCreateNestedManyWithoutBranchInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutBranchInput
+    resultGrades?: ResultGradeUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutRoleClassScopesInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutRoleClassScopesInput, BranchUncheckedCreateWithoutRoleClassScopesInput>
+  }
+
+  export type RoleCreateWithoutClassScopesInput = {
+    roleScopeKey?: number
+    roleName: string
+    description?: string | null
+    status?: string
+    isSystemRole?: boolean
+    classScopeMode?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant?: TenantCreateNestedOneWithoutRolesInput
+    branch?: BranchCreateNestedOneWithoutRolesInput
+    creator?: AdminCreateNestedOneWithoutCreatedRolesInput
+    updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
+    admins?: AdminCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutClassScopesInput = {
+    id?: number
+    tenantId?: number | null
+    branchId?: number | null
+    roleScopeKey?: number
+    roleName: string
+    description?: string | null
+    status?: string
+    isSystemRole?: boolean
+    classScopeMode?: string
+    createdBy?: number | null
+    updatedBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
+    rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutClassScopesInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutClassScopesInput, RoleUncheckedCreateWithoutClassScopesInput>
+  }
+
+  export type AcademicClassCreateWithoutRoleClassScopesInput = {
+    name: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutClassesInput
+    branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
+    sections?: SectionCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
+    examResults?: ExamResultCreateNestedManyWithoutClassInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassUncheckedCreateWithoutRoleClassScopesInput = {
+    id?: number
+    tenantId: number
+    name: string
+    branchId: number
+    inchargeTeacherId?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sections?: SectionUncheckedCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassCreateOrConnectWithoutRoleClassScopesInput = {
+    where: AcademicClassWhereUniqueInput
+    create: XOR<AcademicClassCreateWithoutRoleClassScopesInput, AcademicClassUncheckedCreateWithoutRoleClassScopesInput>
+  }
+
+  export type TenantUpsertWithoutRoleClassScopesInput = {
+    update: XOR<TenantUpdateWithoutRoleClassScopesInput, TenantUncheckedUpdateWithoutRoleClassScopesInput>
+    create: XOR<TenantCreateWithoutRoleClassScopesInput, TenantUncheckedCreateWithoutRoleClassScopesInput>
+    where?: TenantWhereInput
+  }
+
+  export type TenantUpdateToOneWithWhereWithoutRoleClassScopesInput = {
+    where?: TenantWhereInput
+    data: XOR<TenantUpdateWithoutRoleClassScopesInput, TenantUncheckedUpdateWithoutRoleClassScopesInput>
+  }
+
+  export type TenantUpdateWithoutRoleClassScopesInput = {
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: TenantUpdateOneWithoutReferredTenantsNestedInput
+    referredTenants?: TenantUpdateManyWithoutReferredByNestedInput
+    admins?: AdminUpdateManyWithoutTenantNestedInput
+    roles?: RoleUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
+    students?: StudentUpdateManyWithoutTenantNestedInput
+    parents?: ParentUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUpdateManyWithoutTenantNestedInput
+    branches?: BranchUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUpdateManyWithoutTenantNestedInput
+    sections?: SectionUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTenantNestedInput
+    cities?: CityUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutRoleClassScopesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantCode?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    customDomain?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    branchEnabled?: BoolFieldUpdateOperationsInput | boolean
+    publicWebsiteEnabled?: BoolFieldUpdateOperationsInput | boolean
+    branchLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    ownerAdminId?: NullableIntFieldUpdateOperationsInput | number | null
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByTenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    referredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredTenants?: TenantUncheckedUpdateManyWithoutReferredByNestedInput
+    admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
+    students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
+    parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
+    teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutTenantNestedInput
+    shifts?: ShiftUncheckedUpdateManyWithoutTenantNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutTenantNestedInput
+    qualifications?: QualificationUncheckedUpdateManyWithoutTenantNestedInput
+    classes?: AcademicClassUncheckedUpdateManyWithoutTenantNestedInput
+    sections?: SectionUncheckedUpdateManyWithoutTenantNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutTenantNestedInput
+    sessions?: AcademicSessionUncheckedUpdateManyWithoutTenantNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    resultGrades?: ResultGradeUncheckedUpdateManyWithoutTenantNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutTenantNestedInput
+    examResultSubjects?: ExamResultSubjectUncheckedUpdateManyWithoutTenantNestedInput
+    financeHeads?: FinanceHeadUncheckedUpdateManyWithoutTenantNestedInput
+    financeExpenseCategories?: FinanceExpenseCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    feeVouchers?: StudentFeeVoucherUncheckedUpdateManyWithoutTenantNestedInput
+    fundCollections?: FundCollectionUncheckedUpdateManyWithoutTenantNestedInput
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTenantNestedInput
+    financeTransactions?: FinanceTransactionUncheckedUpdateManyWithoutTenantNestedInput
+    financialRecords?: FinancialRecordUncheckedUpdateManyWithoutTenantNestedInput
+    storeItems?: StoreItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeUnits?: StoreUnitUncheckedUpdateManyWithoutTenantNestedInput
+    storeCategories?: StoreCategoryUncheckedUpdateManyWithoutTenantNestedInput
+    storeSuppliers?: StoreSupplierUncheckedUpdateManyWithoutTenantNestedInput
+    storeSupplierPays?: StoreSupplierPaymentUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchases?: StorePurchaseUncheckedUpdateManyWithoutTenantNestedInput
+    storePurchaseItems?: StorePurchaseItemUncheckedUpdateManyWithoutTenantNestedInput
+    storeStockIssues?: StoreStockIssueUncheckedUpdateManyWithoutTenantNestedInput
+    storeReturns?: StoreReturnUncheckedUpdateManyWithoutTenantNestedInput
+    storeDamagedStocks?: StoreDamagedStockUncheckedUpdateManyWithoutTenantNestedInput
+    storeApprovalLogs?: StoreApprovalLogUncheckedUpdateManyWithoutTenantNestedInput
+    storeAdjustments?: StoreStockAdjustmentUncheckedUpdateManyWithoutTenantNestedInput
+    hifzDailyEntries?: HifzDailyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzWeeklyEntries?: HifzWeeklyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzMonthlyEntries?: HifzMonthlyEntryUncheckedUpdateManyWithoutTenantNestedInput
+    hifzSiparaEntries?: HifzSiparaEntryUncheckedUpdateManyWithoutTenantNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutTenantNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutTenantNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutTenantNestedInput
+    studentParents?: StudentParentUncheckedUpdateManyWithoutTenantNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAttendances?: TeacherAttendanceUncheckedUpdateManyWithoutTenantNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTenantNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedUpdateManyWithoutTenantNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTenantNestedInput
+    cities?: CityUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type BranchUpsertWithoutRoleClassScopesInput = {
+    update: XOR<BranchUpdateWithoutRoleClassScopesInput, BranchUncheckedUpdateWithoutRoleClassScopesInput>
+    create: XOR<BranchCreateWithoutRoleClassScopesInput, BranchUncheckedCreateWithoutRoleClassScopesInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutRoleClassScopesInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutRoleClassScopesInput, BranchUncheckedUpdateWithoutRoleClassScopesInput>
+  }
+
+  export type BranchUpdateWithoutRoleClassScopesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutBranchesNestedInput
+    creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
+    assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
+    roles?: RoleUpdateManyWithoutBranchNestedInput
+    shifts?: ShiftUpdateManyWithoutBranchNestedInput
+    departments?: DepartmentUpdateManyWithoutBranchNestedInput
+    qualifications?: QualificationUpdateManyWithoutBranchNestedInput
+    students?: StudentUpdateManyWithoutBranchNestedInput
+    parents?: ParentUpdateManyWithoutBranchNestedInput
+    teachers?: TeacherUpdateManyWithoutBranchNestedInput
+    classes?: AcademicClassUpdateManyWithoutBranchNestedInput
+    subjects?: SubjectUpdateManyWithoutBranchNestedInput
+    sessions?: AcademicSessionUpdateManyWithoutBranchNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutBranchNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutBranchNestedInput
+    teacherAttendances?: TeacherAttendanceUpdateManyWithoutBranchNestedInput
+    suggestions?: SuggestionUpdateManyWithoutBranchNestedInput
+    supportRequests?: SupportRequestUpdateManyWithoutBranchNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutBranchNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUpdateManyWithoutBranchNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutBranchNestedInput
+    resultGrades?: ResultGradeUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutRoleClassScopesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
+    qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
+    students?: StudentUncheckedUpdateManyWithoutBranchNestedInput
+    parents?: ParentUncheckedUpdateManyWithoutBranchNestedInput
+    teachers?: TeacherUncheckedUpdateManyWithoutBranchNestedInput
+    classes?: AcademicClassUncheckedUpdateManyWithoutBranchNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutBranchNestedInput
+    sessions?: AcademicSessionUncheckedUpdateManyWithoutBranchNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutBranchNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutBranchNestedInput
+    teacherAttendances?: TeacherAttendanceUncheckedUpdateManyWithoutBranchNestedInput
+    suggestions?: SuggestionUncheckedUpdateManyWithoutBranchNestedInput
+    supportRequests?: SupportRequestUncheckedUpdateManyWithoutBranchNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutBranchNestedInput
+    teacherResponsibilities?: TeacherResponsibilityUncheckedUpdateManyWithoutBranchNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutBranchNestedInput
+    resultGrades?: ResultGradeUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type RoleUpsertWithoutClassScopesInput = {
+    update: XOR<RoleUpdateWithoutClassScopesInput, RoleUncheckedUpdateWithoutClassScopesInput>
+    create: XOR<RoleCreateWithoutClassScopesInput, RoleUncheckedCreateWithoutClassScopesInput>
+    where?: RoleWhereInput
+  }
+
+  export type RoleUpdateToOneWithWhereWithoutClassScopesInput = {
+    where?: RoleWhereInput
+    data: XOR<RoleUpdateWithoutClassScopesInput, RoleUncheckedUpdateWithoutClassScopesInput>
+  }
+
+  export type RoleUpdateWithoutClassScopesInput = {
+    roleScopeKey?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneWithoutRolesNestedInput
+    branch?: BranchUpdateOneWithoutRolesNestedInput
+    creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
+    updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
+    admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutClassScopesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    roleScopeKey?: IntFieldUpdateOperationsInput | number
+    roleName?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
+    rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type AcademicClassUpsertWithoutRoleClassScopesInput = {
+    update: XOR<AcademicClassUpdateWithoutRoleClassScopesInput, AcademicClassUncheckedUpdateWithoutRoleClassScopesInput>
+    create: XOR<AcademicClassCreateWithoutRoleClassScopesInput, AcademicClassUncheckedCreateWithoutRoleClassScopesInput>
+    where?: AcademicClassWhereInput
+  }
+
+  export type AcademicClassUpdateToOneWithWhereWithoutRoleClassScopesInput = {
+    where?: AcademicClassWhereInput
+    data: XOR<AcademicClassUpdateWithoutRoleClassScopesInput, AcademicClassUncheckedUpdateWithoutRoleClassScopesInput>
+  }
+
+  export type AcademicClassUpdateWithoutRoleClassScopesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
+    sections?: SectionUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
+    examResults?: ExamResultUpdateManyWithoutClassNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+  }
+
+  export type AcademicClassUncheckedUpdateWithoutRoleClassScopesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AdminCreateWithoutMadrassaProfileInput = {
@@ -112255,6 +114753,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
     teachers?: TeacherCreateNestedManyWithoutTenantInput
@@ -112328,6 +114827,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
     teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
@@ -112486,6 +114986,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUpdateManyWithoutTenantNestedInput
@@ -112559,6 +115060,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
@@ -112631,6 +115133,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -112704,6 +115207,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -112792,6 +115296,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -112865,6 +115370,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -112937,6 +115443,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -113010,6 +115517,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -113080,6 +115588,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -113112,6 +115621,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -113230,6 +115740,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -113303,6 +115814,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -113379,6 +115891,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -113411,6 +115924,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -113519,6 +116033,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -113592,6 +116107,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -113662,6 +116178,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -113694,6 +116211,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -113812,6 +116330,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -113885,6 +116404,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -113961,6 +116481,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -113993,6 +116514,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -114101,6 +116623,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -114174,6 +116697,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -114244,6 +116768,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
     students?: StudentCreateNestedManyWithoutBranchInput
@@ -114276,6 +116801,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
     students?: StudentUncheckedCreateNestedManyWithoutBranchInput
@@ -114421,6 +116947,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -114494,6 +117021,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -114570,6 +117098,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
     students?: StudentUpdateManyWithoutBranchNestedInput
@@ -114602,6 +117131,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
     students?: StudentUncheckedUpdateManyWithoutBranchNestedInput
@@ -114656,6 +117186,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -114729,6 +117260,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -114799,6 +117331,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
     students?: StudentCreateNestedManyWithoutBranchInput
@@ -114831,6 +117364,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
     students?: StudentUncheckedCreateNestedManyWithoutBranchInput
@@ -114914,6 +117448,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -114987,6 +117522,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -115063,6 +117599,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
     students?: StudentUpdateManyWithoutBranchNestedInput
@@ -115095,6 +117632,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
     students?: StudentUncheckedUpdateManyWithoutBranchNestedInput
@@ -115179,6 +117717,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -115252,6 +117791,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -115322,6 +117862,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -115354,6 +117895,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -115530,6 +118072,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -115603,6 +118146,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -115679,6 +118223,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -115711,6 +118256,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -115841,6 +118387,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -115914,6 +118461,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -115984,6 +118532,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     students?: StudentCreateNestedManyWithoutBranchInput
@@ -116016,6 +118565,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     students?: StudentUncheckedCreateNestedManyWithoutBranchInput
@@ -116070,6 +118620,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -116143,6 +118694,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -116219,6 +118771,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     students?: StudentUpdateManyWithoutBranchNestedInput
@@ -116251,6 +118804,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     students?: StudentUncheckedUpdateManyWithoutBranchNestedInput
@@ -116289,6 +118843,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -116362,6 +118917,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -116432,6 +118988,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -116464,6 +119021,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -116647,6 +119205,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -116720,6 +119279,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -116796,6 +119356,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -116828,6 +119389,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -116914,6 +119476,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -116987,6 +119550,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -117184,6 +119748,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant?: TenantCreateNestedOneWithoutRolesInput
@@ -117191,6 +119756,7 @@ export namespace Prisma {
     updater?: AdminCreateNestedOneWithoutUpdatedRolesInput
     admins?: AdminCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutBranchInput = {
@@ -117201,12 +119767,14 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     admins?: AdminUncheckedCreateNestedManyWithoutAssignedRoleInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    classScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutBranchInput = {
@@ -117216,6 +119784,31 @@ export namespace Prisma {
 
   export type RoleCreateManyBranchInputEnvelope = {
     data: RoleCreateManyBranchInput | RoleCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RoleClassScopeCreateWithoutBranchInput = {
+    createdAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutRoleClassScopesInput
+    role: RoleCreateNestedOneWithoutClassScopesInput
+    class: AcademicClassCreateNestedOneWithoutRoleClassScopesInput
+  }
+
+  export type RoleClassScopeUncheckedCreateWithoutBranchInput = {
+    id?: number
+    tenantId: number
+    roleId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateOrConnectWithoutBranchInput = {
+    where: RoleClassScopeWhereUniqueInput
+    create: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput>
+  }
+
+  export type RoleClassScopeCreateManyBranchInputEnvelope = {
+    data: RoleClassScopeCreateManyBranchInput | RoleClassScopeCreateManyBranchInput[]
     skipDuplicates?: boolean
   }
 
@@ -117568,6 +120161,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutBranchInput = {
@@ -117586,6 +120180,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutBranchInput = {
@@ -118031,6 +120626,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -118104,6 +120700,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -118257,6 +120854,22 @@ export namespace Prisma {
   export type RoleUpdateManyWithWhereWithoutBranchInput = {
     where: RoleScalarWhereInput
     data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type RoleClassScopeUpsertWithWhereUniqueWithoutBranchInput = {
+    where: RoleClassScopeWhereUniqueInput
+    update: XOR<RoleClassScopeUpdateWithoutBranchInput, RoleClassScopeUncheckedUpdateWithoutBranchInput>
+    create: XOR<RoleClassScopeCreateWithoutBranchInput, RoleClassScopeUncheckedCreateWithoutBranchInput>
+  }
+
+  export type RoleClassScopeUpdateWithWhereUniqueWithoutBranchInput = {
+    where: RoleClassScopeWhereUniqueInput
+    data: XOR<RoleClassScopeUpdateWithoutBranchInput, RoleClassScopeUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type RoleClassScopeUpdateManyWithWhereWithoutBranchInput = {
+    where: RoleClassScopeScalarWhereInput
+    data: XOR<RoleClassScopeUpdateManyMutationInput, RoleClassScopeUncheckedUpdateManyWithoutBranchInput>
   }
 
   export type ShiftUpsertWithWhereUniqueWithoutBranchInput = {
@@ -118566,6 +121179,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -118639,6 +121253,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -118709,6 +121324,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -118741,6 +121357,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -119179,6 +121796,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoleClassScopeCreateWithoutClassInput = {
+    createdAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutRoleClassScopesInput
+    branch: BranchCreateNestedOneWithoutRoleClassScopesInput
+    role: RoleCreateNestedOneWithoutClassScopesInput
+  }
+
+  export type RoleClassScopeUncheckedCreateWithoutClassInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateOrConnectWithoutClassInput = {
+    where: RoleClassScopeWhereUniqueInput
+    create: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput>
+  }
+
+  export type RoleClassScopeCreateManyClassInputEnvelope = {
+    data: RoleClassScopeCreateManyClassInput | RoleClassScopeCreateManyClassInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TenantUpsertWithoutClassesInput = {
     update: XOR<TenantUpdateWithoutClassesInput, TenantUncheckedUpdateWithoutClassesInput>
     create: XOR<TenantCreateWithoutClassesInput, TenantUncheckedCreateWithoutClassesInput>
@@ -119209,6 +121851,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -119282,6 +121925,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -119358,6 +122002,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -119390,6 +122035,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -119629,6 +122275,22 @@ export namespace Prisma {
     data: XOR<TeacherAssignmentUpdateManyMutationInput, TeacherAssignmentUncheckedUpdateManyWithoutClassInput>
   }
 
+  export type RoleClassScopeUpsertWithWhereUniqueWithoutClassInput = {
+    where: RoleClassScopeWhereUniqueInput
+    update: XOR<RoleClassScopeUpdateWithoutClassInput, RoleClassScopeUncheckedUpdateWithoutClassInput>
+    create: XOR<RoleClassScopeCreateWithoutClassInput, RoleClassScopeUncheckedCreateWithoutClassInput>
+  }
+
+  export type RoleClassScopeUpdateWithWhereUniqueWithoutClassInput = {
+    where: RoleClassScopeWhereUniqueInput
+    data: XOR<RoleClassScopeUpdateWithoutClassInput, RoleClassScopeUncheckedUpdateWithoutClassInput>
+  }
+
+  export type RoleClassScopeUpdateManyWithWhereWithoutClassInput = {
+    where: RoleClassScopeScalarWhereInput
+    data: XOR<RoleClassScopeUpdateManyMutationInput, RoleClassScopeUncheckedUpdateManyWithoutClassInput>
+  }
+
   export type TenantCreateWithoutSectionsInput = {
     tenantCode: string
     name: string
@@ -119648,6 +122310,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -119721,6 +122384,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -119794,6 +122458,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutSectionsInput = {
@@ -119812,6 +122477,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutSectionsInput = {
@@ -120136,6 +122802,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -120209,6 +122876,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -120288,6 +122956,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutSectionsInput = {
@@ -120306,6 +122975,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type StudentClassAssignmentUpsertWithWhereUniqueWithoutSectionInput = {
@@ -120439,6 +123109,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -120512,6 +123183,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -120582,6 +123254,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -120614,6 +123287,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -120877,6 +123551,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -120950,6 +123625,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -121026,6 +123702,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -121058,6 +123735,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -121176,6 +123854,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -121249,6 +123928,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -121358,6 +124038,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutStudentSchedulesInput = {
@@ -121376,6 +124057,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutStudentSchedulesInput = {
@@ -121449,6 +124131,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -121522,6 +124205,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -121643,6 +124327,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutStudentSchedulesInput = {
@@ -121661,6 +124346,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutStudentSchedulesInput = {
@@ -121724,6 +124410,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -121797,6 +124484,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -121992,6 +124680,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutTeacherSchedulesInput = {
@@ -122010,6 +124699,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutTeacherSchedulesInput = {
@@ -122083,6 +124773,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -122156,6 +124847,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -122369,6 +125061,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutTeacherSchedulesInput = {
@@ -122387,6 +125080,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutTeacherSchedulesInput = {
@@ -122450,6 +125144,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -122523,6 +125218,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -122593,6 +125289,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -122625,6 +125322,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -122786,6 +125484,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -122859,6 +125558,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -122935,6 +125635,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -122967,6 +125668,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -123091,6 +125793,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -123164,6 +125867,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -123234,6 +125938,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -123266,6 +125971,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -123421,6 +126127,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -123439,6 +126146,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -123604,6 +126312,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -123677,6 +126386,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -123753,6 +126463,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -123785,6 +126496,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -123958,6 +126670,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -123976,6 +126689,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutTeacherAssignmentsInput = {
@@ -124143,6 +126857,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -124216,6 +126931,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -124325,6 +127041,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutExamSchedulesInput = {
@@ -124343,6 +127060,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutExamSchedulesInput = {
@@ -124532,6 +127250,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -124605,6 +127324,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -124726,6 +127446,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutExamSchedulesInput = {
@@ -124744,6 +127465,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutExamSchedulesInput = {
@@ -124935,6 +127657,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -125008,6 +127731,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -125078,6 +127802,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -125110,6 +127835,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -125164,6 +127890,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -125237,6 +127964,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -125313,6 +128041,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -125345,6 +128074,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -125383,6 +128113,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -125456,6 +128187,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -125659,6 +128391,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutExamResultsInput = {
@@ -125677,6 +128410,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutExamResultsInput = {
@@ -125787,6 +128521,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -125860,6 +128595,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -126081,6 +128817,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutExamResultsInput = {
@@ -126099,6 +128836,7 @@ export namespace Prisma {
     teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutExamResultsInput = {
@@ -126178,6 +128916,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -126251,6 +128990,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -126413,6 +129153,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -126486,6 +129227,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -127081,6 +129823,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
     teachers?: TeacherCreateNestedManyWithoutTenantInput
@@ -127154,6 +129897,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
     teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
@@ -127224,6 +129968,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -127256,6 +130001,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -127454,6 +130200,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUpdateManyWithoutTenantNestedInput
@@ -127527,6 +130274,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
@@ -127603,6 +130351,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -127635,6 +130384,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -127702,6 +130452,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     teachers?: TeacherCreateNestedManyWithoutTenantInput
@@ -127775,6 +130526,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     teachers?: TeacherUncheckedCreateNestedManyWithoutTenantInput
@@ -127845,6 +130597,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -127877,6 +130630,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -127947,6 +130701,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUpdateManyWithoutTenantNestedInput
@@ -128020,6 +130775,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     teachers?: TeacherUncheckedUpdateManyWithoutTenantNestedInput
@@ -128096,6 +130852,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -128128,6 +130885,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -128166,6 +130924,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -128239,6 +130998,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -128459,6 +131219,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -128532,6 +131293,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -128748,6 +131510,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -128821,6 +131584,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -128985,6 +131749,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -129017,6 +131782,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -129056,6 +131822,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutAssignmentsInput = {
@@ -129074,6 +131841,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutAssignmentsInput = {
@@ -129183,6 +131951,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -129256,6 +132025,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -129432,6 +132202,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -129464,6 +132235,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -129509,6 +132281,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutAssignmentsInput = {
@@ -129527,6 +132300,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutAssignmentsInput = {
@@ -129810,6 +132584,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -129883,6 +132658,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -129953,6 +132729,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -129985,6 +132762,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -130145,6 +132923,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutInchargeTeacherInput = {
@@ -130163,6 +132942,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutInchargeTeacherInput = {
@@ -130305,6 +133085,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -130378,6 +133159,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -130454,6 +133236,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -130486,6 +133269,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -130588,6 +133372,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -130661,6 +133446,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -130899,6 +133685,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -130972,6 +133759,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -131206,6 +133994,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -131279,6 +134068,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -131443,6 +134233,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -131475,6 +134266,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -131514,6 +134306,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
     examResults?: ExamResultCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassUncheckedCreateWithoutStudentAttendancesInput = {
@@ -131532,6 +134325,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
     examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
     teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutClassInput
   }
 
   export type AcademicClassCreateOrConnectWithoutStudentAttendancesInput = {
@@ -131605,6 +134399,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -131678,6 +134473,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -131854,6 +134650,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -131886,6 +134683,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -131931,6 +134729,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutStudentAttendancesInput = {
@@ -131949,6 +134748,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type SectionUpsertWithoutStudentAttendancesInput = {
@@ -132012,6 +134812,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -132085,6 +134886,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -132241,6 +135043,7 @@ export namespace Prisma {
     creator?: AdminCreateNestedOneWithoutCreatedBranchesInput
     assignedAdmins?: AdminCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutBranchInput
     shifts?: ShiftCreateNestedManyWithoutBranchInput
     departments?: DepartmentCreateNestedManyWithoutBranchInput
     qualifications?: QualificationCreateNestedManyWithoutBranchInput
@@ -132273,6 +135076,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignedAdmins?: AdminUncheckedCreateNestedManyWithoutAssignedBranchInput
     roles?: RoleUncheckedCreateNestedManyWithoutBranchInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutBranchInput
     shifts?: ShiftUncheckedCreateNestedManyWithoutBranchInput
     departments?: DepartmentUncheckedCreateNestedManyWithoutBranchInput
     qualifications?: QualificationUncheckedCreateNestedManyWithoutBranchInput
@@ -132327,6 +135131,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -132400,6 +135205,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -132568,6 +135374,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -132600,6 +135407,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -132638,6 +135446,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -132711,6 +135520,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -132893,6 +135703,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -132966,6 +135777,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -133138,6 +135950,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -133211,6 +136024,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -133393,6 +136207,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -133466,6 +136281,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -133638,6 +136454,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -133711,6 +136528,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -133893,6 +136711,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -133966,6 +136785,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -134138,6 +136958,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -134211,6 +137032,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -134393,6 +137215,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -134466,6 +137289,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -134638,6 +137462,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -134711,6 +137536,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -134909,6 +137735,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -134982,6 +137809,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -135116,6 +137944,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -135189,6 +138018,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -135314,6 +138144,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -135387,6 +138218,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -135475,6 +138307,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -135548,6 +138381,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -135730,6 +138564,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -135803,6 +138638,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -135975,6 +138811,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -136048,6 +138885,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -136136,6 +138974,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -136209,6 +139048,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -136281,6 +139121,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -136354,6 +139195,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -136560,6 +139402,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -136633,6 +139476,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -136835,6 +139679,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -136908,6 +139753,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -137028,6 +139874,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -137101,6 +139948,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -137211,6 +140059,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -137284,6 +140133,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -137436,6 +140286,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -137509,6 +140360,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -137651,6 +140503,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -137724,6 +140577,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -138013,6 +140867,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -138086,6 +140941,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -138238,6 +141094,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -138311,6 +141168,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -138399,6 +141257,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -138472,6 +141331,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -138544,6 +141404,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -138617,6 +141478,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -138705,6 +141567,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -138778,6 +141641,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -138850,6 +141714,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -138923,6 +141788,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -139093,6 +141959,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -139166,6 +142033,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -139270,6 +142138,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -139343,6 +142212,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -139465,6 +142335,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -139538,6 +142409,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -139650,6 +142522,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -139723,6 +142596,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -139880,6 +142754,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -139953,6 +142828,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -140081,6 +142957,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -140154,6 +143031,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -140328,6 +143206,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -140401,6 +143280,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -140571,6 +143451,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -140644,6 +143525,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -140813,6 +143695,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -140886,6 +143769,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -141024,6 +143908,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -141097,6 +143982,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -141271,6 +144157,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -141344,6 +144231,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -141514,6 +144402,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -141587,6 +144476,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -141719,6 +144609,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -141792,6 +144683,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -141914,6 +144806,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -141987,6 +144880,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -142075,6 +144969,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -142148,6 +145043,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -142220,6 +145116,7 @@ export namespace Prisma {
     admins?: AdminCreateNestedManyWithoutTenantInput
     roles?: RoleCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileCreateNestedOneWithoutTenantInput
     students?: StudentCreateNestedManyWithoutTenantInput
     parents?: ParentCreateNestedManyWithoutTenantInput
@@ -142293,6 +145190,7 @@ export namespace Prisma {
     admins?: AdminUncheckedCreateNestedManyWithoutTenantInput
     roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
     rolePermissions?: RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+    roleClassScopes?: RoleClassScopeUncheckedCreateNestedManyWithoutTenantInput
     profile?: MadrassaProfileUncheckedCreateNestedOneWithoutTenantInput
     students?: StudentUncheckedCreateNestedManyWithoutTenantInput
     parents?: ParentUncheckedCreateNestedManyWithoutTenantInput
@@ -142425,6 +145323,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -142498,6 +145397,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -142644,6 +145544,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
@@ -142654,6 +145555,14 @@ export namespace Prisma {
     id?: number
     roleId: number
     permissionId: number
+    createdAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateManyTenantInput = {
+    id?: number
+    branchId: number
+    roleId: number
+    classId: number
     createdAt?: Date | string
   }
 
@@ -143464,6 +146373,7 @@ export namespace Prisma {
     admins?: AdminUpdateManyWithoutTenantNestedInput
     roles?: RoleUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUpdateOneWithoutTenantNestedInput
     students?: StudentUpdateManyWithoutTenantNestedInput
     parents?: ParentUpdateManyWithoutTenantNestedInput
@@ -143537,6 +146447,7 @@ export namespace Prisma {
     admins?: AdminUncheckedUpdateManyWithoutTenantNestedInput
     roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutTenantNestedInput
     profile?: MadrassaProfileUncheckedUpdateOneWithoutTenantNestedInput
     students?: StudentUncheckedUpdateManyWithoutTenantNestedInput
     parents?: ParentUncheckedUpdateManyWithoutTenantNestedInput
@@ -143691,6 +146602,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneWithoutRolesNestedInput
@@ -143698,6 +146610,7 @@ export namespace Prisma {
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutTenantInput = {
@@ -143708,12 +146621,14 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateManyWithoutTenantInput = {
@@ -143724,6 +146639,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143747,6 +146663,29 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     roleId?: IntFieldUpdateOperationsInput | number
     permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUpdateWithoutTenantInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    role?: RoleUpdateOneRequiredWithoutClassScopesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutRoleClassScopesNestedInput
+  }
+
+  export type RoleClassScopeUncheckedUpdateWithoutTenantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutTenantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -144049,6 +146988,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -144081,6 +147021,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -144234,6 +147175,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutTenantInput = {
@@ -144252,6 +147194,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateManyWithoutTenantInput = {
@@ -146259,6 +149202,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -146273,6 +149217,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -146473,6 +149418,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutBranchesNestedInput
     assignedAdmins?: AdminUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUpdateManyWithoutBranchNestedInput
@@ -146505,6 +149451,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedAdmins?: AdminUncheckedUpdateManyWithoutAssignedBranchNestedInput
     roles?: RoleUncheckedUpdateManyWithoutBranchNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutBranchNestedInput
     shifts?: ShiftUncheckedUpdateManyWithoutBranchNestedInput
     departments?: DepartmentUncheckedUpdateManyWithoutBranchNestedInput
     qualifications?: QualificationUncheckedUpdateManyWithoutBranchNestedInput
@@ -146543,6 +149490,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -146550,6 +149498,7 @@ export namespace Prisma {
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutCreatorInput = {
@@ -146561,11 +149510,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateManyWithoutCreatorInput = {
@@ -146577,6 +149528,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146588,6 +149540,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -146595,6 +149548,7 @@ export namespace Prisma {
     creator?: AdminUpdateOneWithoutCreatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutUpdaterInput = {
@@ -146606,11 +149560,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateManyWithoutUpdaterInput = {
@@ -146622,6 +149578,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146968,6 +149925,14 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type RoleClassScopeCreateManyRoleInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    classId: number
+    createdAt?: Date | string
+  }
+
   export type AdminUpdateWithoutAssignedRoleInput = {
     name?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -147062,6 +150027,29 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tenantId?: NullableIntFieldUpdateOperationsInput | number | null
     permissionId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUpdateWithoutRoleInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutRoleClassScopesNestedInput
+  }
+
+  export type RoleClassScopeUncheckedUpdateWithoutRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutRoleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -147505,10 +150493,19 @@ export namespace Prisma {
     description?: string | null
     status?: string
     isSystemRole?: boolean
+    classScopeMode?: string
     createdBy?: number | null
     updatedBy?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type RoleClassScopeCreateManyBranchInput = {
+    id?: number
+    tenantId: number
+    roleId: number
+    classId: number
+    createdAt?: Date | string
   }
 
   export type ShiftCreateManyBranchInput = {
@@ -147867,6 +150864,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneWithoutRolesNestedInput
@@ -147874,6 +150872,7 @@ export namespace Prisma {
     updater?: AdminUpdateOneWithoutUpdatedRolesNestedInput
     admins?: AdminUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutBranchInput = {
@@ -147884,12 +150883,14 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admins?: AdminUncheckedUpdateManyWithoutAssignedRoleNestedInput
     rolePermissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    classScopes?: RoleClassScopeUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateManyWithoutBranchInput = {
@@ -147900,10 +150901,34 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     isSystemRole?: BoolFieldUpdateOperationsInput | boolean
+    classScopeMode?: StringFieldUpdateOperationsInput | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUpdateWithoutBranchInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    role?: RoleUpdateOneRequiredWithoutClassScopesNestedInput
+    class?: AcademicClassUpdateOneRequiredWithoutRoleClassScopesNestedInput
+  }
+
+  export type RoleClassScopeUncheckedUpdateWithoutBranchInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutBranchInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    classId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ShiftUpdateWithoutBranchInput = {
@@ -148315,6 +151340,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutBranchInput = {
@@ -148333,6 +151359,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateManyWithoutBranchInput = {
@@ -148901,6 +151928,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type RoleClassScopeCreateManyClassInput = {
+    id?: number
+    tenantId: number
+    branchId: number
+    roleId: number
+    createdAt?: Date | string
+  }
+
   export type SectionUpdateWithoutClassInput = {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -149267,6 +152302,29 @@ export namespace Prisma {
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUpdateWithoutClassInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutRoleClassScopesNestedInput
+    role?: RoleUpdateOneRequiredWithoutClassScopesNestedInput
+  }
+
+  export type RoleClassScopeUncheckedUpdateWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleClassScopeUncheckedUpdateManyWithoutClassInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StudentClassAssignmentCreateManySectionInput = {
@@ -151321,6 +154379,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateWithoutInchargeTeacherInput = {
@@ -151339,6 +154398,7 @@ export namespace Prisma {
     examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
     examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
     teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    roleClassScopes?: RoleClassScopeUncheckedUpdateManyWithoutClassNestedInput
   }
 
   export type AcademicClassUncheckedUpdateManyWithoutInchargeTeacherInput = {

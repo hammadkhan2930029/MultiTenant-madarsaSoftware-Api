@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { auditService, branchScopeService } from '../security/index.js';
+import { auditService, branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -202,6 +202,7 @@ const assertAssignmentInScope = async (tenantId, id, branchScope = null) => {
       id: Number(id),
       tenantId,
       ...(scopedBranchId ? { branchId: scopedBranchId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
     },
     select: teacherAssignmentSelect,
   });
@@ -267,6 +268,7 @@ export const teacherAssignmentsService = {
       ...(query.teacherId ? { teacherId: Number(query.teacherId) } : {}),
       ...(query.subjectId ? { subjectId: Number(query.subjectId) } : {}),
       ...(query.classId ? { classId: Number(query.classId) } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: Number(query.sectionId) } : {}),
       ...(query.responsibilityId ? { responsibilityId: Number(query.responsibilityId) } : {}),
       ...(query.staffType ? { teacher: { staffType: query.staffType } } : {}),
@@ -307,6 +309,8 @@ export const teacherAssignmentsService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
     const references = await validateAssignmentReferences(resolvedTenantId, payload, requestedBranchId);
+    if (references.staffType === 'teacher') classScopeService.assertClassAccess(references.academicClass?.id, branchScope);
+    else if (classScopeService.isRestricted(branchScope)) throw new AppError('This role can only manage assignments for its assigned classes.', 403);
     const branchId = references.branchId;
     await branchScopeService.validateBranchBelongsToTenant({ tenantId: resolvedTenantId, branchId, requireActive: true });
     const subjects = references.staffType === 'teacher'
@@ -392,6 +396,7 @@ export const teacherAssignmentsService = {
       classId: payload.classId || existing.classId,
       sectionId: payload.sectionId || existing.sectionId,
     }, requestedBranchId);
+    if (references.staffType === 'teacher') classScopeService.assertClassAccess(references.academicClass?.id, branchScope);
     const branchId = references.branchId;
     const subject = references.staffType === 'teacher'
       ? (await getActiveSubjects(resolvedTenantId, [payload.subjectId || existing.subjectId]))[0]

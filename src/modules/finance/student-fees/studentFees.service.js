@@ -1,7 +1,7 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
-import { branchScopeService } from '../../security/index.js';
+import { branchScopeService, classScopeService } from '../../security/index.js';
 
 const DEFAULT_FEE_VOUCHER_NUMBER = 'FEE-0001';
 
@@ -180,8 +180,8 @@ const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   };
 };
 
-const buildAssignmentFilter = ({ tenantId, branchId, classId, sectionId, sessionId }) => {
-  if (!branchId && !classId && !sectionId && !sessionId) return {};
+const buildAssignmentFilter = ({ tenantId, branchId, classId, sectionId, sessionId, branchScope = null }) => {
+  if (!branchId && !classId && !sectionId && !sessionId && !classScopeService.isRestricted(branchScope)) return {};
 
   return {
     assignments: {
@@ -190,6 +190,7 @@ const buildAssignmentFilter = ({ tenantId, branchId, classId, sectionId, session
         status: 'active',
         ...(branchId ? { branchId } : {}),
         ...(classId ? { classId } : {}),
+        ...(classScopeService.isRestricted(branchScope) ? { classId: { in: classScopeService.normalizeClassIds(branchScope) } } : {}),
         ...(sectionId ? { sectionId } : {}),
         ...(sessionId ? { sessionId } : {}),
       },
@@ -225,13 +226,14 @@ export const studentFeesService = {
       includeAdmissionFee = false,
       overwrite = false,
     } = payload;
+    if (classId) classScopeService.assertClassAccess(classId, branchScope);
 
     const students = await prisma.student.findMany({
       where: {
         tenantId: resolvedTenantId,
         status: 'active',
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
-        ...buildAssignmentFilter({ tenantId: resolvedTenantId, branchId: scopedBranchId, classId, sectionId, sessionId }),
+        ...buildAssignmentFilter({ tenantId: resolvedTenantId, branchId: scopedBranchId, classId, sectionId, sessionId, branchScope }),
       },
       select: {
         id: true,
@@ -352,6 +354,7 @@ export const studentFeesService = {
           classId: query.classId,
           sectionId: query.sectionId,
           sessionId: query.sessionId,
+          branchScope,
         }),
       },
     };
@@ -377,7 +380,11 @@ export const studentFeesService = {
       where: {
         id,
         tenantId: resolvedTenantId,
-        ...(scopedBranchId ? { student: buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId) } : {}),
+        student: {
+          tenantId: resolvedTenantId,
+          ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+          ...buildAssignmentFilter({ tenantId: resolvedTenantId, branchId: scopedBranchId, branchScope }),
+        },
       },
       select: voucherSelect,
     });
@@ -393,6 +400,7 @@ export const studentFeesService = {
         id: studentId,
         tenantId: resolvedTenantId,
         ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildAssignmentFilter({ tenantId: resolvedTenantId, branchId: scopedBranchId, branchScope }),
       },
       select: {
         id: true,
@@ -432,7 +440,11 @@ export const studentFeesService = {
       where: {
         id,
         tenantId: resolvedTenantId,
-        ...(scopedBranchId ? { student: buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId) } : {}),
+        student: {
+          tenantId: resolvedTenantId,
+          ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+          ...buildAssignmentFilter({ tenantId: resolvedTenantId, branchId: scopedBranchId, branchScope }),
+        },
       },
     });
     if (!existing) throw new AppError('Fee voucher not found.', 404);

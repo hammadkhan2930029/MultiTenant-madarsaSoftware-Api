@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -53,8 +53,8 @@ const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
   };
 };
 
-const buildStudentAssignmentFilter = (tenantId, query, branchId) =>
-  branchId || query.classId || query.sectionId || query.sessionId
+const buildStudentAssignmentFilter = (tenantId, query, branchId, branchScope = null) =>
+  branchId || query.classId || query.sectionId || query.sessionId || classScopeService.isRestricted(branchScope)
     ? {
         assignments: {
           some: {
@@ -62,6 +62,7 @@ const buildStudentAssignmentFilter = (tenantId, query, branchId) =>
             status: 'active',
             ...(branchId ? { branchId } : {}),
             ...(query.classId ? { classId: query.classId } : {}),
+            ...(classScopeService.isRestricted(branchScope) ? { classId: { in: classScopeService.normalizeClassIds(branchScope) } } : {}),
             ...(query.sectionId ? { sectionId: query.sectionId } : {}),
             ...(query.sessionId ? { sessionId: query.sessionId } : {}),
           },
@@ -112,7 +113,7 @@ export const reportsService = {
           }
         : {}),
       ...(query.status ? { status: query.status } : {}),
-      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId, branchScope),
     };
 
     const [items, totalItems] = await Promise.all([
@@ -179,6 +180,7 @@ export const reportsService = {
       ...(query.status ? { status: query.status } : {}),
       ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...buildDateRangeFilter(query.fromDate, query.toDate, 'date'),
     };
@@ -222,7 +224,7 @@ export const reportsService = {
       AND: [
         buildStudentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
       ].filter((item) => Object.keys(item).length),
-      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId),
+      ...buildStudentAssignmentFilter(resolvedTenantId, query, requestedBranchId, branchScope),
     };
 
     const [students, totalItems] = await Promise.all([

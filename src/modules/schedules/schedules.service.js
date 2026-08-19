@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -63,6 +63,7 @@ export const schedulesService = {
   async createSchedule(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveScheduleBranchId(resolvedTenantId, payload, branchScope);
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.studentSchedule.create({
@@ -91,6 +92,7 @@ export const schedulesService = {
       section: { tenantId: resolvedTenantId },
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       status: query.status || 'active',
     };
@@ -116,13 +118,14 @@ export const schedulesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveScheduleBranchId(resolvedTenantId, payload, branchScope);
     const existingSchedule = await prisma.studentSchedule.findFirst({
-      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
+      where: { id, tenantId: resolvedTenantId, ...classScopeService.buildClassIdWhere(branchScope), class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
     });
 
     if (!existingSchedule) {
       throw new AppError('Schedule not found.', 404);
     }
 
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     await ensureScheduleReferences(resolvedTenantId, payload, branchId);
 
     return prisma.studentSchedule.update({
@@ -146,7 +149,7 @@ export const schedulesService = {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveScheduleBranchId(resolvedTenantId, {}, branchScope);
     const schedule = await prisma.studentSchedule.findFirst({
-      where: { id, tenantId: resolvedTenantId, class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
+      where: { id, tenantId: resolvedTenantId, ...classScopeService.buildClassIdWhere(branchScope), class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, section: { tenantId: resolvedTenantId } },
     });
 
     if (!schedule) {

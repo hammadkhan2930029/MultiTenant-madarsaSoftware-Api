@@ -367,6 +367,25 @@ const assertRoleAllowedForBranchAdmin = async (role, requester = null, client = 
       });
     }
   }
+
+  if (requester?.classScopeMode === 'selected') {
+    if ((role?.class_scope_mode || 'all') !== 'selected') {
+      await denyUserEscalation(requester, 'role class scope boundary exceeded', {
+        requestedRoleId: role?.id || null,
+      });
+    }
+
+    const allowedClassIds = new Set((requester.classIds || []).map(Number));
+    const roleClassScopes = await client.roleClassScope.findMany({
+      where: { roleId: Number(role.id) },
+      select: { classId: true },
+    });
+    if (roleClassScopes.some((scope) => !allowedClassIds.has(Number(scope.classId)))) {
+      await denyUserEscalation(requester, 'role class scope boundary exceeded', {
+        requestedRoleId: role?.id || null,
+      });
+    }
+  }
 };
 
 const normalizeUsername = (payload) => {

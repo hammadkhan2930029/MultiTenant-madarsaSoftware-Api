@@ -17,6 +17,7 @@ export const mapRoleRow = (row) => {
     description: row.description,
     status: row.status || 'active',
     isSystemRole: Boolean(row.is_system_role),
+    classScopeMode: row.class_scope_mode || 'all',
     createdBy: toNumber(row.created_by),
     updatedBy: toNumber(row.updated_by),
     createdAt: row.created_at,
@@ -28,7 +29,7 @@ export const getRoleById = async (roleId, client = prisma) => {
   if (!roleId) return null;
 
     const rows = await client.$queryRaw`
-    SELECT id, tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by, created_at, updated_at
+    SELECT id, tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, class_scope_mode, created_by, updated_by, created_at, updated_at
     FROM roles
     WHERE id = ${roleId}
     LIMIT 1
@@ -98,10 +99,17 @@ export const getAdminRoleAndPermissions = async (admin, client = prisma) => {
   const role = roleById && toNumber(roleById.tenant_id) === adminTenantId ? roleById : null;
 
   const permissions = await getRolePermissions(role, client);
+  const classScopeRows = role?.id && role.class_scope_mode === 'selected'
+    ? await client.roleClassScope.findMany({
+        where: { roleId: Number(role.id) },
+        select: { classId: true },
+      })
+    : [];
 
   return {
     role: mapRoleRow(role),
     permissions,
     permissionKeys: permissions.map((permission) => permission.permissionKey),
+    classIds: classScopeRows.map((row) => Number(row.classId)),
   };
 };

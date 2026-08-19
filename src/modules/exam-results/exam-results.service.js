@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
-import { branchScopeService } from '../security/index.js';
+import { branchScopeService, classScopeService } from '../security/index.js';
 
 const DEFAULT_EXAM_NAME = '\u0627\u0645\u062a\u062d\u0627\u0646\u06cc \u0631\u0632\u0644\u0679';
 const LEGACY_DEFAULT_EXAM_NAME = '\u00d8\u00a7\u00d9\u2026\u00d8\u00aa\u00d8\u00ad\u00d8\u00a7\u00d9\u2020\u00db\u2019 \u00d8\u00b1\u00d8\u00b2\u00d9\u201e\u00d9\u00b9';
@@ -252,12 +252,13 @@ export const examResultsService = {
   async saveExamResult(tenantId, payload, id = null, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const requestedBranchId = await resolveRequestedBranchId(resolvedTenantId, payload, branchScope);
+    classScopeService.assertClassAccess(payload.classId, branchScope);
     const { branchId, subjects } = await ensureReferences(resolvedTenantId, payload, requestedBranchId);
     const scopedPayload = { ...payload, subjects };
     const calculated = await buildCalculatedResult(resolvedTenantId, scopedPayload);
 
     const existingResult = id
-      ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } })
+      ? await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...classScopeService.buildClassIdWhere(branchScope) } })
       : await prisma.examResult.findFirst({
           where: {
             tenantId: resolvedTenantId,
@@ -290,6 +291,7 @@ export const examResultsService = {
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.sessionId ? { sessionId: query.sessionId } : {}),
       ...(query.classId ? { classId: query.classId } : {}),
+      ...classScopeService.buildClassIdWhere(branchScope),
       ...(query.sectionId ? { sectionId: query.sectionId, section: { tenantId: resolvedTenantId } } : {}),
       ...(query.examName ? { examName: query.examName } : {}),
       ...(query.status ? { status: query.status } : {}),
@@ -330,6 +332,7 @@ export const examResultsService = {
         id: Number(id),
         tenantId: resolvedTenantId,
         ...(branchId ? { branchId } : {}),
+        ...classScopeService.buildClassIdWhere(branchScope),
         student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
         class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) },
       },
@@ -350,6 +353,7 @@ export const examResultsService = {
         tenantId: resolvedTenantId,
         ...(branchId ? { branchId } : {}),
         studentId: Number(studentId),
+        ...classScopeService.buildClassIdWhere(branchScope),
         student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId) },
         ...(query.sessionId ? { sessionId: query.sessionId } : {}),
         ...(query.classId ? { classId: query.classId, class: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } : {}),
@@ -369,7 +373,7 @@ export const examResultsService = {
   async deleteExamResult(tenantId, id, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveRequestedBranchId(resolvedTenantId, {}, branchScope);
-    const existingResult = await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
+    const existingResult = await prisma.examResult.findFirst({ where: { id: Number(id), tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), ...classScopeService.buildClassIdWhere(branchScope) } });
     if (!existingResult) throw new AppError('Exam result not found.', 404);
 
     const result = await prisma.examResult.update({

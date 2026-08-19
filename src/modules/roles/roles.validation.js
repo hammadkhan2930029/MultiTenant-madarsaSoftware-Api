@@ -28,6 +28,8 @@ const roleBodyShape = {
   roleName: roleNameSchema.optional(),
   description: z.string().trim().max(255, 'Role description is too long.').optional().or(z.literal('')),
   status: z.enum(['active', 'inactive']).optional(),
+  classScopeMode: z.enum(['all', 'selected']).optional(),
+  classIds: z.array(z.coerce.number().int().positive('Class id must be valid.')).max(100).optional(),
   ...permissionsBodySchema,
 };
 

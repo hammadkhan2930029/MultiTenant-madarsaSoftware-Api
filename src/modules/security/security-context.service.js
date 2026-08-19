@@ -91,6 +91,8 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
     isTenantAdmin: isTenantAdminRole,
     tenantId: resolvedTenantId,
     branchId,
+    classScopeMode: access.role?.classScopeMode || 'all',
+    classIds: access.classIds || [],
   };
 
   assertRoleTenantMatch({
@@ -138,6 +140,7 @@ const buildSecurityContext = ({ req, decodedToken, admin, auth }) => ({
   },
   scopes: {
     branchIds: auth.branchId ? [auth.branchId] : [],
+    classIds: auth.classIds || [],
     departmentIds: [],
   },
   featureFlags: {},
