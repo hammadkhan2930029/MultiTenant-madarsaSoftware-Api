@@ -19,6 +19,7 @@ const classSelect = {
   tenantId: true,
   name: true,
   branchId: true,
+  inchargeTeacherId: true,
   status: true,
   createdAt: true,
   updatedAt: true,
@@ -27,6 +28,14 @@ const classSelect = {
       id: true,
       name: true,
       code: true,
+      status: true,
+    },
+  },
+  inchargeTeacher: {
+    select: {
+      id: true,
+      fullName: true,
+      subject: true,
       status: true,
     },
   },
@@ -63,11 +72,33 @@ const resolveClassBranchId = async (tenantId, queryOrPayload = {}, branchScope =
   });
 };
 
+const resolveInchargeTeacherId = async (tenantId, branchId, inchargeTeacherId) => {
+  if (!inchargeTeacherId) return null;
+
+  const teacher = await prisma.teacher.findFirst({
+    where: {
+      id: Number(inchargeTeacherId),
+      tenantId,
+      branchId,
+      staffType: 'teacher',
+      status: 'active',
+    },
+    select: { id: true },
+  });
+
+  if (!teacher) {
+    throw new AppError('Selected class incharge must be an active teacher from the same branch.', 400);
+  }
+
+  return teacher.id;
+};
+
 export const classesService = {
   async createClass(tenantId, payload, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveClassBranchId(resolvedTenantId, payload, branchScope);
     await validateBranchAccess(resolvedTenantId, branchId);
+    const inchargeTeacherId = await resolveInchargeTeacherId(resolvedTenantId, branchId, payload.inchargeTeacherId);
 
     const duplicateClass = await prisma.academicClass.findFirst({
       where: {
@@ -85,6 +116,7 @@ export const classesService = {
       data: {
         tenantId: resolvedTenantId,
         name: payload.name,
+        inchargeTeacherId,
         ...buildClassBranchData(branchId),
       },
       select: classSelect,
@@ -100,6 +132,7 @@ export const classesService = {
       .map((item, index) => ({
         index,
         name: String(item.name || '').trim(),
+        inchargeTeacherId: item.inchargeTeacherId ? Number(item.inchargeTeacherId) : null,
       }))
       .filter((item) => item.name);
 
@@ -145,6 +178,33 @@ export const classesService = {
       throw new AppError('Ø¯Ø±Ø¬ Ú©Ø±Ø¯Û Ø¬Ù…Ø§Ø¹ØªÙˆÚº Ù…ÛŒÚº ØºÙ„Ø·ÛŒ Ù…ÙˆØ¬ÙˆØ¯ ÛÛ’Û”', 409, { rows: rowErrors });
     }
 
+    const requestedTeacherIds = [...new Set(normalizedRows.map((row) => row.inchargeTeacherId).filter(Boolean))];
+    if (requestedTeacherIds.length) {
+      const validTeachers = await prisma.teacher.findMany({
+        where: {
+          id: { in: requestedTeacherIds },
+          tenantId: resolvedTenantId,
+          branchId,
+          staffType: 'teacher',
+          status: 'active',
+        },
+        select: { id: true },
+      });
+      const validTeacherIds = new Set(validTeachers.map((teacher) => teacher.id));
+      normalizedRows.forEach((row) => {
+        if (row.inchargeTeacherId && !validTeacherIds.has(row.inchargeTeacherId)) {
+          rowErrors.push({
+            index: row.index,
+            message: 'Selected class incharge must be an active teacher from the same branch.',
+          });
+        }
+      });
+    }
+
+    if (rowErrors.length) {
+      throw new AppError('The submitted classes contain invalid information.', 400, { rows: rowErrors });
+    }
+
     return prisma.$transaction(async (tx) => {
       const createdClasses = [];
 
@@ -154,6 +214,7 @@ export const classesService = {
             tenantId: resolvedTenantId,
             ...buildClassBranchData(branchId),
             name: row.name,
+            inchargeTeacherId: row.inchargeTeacherId,
           },
           select: classSelect,
         });
@@ -241,6 +302,10 @@ export const classesService = {
     }
 
     await validateBranchAccess(resolvedTenantId, branchId);
+    const requestedInchargeTeacherId = payload.inchargeTeacherId === undefined
+      ? academicClass.inchargeTeacherId
+      : payload.inchargeTeacherId;
+    const inchargeTeacherId = await resolveInchargeTeacherId(resolvedTenantId, branchId, requestedInchargeTeacherId);
 
     const duplicateClass = await prisma.academicClass.findFirst({
       where: {
@@ -259,6 +324,7 @@ export const classesService = {
       where: { id, tenantId: resolvedTenantId },
       data: {
         name: payload.name,
+        inchargeTeacherId,
         ...buildClassBranchWhere(branchId),
         status: payload.status || academicClass.status,
       },

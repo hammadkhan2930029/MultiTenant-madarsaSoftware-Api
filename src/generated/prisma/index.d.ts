@@ -7055,6 +7055,7 @@ export namespace Prisma {
     departmentHeads: number
     teachingAssignments: number
     invigilatedExams: number
+    inchargeClasses: number
   }
 
   export type TeacherCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7065,6 +7066,7 @@ export namespace Prisma {
     departmentHeads?: boolean | TeacherCountOutputTypeCountDepartmentHeadsArgs
     teachingAssignments?: boolean | TeacherCountOutputTypeCountTeachingAssignmentsArgs
     invigilatedExams?: boolean | TeacherCountOutputTypeCountInvigilatedExamsArgs
+    inchargeClasses?: boolean | TeacherCountOutputTypeCountInchargeClassesArgs
   }
 
   // Custom InputTypes
@@ -7125,6 +7127,13 @@ export namespace Prisma {
    */
   export type TeacherCountOutputTypeCountInvigilatedExamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExamScheduleWhereInput
+  }
+
+  /**
+   * TeacherCountOutputType without action
+   */
+  export type TeacherCountOutputTypeCountInchargeClassesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AcademicClassWhereInput
   }
 
 
@@ -27317,12 +27326,14 @@ export namespace Prisma {
     id: number | null
     tenantId: number | null
     branchId: number | null
+    inchargeTeacherId: number | null
   }
 
   export type AcademicClassSumAggregateOutputType = {
     id: number | null
     tenantId: number | null
     branchId: number | null
+    inchargeTeacherId: number | null
   }
 
   export type AcademicClassMinAggregateOutputType = {
@@ -27330,6 +27341,7 @@ export namespace Prisma {
     tenantId: number | null
     name: string | null
     branchId: number | null
+    inchargeTeacherId: number | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -27340,6 +27352,7 @@ export namespace Prisma {
     tenantId: number | null
     name: string | null
     branchId: number | null
+    inchargeTeacherId: number | null
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -27350,6 +27363,7 @@ export namespace Prisma {
     tenantId: number
     name: number
     branchId: number
+    inchargeTeacherId: number
     status: number
     createdAt: number
     updatedAt: number
@@ -27361,12 +27375,14 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     branchId?: true
+    inchargeTeacherId?: true
   }
 
   export type AcademicClassSumAggregateInputType = {
     id?: true
     tenantId?: true
     branchId?: true
+    inchargeTeacherId?: true
   }
 
   export type AcademicClassMinAggregateInputType = {
@@ -27374,6 +27390,7 @@ export namespace Prisma {
     tenantId?: true
     name?: true
     branchId?: true
+    inchargeTeacherId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -27384,6 +27401,7 @@ export namespace Prisma {
     tenantId?: true
     name?: true
     branchId?: true
+    inchargeTeacherId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -27394,6 +27412,7 @@ export namespace Prisma {
     tenantId?: true
     name?: true
     branchId?: true
+    inchargeTeacherId?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -27491,6 +27510,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId: number | null
     status: string
     createdAt: Date
     updatedAt: Date
@@ -27520,11 +27540,13 @@ export namespace Prisma {
     tenantId?: boolean
     name?: boolean
     branchId?: boolean
+    inchargeTeacherId?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     branch?: boolean | BranchDefaultArgs<ExtArgs>
+    inchargeTeacher?: boolean | AcademicClass$inchargeTeacherArgs<ExtArgs>
     sections?: boolean | AcademicClass$sectionsArgs<ExtArgs>
     assignments?: boolean | AcademicClass$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
@@ -27543,15 +27565,17 @@ export namespace Prisma {
     tenantId?: boolean
     name?: boolean
     branchId?: boolean
+    inchargeTeacherId?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AcademicClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "branchId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["academicClass"]>
+  export type AcademicClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "branchId" | "inchargeTeacherId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["academicClass"]>
   export type AcademicClassInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     branch?: boolean | BranchDefaultArgs<ExtArgs>
+    inchargeTeacher?: boolean | AcademicClass$inchargeTeacherArgs<ExtArgs>
     sections?: boolean | AcademicClass$sectionsArgs<ExtArgs>
     assignments?: boolean | AcademicClass$assignmentsArgs<ExtArgs>
     studentAttendances?: boolean | AcademicClass$studentAttendancesArgs<ExtArgs>
@@ -27568,6 +27592,7 @@ export namespace Prisma {
     objects: {
       tenant: Prisma.$TenantPayload<ExtArgs>
       branch: Prisma.$BranchPayload<ExtArgs>
+      inchargeTeacher: Prisma.$TeacherPayload<ExtArgs> | null
       sections: Prisma.$SectionPayload<ExtArgs>[]
       assignments: Prisma.$StudentClassAssignmentPayload<ExtArgs>[]
       studentAttendances: Prisma.$StudentAttendancePayload<ExtArgs>[]
@@ -27582,6 +27607,7 @@ export namespace Prisma {
       tenantId: number
       name: string
       branchId: number
+      inchargeTeacherId: number | null
       status: string
       createdAt: Date
       updatedAt: Date
@@ -27927,6 +27953,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    inchargeTeacher<T extends AcademicClass$inchargeTeacherArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$inchargeTeacherArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     sections<T extends AcademicClass$sectionsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignments<T extends AcademicClass$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentClassAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentAttendances<T extends AcademicClass$studentAttendancesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicClass$studentAttendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -27968,6 +27995,7 @@ export namespace Prisma {
     readonly tenantId: FieldRef<"AcademicClass", 'Int'>
     readonly name: FieldRef<"AcademicClass", 'String'>
     readonly branchId: FieldRef<"AcademicClass", 'Int'>
+    readonly inchargeTeacherId: FieldRef<"AcademicClass", 'Int'>
     readonly status: FieldRef<"AcademicClass", 'String'>
     readonly createdAt: FieldRef<"AcademicClass", 'DateTime'>
     readonly updatedAt: FieldRef<"AcademicClass", 'DateTime'>
@@ -28311,6 +28339,25 @@ export namespace Prisma {
      * Limit how many AcademicClasses to delete.
      */
     limit?: number
+  }
+
+  /**
+   * AcademicClass.inchargeTeacher
+   */
+  export type AcademicClass$inchargeTeacherArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Teacher
+     */
+    select?: TeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Teacher
+     */
+    omit?: TeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeacherInclude<ExtArgs> | null
+    where?: TeacherWhereInput
   }
 
   /**
@@ -45116,6 +45163,7 @@ export namespace Prisma {
     departmentHeads?: boolean | Teacher$departmentHeadsArgs<ExtArgs>
     teachingAssignments?: boolean | Teacher$teachingAssignmentsArgs<ExtArgs>
     invigilatedExams?: boolean | Teacher$invigilatedExamsArgs<ExtArgs>
+    inchargeClasses?: boolean | Teacher$inchargeClassesArgs<ExtArgs>
     _count?: boolean | TeacherCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["teacher"]>
 
@@ -45167,6 +45215,7 @@ export namespace Prisma {
     departmentHeads?: boolean | Teacher$departmentHeadsArgs<ExtArgs>
     teachingAssignments?: boolean | Teacher$teachingAssignmentsArgs<ExtArgs>
     invigilatedExams?: boolean | Teacher$invigilatedExamsArgs<ExtArgs>
+    inchargeClasses?: boolean | Teacher$inchargeClassesArgs<ExtArgs>
     _count?: boolean | TeacherCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -45183,6 +45232,7 @@ export namespace Prisma {
       departmentHeads: Prisma.$DepartmentHeadAssignmentPayload<ExtArgs>[]
       teachingAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
       invigilatedExams: Prisma.$ExamSchedulePayload<ExtArgs>[]
+      inchargeClasses: Prisma.$AcademicClassPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -45566,6 +45616,7 @@ export namespace Prisma {
     departmentHeads<T extends Teacher$departmentHeadsArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$departmentHeadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentHeadAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teachingAssignments<T extends Teacher$teachingAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$teachingAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invigilatedExams<T extends Teacher$invigilatedExamsArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$invigilatedExamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inchargeClasses<T extends Teacher$inchargeClassesArgs<ExtArgs> = {}>(args?: Subset<T, Teacher$inchargeClassesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AcademicClassPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -46172,6 +46223,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExamScheduleScalarFieldEnum | ExamScheduleScalarFieldEnum[]
+  }
+
+  /**
+   * Teacher.inchargeClasses
+   */
+  export type Teacher$inchargeClassesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AcademicClass
+     */
+    select?: AcademicClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AcademicClass
+     */
+    omit?: AcademicClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AcademicClassInclude<ExtArgs> | null
+    where?: AcademicClassWhereInput
+    orderBy?: AcademicClassOrderByWithRelationInput | AcademicClassOrderByWithRelationInput[]
+    cursor?: AcademicClassWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AcademicClassScalarFieldEnum | AcademicClassScalarFieldEnum[]
   }
 
   /**
@@ -75174,6 +75249,7 @@ export namespace Prisma {
     tenantId: 'tenantId',
     name: 'name',
     branchId: 'branchId',
+    inchargeTeacherId: 'inchargeTeacherId',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -78578,11 +78654,13 @@ export namespace Prisma {
     tenantId?: IntFilter<"AcademicClass"> | number
     name?: StringFilter<"AcademicClass"> | string
     branchId?: IntFilter<"AcademicClass"> | number
+    inchargeTeacherId?: IntNullableFilter<"AcademicClass"> | number | null
     status?: StringFilter<"AcademicClass"> | string
     createdAt?: DateTimeFilter<"AcademicClass"> | Date | string
     updatedAt?: DateTimeFilter<"AcademicClass"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+    inchargeTeacher?: XOR<TeacherNullableScalarRelationFilter, TeacherWhereInput> | null
     sections?: SectionListRelationFilter
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
@@ -78598,11 +78676,13 @@ export namespace Prisma {
     tenantId?: SortOrder
     name?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tenant?: TenantOrderByWithRelationInput
     branch?: BranchOrderByWithRelationInput
+    inchargeTeacher?: TeacherOrderByWithRelationInput
     sections?: SectionOrderByRelationAggregateInput
     assignments?: StudentClassAssignmentOrderByRelationAggregateInput
     studentAttendances?: StudentAttendanceOrderByRelationAggregateInput
@@ -78623,11 +78703,13 @@ export namespace Prisma {
     tenantId?: IntFilter<"AcademicClass"> | number
     name?: StringFilter<"AcademicClass"> | string
     branchId?: IntFilter<"AcademicClass"> | number
+    inchargeTeacherId?: IntNullableFilter<"AcademicClass"> | number | null
     status?: StringFilter<"AcademicClass"> | string
     createdAt?: DateTimeFilter<"AcademicClass"> | Date | string
     updatedAt?: DateTimeFilter<"AcademicClass"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+    inchargeTeacher?: XOR<TeacherNullableScalarRelationFilter, TeacherWhereInput> | null
     sections?: SectionListRelationFilter
     assignments?: StudentClassAssignmentListRelationFilter
     studentAttendances?: StudentAttendanceListRelationFilter
@@ -78643,6 +78725,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     name?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -78661,6 +78744,7 @@ export namespace Prisma {
     tenantId?: IntWithAggregatesFilter<"AcademicClass"> | number
     name?: StringWithAggregatesFilter<"AcademicClass"> | string
     branchId?: IntWithAggregatesFilter<"AcademicClass"> | number
+    inchargeTeacherId?: IntNullableWithAggregatesFilter<"AcademicClass"> | number | null
     status?: StringWithAggregatesFilter<"AcademicClass"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AcademicClass"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AcademicClass"> | Date | string
@@ -80316,6 +80400,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentListRelationFilter
     teachingAssignments?: TeacherAssignmentListRelationFilter
     invigilatedExams?: ExamScheduleListRelationFilter
+    inchargeClasses?: AcademicClassListRelationFilter
   }
 
   export type TeacherOrderByWithRelationInput = {
@@ -80360,6 +80445,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentOrderByRelationAggregateInput
     teachingAssignments?: TeacherAssignmentOrderByRelationAggregateInput
     invigilatedExams?: ExamScheduleOrderByRelationAggregateInput
+    inchargeClasses?: AcademicClassOrderByRelationAggregateInput
     _relevance?: TeacherOrderByRelevanceInput
   }
 
@@ -80410,6 +80496,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentListRelationFilter
     teachingAssignments?: TeacherAssignmentListRelationFilter
     invigilatedExams?: ExamScheduleListRelationFilter
+    inchargeClasses?: AcademicClassListRelationFilter
   }, "id" | "tenantId_phone" | "tenantId_cnic">
 
   export type TeacherOrderByWithAggregationInput = {
@@ -85216,6 +85303,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -85231,6 +85319,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85251,6 +85340,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -85266,6 +85356,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85284,6 +85375,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85301,6 +85393,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86962,6 +87055,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateInput = {
@@ -87003,6 +87097,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUpdateInput = {
@@ -87043,6 +87138,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateInput = {
@@ -87084,6 +87180,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherCreateManyInput = {
@@ -92127,6 +92224,11 @@ export namespace Prisma {
     isNot?: BranchWhereInput
   }
 
+  export type TeacherNullableScalarRelationFilter = {
+    is?: TeacherWhereInput | null
+    isNot?: TeacherWhereInput | null
+  }
+
   export type AcademicClassOrderByRelevanceInput = {
     fields: AcademicClassOrderByRelevanceFieldEnum | AcademicClassOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -92143,6 +92245,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     name?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -92152,6 +92255,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrder
   }
 
   export type AcademicClassMaxOrderByAggregateInput = {
@@ -92159,6 +92263,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     name?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -92169,6 +92274,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     name?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -92178,6 +92284,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     branchId?: SortOrder
+    inchargeTeacherId?: SortOrder
   }
 
   export type AcademicClassScalarRelationFilter = {
@@ -92663,11 +92770,6 @@ export namespace Prisma {
   export type SubjectScalarRelationFilter = {
     is?: SubjectWhereInput
     isNot?: SubjectWhereInput
-  }
-
-  export type TeacherNullableScalarRelationFilter = {
-    is?: TeacherWhereInput | null
-    isNot?: TeacherWhereInput | null
   }
 
   export type ExamScheduleOrderByRelevanceInput = {
@@ -100243,6 +100345,12 @@ export namespace Prisma {
     connect?: BranchWhereUniqueInput
   }
 
+  export type TeacherCreateNestedOneWithoutInchargeClassesInput = {
+    create?: XOR<TeacherCreateWithoutInchargeClassesInput, TeacherUncheckedCreateWithoutInchargeClassesInput>
+    connectOrCreate?: TeacherCreateOrConnectWithoutInchargeClassesInput
+    connect?: TeacherWhereUniqueInput
+  }
+
   export type SectionCreateNestedManyWithoutClassInput = {
     create?: XOR<SectionCreateWithoutClassInput, SectionUncheckedCreateWithoutClassInput> | SectionCreateWithoutClassInput[] | SectionUncheckedCreateWithoutClassInput[]
     connectOrCreate?: SectionCreateOrConnectWithoutClassInput | SectionCreateOrConnectWithoutClassInput[]
@@ -100369,6 +100477,16 @@ export namespace Prisma {
     upsert?: BranchUpsertWithoutClassesInput
     connect?: BranchWhereUniqueInput
     update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutClassesInput, BranchUpdateWithoutClassesInput>, BranchUncheckedUpdateWithoutClassesInput>
+  }
+
+  export type TeacherUpdateOneWithoutInchargeClassesNestedInput = {
+    create?: XOR<TeacherCreateWithoutInchargeClassesInput, TeacherUncheckedCreateWithoutInchargeClassesInput>
+    connectOrCreate?: TeacherCreateOrConnectWithoutInchargeClassesInput
+    upsert?: TeacherUpsertWithoutInchargeClassesInput
+    disconnect?: TeacherWhereInput | boolean
+    delete?: TeacherWhereInput | boolean
+    connect?: TeacherWhereUniqueInput
+    update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutInchargeClassesInput, TeacherUpdateWithoutInchargeClassesInput>, TeacherUncheckedUpdateWithoutInchargeClassesInput>
   }
 
   export type SectionUpdateManyWithoutClassNestedInput = {
@@ -102458,6 +102576,13 @@ export namespace Prisma {
     connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
   }
 
+  export type AcademicClassCreateNestedManyWithoutInchargeTeacherInput = {
+    create?: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput> | AcademicClassCreateWithoutInchargeTeacherInput[] | AcademicClassUncheckedCreateWithoutInchargeTeacherInput[]
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutInchargeTeacherInput | AcademicClassCreateOrConnectWithoutInchargeTeacherInput[]
+    createMany?: AcademicClassCreateManyInchargeTeacherInputEnvelope
+    connect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+  }
+
   export type TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput = {
     create?: XOR<TeacherAttendanceCreateWithoutTeacherInput, TeacherAttendanceUncheckedCreateWithoutTeacherInput> | TeacherAttendanceCreateWithoutTeacherInput[] | TeacherAttendanceUncheckedCreateWithoutTeacherInput[]
     connectOrCreate?: TeacherAttendanceCreateOrConnectWithoutTeacherInput | TeacherAttendanceCreateOrConnectWithoutTeacherInput[]
@@ -102505,6 +102630,13 @@ export namespace Prisma {
     connectOrCreate?: ExamScheduleCreateOrConnectWithoutInvigilatorTeacherInput | ExamScheduleCreateOrConnectWithoutInvigilatorTeacherInput[]
     createMany?: ExamScheduleCreateManyInvigilatorTeacherInputEnvelope
     connect?: ExamScheduleWhereUniqueInput | ExamScheduleWhereUniqueInput[]
+  }
+
+  export type AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput = {
+    create?: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput> | AcademicClassCreateWithoutInchargeTeacherInput[] | AcademicClassUncheckedCreateWithoutInchargeTeacherInput[]
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutInchargeTeacherInput | AcademicClassCreateOrConnectWithoutInchargeTeacherInput[]
+    createMany?: AcademicClassCreateManyInchargeTeacherInputEnvelope
+    connect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
   }
 
   export type TeacherAttendanceUpdateManyWithoutTeacherNestedInput = {
@@ -102633,6 +102765,20 @@ export namespace Prisma {
     deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
   }
 
+  export type AcademicClassUpdateManyWithoutInchargeTeacherNestedInput = {
+    create?: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput> | AcademicClassCreateWithoutInchargeTeacherInput[] | AcademicClassUncheckedCreateWithoutInchargeTeacherInput[]
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutInchargeTeacherInput | AcademicClassCreateOrConnectWithoutInchargeTeacherInput[]
+    upsert?: AcademicClassUpsertWithWhereUniqueWithoutInchargeTeacherInput | AcademicClassUpsertWithWhereUniqueWithoutInchargeTeacherInput[]
+    createMany?: AcademicClassCreateManyInchargeTeacherInputEnvelope
+    set?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    disconnect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    delete?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    connect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    update?: AcademicClassUpdateWithWhereUniqueWithoutInchargeTeacherInput | AcademicClassUpdateWithWhereUniqueWithoutInchargeTeacherInput[]
+    updateMany?: AcademicClassUpdateManyWithWhereWithoutInchargeTeacherInput | AcademicClassUpdateManyWithWhereWithoutInchargeTeacherInput[]
+    deleteMany?: AcademicClassScalarWhereInput | AcademicClassScalarWhereInput[]
+  }
+
   export type TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput = {
     create?: XOR<TeacherAttendanceCreateWithoutTeacherInput, TeacherAttendanceUncheckedCreateWithoutTeacherInput> | TeacherAttendanceCreateWithoutTeacherInput[] | TeacherAttendanceUncheckedCreateWithoutTeacherInput[]
     connectOrCreate?: TeacherAttendanceCreateOrConnectWithoutTeacherInput | TeacherAttendanceCreateOrConnectWithoutTeacherInput[]
@@ -102729,6 +102875,20 @@ export namespace Prisma {
     update?: ExamScheduleUpdateWithWhereUniqueWithoutInvigilatorTeacherInput | ExamScheduleUpdateWithWhereUniqueWithoutInvigilatorTeacherInput[]
     updateMany?: ExamScheduleUpdateManyWithWhereWithoutInvigilatorTeacherInput | ExamScheduleUpdateManyWithWhereWithoutInvigilatorTeacherInput[]
     deleteMany?: ExamScheduleScalarWhereInput | ExamScheduleScalarWhereInput[]
+  }
+
+  export type AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput = {
+    create?: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput> | AcademicClassCreateWithoutInchargeTeacherInput[] | AcademicClassUncheckedCreateWithoutInchargeTeacherInput[]
+    connectOrCreate?: AcademicClassCreateOrConnectWithoutInchargeTeacherInput | AcademicClassCreateOrConnectWithoutInchargeTeacherInput[]
+    upsert?: AcademicClassUpsertWithWhereUniqueWithoutInchargeTeacherInput | AcademicClassUpsertWithWhereUniqueWithoutInchargeTeacherInput[]
+    createMany?: AcademicClassCreateManyInchargeTeacherInputEnvelope
+    set?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    disconnect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    delete?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    connect?: AcademicClassWhereUniqueInput | AcademicClassWhereUniqueInput[]
+    update?: AcademicClassUpdateWithWhereUniqueWithoutInchargeTeacherInput | AcademicClassUpdateWithWhereUniqueWithoutInchargeTeacherInput[]
+    updateMany?: AcademicClassUpdateManyWithWhereWithoutInchargeTeacherInput | AcademicClassUpdateManyWithWhereWithoutInchargeTeacherInput[]
+    deleteMany?: AcademicClassScalarWhereInput | AcademicClassScalarWhereInput[]
   }
 
   export type TenantCreateNestedOneWithoutSalaryIncrementsInput = {
@@ -104945,6 +105105,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutTenantInput = {
@@ -104985,6 +105146,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutTenantInput = {
@@ -105177,6 +105339,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -105191,6 +105354,7 @@ export namespace Prisma {
     id?: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107587,6 +107751,7 @@ export namespace Prisma {
     tenantId?: IntFilter<"AcademicClass"> | number
     name?: StringFilter<"AcademicClass"> | string
     branchId?: IntFilter<"AcademicClass"> | number
+    inchargeTeacherId?: IntNullableFilter<"AcademicClass"> | number | null
     status?: StringFilter<"AcademicClass"> | string
     createdAt?: DateTimeFilter<"AcademicClass"> | Date | string
     updatedAt?: DateTimeFilter<"AcademicClass"> | Date | string
@@ -114172,6 +114337,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutShiftInput = {
@@ -114212,6 +114378,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutShiftInput = {
@@ -115248,6 +115415,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutTeachersInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutDepartmentHeadsInput = {
@@ -115288,6 +115456,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutDepartmentHeadsInput = {
@@ -115609,6 +115778,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutTeachersNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutDepartmentHeadsInput = {
@@ -115649,6 +115819,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TenantCreateWithoutQualificationsInput = {
@@ -117328,6 +117499,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutBranchInput = {
@@ -117368,6 +117540,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutBranchInput = {
@@ -117386,6 +117559,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -117400,6 +117574,7 @@ export namespace Prisma {
     id?: number
     tenantId: number
     name: string
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -118590,6 +118765,92 @@ export namespace Prisma {
     create: XOR<BranchCreateWithoutClassesInput, BranchUncheckedCreateWithoutClassesInput>
   }
 
+  export type TeacherCreateWithoutInchargeClassesInput = {
+    staffType?: string
+    fullName: string
+    email?: string | null
+    phone?: string | null
+    cnic?: string | null
+    subject?: string | null
+    qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
+    address?: string | null
+    imageUrl?: string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendances?: TeacherAttendanceCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementCreateNestedManyWithoutTeacherInput
+    salaryEntries?: SalaryEntryCreateNestedManyWithoutTeacherInput
+    schedules?: TeacherScheduleCreateNestedManyWithoutTeacherInput
+    shift?: ShiftCreateNestedOneWithoutTeachersInput
+    tenant: TenantCreateNestedOneWithoutTeachersInput
+    branch?: BranchCreateNestedOneWithoutTeachersInput
+    departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
+    teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+  }
+
+  export type TeacherUncheckedCreateWithoutInchargeClassesInput = {
+    id?: number
+    tenantId: number
+    branchId?: number | null
+    staffType?: string
+    fullName: string
+    email?: string | null
+    phone?: string | null
+    cnic?: string | null
+    subject?: string | null
+    qualification?: string | null
+    educationInstitute?: string | null
+    educationYear?: string | null
+    specialization?: string | null
+    address?: string | null
+    shiftId?: number | null
+    imageUrl?: string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    bankName?: string | null
+    accountTitle?: string | null
+    accountNumber?: string | null
+    iban?: string | null
+    jobTitle?: string | null
+    department?: string | null
+    employmentType?: string | null
+    appointmentDate?: string | null
+    joiningDate?: string | null
+    experienceSummary?: string | null
+    notes?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendances?: TeacherAttendanceUncheckedCreateNestedManyWithoutTeacherInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedCreateNestedManyWithoutTeacherInput
+    salaryEntries?: SalaryEntryUncheckedCreateNestedManyWithoutTeacherInput
+    schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+  }
+
+  export type TeacherCreateOrConnectWithoutInchargeClassesInput = {
+    where: TeacherWhereUniqueInput
+    create: XOR<TeacherCreateWithoutInchargeClassesInput, TeacherUncheckedCreateWithoutInchargeClassesInput>
+  }
+
   export type SectionCreateWithoutClassInput = {
     name: string
     status?: string
@@ -119148,6 +119409,98 @@ export namespace Prisma {
     resultGrades?: ResultGradeUncheckedUpdateManyWithoutBranchNestedInput
   }
 
+  export type TeacherUpsertWithoutInchargeClassesInput = {
+    update: XOR<TeacherUpdateWithoutInchargeClassesInput, TeacherUncheckedUpdateWithoutInchargeClassesInput>
+    create: XOR<TeacherCreateWithoutInchargeClassesInput, TeacherUncheckedCreateWithoutInchargeClassesInput>
+    where?: TeacherWhereInput
+  }
+
+  export type TeacherUpdateToOneWithWhereWithoutInchargeClassesInput = {
+    where?: TeacherWhereInput
+    data: XOR<TeacherUpdateWithoutInchargeClassesInput, TeacherUncheckedUpdateWithoutInchargeClassesInput>
+  }
+
+  export type TeacherUpdateWithoutInchargeClassesInput = {
+    staffType?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: TeacherAttendanceUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUpdateManyWithoutTeacherNestedInput
+    salaryEntries?: SalaryEntryUpdateManyWithoutTeacherNestedInput
+    schedules?: TeacherScheduleUpdateManyWithoutTeacherNestedInput
+    shift?: ShiftUpdateOneWithoutTeachersNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutTeachersNestedInput
+    branch?: BranchUpdateOneWithoutTeachersNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
+    teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+  }
+
+  export type TeacherUncheckedUpdateWithoutInchargeClassesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    staffType?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cnic?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification?: NullableStringFieldUpdateOperationsInput | string | null
+    educationInstitute?: NullableStringFieldUpdateOperationsInput | string | null
+    educationYear?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    shiftId?: NullableIntFieldUpdateOperationsInput | number | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    department?: NullableStringFieldUpdateOperationsInput | string | null
+    employmentType?: NullableStringFieldUpdateOperationsInput | string | null
+    appointmentDate?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableStringFieldUpdateOperationsInput | string | null
+    experienceSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: TeacherAttendanceUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryIncrements?: TeacherSalaryIncrementUncheckedUpdateManyWithoutTeacherNestedInput
+    salaryEntries?: SalaryEntryUncheckedUpdateManyWithoutTeacherNestedInput
+    schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+    departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+  }
+
   export type SectionUpsertWithWhereUniqueWithoutClassInput = {
     where: SectionWhereUniqueInput
     update: XOR<SectionUpdateWithoutClassInput, SectionUncheckedUpdateWithoutClassInput>
@@ -119433,6 +119786,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
@@ -119447,6 +119801,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -119925,6 +120280,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
@@ -119939,6 +120295,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -120993,6 +121350,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -121007,6 +121365,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -121276,6 +121635,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -121290,6 +121650,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -121531,6 +121892,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutSchedulesInput = {
@@ -121571,6 +121933,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutSchedulesInput = {
@@ -121621,6 +121984,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -121635,6 +121999,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -121892,6 +122257,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutSchedulesInput = {
@@ -121932,6 +122298,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type AcademicSessionUpsertWithoutTeacherSchedulesInput = {
@@ -121994,6 +122361,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -122008,6 +122376,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -122958,6 +123327,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutTeachersInput
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutTeachingAssignmentsInput = {
@@ -122998,6 +123368,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutTeachingAssignmentsInput = {
@@ -123042,6 +123413,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -123056,6 +123428,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -123479,6 +123852,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutTeachersNestedInput
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutTeachingAssignmentsInput = {
@@ -123519,6 +123893,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -123575,6 +123950,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -123589,6 +123965,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -123940,6 +124317,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -123954,6 +124332,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -124074,6 +124453,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutTeachersInput
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutInvigilatedExamsInput = {
@@ -124114,6 +124494,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedCreateNestedManyWithoutTeacherInput
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutInvigilatedExamsInput = {
@@ -124337,6 +124718,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -124351,6 +124733,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -124489,6 +124872,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutTeachersNestedInput
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutInvigilatedExamsInput = {
@@ -124529,6 +124913,7 @@ export namespace Prisma {
     schedules?: TeacherScheduleUncheckedUpdateManyWithoutTeacherNestedInput
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TenantCreateWithoutResultGradesInput = {
@@ -125266,6 +125651,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
@@ -125280,6 +125666,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -125686,6 +126073,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -125700,6 +126088,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128659,6 +129048,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
@@ -128673,6 +129063,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -129110,6 +129501,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
@@ -129124,6 +129516,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -129737,6 +130130,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AcademicClassCreateWithoutInchargeTeacherInput = {
+    name: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutClassesInput
+    branch: BranchCreateNestedOneWithoutClassesInput
+    sections?: SectionCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleCreateNestedManyWithoutClassInput
+    examResults?: ExamResultCreateNestedManyWithoutClassInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassUncheckedCreateWithoutInchargeTeacherInput = {
+    id?: number
+    tenantId: number
+    name: string
+    branchId: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sections?: SectionUncheckedCreateNestedManyWithoutClassInput
+    assignments?: StudentClassAssignmentUncheckedCreateNestedManyWithoutClassInput
+    studentAttendances?: StudentAttendanceUncheckedCreateNestedManyWithoutClassInput
+    studentSchedules?: StudentScheduleUncheckedCreateNestedManyWithoutClassInput
+    teacherSchedules?: TeacherScheduleUncheckedCreateNestedManyWithoutClassInput
+    examSchedules?: ExamScheduleUncheckedCreateNestedManyWithoutClassInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutClassInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutClassInput
+  }
+
+  export type AcademicClassCreateOrConnectWithoutInchargeTeacherInput = {
+    where: AcademicClassWhereUniqueInput
+    create: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput>
+  }
+
+  export type AcademicClassCreateManyInchargeTeacherInputEnvelope = {
+    data: AcademicClassCreateManyInchargeTeacherInput | AcademicClassCreateManyInchargeTeacherInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TeacherAttendanceUpsertWithWhereUniqueWithoutTeacherInput = {
     where: TeacherAttendanceWhereUniqueInput
     update: XOR<TeacherAttendanceUpdateWithoutTeacherInput, TeacherAttendanceUncheckedUpdateWithoutTeacherInput>
@@ -130115,6 +130553,22 @@ export namespace Prisma {
     data: XOR<ExamScheduleUpdateManyMutationInput, ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherInput>
   }
 
+  export type AcademicClassUpsertWithWhereUniqueWithoutInchargeTeacherInput = {
+    where: AcademicClassWhereUniqueInput
+    update: XOR<AcademicClassUpdateWithoutInchargeTeacherInput, AcademicClassUncheckedUpdateWithoutInchargeTeacherInput>
+    create: XOR<AcademicClassCreateWithoutInchargeTeacherInput, AcademicClassUncheckedCreateWithoutInchargeTeacherInput>
+  }
+
+  export type AcademicClassUpdateWithWhereUniqueWithoutInchargeTeacherInput = {
+    where: AcademicClassWhereUniqueInput
+    data: XOR<AcademicClassUpdateWithoutInchargeTeacherInput, AcademicClassUncheckedUpdateWithoutInchargeTeacherInput>
+  }
+
+  export type AcademicClassUpdateManyWithWhereWithoutInchargeTeacherInput = {
+    where: AcademicClassScalarWhereInput
+    data: XOR<AcademicClassUpdateManyMutationInput, AcademicClassUncheckedUpdateManyWithoutInchargeTeacherInput>
+  }
+
   export type TenantCreateWithoutSalaryIncrementsInput = {
     tenantCode: string
     name: string
@@ -130302,6 +130756,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutSalaryIncrementsInput = {
@@ -130342,6 +130797,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutSalaryIncrementsInput = {
@@ -130617,6 +131073,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutSalaryIncrementsInput = {
@@ -130657,6 +131114,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type AdminUpsertWithoutSalaryIncrementsInput = {
@@ -131048,6 +131506,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutClassesInput
     branch: BranchCreateNestedOneWithoutClassesInput
+    inchargeTeacher?: TeacherCreateNestedOneWithoutInchargeClassesInput
     sections?: SectionCreateNestedManyWithoutClassInput
     assignments?: StudentClassAssignmentCreateNestedManyWithoutClassInput
     studentSchedules?: StudentScheduleCreateNestedManyWithoutClassInput
@@ -131062,6 +131521,7 @@ export namespace Prisma {
     tenantId: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -131463,6 +131923,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
@@ -131477,6 +131938,7 @@ export namespace Prisma {
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131718,6 +132180,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutAttendancesInput = {
@@ -131758,6 +132221,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutAttendancesInput = {
@@ -132037,6 +132501,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutAttendancesInput = {
@@ -132077,6 +132542,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type BranchUpsertWithoutTeacherAttendancesInput = {
@@ -135983,6 +136449,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherUncheckedCreateWithoutSalaryEntriesInput = {
@@ -136023,6 +136490,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     teachingAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
     invigilatedExams?: ExamScheduleUncheckedCreateNestedManyWithoutInvigilatorTeacherInput
+    inchargeClasses?: AcademicClassUncheckedCreateNestedManyWithoutInchargeTeacherInput
   }
 
   export type TeacherCreateOrConnectWithoutSalaryEntriesInput = {
@@ -136266,6 +136734,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutSalaryEntriesInput = {
@@ -136306,6 +136775,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type FinanceHeadUpsertWithoutSalaryEntriesInput = {
@@ -142323,6 +142793,7 @@ export namespace Prisma {
     id?: number
     name: string
     branchId: number
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -143490,6 +143961,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutTenantInput = {
@@ -143530,6 +144002,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateManyWithoutTenantInput = {
@@ -143752,6 +144225,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -143766,6 +144240,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143783,6 +144258,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     branchId?: IntFieldUpdateOperationsInput | number
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146686,6 +147162,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutShiftInput = {
@@ -146726,6 +147203,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateManyWithoutShiftInput = {
@@ -147157,6 +147635,7 @@ export namespace Prisma {
     id?: number
     tenantId: number
     name: string
+    inchargeTeacherId?: number | null
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -147744,6 +148223,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateWithoutBranchInput = {
@@ -147784,6 +148264,7 @@ export namespace Prisma {
     departmentHeads?: DepartmentHeadAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     teachingAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
     invigilatedExams?: ExamScheduleUncheckedUpdateManyWithoutInvigilatorTeacherNestedInput
+    inchargeClasses?: AcademicClassUncheckedUpdateManyWithoutInchargeTeacherNestedInput
   }
 
   export type TeacherUncheckedUpdateManyWithoutBranchInput = {
@@ -147825,6 +148306,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
+    inchargeTeacher?: TeacherUpdateOneWithoutInchargeClassesNestedInput
     sections?: SectionUpdateManyWithoutClassNestedInput
     assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
     studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
@@ -147839,6 +148321,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -147856,6 +148339,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    inchargeTeacherId?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -150510,6 +150994,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AcademicClassCreateManyInchargeTeacherInput = {
+    id?: number
+    tenantId: number
+    name: string
+    branchId: number
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TeacherAttendanceUpdateWithoutTeacherInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
@@ -150807,6 +151301,51 @@ export namespace Prisma {
     room?: NullableStringFieldUpdateOperationsInput | string | null
     invigilator?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AcademicClassUpdateWithoutInchargeTeacherInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutClassesNestedInput
+    branch?: BranchUpdateOneRequiredWithoutClassesNestedInput
+    sections?: SectionUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUpdateManyWithoutClassNestedInput
+    examResults?: ExamResultUpdateManyWithoutClassNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutClassNestedInput
+  }
+
+  export type AcademicClassUncheckedUpdateWithoutInchargeTeacherInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sections?: SectionUncheckedUpdateManyWithoutClassNestedInput
+    assignments?: StudentClassAssignmentUncheckedUpdateManyWithoutClassNestedInput
+    studentAttendances?: StudentAttendanceUncheckedUpdateManyWithoutClassNestedInput
+    studentSchedules?: StudentScheduleUncheckedUpdateManyWithoutClassNestedInput
+    teacherSchedules?: TeacherScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examSchedules?: ExamScheduleUncheckedUpdateManyWithoutClassNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutClassNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutClassNestedInput
+  }
+
+  export type AcademicClassUncheckedUpdateManyWithoutInchargeTeacherInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    branchId?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

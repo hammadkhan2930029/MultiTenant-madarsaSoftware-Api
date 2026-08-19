@@ -354,6 +354,7 @@ exports.Prisma.AcademicClassScalarFieldEnum = {
   tenantId: 'tenantId',
   name: 'name',
   branchId: 'branchId',
+  inchargeTeacherId: 'inchargeTeacherId',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

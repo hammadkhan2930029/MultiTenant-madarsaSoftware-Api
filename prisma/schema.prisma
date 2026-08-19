@@ -473,11 +473,13 @@ model AcademicClass {
   tenantId           Int                      @map("tenant_id")
   name               String                   @db.VarChar(150)
   branchId           Int
+  inchargeTeacherId  Int?                     @map("incharge_teacher_id")
   status             String                   @default("active") @db.VarChar(50)
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
   tenant             Tenant                   @relation("TenantClasses", fields: [tenantId], references: [id])
   branch             Branch                   @relation(fields: [branchId], references: [id])
+  inchargeTeacher    Teacher?                 @relation("ClassInchargeTeacher", fields: [inchargeTeacherId], references: [id], onDelete: SetNull)
   sections           Section[]
   assignments        StudentClassAssignment[]
   studentAttendances StudentAttendance[]
@@ -489,6 +491,7 @@ model AcademicClass {
 
   @@unique([branchId, name])
   @@index([tenantId])
+  @@index([inchargeTeacherId])
   @@map("classes")
 }
 
@@ -930,6 +933,7 @@ model Teacher {
   departmentHeads    DepartmentHeadAssignment[]
   teachingAssignments TeacherAssignment[]
   invigilatedExams     ExamSchedule[]             @relation("TeacherExamInvigilation")
+  inchargeClasses      AcademicClass[]             @relation("ClassInchargeTeacher")
 
   @@unique([tenantId, phone])
   @@unique([tenantId, cnic])
