@@ -135,6 +135,8 @@ exports.Prisma.TenantScalarFieldEnum = {
   referralCode: 'referralCode',
   referredByTenantId: 'referredByTenantId',
   referredAt: 'referredAt',
+  saleAmount: 'saleAmount',
+  saleCurrency: 'saleCurrency',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -154,6 +156,102 @@ exports.Prisma.AdminScalarFieldEnum = {
   ownerAdminId: 'ownerAdminId',
   branchId: 'branchId',
   status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliateCommissionTierScalarFieldEnum = {
+  id: 'id',
+  minReferrals: 'minReferrals',
+  maxReferrals: 'maxReferrals',
+  percentage: 'percentage',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  status: 'status',
+  createdByAdminId: 'createdByAdminId',
+  updatedByAdminId: 'updatedByAdminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliateCommissionScalarFieldEnum = {
+  id: 'id',
+  referrerTenantId: 'referrerTenantId',
+  referredTenantId: 'referredTenantId',
+  commissionTierId: 'commissionTierId',
+  referralCountSnapshot: 'referralCountSnapshot',
+  saleAmountSnapshot: 'saleAmountSnapshot',
+  percentageSnapshot: 'percentageSnapshot',
+  commissionAmount: 'commissionAmount',
+  currency: 'currency',
+  status: 'status',
+  earnedAt: 'earnedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliatePaymentAccountScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  accountType: 'accountType',
+  accountTitle: 'accountTitle',
+  institutionName: 'institutionName',
+  accountNumber: 'accountNumber',
+  iban: 'iban',
+  walletPhone: 'walletPhone',
+  branchName: 'branchName',
+  instructions: 'instructions',
+  isDefault: 'isDefault',
+  status: 'status',
+  createdByAdminId: 'createdByAdminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliateWithdrawalRequestScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  requestedAmount: 'requestedAmount',
+  currency: 'currency',
+  paymentAccountId: 'paymentAccountId',
+  paymentAccountSnapshot: 'paymentAccountSnapshot',
+  status: 'status',
+  requestNote: 'requestNote',
+  adminNote: 'adminNote',
+  requestedByAdminId: 'requestedByAdminId',
+  reviewedByAdminId: 'reviewedByAdminId',
+  requestedAt: 'requestedAt',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliatePaymentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  withdrawalRequestId: 'withdrawalRequestId',
+  amount: 'amount',
+  currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  transactionReference: 'transactionReference',
+  paymentDate: 'paymentDate',
+  note: 'note',
+  paidByAdminId: 'paidByAdminId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AffiliateSettingScalarFieldEnum = {
+  id: 'id',
+  scopeKey: 'scopeKey',
+  withdrawalIntervalDays: 'withdrawalIntervalDays',
+  allowBlankWithdrawalAmount: 'allowBlankWithdrawalAmount',
+  allowOnlyOnePendingRequest: 'allowOnlyOnePendingRequest',
+  minimumWithdrawalAmount: 'minimumWithdrawalAmount',
+  status: 'status',
+  createdByAdminId: 'createdByAdminId',
+  updatedByAdminId: 'updatedByAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -544,7 +642,9 @@ exports.Prisma.StudentScalarFieldEnum = {
   permanentAddress: 'permanentAddress',
   district: 'district',
   prevMadrassa: 'prevMadrassa',
+  religiousEduDate: 'religiousEduDate',
   prevSchool: 'prevSchool',
+  secularEduDate: 'secularEduDate',
   secularEdu: 'secularEdu',
   religiousEdu: 'religiousEdu',
   requiredClass: 'requiredClass',
@@ -555,6 +655,20 @@ exports.Prisma.StudentScalarFieldEnum = {
   reside: 'reside',
   imageUrl: 'imageUrl',
   status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StudentDocumentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  studentId: 'studentId',
+  originalName: 'originalName',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1085,12 +1199,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -1105,7 +1219,8 @@ exports.Prisma.TenantOrderByRelevanceFieldEnum = {
   subdomain: 'subdomain',
   customDomain: 'customDomain',
   status: 'status',
-  referralCode: 'referralCode'
+  referralCode: 'referralCode',
+  saleCurrency: 'saleCurrency'
 };
 
 exports.Prisma.AdminOrderByRelevanceFieldEnum = {
@@ -1120,6 +1235,27 @@ exports.Prisma.AdminOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.AffiliateCommissionTierOrderByRelevanceFieldEnum = {
+  status: 'status'
+};
+
+exports.Prisma.AffiliateCommissionOrderByRelevanceFieldEnum = {
+  currency: 'currency',
+  status: 'status'
+};
+
+exports.Prisma.AffiliatePaymentAccountOrderByRelevanceFieldEnum = {
+  accountType: 'accountType',
+  accountTitle: 'accountTitle',
+  institutionName: 'institutionName',
+  accountNumber: 'accountNumber',
+  iban: 'iban',
+  walletPhone: 'walletPhone',
+  branchName: 'branchName',
+  instructions: 'instructions',
+  status: 'status'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
@@ -1129,6 +1265,26 @@ exports.Prisma.JsonNullValueFilter = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.AffiliateWithdrawalRequestOrderByRelevanceFieldEnum = {
+  currency: 'currency',
+  status: 'status',
+  requestNote: 'requestNote',
+  adminNote: 'adminNote'
+};
+
+exports.Prisma.AffiliatePaymentOrderByRelevanceFieldEnum = {
+  currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  transactionReference: 'transactionReference',
+  note: 'note',
+  status: 'status'
+};
+
+exports.Prisma.AffiliateSettingOrderByRelevanceFieldEnum = {
+  scopeKey: 'scopeKey',
+  status: 'status'
 };
 
 exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
@@ -1336,6 +1492,13 @@ exports.Prisma.StudentOrderByRelevanceFieldEnum = {
   reside: 'reside',
   imageUrl: 'imageUrl',
   status: 'status'
+};
+
+exports.Prisma.StudentDocumentOrderByRelevanceFieldEnum = {
+  originalName: 'originalName',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  mimeType: 'mimeType'
 };
 
 exports.Prisma.ParentOrderByRelevanceFieldEnum = {
@@ -1603,6 +1766,12 @@ exports.Prisma.StoreStockAdjustmentOrderByRelevanceFieldEnum = {
 exports.Prisma.ModelName = {
   Tenant: 'Tenant',
   Admin: 'Admin',
+  AffiliateCommissionTier: 'AffiliateCommissionTier',
+  AffiliateCommission: 'AffiliateCommission',
+  AffiliatePaymentAccount: 'AffiliatePaymentAccount',
+  AffiliateWithdrawalRequest: 'AffiliateWithdrawalRequest',
+  AffiliatePayment: 'AffiliatePayment',
+  AffiliateSetting: 'AffiliateSetting',
   AuditLog: 'AuditLog',
   Role: 'Role',
   Permission: 'Permission',
@@ -1630,6 +1799,7 @@ exports.Prisma.ModelName = {
   ExamResult: 'ExamResult',
   ExamResultSubject: 'ExamResultSubject',
   Student: 'Student',
+  StudentDocument: 'StudentDocument',
   Parent: 'Parent',
   StudentParent: 'StudentParent',
   StudentClassAssignment: 'StudentClassAssignment',

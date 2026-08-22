@@ -77,7 +77,9 @@ const studentBodySchema = z.object({
   permanentAddress: requiredStringField(2, 255, 'مستقل پتہ لازمی درج کریں۔', 'مستقل پتہ بہت لمبا ہے۔'),
   district: optionalStringField(150, 'District is too long.'),
   prevMadrassa: optionalStringField(150, 'Previous madrassa is too long.'),
+  religiousEduDate: optionalDateField,
   prevSchool: optionalStringField(150, 'Previous school is too long.'),
+  secularEduDate: optionalDateField,
   secularEdu: optionalStringField(150, 'Secular education detail is too long.'),
   religiousEdu: optionalStringField(150, 'Religious education detail is too long.'),
   sessionId: z.coerce.number().int().positive('Session id must be a valid number.').optional(),
@@ -127,6 +129,15 @@ export const updateStudentValidationSchema = z.object({
   body: studentBodySchema,
   params: z.object({
     id: z.coerce.number().int().positive('Student id must be a valid number.'),
+  }),
+  query: z.object({}).default({}),
+});
+
+export const studentDocumentIdValidationSchema = z.object({
+  body: z.object({}).default({}),
+  params: z.object({
+    id: z.coerce.number().int().positive('Student id must be a valid number.'),
+    documentId: z.coerce.number().int().positive('Document id must be a valid number.'),
   }),
   query: z.object({}).default({}),
 });

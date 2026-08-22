@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { authMiddleware } from '../../../middlewares/auth.middleware.js';
+import { requireSuperAdmin } from '../../../middlewares/authorization.middleware.js';
+import { validate } from '../../../middlewares/validate.middleware.js';
+import { getAffiliateWithdrawal, listAffiliateWithdrawals, payAffiliateWithdrawal, rejectAffiliateWithdrawal } from './affiliateWithdrawals.controller.js';
+import { affiliateWithdrawalIdSchema, listAffiliateWithdrawalsSchema, payAffiliateWithdrawalSchema, rejectAffiliateWithdrawalSchema } from './affiliateWithdrawals.validation.js';
+const router = Router();
+router.use(authMiddleware, requireSuperAdmin);
+router.get('/', validate(listAffiliateWithdrawalsSchema), listAffiliateWithdrawals);
+router.get('/:id', validate(affiliateWithdrawalIdSchema), getAffiliateWithdrawal);
+router.patch('/:id/reject', validate(rejectAffiliateWithdrawalSchema), rejectAffiliateWithdrawal);
+router.post('/:id/pay', validate(payAffiliateWithdrawalSchema), payAffiliateWithdrawal);
+export { router as affiliateWithdrawalsRoutes };

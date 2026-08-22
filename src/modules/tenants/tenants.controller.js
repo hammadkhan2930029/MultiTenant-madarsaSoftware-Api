@@ -82,7 +82,7 @@ export const getTenantById = asyncHandler(async (req, res) => {
 });
 
 export const updateTenant = asyncHandler(async (req, res) => {
-  const result = await tenantsService.updateTenant(req.params.id, req.body);
+  const result = await tenantsService.updateTenant(req.params.id, req.body, buildRequester(req));
 
   return apiResponse(res, {
     message: 'Tenant updated successfully.',

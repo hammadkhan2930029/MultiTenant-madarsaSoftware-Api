@@ -40,6 +40,7 @@ import { usersRoutes } from './modules/users/users.routes.js';
 import { tenantsRoutes } from './modules/tenants/tenants.routes.js';
 import { auditLogsRoutes } from './modules/audit-logs/auditLogs.routes.js';
 import { tenantCurrentRoutes } from './modules/tenant-current/tenantCurrent.routes.js';
+import { affiliateRoutes } from './modules/affiliate/affiliate.routes.js';
 import { tenantResolverMiddleware } from './middlewares/tenant.middleware.js';
 import { notFoundMiddleware } from './middlewares/notFound.middleware.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
@@ -122,6 +123,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/audit-logs', auditLogsRoutes);
 app.use('/api/tenant', tenantCurrentRoutes);
 app.use('/api/tenants', tenantsRoutes);
+app.use('/api/affiliate', affiliateRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

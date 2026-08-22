@@ -10,6 +10,7 @@ import { buildReferralLink } from '../../utils/referral.js';
 import { ensureDefaultBranch } from '../branches/branches.service.js';
 import { seedDefaultTenantRoles } from '../roles/tenantRoleSeeder.service.js';
 import { auditService } from '../security/index.js';
+import { affiliateCommissionCalculationService } from '../affiliate/commissions/commissionCalculation.service.js';
 
 const mapTenant = (tenant) => ({
   id: tenant.id,
@@ -26,6 +27,8 @@ const mapTenant = (tenant) => ({
   referralLink: buildReferralLink(tenant.referralCode),
   referredByTenantId: tenant.referredByTenantId || null,
   referredAt: tenant.referredAt || null,
+  saleAmount: tenant.saleAmount?.toFixed?.(2) || null,
+  saleCurrency: tenant.saleCurrency || null,
   referredBy: tenant.referredBy ? {
     id: tenant.referredBy.id,
     name: tenant.referredBy.name,
@@ -339,6 +342,8 @@ const mapTenantBranchSummary = ({ tenant, tenantAdmin, madrassaProfile = null, s
     referralLink: buildReferralLink(tenant.referralCode),
     referredByTenantId: tenant.referredByTenantId || null,
     referredAt: tenant.referredAt || null,
+    saleAmount: tenant.saleAmount?.toFixed?.(2) || null,
+    saleCurrency: tenant.saleCurrency || null,
     referredBy: tenant.referredBy || null,
     referredTenantsCount: tenant._count?.referredTenants || 0,
     subdomain: tenant.subdomain,
@@ -637,8 +642,11 @@ export const tenantsService = {
             referralCode,
             referredByTenantId: referrer?.id || null,
             referredAt: referrer ? new Date() : null,
+            saleAmount: payload.saleAmount ? new Prisma.Decimal(payload.saleAmount) : null,
+            saleCurrency: payload.saleCurrency || null,
           },
         });
+        const affiliateCommission = await affiliateCommissionCalculationService.createForNewReferral(tx, { tenant, referrer });
         const seededRoles = await seedDefaultTenantRoles(tx, tenant.id);
         const adminRole = seededRoles.admin;
 
@@ -720,6 +728,10 @@ export const tenantsService = {
             tenantCode: tenant.tenantCode,
             referralCode,
             referredByTenantId: referrer?.id || null,
+            saleAmount: tenant.saleAmount?.toFixed?.(2) || null,
+            saleCurrency: tenant.saleCurrency || null,
+            affiliateCommissionId: affiliateCommission?.id || null,
+            affiliateCommissionStatus: affiliateCommission?.status || null,
           },
           ipAddress: requester?.audit?.ipAddress || null,
           userAgent: requester?.audit?.userAgent || null,
@@ -803,7 +815,7 @@ export const tenantsService = {
     };
   },
 
-  async updateTenant(id, payload) {
+  async updateTenant(id, payload, requester = {}) {
     const existingTenant = await prisma.tenant.findUnique({
       where: { id },
     });
@@ -851,9 +863,33 @@ export const tenantsService = {
     return prisma.$transaction(async (tx) => {
       const shouldUpdateReferrer = Object.prototype.hasOwnProperty.call(payload, 'referredByCode');
       const referrer = shouldUpdateReferrer ? await getReferrerByCode(tx, payload.referredByCode) : null;
+      const existingCommission = await affiliateCommissionCalculationService.getByReferredTenant(tx, existingTenant.id);
 
       if (referrer?.id === existingTenant.id) {
         throw new AppError('A madrassa cannot refer itself.', 400);
+      }
+
+      const nextReferrerId = shouldUpdateReferrer ? (referrer?.id || null) : existingTenant.referredByTenantId;
+      const referrerChanged = nextReferrerId !== existingTenant.referredByTenantId;
+      if (existingCommission && referrerChanged) {
+        throw new AppError('Referral source cannot be changed after an affiliate commission record has been created.', 409);
+      }
+
+      const hasSaleAmount = Object.prototype.hasOwnProperty.call(payload, 'saleAmount');
+      const hasSaleCurrency = Object.prototype.hasOwnProperty.call(payload, 'saleCurrency');
+      const hasStatus = Object.prototype.hasOwnProperty.call(payload, 'status');
+      const nextStatus = hasStatus ? payload.status : existingTenant.status;
+      const nextSaleAmount = hasSaleAmount
+        ? (payload.saleAmount ? new Prisma.Decimal(payload.saleAmount) : null)
+        : existingTenant.saleAmount;
+      const nextSaleCurrency = hasSaleCurrency ? (payload.saleCurrency || null) : existingTenant.saleCurrency;
+      if (Boolean(nextSaleAmount) !== Boolean(nextSaleCurrency)) {
+        throw new AppError('Sale amount and sale currency must be entered or cleared together.', 400);
+      }
+      const saleAmountChanged = (existingTenant.saleAmount?.toFixed?.(2) || null) !== (nextSaleAmount?.toFixed?.(2) || null);
+      const saleCurrencyChanged = (existingTenant.saleCurrency || null) !== (nextSaleCurrency || null);
+      if (existingCommission?.status === 'earned' && (saleAmountChanged || saleCurrencyChanged)) {
+        throw new AppError('Sale amount or currency cannot be changed after commission has been earned.', 409);
       }
 
       const tenant = await tx.tenant.update({
@@ -875,6 +911,8 @@ export const tenantsService = {
               }
             : {}),
           ...(payload.status ? { status: payload.status } : {}),
+          ...(hasSaleAmount ? { saleAmount: nextSaleAmount } : {}),
+          ...(hasSaleCurrency ? { saleCurrency: nextSaleCurrency } : {}),
         },
         include: TENANT_REFERRAL_INCLUDE,
       });
@@ -942,6 +980,33 @@ export const tenantsService = {
           },
         });
       }
+
+      const affiliateCommission = existingCommission?.status === 'pending_calculation' && (hasSaleAmount || hasSaleCurrency || hasStatus)
+        ? await affiliateCommissionCalculationService.syncPendingSale(tx, existingCommission, nextSaleAmount, nextSaleCurrency, nextStatus)
+        : existingCommission;
+
+      await auditService.recordAuditLog(tx, {
+        tenantId: tenant.id,
+        actorUserId: requester?.admin?.id || null,
+        roleId: requester?.audit?.roleId || requester?.admin?.roleId || requester?.admin?.role_id || null,
+        action: 'tenant.updated',
+        module: 'tenants',
+        targetType: 'tenant',
+        targetId: tenant.id,
+        oldValue: {
+          referredByTenantId: existingTenant.referredByTenantId || null,
+          saleAmount: existingTenant.saleAmount?.toFixed?.(2) || null,
+          saleCurrency: existingTenant.saleCurrency || null,
+        },
+        newValue: {
+          referredByTenantId: tenant.referredByTenantId || null,
+          saleAmount: tenant.saleAmount?.toFixed?.(2) || null,
+          saleCurrency: tenant.saleCurrency || null,
+          affiliateCommissionStatus: affiliateCommission?.status || null,
+        },
+        ipAddress: requester?.audit?.ipAddress || null,
+        userAgent: requester?.audit?.userAgent || null,
+      });
 
       const [tenantAdmin, madrassaProfile] = await Promise.all([
         getTenantAdminDetails(tenant.id, tenant.ownerAdminId, tx),

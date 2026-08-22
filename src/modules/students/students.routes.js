@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authMiddleware } from '../../middlewares/auth.middleware.js';
 import { requirePermission, requireResourceRead } from '../../middlewares/authorization.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
-import { studentImageUpload } from '../../middlewares/upload.middleware.js';
+import { studentAdmissionUpload } from '../../middlewares/upload.middleware.js';
 import { parseJsonFields } from '../../middlewares/parseJsonFields.middleware.js';
 import {
   createStudent,
@@ -11,6 +11,7 @@ import {
   getStudentById,
   updateStudent,
   deleteStudent,
+  deleteStudentDocument,
   assignClassToStudent,
   removeClassAssignment,
 } from './students.controller.js';
@@ -19,6 +20,7 @@ import {
   listStudentsValidationSchema,
   studentIdValidationSchema,
   updateStudentValidationSchema,
+  studentDocumentIdValidationSchema,
   assignStudentClassValidationSchema,
   classAssignmentIdValidationSchema,
 } from './students.validation.js';
@@ -30,7 +32,7 @@ router.use(authMiddleware);
 router.post(
   '/',
   requirePermission('students.create'),
-  studentImageUpload.single('image'),
+  studentAdmissionUpload,
   parseJsonFields(['parents']),
   validate(createStudentValidationSchema),
   createStudent
@@ -41,10 +43,16 @@ router.get('/:id', requireResourceRead('students', 'students.view'), validate(st
 router.put(
   '/:id',
   requirePermission('students.edit'),
-  studentImageUpload.single('image'),
+  studentAdmissionUpload,
   parseJsonFields(['parents']),
   validate(updateStudentValidationSchema),
   updateStudent
+);
+router.delete(
+  '/:id/documents/:documentId',
+  requirePermission('students.edit'),
+  validate(studentDocumentIdValidationSchema),
+  deleteStudentDocument
 );
 router.delete('/:id', requirePermission('students.delete'), validate(studentIdValidationSchema), deleteStudent);
 router.post('/:id/assign-class', requirePermission('students.edit'), validate(assignStudentClassValidationSchema), assignClassToStudent);

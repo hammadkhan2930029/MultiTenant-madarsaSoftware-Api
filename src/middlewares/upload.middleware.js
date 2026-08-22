@@ -25,6 +25,31 @@ const createStorage = (folderName) => {
   });
 };
 
+const createFieldStorage = (folderByField) =>
+  multer.diskStorage({
+    destination: (_req, file, cb) => {
+      const folderName = folderByField[file.fieldname];
+      if (!folderName) {
+        cb(new AppError('Unsupported upload field.', 400));
+        return;
+      }
+
+      const uploadDirectory = path.resolve(process.cwd(), 'uploads', folderName);
+      fs.mkdirSync(uploadDirectory, { recursive: true });
+      cb(null, uploadDirectory);
+    },
+    filename: (_req, file, cb) => {
+      const extension = path.extname(file.originalname).toLowerCase();
+      const safeName = path
+        .basename(file.originalname, extension)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      cb(null, `${Date.now()}-${crypto.randomUUID()}-${safeName || 'file'}${extension}`);
+    },
+  });
+
 const imageFileFilter = (_req, file, cb) => {
   if (!file.mimetype.startsWith('image/')) {
     cb(new AppError('Only image files are allowed.', 400));
@@ -41,6 +66,35 @@ export const studentImageUpload = multer({
   },
   fileFilter: imageFileFilter,
 });
+
+const studentAdmissionFileFilter = (_req, file, cb) => {
+  if (file.fieldname === 'image') {
+    imageFileFilter(_req, file, cb);
+    return;
+  }
+
+  if (file.fieldname === 'documents' && (file.mimetype === 'application/pdf' || file.mimetype.startsWith('image/'))) {
+    cb(null, true);
+    return;
+  }
+
+  cb(new AppError('Only PDF and image admission documents are allowed.', 400));
+};
+
+export const studentAdmissionUpload = multer({
+  storage: createFieldStorage({
+    image: 'students',
+    documents: 'student-documents',
+  }),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+    files: 11,
+  },
+  fileFilter: studentAdmissionFileFilter,
+}).fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'documents', maxCount: 10 },
+]);
 
 export const teacherImageUpload = multer({
   storage: createStorage('teachers'),

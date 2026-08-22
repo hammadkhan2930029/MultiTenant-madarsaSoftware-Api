@@ -5,7 +5,8 @@ import { studentsService } from './students.service.js';
 export const createStudent = asyncHandler(async (req, res) => {
   const student = await studentsService.createStudent(req.tenantId, {
     body: req.body,
-    file: req.file,
+    file: req.files?.image?.[0],
+    files: req.files?.documents || [],
     branchScope: req.branchScope,
   });
 
@@ -46,7 +47,8 @@ export const getStudentById = asyncHandler(async (req, res) => {
 export const updateStudent = asyncHandler(async (req, res) => {
   const student = await studentsService.updateStudent(req.tenantId, Number(req.params.id), {
     body: req.body,
-    file: req.file,
+    file: req.files?.image?.[0],
+    files: req.files?.documents || [],
     branchScope: req.branchScope,
   });
 
@@ -62,6 +64,20 @@ export const deleteStudent = asyncHandler(async (req, res) => {
   return apiResponse(res, {
     message: 'Student deleted successfully.',
     data: student,
+  });
+});
+
+export const deleteStudentDocument = asyncHandler(async (req, res) => {
+  const document = await studentsService.deleteStudentDocument(
+    req.tenantId,
+    Number(req.params.id),
+    Number(req.params.documentId),
+    req.branchScope
+  );
+
+  return apiResponse(res, {
+    message: 'Student admission document deleted successfully.',
+    data: document,
   });
 });
 

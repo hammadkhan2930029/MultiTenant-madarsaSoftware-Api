@@ -3,6 +3,20 @@ import { normalizeDomainName } from '../../utils/domain.js';
 
 const tenantStatusSchema = z.enum(['active', 'inactive']);
 
+const saleAmountSchema = z.preprocess(
+  (value) => (value === '' || value === null || value === undefined ? null : String(value).trim()),
+  z.string()
+    .regex(/^\d{1,10}(\.\d{1,2})?$/, 'Sale amount must be a valid amount with up to 2 decimal places.')
+    .refine((value) => Number(value) > 0, 'Sale amount must be greater than zero.')
+    .nullable()
+    .optional(),
+);
+
+const saleCurrencySchema = z.preprocess(
+  (value) => (value === '' || value === null || value === undefined ? null : String(value).trim().toUpperCase()),
+  z.string().min(3).max(10).regex(/^[A-Z]+$/, 'Sale currency must contain letters only.').nullable().optional(),
+);
+
 const branchLimitSchema = z.preprocess(
   (value) => {
     if (value === '' || value === undefined || value === null) return null;
@@ -105,6 +119,8 @@ const tenantBaseSchema = {
   branchEnabled: z.boolean().optional(),
   publicWebsiteEnabled: z.boolean().optional(),
   branchLimit: branchLimitSchema,
+  saleAmount: saleAmountSchema,
+  saleCurrency: saleCurrencySchema,
 };
 
 const validateBranchSettings = (value, context) => {
@@ -113,6 +129,22 @@ const validateBranchSettings = (value, context) => {
       code: z.ZodIssueCode.custom,
       path: ['branchLimit'],
       message: 'برانچ سسٹم فعال ہو تو برانچ حد کم از کم 1 ہونی چاہیے۔',
+    });
+  }
+
+  if (value.saleAmount && !value.saleCurrency) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['saleCurrency'],
+      message: 'Sale currency is required when sale amount is entered.',
+    });
+  }
+
+  if (value.saleCurrency && !value.saleAmount) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['saleAmount'],
+      message: 'Sale amount is required when sale currency is entered.',
     });
   }
 };
@@ -174,6 +206,8 @@ export const updateTenantValidationSchema = z.object({
     branchEnabled: tenantBaseSchema.branchEnabled,
     publicWebsiteEnabled: tenantBaseSchema.publicWebsiteEnabled,
     branchLimit: tenantBaseSchema.branchLimit,
+    saleAmount: tenantBaseSchema.saleAmount,
+    saleCurrency: tenantBaseSchema.saleCurrency,
   }).superRefine(validateBranchSettings),
   params: tenantIdValidationSchema.shape.params,
   query: z.object({}).optional(),

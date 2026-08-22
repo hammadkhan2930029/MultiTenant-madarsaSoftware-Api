@@ -1,4 +1,6 @@
 ﻿import { prisma } from '../../config/prisma.js';
+import fs from 'fs/promises';
+import path from 'path';
 import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
@@ -6,6 +8,20 @@ import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService, classScopeService } from '../security/index.js';
 
 const buildImageUrl = (file) => (file ? `/uploads/students/${file.filename}` : null);
+const buildDocumentUrl = (file) => `/uploads/student-documents/${file.filename}`;
+const MAX_STUDENT_DOCUMENTS = 10;
+
+const buildDocumentData = (files, { tenantId, branchId, studentId }) =>
+  files.map((file) => ({
+    tenantId,
+    branchId,
+    studentId,
+    originalName: file.originalname,
+    fileName: file.filename,
+    fileUrl: buildDocumentUrl(file),
+    mimeType: file.mimetype,
+    fileSize: file.size,
+  }));
 const DEFAULT_ADMISSION_NUMBER = '0001';
 
 const normalizeTenantId = (tenantId) => {
@@ -142,7 +158,9 @@ const buildStudentSelect = (branchId, branchScope = null) => ({
   permanentAddress: true,
   district: true,
   prevMadrassa: true,
+  religiousEduDate: true,
   prevSchool: true,
+  secularEduDate: true,
   secularEdu: true,
   religiousEdu: true,
   requiredClass: true,
@@ -152,6 +170,18 @@ const buildStudentSelect = (branchId, branchScope = null) => ({
   monthlyFee: true,
   reside: true,
   imageUrl: true,
+  documents: {
+    select: {
+      id: true,
+      originalName: true,
+      fileName: true,
+      fileUrl: true,
+      mimeType: true,
+      fileSize: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  },
   status: true,
   createdAt: true,
   updatedAt: true,
@@ -330,7 +360,7 @@ export const studentsService = {
     return { admissionNumber: await getNextAdmissionNumber(tenantId) };
   },
 
-  async createStudent(tenantId, { body, file, branchScope = null }) {
+  async createStudent(tenantId, { body, file, files = [], branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
     const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
@@ -385,7 +415,9 @@ export const studentsService = {
           permanentAddress: optionalString(body.permanentAddress),
           district: optionalString(body.district),
           prevMadrassa: optionalString(body.prevMadrassa),
+          religiousEduDate: body.religiousEduDate || null,
           prevSchool: optionalString(body.prevSchool),
+          secularEduDate: body.secularEduDate || null,
           secularEdu: optionalString(body.secularEdu),
           religiousEdu: optionalString(body.religiousEdu),
           requiredClass: optionalString(body.requiredClass),
@@ -400,6 +432,16 @@ export const studentsService = {
 
       if (Array.isArray(body.parents) && body.parents.length > 0) {
         await upsertStudentParents(tx, resolvedTenantId, createdStudent.id, body.parents, scopedBranchId);
+      }
+
+      if (files.length > 0) {
+        await tx.studentDocument.createMany({
+          data: buildDocumentData(files, {
+            tenantId: resolvedTenantId,
+            branchId: scopedBranchId,
+            studentId: createdStudent.id,
+          }),
+        });
       }
 
       if (shouldSaveAssignment) {
@@ -501,7 +543,7 @@ export const studentsService = {
     return student;
   },
 
-  async updateStudent(tenantId, id, { body, file, branchScope = null }) {
+  async updateStudent(tenantId, id, { body, file, files = [], branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
     const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
@@ -526,6 +568,16 @@ export const studentsService = {
 
     if (!existingStudent) {
       throw new AppError('Student not found.', 404);
+    }
+
+    if (files.length > 0) {
+      const existingDocumentCount = await prisma.studentDocument.count({
+        where: { tenantId: resolvedTenantId, studentId: id },
+      });
+
+      if (existingDocumentCount + files.length > MAX_STUDENT_DOCUMENTS) {
+        throw new AppError('A student can have a maximum of 10 admission documents.', 400);
+      }
     }
 
     const duplicateStudent = await prisma.student.findFirst({
@@ -562,7 +614,9 @@ export const studentsService = {
           permanentAddress: optionalString(body.permanentAddress),
           district: optionalString(body.district),
           prevMadrassa: optionalString(body.prevMadrassa),
+          religiousEduDate: body.religiousEduDate || null,
           prevSchool: optionalString(body.prevSchool),
+          secularEduDate: body.secularEduDate || null,
           secularEdu: optionalString(body.secularEdu),
           religiousEdu: optionalString(body.religiousEdu),
           requiredClass: optionalString(body.requiredClass),
@@ -578,6 +632,16 @@ export const studentsService = {
 
       if (Array.isArray(body.parents)) {
         await upsertStudentParents(tx, resolvedTenantId, id, body.parents, scopedBranchId || existingStudent.branchId);
+      }
+
+      if (files.length > 0) {
+        await tx.studentDocument.createMany({
+          data: buildDocumentData(files, {
+            tenantId: resolvedTenantId,
+            branchId: scopedBranchId || existingStudent.branchId,
+            studentId: id,
+          }),
+        });
       }
 
       if (shouldSaveAssignment) {
@@ -653,6 +717,50 @@ export const studentsService = {
         select: buildStudentSelect(scopedBranchId, branchScope),
       });
     });
+  },
+
+  async deleteStudentDocument(tenantId, studentId, documentId, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, {}, branchScope);
+    const student = await prisma.student.findFirst({
+      where: {
+        id: studentId,
+        tenantId: resolvedTenantId,
+        ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
+      },
+      select: { id: true },
+    });
+
+    if (!student) {
+      throw new AppError('Student not found.', 404);
+    }
+
+    const document = await prisma.studentDocument.findFirst({
+      where: {
+        id: documentId,
+        studentId,
+        tenantId: resolvedTenantId,
+        ...(scopedBranchId ? { branchId: scopedBranchId } : {}),
+      },
+    });
+
+    if (!document) {
+      throw new AppError('Student admission document not found.', 404);
+    }
+
+    await prisma.studentDocument.delete({ where: { id: document.id } });
+
+    const storedFilePath = path.resolve(process.cwd(), 'uploads', 'student-documents', path.basename(document.fileName));
+    try {
+      await fs.unlink(storedFilePath);
+    } catch (error) {
+      if (error.code !== 'ENOENT' && process.env.NODE_ENV !== 'production') {
+        console.error(error);
+      }
+    }
+
+    return document;
   },
 
   async assignClassToStudent(tenantId, studentId, payload, branchScope = null) {
