@@ -12,6 +12,7 @@ import {
   updateStudent,
   deleteStudent,
   deleteStudentDocument,
+  getStudentDocumentFile,
   assignClassToStudent,
   removeClassAssignment,
 } from './students.controller.js';
@@ -47,6 +48,12 @@ router.put(
   parseJsonFields(['parents']),
   validate(updateStudentValidationSchema),
   updateStudent
+);
+router.get(
+  '/:id/documents/:documentId/file',
+  requireResourceRead('students', 'students.view'),
+  validate(studentDocumentIdValidationSchema),
+  getStudentDocumentFile
 );
 router.delete(
   '/:id/documents/:documentId',

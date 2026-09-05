@@ -81,6 +81,26 @@ export const deleteStudentDocument = asyncHandler(async (req, res) => {
   });
 });
 
+export const getStudentDocumentFile = asyncHandler(async (req, res) => {
+  const document = await studentsService.getStudentDocumentFile(
+    req.tenantId,
+    Number(req.params.id),
+    Number(req.params.documentId),
+    req.branchScope
+  );
+
+  const safeName = String(document.originalName || 'document')
+    .replace(/[\r\n"\\/]/g, '_');
+  res.type(document.mimeType || 'application/octet-stream');
+
+  if (req.query.download === 'true') {
+    return res.download(document.filePath, safeName);
+  }
+
+  res.setHeader('Content-Disposition', `inline; filename="${safeName.replace(/[^\x20-\x7E]/g, '_')}"`);
+  return res.sendFile(document.filePath);
+});
+
 export const assignClassToStudent = asyncHandler(async (req, res) => {
   const assignment = await studentsService.assignClassToStudent(req.tenantId, Number(req.params.id), req.body, req.branchScope);
 

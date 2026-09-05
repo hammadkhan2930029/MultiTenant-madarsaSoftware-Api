@@ -30,6 +30,7 @@ const roleBodyShape = {
   status: z.enum(['active', 'inactive']).optional(),
   classScopeMode: z.enum(['all', 'selected']).optional(),
   classIds: z.array(z.coerce.number().int().positive('Class id must be valid.')).max(100).optional(),
+  teacherId: z.coerce.number().int().positive('Teacher id must be valid.').optional().nullable(),
   ...permissionsBodySchema,
 };
 

@@ -3,6 +3,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
+import { assignParentRegistrationNumber } from '../../utils/parentRegistrationNumber.js';
+import { normalizeStudentRegistrationNumber } from '../../utils/studentRegistration.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
 import { branchScopeService, classScopeService } from '../security/index.js';
@@ -34,7 +36,7 @@ const normalizeTenantId = (tenantId) => {
 };
 
 const parseAdmissionNumber = (value) => {
-  const text = String(value || '').trim();
+  const text = normalizeStudentRegistrationNumber(value);
   const match = text.match(/^(.*?)(\d+)$/);
 
   if (!match) return null;
@@ -174,8 +176,6 @@ const buildStudentSelect = (branchId, branchScope = null) => ({
     select: {
       id: true,
       originalName: true,
-      fileName: true,
-      fileUrl: true,
       mimeType: true,
       fileSize: true,
       createdAt: true,
@@ -230,6 +230,19 @@ const buildStudentSelect = (branchId, branchScope = null) => ({
   },
 });
 
+const withCurrentPrimaryParentDetails = (student) => {
+  if (!student) return student;
+  const primaryParent = student.parents?.find((item) => ['والد', 'father'].includes(String(item.relationship || '').trim().toLowerCase()))?.parent
+    || student.parents?.find((item) => item.isPrimary)?.parent
+    || student.parents?.[0]?.parent;
+
+  return {
+    ...student,
+    ...(primaryParent?.fullName ? { fatherName: primaryParent.fullName } : {}),
+    familyNumber: primaryParent?.familyNumber || null,
+  };
+};
+
 const optionalString = (value) => (value ? value : null);
 const optionalDecimal = (value) => (value === undefined || value === null || value === '' ? null : value);
 
@@ -266,7 +279,7 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
     where: { studentId, tenantId },
   });
 
-  for (const parentItem of parents) {
+  for (const [parentIndex, parentItem] of parents.entries()) {
     let parentId = parentItem.parentId;
 
     if (parentId) {
@@ -282,11 +295,26 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
         throw new AppError(`Parent not found for id: ${parentId}`, 404);
       }
 
+      const requestedFamilyNumber = optionalString(
+        typeof parentItem.familyNumber === 'string' ? parentItem.familyNumber.trim() : parentItem.familyNumber,
+      );
+      if (requestedFamilyNumber && requestedFamilyNumber !== existingParent.familyNumber) {
+        const duplicateFamilyNumber = await tx.parent.findFirst({
+          where: { tenantId, familyNumber: requestedFamilyNumber, id: { not: parentId } },
+          select: { id: true },
+        });
+        if (duplicateFamilyNumber) {
+          throw new AppError('یہ خاندان نمبر پہلے سے موجود ہے۔', 409);
+        }
+      }
+
       await tx.parent.update({
         where: { id: parentId },
         data: {
           fullName: parentItem.fullName || existingParent.fullName,
-          familyNumber: optionalString(parentItem.familyNumber) || existingParent.familyNumber,
+          familyNumber: Object.prototype.hasOwnProperty.call(parentItem, 'familyNumber')
+            ? requestedFamilyNumber
+            : existingParent.familyNumber,
           phone: optionalString(parentItem.phone) || existingParent.phone,
           whatsapp: optionalString(parentItem.whatsapp) || existingParent.whatsapp,
           email: optionalString(parentItem.email) || existingParent.email,
@@ -296,6 +324,18 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
           status: parentItem.status || existingParent.status,
         },
       });
+
+      if (parentItem.fullName && parentItem.fullName !== existingParent.fullName) {
+        await tx.student.updateMany({
+          where: {
+            tenantId,
+            parents: {
+              some: { tenantId, parentId, isPrimary: true },
+            },
+          },
+          data: { fatherName: parentItem.fullName },
+        });
+      }
     } else {
       const duplicateParent =
         parentItem.phone || parentItem.email
@@ -319,7 +359,20 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
       if (duplicateParent) {
         parentId = duplicateParent.id;
       } else {
-        const familyNumber = optionalString(parentItem.familyNumber) || (await getNextFamilyNumber(tenantId, tx));
+        const requestedFamilyNumber = optionalString(
+          typeof parentItem.familyNumber === 'string' ? parentItem.familyNumber.trim() : parentItem.familyNumber,
+        );
+        const familyNumber = requestedFamilyNumber || (await getNextFamilyNumber(tenantId, tx));
+
+        if (requestedFamilyNumber) {
+          const duplicateFamilyNumber = await tx.parent.findFirst({
+            where: { tenantId, familyNumber },
+            select: { id: true },
+          });
+          if (duplicateFamilyNumber) {
+            throw new AppError('یہ خاندان نمبر پہلے سے موجود ہے۔ موجودہ والدین کو تلاش کر کے منتخب کریں۔', 409);
+          }
+        }
 
         const parent = await tx.parent.create({
           data: {
@@ -339,6 +392,8 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
           },
         });
 
+        await assignParentRegistrationNumber(tx, tenantId, parent.id);
+
         parentId = parent.id;
       }
     }
@@ -349,7 +404,7 @@ const upsertStudentParents = async (tx, tenantId, studentId, parents = [], branc
         studentId,
         parentId,
         relationship: parentItem.relationship,
-        isPrimary: Boolean(parentItem.isPrimary),
+        isPrimary: parentIndex === 0,
       },
     });
   }
@@ -463,7 +518,7 @@ export const studentsService = {
       });
     });
 
-    return student;
+    return withCurrentPrimaryParentDetails(student);
   },
 
   async getStudents(tenantId, query, branchScope = null) {
@@ -483,6 +538,8 @@ export const studentsService = {
             OR: [
               { fullName: { contains: query.search } },
               { fatherName: { contains: query.search } },
+              { parents: { some: { parent: { fullName: { contains: query.search } } } } },
+              { parents: { some: { parent: { familyNumber: { contains: query.search } } } } },
               { admissionNumber: { contains: query.search } },
               { phone: { contains: query.search } },
             ],
@@ -518,7 +575,7 @@ export const studentsService = {
     ]);
 
     return {
-      items,
+      items: items.map(withCurrentPrimaryParentDetails),
       meta: buildPaginationMeta({ totalItems, page, limit }),
     };
   },
@@ -540,7 +597,7 @@ export const studentsService = {
       throw new AppError('Student not found.', 404);
     }
 
-    return student;
+    return withCurrentPrimaryParentDetails(student);
   },
 
   async updateStudent(tenantId, id, { body, file, files = [], branchScope = null }) {
@@ -679,7 +736,7 @@ export const studentsService = {
       });
     });
 
-    return student;
+    return withCurrentPrimaryParentDetails(student);
   },
 
   async deleteStudent(tenantId, id, branchScope = null) {
@@ -761,6 +818,43 @@ export const studentsService = {
     }
 
     return document;
+  },
+
+  async getStudentDocumentFile(tenantId, studentId, documentId, branchScope = null) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, {}, branchScope);
+    const student = await prisma.student.findFirst({
+      where: {
+        id: studentId,
+        tenantId: resolvedTenantId,
+        ...buildStudentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
+        ...buildStudentClassScopeWhere(branchScope),
+      },
+      select: { id: true },
+    });
+
+    if (!student) throw new AppError('Student not found.', 404);
+
+    const document = await prisma.studentDocument.findFirst({
+      where: { id: documentId, studentId, tenantId: resolvedTenantId },
+      select: { id: true, originalName: true, fileName: true, mimeType: true },
+    });
+
+    if (!document) throw new AppError('Student admission document not found.', 404);
+
+    const uploadDirectory = path.resolve(process.cwd(), 'uploads', 'student-documents');
+    const filePath = path.resolve(uploadDirectory, path.basename(document.fileName));
+    if (!filePath.startsWith(`${uploadDirectory}${path.sep}`)) {
+      throw new AppError('Student admission document path is invalid.', 400);
+    }
+
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw new AppError('Uploaded document file is missing from storage.', 404);
+    }
+
+    return { ...document, filePath };
   },
 
   async assignClassToStudent(tenantId, studentId, payload, branchScope = null) {

@@ -3,6 +3,7 @@ import { AppError } from '../../utils/appError.js';
 import { getNextFamilyNumber } from '../../utils/familyNumber.js';
 import { buildPaginationMeta, getPagination } from '../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../utils/statusFilter.js';
+import { assignParentRegistrationNumber } from '../../utils/parentRegistrationNumber.js';
 import { branchScopeService, classScopeService } from '../security/index.js';
 
 const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
@@ -70,6 +71,7 @@ const buildParentClassScopeWhere = (tenantId, branchScope = null) => (
 
 const buildParentSelect = (tenantId, branchId, branchScope = null) => ({
   id: true,
+  registrationNumber: true,
   tenantId: true,
   branchId: true,
   fullName: true,
@@ -176,23 +178,25 @@ export const parentsService = {
       }
     }
 
-    const createdParent = await prisma.parent.create({
-      data: {
-        tenantId: resolvedTenantId,
-        branchId: scopedBranchId,
-        fullName: payload.fullName,
-        familyNumber,
-        phone: payload.phone || null,
-        whatsapp: payload.whatsapp || null,
-        email: payload.email || null,
-        cnic: payload.cnic || null,
-        occupation: payload.occupation || null,
-        address: payload.address || null,
-      },
-      select: {
-        id: true,
-        familyNumber: true,
-      },
+    const createdParent = await prisma.$transaction(async (tx) => {
+      const parent = await tx.parent.create({
+        data: {
+          tenantId: resolvedTenantId,
+          branchId: scopedBranchId,
+          fullName: payload.fullName,
+          familyNumber,
+          phone: payload.phone || null,
+          whatsapp: payload.whatsapp || null,
+          email: payload.email || null,
+          cnic: payload.cnic || null,
+          occupation: payload.occupation || null,
+          address: payload.address || null,
+        },
+        select: { id: true, familyNumber: true },
+      });
+
+      await assignParentRegistrationNumber(tx, resolvedTenantId, parent.id);
+      return parent;
     });
 
     return prisma.parent.findUnique({
@@ -217,6 +221,7 @@ export const parentsService = {
         ? {
             OR: [
               { fullName: { contains: query.search } },
+              { registrationNumber: { contains: query.search } },
               { familyNumber: { contains: query.search } },
               { phone: { contains: query.search } },
               { email: { contains: query.search } },
@@ -291,20 +296,43 @@ export const parentsService = {
       }
     }
 
-    return prisma.parent.update({
-      where: { id, tenantId: resolvedTenantId },
-      data: {
-        fullName: payload.fullName,
-        familyNumber: payload.familyNumber || existingParent.familyNumber,
-        phone: payload.phone || null,
-        whatsapp: payload.whatsapp || null,
-        email: payload.email || null,
-        cnic: payload.cnic || null,
-        occupation: payload.occupation || null,
-        address: payload.address || null,
-        status: payload.status || existingParent.status,
-      },
-      select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
+    return prisma.$transaction(async (tx) => {
+      const parent = await tx.parent.update({
+        where: { id, tenantId: resolvedTenantId },
+        data: {
+          fullName: payload.fullName,
+          familyNumber: payload.familyNumber || existingParent.familyNumber,
+          phone: payload.phone || null,
+          whatsapp: payload.whatsapp || null,
+          email: payload.email || null,
+          cnic: payload.cnic || null,
+          occupation: payload.occupation || null,
+          address: payload.address || null,
+          status: payload.status || existingParent.status,
+        },
+        select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
+      });
+
+      if (payload.fullName !== existingParent.fullName) {
+        await tx.student.updateMany({
+          where: {
+            tenantId: resolvedTenantId,
+            parents: {
+              some: {
+                tenantId: resolvedTenantId,
+                parentId: id,
+                OR: [
+                  { isPrimary: true },
+                  { relationship: { in: ['والد', 'father'] } },
+                ],
+              },
+            },
+          },
+          data: { fatherName: payload.fullName },
+        });
+      }
+
+      return parent;
     });
   },
 

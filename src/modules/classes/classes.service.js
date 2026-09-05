@@ -34,6 +34,8 @@ const classSelect = {
   inchargeTeacher: {
     select: {
       id: true,
+      tenantId: true,
+      branchId: true,
       fullName: true,
       subject: true,
       status: true,
@@ -44,6 +46,21 @@ const classSelect = {
       sections: true,
     },
   },
+};
+
+const normalizeClassIncharge = (academicClass) => {
+  if (!academicClass) return academicClass;
+  const teacher = academicClass.inchargeTeacher;
+  const isSameScope = teacher
+    && teacher.tenantId === academicClass.tenantId
+    && teacher.branchId === academicClass.branchId;
+
+  if (!isSameScope) {
+    return { ...academicClass, inchargeTeacher: null };
+  }
+
+  const { tenantId: _teacherTenantId, branchId: _teacherBranchId, ...publicTeacher } = teacher;
+  return { ...academicClass, inchargeTeacher: publicTeacher };
 };
 
 const buildClassBranchWhere = (branchId) => (
@@ -115,7 +132,7 @@ export const classesService = {
       throw new AppError('Class with the same name already exists in this branch.', 409);
     }
 
-    return prisma.academicClass.create({
+    const academicClass = await prisma.academicClass.create({
       data: {
         tenantId: resolvedTenantId,
         name: payload.name,
@@ -124,6 +141,7 @@ export const classesService = {
       },
       select: classSelect,
     });
+    return normalizeClassIncharge(academicClass);
   },
 
   async bulkCreateClasses(tenantId, payload, branchScope = null) {
@@ -224,7 +242,7 @@ export const classesService = {
           },
           select: classSelect,
         });
-        createdClasses.push(createdClass);
+        createdClasses.push(normalizeClassIncharge(createdClass));
       }
 
       return {
@@ -267,7 +285,7 @@ export const classesService = {
     ]);
 
     return {
-      items,
+      items: items.map(normalizeClassIncharge),
       meta: buildPaginationMeta({ totalItems, page, limit }),
     };
   },
@@ -295,7 +313,7 @@ export const classesService = {
       throw new AppError('Class not found.', 404);
     }
 
-    return academicClass;
+    return normalizeClassIncharge(academicClass);
   },
 
   async updateClass(tenantId, id, payload, branchScope = null) {
@@ -329,7 +347,7 @@ export const classesService = {
       throw new AppError('Another class with the same name already exists in this branch.', 409);
     }
 
-    return prisma.academicClass.update({
+    const updatedClass = await prisma.academicClass.update({
       where: { id, tenantId: resolvedTenantId },
       data: {
         name: payload.name,
@@ -339,6 +357,7 @@ export const classesService = {
       },
       select: classSelect,
     });
+    return normalizeClassIncharge(updatedClass);
   },
 
   async deleteClass(tenantId, id, branchScope = null) {
@@ -375,9 +394,10 @@ export const classesService = {
       throw new AppError('This class cannot be deleted because related records exist.', 400);
     }
 
-    return prisma.academicClass.delete({
+    const deletedClass = await prisma.academicClass.delete({
       where: { id, tenantId: resolvedTenantId },
       select: classSelect,
     });
+    return normalizeClassIncharge(deletedClass);
   },
 };

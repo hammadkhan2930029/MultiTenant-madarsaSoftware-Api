@@ -15,6 +15,14 @@ const mapUserRow = (row) => ({
   tenantId: row.tenant_id === null || row.tenant_id === undefined ? null : Number(row.tenant_id),
   roleId: row.role_id === null || row.role_id === undefined ? null : Number(row.role_id),
   branchId: row.branch_id === null || row.branch_id === undefined ? null : Number(row.branch_id),
+  teacherId: row.teacher_id === null || row.teacher_id === undefined ? null : Number(row.teacher_id),
+  teacher: row.teacher_id
+    ? {
+        id: Number(row.teacher_id),
+        fullName: row.teacher_name || null,
+        status: row.teacher_status || null,
+      }
+    : null,
   branch: row.branch_id
     ? {
         id: Number(row.branch_id),
@@ -42,6 +50,7 @@ const getUserRowById = async (client, id) => {
       a.tenant_id,
       a.role_id,
       a.branch_id,
+      a.teacher_id,
       a.owner_admin_id,
       a.status,
       a.createdAt,
@@ -52,9 +61,12 @@ const getUserRowById = async (client, id) => {
       b.name AS branch_name,
       b.code AS branch_code,
       b.status AS branch_status
+      ,t.fullName AS teacher_name
+      ,t.status AS teacher_status
     FROM admins a
     LEFT JOIN roles r ON r.id = a.role_id
     LEFT JOIN branches b ON b.id = a.branch_id
+    LEFT JOIN teachers t ON t.id = a.teacher_id
     WHERE a.id = ${id}
     LIMIT 1
   `;
@@ -188,6 +200,41 @@ const resolveUserBranchIdForCreate = async (payload, tenantId, requester = null,
   return ensureAssignableBranch(payload.branchId, tenantId, client);
 };
 
+const resolveLinkedTeacherId = async ({ teacherId, tenantId, branchId, excludeUserId = null }, client = prisma) => {
+  const resolvedTeacherId = teacherId === null || teacherId === undefined || teacherId === '' ? null : Number(teacherId);
+  if (!resolvedTeacherId) return null;
+  if (!tenantId || !branchId) {
+    throw new AppError('استاد کو صارف بنانے کے لیے برانچ منتخب کریں۔', 400);
+  }
+
+  const teacher = await client.teacher.findFirst({
+    where: {
+      id: resolvedTeacherId,
+      tenantId: normalizeTenantId(tenantId),
+      branchId: normalizeBranchId(branchId),
+      staffType: 'teacher',
+      status: 'active',
+    },
+    select: { id: true },
+  });
+  if (!teacher) {
+    throw new AppError('منتخب استاد موجودہ ٹیننٹ اور برانچ کا فعال استاد نہیں ہے۔', 403);
+  }
+
+  const linkedUser = await client.admin.findFirst({
+    where: {
+      teacherId: resolvedTeacherId,
+      ...(excludeUserId ? { id: { not: Number(excludeUserId) } } : {}),
+    },
+    select: { id: true },
+  });
+  if (linkedUser) {
+    throw new AppError('یہ استاد پہلے ہی ایک صارف کے ساتھ منسلک ہے۔', 409);
+  }
+
+  return teacher.id;
+};
+
 const canAccessUserRow = (requester, row) => {
   if (requester?.isSuperAdmin) return true;
   const sameTenant = normalizeTenantId(row?.tenant_id) === normalizeTenantId(requester?.tenantId);
@@ -235,6 +282,20 @@ const assertRoleCanBeAssignedToBranch = (role, branchId) => {
 
   if (roleBranchId !== targetBranchId || roleScopeKey !== targetBranchId) {
     throw new AppError('Selected role is not available for this branch.', 400);
+  }
+};
+
+const assertRoleTeacherMatchesUser = async (roleId, teacherId, client = prisma) => {
+  const assignments = await client.roleTeacherClassAssignment.findMany({
+    where: { roleId: Number(roleId) },
+    distinct: ['teacherId'],
+    select: { teacherId: true },
+  });
+  if (!assignments.length) return;
+
+  const assignedTeacherIds = new Set(assignments.map((item) => Number(item.teacherId)));
+  if (!teacherId || !assignedTeacherIds.has(Number(teacherId))) {
+    throw new AppError('یہ کردار مخصوص استاد کے لیے مقرر ہے۔ اسی استاد کو منتخب کریں۔', 400);
   }
 };
 
@@ -484,6 +545,11 @@ export const usersService = {
         ? normalizeTenantId(requestedRole.tenant_id)
         : normalizeTenantId(requester?.tenantId);
       const branchId = await resolveUserBranchIdForCreate(payload, tenantId, requester, tx);
+      const teacherId = await resolveLinkedTeacherId({
+        teacherId: payload.teacherId,
+        tenantId,
+        branchId,
+      }, tx);
       const role = await ensureTenantAdminBranchRole({
         role: requestedRole,
         tenantId,
@@ -494,6 +560,7 @@ export const usersService = {
       assertRoleCanBeAssignedToTenant(role, tenantId);
       await assertRoleAllowedForBranchAdmin(role, requester, tx);
       assertRoleCanBeAssignedToBranch(role, branchId);
+      await assertRoleTeacherMatchesUser(role.id, teacherId, tx);
 
       const hashedPassword = await bcrypt.hash(payload.password, 12);
       const username = normalizeUsername(payload);
@@ -502,7 +569,7 @@ export const usersService = {
       await ensureUniqueUser({ email: payload.email, username, tenantId }, tx);
 
       await tx.$executeRaw`
-        INSERT INTO admins (name, email, phone, username, password, role, tenant_id, role_id, owner_admin_id, branch_id, status, updatedAt)
+        INSERT INTO admins (name, email, phone, username, password, role, tenant_id, role_id, owner_admin_id, branch_id, teacher_id, status, updatedAt)
         VALUES (
           ${payload.name},
           ${payload.email},
@@ -514,6 +581,7 @@ export const usersService = {
           ${Number(role.id)},
           ${ownerAdminId},
           ${branchId},
+          ${teacherId},
           ${payload.status || 'active'},
           CURRENT_TIMESTAMP
         )
@@ -570,6 +638,7 @@ export const usersService = {
           a.tenant_id,
           a.role_id,
           a.branch_id,
+          a.teacher_id,
           a.owner_admin_id,
           a.status,
           a.createdAt,
@@ -580,9 +649,12 @@ export const usersService = {
           b.name AS branch_name,
           b.code AS branch_code,
           b.status AS branch_status
+          ,t.fullName AS teacher_name
+          ,t.status AS teacher_status
         FROM admins a
         LEFT JOIN roles r ON r.id = a.role_id
         LEFT JOIN branches b ON b.id = a.branch_id
+        LEFT JOIN teachers t ON t.id = a.teacher_id
         WHERE (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
@@ -603,6 +675,7 @@ export const usersService = {
           a.tenant_id,
           a.role_id,
           a.branch_id,
+          a.teacher_id,
           a.owner_admin_id,
           a.status,
           a.createdAt,
@@ -613,9 +686,12 @@ export const usersService = {
           b.name AS branch_name,
           b.code AS branch_code,
           b.status AS branch_status
+          ,t.fullName AS teacher_name
+          ,t.status AS teacher_status
         FROM admins a
         LEFT JOIN roles r ON r.id = a.role_id
         LEFT JOIN branches b ON b.id = a.branch_id
+        LEFT JOIN teachers t ON t.id = a.teacher_id
         WHERE a.tenant_id <=> ${tenantId}
           AND (${branchId} IS NULL OR a.branch_id = ${branchId})
           AND (${branchScopedRequester} = false OR (a.branch_id = ${branchId} AND r.branch_id = ${branchId} AND r.role_scope_key = ${branchId} AND COALESCE(r.role_name, a.role) NOT IN ('admin', 'super_admin')))
@@ -692,6 +768,12 @@ export const usersService = {
       const nextBranchId = Object.prototype.hasOwnProperty.call(payload, 'branchId')
         ? await ensureAssignableBranch(payload.branchId, tenantId, tx)
         : normalizeBranchId(existingUser.branch_id);
+      const nextTeacherId = await resolveLinkedTeacherId({
+        teacherId: Object.prototype.hasOwnProperty.call(payload, 'teacherId') ? payload.teacherId : existingUser.teacher_id,
+        tenantId,
+        branchId: nextBranchId,
+        excludeUserId: id,
+      }, tx);
       assertNotSelfDeactivate(id, payload, requester);
       if (Object.prototype.hasOwnProperty.call(payload, 'roleId')) {
         assertNotSelfRoleChange(id, requester);
@@ -718,6 +800,7 @@ export const usersService = {
         nextRoleId = Number(role.id);
         nextRoleName = role.role_name || nextRoleName;
       }
+      await assertRoleTeacherMatchesUser(nextRoleId, nextTeacherId, tx);
 
       if (payload.password) {
         const hashedPassword = await bcrypt.hash(payload.password, 12);
@@ -733,6 +816,7 @@ export const usersService = {
             role = ${nextRoleName},
             role_id = ${nextRoleId},
             branch_id = ${nextBranchId},
+            teacher_id = ${nextTeacherId},
             status = ${payload.status || existingUser.status},
             updatedAt = CURRENT_TIMESTAMP
           WHERE id = ${id}
@@ -748,6 +832,7 @@ export const usersService = {
             role = ${nextRoleName},
             role_id = ${nextRoleId},
             branch_id = ${nextBranchId},
+            teacher_id = ${nextTeacherId},
             status = ${payload.status || existingUser.status},
             updatedAt = CURRENT_TIMESTAMP
           WHERE id = ${id}
@@ -825,6 +910,7 @@ export const usersService = {
       assertRoleCanBeAssignedToTenant(role, existingUser.tenant_id);
       await assertRoleAllowedForBranchAdmin(role, requester, tx);
       assertRoleCanBeAssignedToBranch(role, existingUser.branch_id);
+      await assertRoleTeacherMatchesUser(role.id, existingUser.teacher_id, tx);
 
       await tx.$executeRaw`
         UPDATE admins

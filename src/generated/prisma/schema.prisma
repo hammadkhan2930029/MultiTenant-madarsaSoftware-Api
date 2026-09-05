@@ -33,6 +33,7 @@ model Tenant {
   roles                         Role[]                       @relation("TenantRoles")
   rolePermissions               RolePermission[]             @relation("TenantRolePermissions")
   roleClassScopes               RoleClassScope[]             @relation("TenantRoleClassScopes")
+  roleTeacherClassAssignments   RoleTeacherClassAssignment[] @relation("TenantRoleTeacherClassAssignments")
   profile                       MadrassaProfile?             @relation("TenantMadrassaProfile")
   students                      Student[]                    @relation("TenantStudents")
   studentDocuments              StudentDocument[]            @relation("TenantStudentDocuments")
@@ -110,12 +111,14 @@ model Admin {
   roleId                          Int?                         @map("role_id")
   ownerAdminId                    Int?                         @map("owner_admin_id")
   branchId                        Int?                         @map("branch_id")
+  teacherId                       Int?                         @unique @map("teacher_id")
   status                          String                       @default("active") @db.VarChar(50)
   createdAt                       DateTime                     @default(now())
   updatedAt                       DateTime                     @updatedAt
   tenant                          Tenant?                      @relation("TenantAdmins", fields: [tenantId], references: [id], onDelete: SetNull)
   assignedRole                    Role?                        @relation("AdminAssignedRole", fields: [roleId], references: [id], onDelete: SetNull)
   assignedBranch                  Branch?                      @relation("AdminBranchAssignment", fields: [branchId], references: [id], onDelete: SetNull)
+  linkedTeacher                   Teacher?                     @relation("TeacherLinkedUser", fields: [teacherId], references: [id], onDelete: SetNull)
   ownerAdmin                      Admin?                       @relation("AdminMadrassaOwner", fields: [ownerAdminId], references: [id], onDelete: SetNull)
   ownedUsers                      Admin[]                      @relation("AdminMadrassaOwner")
   createdBranches                 Branch[]                     @relation("BranchCreatedBy")
@@ -323,26 +326,27 @@ model AuditLog {
 }
 
 model Role {
-  id              Int              @id @default(autoincrement())
-  tenantId        Int?             @map("tenant_id")
-  branchId        Int?             @map("branch_id")
-  roleScopeKey    Int              @default(0) @map("role_scope_key")
-  roleName        String           @map("role_name") @db.VarChar(100)
-  description     String?          @db.VarChar(255)
-  status          String           @default("active") @db.VarChar(50)
-  isSystemRole    Boolean          @default(false) @map("is_system_role")
-  classScopeMode  String           @default("all") @map("class_scope_mode") @db.VarChar(20)
-  createdBy       Int?             @map("created_by")
-  updatedBy       Int?             @map("updated_by")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  tenant          Tenant?          @relation("TenantRoles", fields: [tenantId], references: [id], onDelete: Cascade)
-  branch          Branch?          @relation("BranchRoles", fields: [branchId], references: [id], onDelete: SetNull)
-  creator         Admin?           @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
-  updater         Admin?           @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
-  admins          Admin[]          @relation("AdminAssignedRole")
-  rolePermissions RolePermission[]
-  classScopes     RoleClassScope[]
+  id                      Int                          @id @default(autoincrement())
+  tenantId                Int?                         @map("tenant_id")
+  branchId                Int?                         @map("branch_id")
+  roleScopeKey            Int                          @default(0) @map("role_scope_key")
+  roleName                String                       @map("role_name") @db.VarChar(100)
+  description             String?                      @db.VarChar(255)
+  status                  String                       @default("active") @db.VarChar(50)
+  isSystemRole            Boolean                      @default(false) @map("is_system_role")
+  classScopeMode          String                       @default("all") @map("class_scope_mode") @db.VarChar(20)
+  createdBy               Int?                         @map("created_by")
+  updatedBy               Int?                         @map("updated_by")
+  createdAt               DateTime                     @default(now()) @map("created_at")
+  updatedAt               DateTime                     @updatedAt @map("updated_at")
+  tenant                  Tenant?                      @relation("TenantRoles", fields: [tenantId], references: [id], onDelete: Cascade)
+  branch                  Branch?                      @relation("BranchRoles", fields: [branchId], references: [id], onDelete: SetNull)
+  creator                 Admin?                       @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater                 Admin?                       @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+  admins                  Admin[]                      @relation("AdminAssignedRole")
+  rolePermissions         RolePermission[]
+  classScopes             RoleClassScope[]
+  teacherClassAssignments RoleTeacherClassAssignment[]
 
   @@unique([tenantId, roleScopeKey, roleName])
   @@index([tenantId])
@@ -405,6 +409,27 @@ model RoleClassScope {
   @@index([tenantId, branchId])
   @@index([classId])
   @@map("role_class_scopes")
+}
+
+model RoleTeacherClassAssignment {
+  id        Int           @id @default(autoincrement())
+  tenantId  Int           @map("tenant_id")
+  branchId  Int           @map("branch_id")
+  roleId    Int           @map("role_id")
+  teacherId Int           @map("teacher_id")
+  classId   Int           @map("class_id")
+  createdAt DateTime      @default(now()) @map("created_at")
+  tenant    Tenant        @relation("TenantRoleTeacherClassAssignments", fields: [tenantId], references: [id], onDelete: Cascade)
+  branch    Branch        @relation("BranchRoleTeacherClassAssignments", fields: [branchId], references: [id], onDelete: Cascade)
+  role      Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  teacher   Teacher       @relation("TeacherRoleClassAssignments", fields: [teacherId], references: [id], onDelete: Cascade)
+  class     AcademicClass @relation("ClassRoleTeacherAssignments", fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, classId])
+  @@index([tenantId, branchId])
+  @@index([teacherId])
+  @@index([classId])
+  @@map("role_teacher_class_assignments")
 }
 
 model MadrassaProfile {
@@ -610,40 +635,41 @@ model Subject {
 }
 
 model Branch {
-  id                      Int                        @id @default(autoincrement())
-  tenantId                Int                        @map("tenant_id")
-  name                    String                     @db.VarChar(150)
-  code                    String?                    @db.VarChar(50)
-  address                 String?                    @db.VarChar(255)
-  contact                 String?                    @db.VarChar(50)
-  createdBy               Int?                       @map("created_by")
-  status                  String                     @default("active") @db.VarChar(50)
-  createdAt               DateTime                   @default(now())
-  updatedAt               DateTime                   @updatedAt
-  tenant                  Tenant                     @relation("TenantBranches", fields: [tenantId], references: [id])
-  creator                 Admin?                     @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
-  assignedAdmins          Admin[]                    @relation("AdminBranchAssignment")
-  roles                   Role[]                     @relation("BranchRoles")
-  roleClassScopes         RoleClassScope[]           @relation("BranchRoleClassScopes")
-  shifts                  Shift[]                    @relation("BranchShifts")
-  departments             Department[]               @relation("BranchDepartments")
-  qualifications          Qualification[]            @relation("BranchQualifications")
-  students                Student[]                  @relation("BranchStudents")
-  studentDocuments        StudentDocument[]          @relation("BranchStudentDocuments")
-  parents                 Parent[]                   @relation("BranchParents")
-  teachers                Teacher[]                  @relation("BranchTeachers")
-  classes                 AcademicClass[]
-  subjects                Subject[]                  @relation("BranchSubjects")
-  sessions                AcademicSession[]          @relation("BranchSessions")
-  assignments             StudentClassAssignment[]
-  studentAttendances      StudentAttendance[]
-  teacherAttendances      TeacherAttendance[]
-  suggestions             Suggestion[]               @relation("BranchSuggestions")
-  supportRequests         SupportRequest[]           @relation("BranchSupportRequests")
-  departmentHeads         DepartmentHeadAssignment[]
-  teacherResponsibilities TeacherResponsibility[]    @relation("BranchTeacherResponsibilities")
-  teacherAssignments      TeacherAssignment[]        @relation("BranchTeacherAssignments")
-  resultGrades            ResultGrade[]              @relation("BranchResultGrades")
+  id                          Int                          @id @default(autoincrement())
+  tenantId                    Int                          @map("tenant_id")
+  name                        String                       @db.VarChar(150)
+  code                        String?                      @db.VarChar(50)
+  address                     String?                      @db.VarChar(255)
+  contact                     String?                      @db.VarChar(50)
+  createdBy                   Int?                         @map("created_by")
+  status                      String                       @default("active") @db.VarChar(50)
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+  tenant                      Tenant                       @relation("TenantBranches", fields: [tenantId], references: [id])
+  creator                     Admin?                       @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  assignedAdmins              Admin[]                      @relation("AdminBranchAssignment")
+  roles                       Role[]                       @relation("BranchRoles")
+  roleClassScopes             RoleClassScope[]             @relation("BranchRoleClassScopes")
+  roleTeacherClassAssignments RoleTeacherClassAssignment[] @relation("BranchRoleTeacherClassAssignments")
+  shifts                      Shift[]                      @relation("BranchShifts")
+  departments                 Department[]                 @relation("BranchDepartments")
+  qualifications              Qualification[]              @relation("BranchQualifications")
+  students                    Student[]                    @relation("BranchStudents")
+  studentDocuments            StudentDocument[]            @relation("BranchStudentDocuments")
+  parents                     Parent[]                     @relation("BranchParents")
+  teachers                    Teacher[]                    @relation("BranchTeachers")
+  classes                     AcademicClass[]
+  subjects                    Subject[]                    @relation("BranchSubjects")
+  sessions                    AcademicSession[]            @relation("BranchSessions")
+  assignments                 StudentClassAssignment[]
+  studentAttendances          StudentAttendance[]
+  teacherAttendances          TeacherAttendance[]
+  suggestions                 Suggestion[]                 @relation("BranchSuggestions")
+  supportRequests             SupportRequest[]             @relation("BranchSupportRequests")
+  departmentHeads             DepartmentHeadAssignment[]
+  teacherResponsibilities     TeacherResponsibility[]      @relation("BranchTeacherResponsibilities")
+  teacherAssignments          TeacherAssignment[]          @relation("BranchTeacherAssignments")
+  resultGrades                ResultGrade[]                @relation("BranchResultGrades")
 
   @@unique([tenantId, name])
   @@unique([tenantId, code])
@@ -654,26 +680,27 @@ model Branch {
 }
 
 model AcademicClass {
-  id                 Int                      @id @default(autoincrement())
-  tenantId           Int                      @map("tenant_id")
-  name               String                   @db.VarChar(150)
-  branchId           Int
-  inchargeTeacherId  Int?                     @map("incharge_teacher_id")
-  status             String                   @default("active") @db.VarChar(50)
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
-  tenant             Tenant                   @relation("TenantClasses", fields: [tenantId], references: [id])
-  branch             Branch                   @relation(fields: [branchId], references: [id])
-  inchargeTeacher    Teacher?                 @relation("ClassInchargeTeacher", fields: [inchargeTeacherId], references: [id], onDelete: SetNull)
-  sections           Section[]
-  assignments        StudentClassAssignment[]
-  studentAttendances StudentAttendance[]
-  studentSchedules   StudentSchedule[]
-  teacherSchedules   TeacherSchedule[]
-  examSchedules      ExamSchedule[]
-  examResults        ExamResult[]
-  teacherAssignments TeacherAssignment[]
-  roleClassScopes    RoleClassScope[]         @relation("AcademicClassRoleScopes")
+  id                     Int                          @id @default(autoincrement())
+  tenantId               Int                          @map("tenant_id")
+  name                   String                       @db.VarChar(150)
+  branchId               Int
+  inchargeTeacherId      Int?                         @map("incharge_teacher_id")
+  status                 String                       @default("active") @db.VarChar(50)
+  createdAt              DateTime                     @default(now())
+  updatedAt              DateTime                     @updatedAt
+  tenant                 Tenant                       @relation("TenantClasses", fields: [tenantId], references: [id])
+  branch                 Branch                       @relation(fields: [branchId], references: [id])
+  inchargeTeacher        Teacher?                     @relation("ClassInchargeTeacher", fields: [inchargeTeacherId], references: [id], onDelete: SetNull)
+  sections               Section[]
+  assignments            StudentClassAssignment[]
+  studentAttendances     StudentAttendance[]
+  studentSchedules       StudentSchedule[]
+  teacherSchedules       TeacherSchedule[]
+  examSchedules          ExamSchedule[]
+  examResults            ExamResult[]
+  teacherAssignments     TeacherAssignment[]
+  roleClassScopes        RoleClassScope[]             @relation("AcademicClassRoleScopes")
+  roleTeacherAssignments RoleTeacherClassAssignment[] @relation("ClassRoleTeacherAssignments")
 
   @@unique([branchId, name])
   @@index([tenantId])
@@ -1037,25 +1064,27 @@ model StudentDocument {
 }
 
 model Parent {
-  id           Int             @id @default(autoincrement())
-  tenantId     Int             @map("tenant_id")
-  branchId     Int?            @map("branch_id")
-  fullName     String          @db.VarChar(150)
-  familyNumber String?         @db.VarChar(100)
-  phone        String?         @db.VarChar(50)
-  whatsapp     String?         @db.VarChar(50)
-  email        String?         @db.VarChar(150)
-  cnic         String?         @db.VarChar(50)
-  occupation   String?         @db.VarChar(150)
-  address      String?         @db.VarChar(255)
-  status       String          @default("active") @db.VarChar(50)
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  students     StudentParent[]
-  tenant       Tenant          @relation("TenantParents", fields: [tenantId], references: [id])
-  branch       Branch?         @relation("BranchParents", fields: [branchId], references: [id], onDelete: SetNull)
+  id                 Int             @id @default(autoincrement())
+  tenantId           Int             @map("tenant_id")
+  branchId           Int?            @map("branch_id")
+  registrationNumber String?         @map("registration_number") @db.VarChar(100)
+  fullName           String          @db.VarChar(150)
+  familyNumber       String?         @db.VarChar(100)
+  phone              String?         @db.VarChar(50)
+  whatsapp           String?         @db.VarChar(50)
+  email              String?         @db.VarChar(150)
+  cnic               String?         @db.VarChar(50)
+  occupation         String?         @db.VarChar(150)
+  address            String?         @db.VarChar(255)
+  status             String          @default("active") @db.VarChar(50)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  students           StudentParent[]
+  tenant             Tenant          @relation("TenantParents", fields: [tenantId], references: [id])
+  branch             Branch?         @relation("BranchParents", fields: [branchId], references: [id], onDelete: SetNull)
 
   @@unique([tenantId, familyNumber])
+  @@unique([tenantId, registrationNumber])
   @@index([tenantId])
   @@index([branchId])
   @@index([tenantId, branchId])
@@ -1104,48 +1133,50 @@ model StudentClassAssignment {
 }
 
 model Teacher {
-  id                  Int                        @id @default(autoincrement())
-  tenantId            Int                        @map("tenant_id")
-  branchId            Int?                       @map("branch_id")
-  staffType           String                     @default("teacher") @db.VarChar(50)
-  fullName            String                     @db.VarChar(150)
-  email               String?                    @db.VarChar(150)
-  phone               String?                    @db.VarChar(50)
-  cnic                String?                    @db.VarChar(50)
-  subject             String?                    @db.VarChar(150)
-  qualification       String?                    @db.VarChar(150)
-  educationInstitute  String?                    @db.VarChar(150)
-  educationYear       String?                    @db.VarChar(20)
-  specialization      String?                    @db.VarChar(150)
-  address             String?                    @db.VarChar(255)
-  shiftId             Int?
-  imageUrl            String?                    @db.VarChar(255)
-  basicSalary         Decimal                    @db.Decimal(10, 2)
-  bankName            String?                    @db.VarChar(150)
-  accountTitle        String?                    @db.VarChar(150)
-  accountNumber       String?                    @db.VarChar(100)
-  iban                String?                    @db.VarChar(100)
-  jobTitle            String?                    @db.VarChar(150)
-  department          String?                    @db.VarChar(150)
-  employmentType      String?                    @db.VarChar(100)
-  appointmentDate     String?                    @db.VarChar(20)
-  joiningDate         String?                    @db.VarChar(20)
-  experienceSummary   String?                    @db.VarChar(500)
-  notes               String?                    @db.VarChar(500)
-  status              String                     @default("active") @db.VarChar(50)
-  createdAt           DateTime                   @default(now())
-  updatedAt           DateTime                   @updatedAt
-  attendances         TeacherAttendance[]
-  salaryIncrements    TeacherSalaryIncrement[]
-  salaryEntries       SalaryEntry[]
-  schedules           TeacherSchedule[]
-  shift               Shift?                     @relation(fields: [shiftId], references: [id], onDelete: SetNull)
-  tenant              Tenant                     @relation("TenantTeachers", fields: [tenantId], references: [id])
-  branch              Branch?                    @relation("BranchTeachers", fields: [branchId], references: [id], onDelete: SetNull)
-  departmentHeads     DepartmentHeadAssignment[]
-  teachingAssignments TeacherAssignment[]
-  invigilatedExams    ExamSchedule[]             @relation("TeacherExamInvigilation")
-  inchargeClasses     AcademicClass[]            @relation("ClassInchargeTeacher")
+  id                   Int                          @id @default(autoincrement())
+  tenantId             Int                          @map("tenant_id")
+  branchId             Int?                         @map("branch_id")
+  staffType            String                       @default("teacher") @db.VarChar(50)
+  fullName             String                       @db.VarChar(150)
+  email                String?                      @db.VarChar(150)
+  phone                String?                      @db.VarChar(50)
+  cnic                 String?                      @db.VarChar(50)
+  subject              String?                      @db.VarChar(150)
+  qualification        String?                      @db.VarChar(150)
+  educationInstitute   String?                      @db.VarChar(150)
+  educationYear        String?                      @db.VarChar(20)
+  specialization       String?                      @db.VarChar(150)
+  address              String?                      @db.VarChar(255)
+  shiftId              Int?
+  imageUrl             String?                      @db.VarChar(255)
+  basicSalary          Decimal                      @db.Decimal(10, 2)
+  bankName             String?                      @db.VarChar(150)
+  accountTitle         String?                      @db.VarChar(150)
+  accountNumber        String?                      @db.VarChar(100)
+  iban                 String?                      @db.VarChar(100)
+  jobTitle             String?                      @db.VarChar(150)
+  department           String?                      @db.VarChar(150)
+  employmentType       String?                      @db.VarChar(100)
+  appointmentDate      String?                      @db.VarChar(20)
+  joiningDate          String?                      @db.VarChar(20)
+  experienceSummary    String?                      @db.VarChar(500)
+  notes                String?                      @db.VarChar(500)
+  status               String                       @default("active") @db.VarChar(50)
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  attendances          TeacherAttendance[]
+  salaryIncrements     TeacherSalaryIncrement[]
+  salaryEntries        SalaryEntry[]
+  schedules            TeacherSchedule[]
+  shift                Shift?                       @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  tenant               Tenant                       @relation("TenantTeachers", fields: [tenantId], references: [id])
+  branch               Branch?                      @relation("BranchTeachers", fields: [branchId], references: [id], onDelete: SetNull)
+  departmentHeads      DepartmentHeadAssignment[]
+  teachingAssignments  TeacherAssignment[]
+  invigilatedExams     ExamSchedule[]               @relation("TeacherExamInvigilation")
+  inchargeClasses      AcademicClass[]              @relation("ClassInchargeTeacher")
+  roleClassAssignments RoleTeacherClassAssignment[] @relation("TeacherRoleClassAssignments")
+  linkedUser           Admin?                       @relation("TeacherLinkedUser")
 
   @@unique([tenantId, phone])
   @@unique([tenantId, cnic])

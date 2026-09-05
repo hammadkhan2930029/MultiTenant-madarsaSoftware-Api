@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { optionalCnicField } from '../../utils/cnicValidation.js';
+import { optionalPhoneField, requiredPhoneField } from '../../utils/phoneValidation.js';
 
 const optionalStringField = (max, message) =>
   z.union([z.string().trim().max(max, message), z.literal(''), z.undefined()]).transform((value) =>
@@ -12,8 +13,8 @@ const requiredStringField = (min, max, requiredMessage, maxMessage) =>
 const parentBodySchema = z.object({
   fullName: z.string().trim().min(2, 'Parent full name is required.').max(150, 'Parent full name is too long.'),
   familyNumber: optionalStringField(100, 'Family number is too long.'),
-  phone: requiredStringField(1, 50, 'Phone number is required.', 'Phone is too long.'),
-  whatsapp: optionalStringField(50, 'WhatsApp number is too long.'),
+  phone: requiredPhoneField('فون نمبر درج کرنا ضروری ہے۔'),
+  whatsapp: optionalPhoneField(),
   email: z
     .union([z.string().trim().email('Please enter a valid email address.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),

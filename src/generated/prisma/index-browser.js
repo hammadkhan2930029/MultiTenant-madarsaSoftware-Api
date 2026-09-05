@@ -155,6 +155,7 @@ exports.Prisma.AdminScalarFieldEnum = {
   roleId: 'roleId',
   ownerAdminId: 'ownerAdminId',
   branchId: 'branchId',
+  teacherId: 'teacherId',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -315,6 +316,16 @@ exports.Prisma.RoleClassScopeScalarFieldEnum = {
   tenantId: 'tenantId',
   branchId: 'branchId',
   roleId: 'roleId',
+  classId: 'classId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RoleTeacherClassAssignmentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  branchId: 'branchId',
+  roleId: 'roleId',
+  teacherId: 'teacherId',
   classId: 'classId',
   createdAt: 'createdAt'
 };
@@ -677,6 +688,7 @@ exports.Prisma.ParentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   branchId: 'branchId',
+  registrationNumber: 'registrationNumber',
   fullName: 'fullName',
   familyNumber: 'familyNumber',
   phone: 'phone',
@@ -1502,6 +1514,7 @@ exports.Prisma.StudentDocumentOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.ParentOrderByRelevanceFieldEnum = {
+  registrationNumber: 'registrationNumber',
   fullName: 'fullName',
   familyNumber: 'familyNumber',
   phone: 'phone',
@@ -1777,6 +1790,7 @@ exports.Prisma.ModelName = {
   Permission: 'Permission',
   RolePermission: 'RolePermission',
   RoleClassScope: 'RoleClassScope',
+  RoleTeacherClassAssignment: 'RoleTeacherClassAssignment',
   MadrassaProfile: 'MadrassaProfile',
   City: 'City',
   Suggestion: 'Suggestion',

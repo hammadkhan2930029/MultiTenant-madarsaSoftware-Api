@@ -429,9 +429,30 @@ const getRoleClassScopes = async (client, roleId) => {
   };
 };
 
+const getRoleTeacherClassAssignments = async (client, roleId) => {
+  const rows = await client.roleTeacherClassAssignment.findMany({
+    where: { roleId: Number(roleId) },
+    select: {
+      classId: true,
+      teacherId: true,
+      teacher: { select: { id: true, fullName: true, status: true } },
+      class: { select: { id: true, name: true, status: true } },
+    },
+    orderBy: { class: { name: 'asc' } },
+  });
+  const teacherIds = [...new Set(rows.map((row) => Number(row.teacherId)))];
+
+  return {
+    teacherId: teacherIds.length === 1 ? teacherIds[0] : null,
+    teacher: teacherIds.length === 1 ? rows[0]?.teacher || null : null,
+    classTeacherAssignments: rows,
+  };
+};
+
 const hasClassScopePayload = (payload = {}) => (
   Object.prototype.hasOwnProperty.call(payload, 'classScopeMode') ||
-  Object.prototype.hasOwnProperty.call(payload, 'classIds')
+  Object.prototype.hasOwnProperty.call(payload, 'classIds') ||
+  Object.prototype.hasOwnProperty.call(payload, 'teacherId')
 );
 
 const resolveClassScopePayload = async (client, payload, tenantId, branchId, fallbackMode = 'all') => {
@@ -487,6 +508,41 @@ const replaceRoleClassScopes = async (client, role, scope) => {
       })),
     });
   }
+};
+
+const resolveTeacherClassAssignment = async (client, payload, tenantId, branchId, classScope, fallbackTeacherId = null) => {
+  if (classScope.mode === 'all') return { teacherId: null, classIds: [] };
+
+  const teacherId = Number(payload.teacherId || fallbackTeacherId);
+  if (!Number.isInteger(teacherId) || teacherId <= 0) {
+    throw new AppError('منتخب جماعتوں کے لیے استاد منتخب کریں۔', 400);
+  }
+
+  const teacher = await client.teacher.findFirst({
+    where: { id: teacherId, tenantId, branchId, staffType: 'teacher', status: 'active' },
+    select: { id: true },
+  });
+  if (!teacher) {
+    throw new AppError('منتخب استاد اس ٹیننٹ اور برانچ کا فعال استاد نہیں ہے۔', 403);
+  }
+
+  return { teacherId, classIds: classScope.classIds };
+};
+
+const replaceRoleTeacherClassAssignments = async (client, role, assignment) => {
+  const roleId = Number(role.id);
+  await client.roleTeacherClassAssignment.deleteMany({ where: { roleId } });
+  if (!assignment.teacherId || !assignment.classIds.length) return;
+
+  await client.roleTeacherClassAssignment.createMany({
+    data: assignment.classIds.map((classId) => ({
+      tenantId: Number(role.tenant_id),
+      branchId: Number(role.branch_id),
+      roleId,
+      teacherId: assignment.teacherId,
+      classId,
+    })),
+  });
 };
 
 const collectPermissionInputs = (payload = {}) => {
@@ -716,11 +772,13 @@ const buildRoleResponse = async (client, id) => {
   const role = await assertRoleExists(client, id);
   const permissions = await getRolePermissions(client, id);
   const classScopes = await getRoleClassScopes(client, id);
+  const teacherClassAssignments = await getRoleTeacherClassAssignments(client, id);
 
   return {
     ...mapRole(role),
     permissions,
     ...classScopes,
+    ...teacherClassAssignments,
   };
 };
 
@@ -782,6 +840,13 @@ export const rolesService = {
       await assertPermissionBoundary(tx, permissionIds, requester);
       const classScope = await resolveClassScopePayload(tx, payload, roleTenantId, roleBranchId);
       await assertClassScopeBoundary(classScope, requester);
+      const teacherClassAssignment = await resolveTeacherClassAssignment(
+        tx,
+        payload,
+        roleTenantId,
+        roleBranchId,
+        classScope,
+      );
 
       await tx.$executeRaw`
         INSERT INTO roles (tenant_id, branch_id, role_scope_key, role_name, description, status, is_system_role, created_by, updated_by)
@@ -792,6 +857,7 @@ export const rolesService = {
 
       await replaceRolePermissions(tx, Number(createdRole.id), permissionIds);
       await replaceRoleClassScopes(tx, createdRole, classScope);
+      await replaceRoleTeacherClassAssignments(tx, createdRole, teacherClassAssignment);
 
       const createdResponse = await buildRoleResponse(tx, Number(createdRole.id));
       await logRoleAudit(tx, requester, {
@@ -984,7 +1050,17 @@ export const rolesService = {
           existingRole.class_scope_mode || 'all',
         );
         await assertClassScopeBoundary(classScope, requester);
+        const previousTeacherAssignment = await getRoleTeacherClassAssignments(tx, id);
+        const teacherClassAssignment = await resolveTeacherClassAssignment(
+          tx,
+          payload,
+          roleTenantId,
+          roleBranchId,
+          classScope,
+          previousTeacherAssignment.teacherId,
+        );
         await replaceRoleClassScopes(tx, existingRole, classScope);
+        await replaceRoleTeacherClassAssignments(tx, existingRole, teacherClassAssignment);
       }
 
       const updatedResponse = await buildRoleResponse(tx, id);

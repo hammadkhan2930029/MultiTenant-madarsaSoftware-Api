@@ -14,10 +14,7 @@ const classBodySchema = z.object({
 });
 
 export const createClassValidationSchema = z.object({
-  body: classBodySchema.refine((body) => Boolean(body.inchargeTeacherId), {
-    path: ['inchargeTeacherId'],
-    message: 'Class incharge teacher is required.',
-  }),
+  body: classBodySchema,
   params: z.object({}).default({}),
   query: z.object({}).default({}),
 });
@@ -28,7 +25,7 @@ export const bulkCreateClassesValidationSchema = z.object({
     classes: z.array(
       z.object({
         name: z.string().trim().min(2, 'Class name is required.').max(150, 'Class name is too long.'),
-        inchargeTeacherId: z.coerce.number().int().positive('Class incharge teacher is required.'),
+        inchargeTeacherId: optionalInchargeTeacherId,
       }),
     ).min(1, 'At least one class is required.').max(50, 'Too many classes in one request.'),
   }),

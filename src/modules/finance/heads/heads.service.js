@@ -38,7 +38,7 @@ const getTenantHead = async (tenantId, id, branchId) => {
   });
 
   if (!head) {
-    throw new AppError('Finance head not found.', 404);
+    throw new AppError('مالیاتی قسم نہیں ملی۔', 404);
   }
 
   return head;
@@ -64,8 +64,25 @@ export const headsService = {
       where: { tenantId: resolvedTenantId, branchId, name: payload.name },
     });
 
+    if (existing?.status === 'active') {
+      throw new AppError(
+        payload.type === 'income' ? 'یہ آمدنی کی قسم پہلے سے موجود ہے۔' : 'یہ خرچ کی قسم پہلے سے موجود ہے۔',
+        409,
+      );
+    }
+
     if (existing) {
-      throw new AppError('Finance head with the same name already exists.', 409);
+      return prisma.financeHead.update({
+        where: { id: existing.id },
+        data: {
+          name: payload.name,
+          type: payload.type,
+          expenseCategoryId,
+          description: payload.description || null,
+          status: payload.status || 'active',
+        },
+        select,
+      });
     }
 
     return prisma.financeHead.create({
@@ -119,7 +136,10 @@ export const headsService = {
       });
 
       if (duplicate) {
-        throw new AppError('Another finance head with the same name already exists.', 409);
+        throw new AppError(
+          nextType === 'income' ? 'یہ آمدنی کی قسم پہلے سے موجود ہے۔' : 'یہ خرچ کی قسم پہلے سے موجود ہے۔',
+          409,
+        );
       }
     }
 

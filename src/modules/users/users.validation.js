@@ -1,12 +1,14 @@
 import { z } from 'zod';
+import { optionalPhoneField } from '../../utils/phoneValidation.js';
 
 const userBaseSchema = {
   name: z.string().trim().min(2, 'User name is required.').max(150, 'User name is too long.'),
   email: z.string().trim().email('Valid email is required.').max(150, 'Email is too long.'),
-  phone: z.string().trim().max(50, 'Phone is too long.').optional().or(z.literal('')),
+  phone: optionalPhoneField(),
   username: z.string().trim().min(3, 'Username is required.').max(100, 'Username is too long.').optional(),
   roleId: z.coerce.number().int().positive('Role is required.'),
   branchId: z.coerce.number().int().positive('برانچ نمبر درست ہونا چاہیے۔').optional().nullable(),
+  teacherId: z.coerce.number().int().positive('استاد نمبر درست ہونا چاہیے۔').optional().nullable(),
   status: z.enum(['active', 'inactive']).optional(),
 };
 
@@ -48,6 +50,7 @@ export const updateUserValidationSchema = z.object({
       username: userBaseSchema.username.optional(),
       status: userBaseSchema.status,
       branchId: userBaseSchema.branchId,
+      teacherId: userBaseSchema.teacherId,
       password: z.string().min(8, 'Password must be at least 8 characters.').max(100, 'Password is too long.').optional(),
     })
     .refine((value) => Object.keys(value).length > 0, {

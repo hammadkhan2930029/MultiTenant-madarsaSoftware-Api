@@ -67,7 +67,7 @@ export const getAdminRoleAndPermissions = async (admin, client = prisma) => {
 
   try {
     rows = await client.$queryRaw`
-      SELECT role_id, role, tenant_id
+      SELECT role_id, role, tenant_id, teacher_id
       FROM admins
       WHERE id = ${Number(admin.id)}
       LIMIT 1
@@ -105,11 +105,28 @@ export const getAdminRoleAndPermissions = async (admin, client = prisma) => {
         select: { classId: true },
       })
     : [];
+  const teacherClassRows = role?.id && role.class_scope_mode === 'selected'
+    ? await client.roleTeacherClassAssignment.findMany({
+        where: { roleId: Number(role.id) },
+        select: { teacherId: true, classId: true },
+      })
+    : [];
+  const scopedClassIds = classScopeRows.map((row) => Number(row.classId));
+  const assignedClassIds = new Set(teacherClassRows.map((row) => Number(row.classId)));
+  const effectiveClassIds = teacherClassRows.length
+    ? scopedClassIds.filter((classId) => assignedClassIds.has(classId))
+    : scopedClassIds;
+  const teacherIds = [...new Set(teacherClassRows.map((row) => Number(row.teacherId)))];
+  const roleTeacherId = teacherIds.length === 1 ? teacherIds[0] : null;
+  const linkedTeacherId = toNumber(adminRoleState.teacher_id);
+  const teacherAssignmentMatches = !roleTeacherId || linkedTeacherId === roleTeacherId;
 
   return {
     role: mapRoleRow(role),
     permissions,
     permissionKeys: permissions.map((permission) => permission.permissionKey),
-    classIds: classScopeRows.map((row) => Number(row.classId)),
+    classIds: teacherAssignmentMatches ? effectiveClassIds : [],
+    teacherId: linkedTeacherId,
+    roleTeacherId,
   };
 };

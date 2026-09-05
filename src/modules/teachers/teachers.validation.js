@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { optionalCnicField } from '../../utils/cnicValidation.js';
+import { requiredPhoneField } from '../../utils/phoneValidation.js';
 
 const optionalStringField = (max, message) =>
   z.union([z.string().trim().max(max, message), z.literal(''), z.undefined()]).transform((value) =>
@@ -16,7 +17,7 @@ const teacherBodySchema = z.object({
   email: z
     .union([z.string().trim().email('درست ای میل درج کریں۔').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
-  phone: optionalStringField(50, 'فون نمبر بہت لمبا ہے۔'),
+  phone: requiredPhoneField('فون نمبر درج کرنا ضروری ہے۔'),
   cnic: optionalCnicField(),
   subject: requiredStringField(150, 'مضمون / ذمہ داری لازمی ہے۔', 'مضمون / ذمہ داری بہت لمبی ہے۔'),
   qualification: optionalStringField(150, 'تعلیمی قابلیت بہت لمبی ہے۔'),

@@ -53,4 +53,12 @@ export const env = {
   smtpRejectUnauthorized: process.env.SMTP_REJECT_UNAUTHORIZED !== 'false',
   suggestionsRecipientEmail: process.env.SUGGESTIONS_RECIPIENT_EMAIL || 'info@cogentdevs.com',
   supportRecipientEmail: process.env.SUPPORT_RECIPIENT_EMAIL || 'info@cogentdevs.com',
+  recaptchaEnabled: process.env.RECAPTCHA_ENABLED
+    ? process.env.RECAPTCHA_ENABLED === 'true'
+    : process.env.NODE_ENV === 'production',
+  recaptchaSecretKey: process.env.RECAPTCHA_SECRET_KEY || '',
 };
+
+if (env.recaptchaEnabled && !env.recaptchaSecretKey) {
+  throw new Error('Missing required environment variable: RECAPTCHA_SECRET_KEY');
+}

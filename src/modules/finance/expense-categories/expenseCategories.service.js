@@ -50,14 +50,29 @@ export const expenseCategoriesService = {
     const status = payload.status || 'active';
 
     const duplicates = await prisma.$queryRaw`
-      SELECT id
+      SELECT id, status
       FROM finance_expense_categories
       WHERE tenant_id = ${resolvedTenantId} AND branch_id = ${branchId} AND name = ${name}
       LIMIT 1
     `;
 
     if (duplicates.length) {
-      throw new AppError('یہ خرچ کی قسم پہلے سے موجود ہے۔', 409);
+      const existing = duplicates[0];
+
+      if (String(existing.status).toLowerCase() === 'active') {
+        throw new AppError('یہ خرچ کی قسم پہلے سے موجود ہے۔', 409);
+      }
+
+      const existingId = Number(existing.id);
+      await prisma.$executeRaw`
+        UPDATE finance_expense_categories
+        SET status = ${status}, updatedAt = ${new Date()}
+        WHERE id = ${existingId}
+          AND tenant_id = ${resolvedTenantId}
+          AND branch_id = ${branchId}
+      `;
+
+      return getCategoryById(resolvedTenantId, existingId, branchId);
     }
 
     await prisma.$executeRaw`

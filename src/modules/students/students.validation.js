@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { optionalCnicField } from '../../utils/cnicValidation.js';
+import { optionalPhoneField, requiredPhoneField } from '../../utils/phoneValidation.js';
+import { urduRelationshipField } from '../../utils/relationshipValidation.js';
 
 const optionalStringField = (max, message) =>
   z.union([z.string().trim().max(max, message), z.literal(''), z.undefined()]).transform((value) =>
@@ -38,14 +40,25 @@ const requiredNumberField = (requiredMessage, invalidMessage) =>
 const requiredStringField = (min, max, requiredMessage, maxMessage) =>
   z.string().trim().min(min, requiredMessage).max(max, maxMessage);
 
+const residenceStatusField = z.preprocess(
+  (value) => {
+    if (value === '' || value === null) return undefined;
+    if (value === 'ہاں') return 'رہائشی';
+    if (value === 'نہیں') return 'غیر رہائشی';
+    return value;
+  },
+  z.enum(['رہائشی', 'غیر رہائشی'], {
+    errorMap: () => ({ message: 'رہائشی حیثیت درست منتخب کریں۔' }),
+  }).optional(),
+);
+
 const parentLinkSchema = z.object({
   parentId: z.coerce.number().int().positive().optional(),
   fullName: z.string().trim().min(2, 'Parent full name is required.').max(150, 'Parent full name is too long.'),
   familyNumber: optionalStringField(100, 'Family number is too long.'),
-  relationship: z.string().trim().min(2, 'Relationship is required.').max(50, 'Relationship is too long.'),
-  isPrimary: z.coerce.boolean().optional(),
-  phone: optionalStringField(50, 'Parent phone is too long.'),
-  whatsapp: optionalStringField(50, 'Parent WhatsApp number is too long.'),
+  relationship: urduRelationshipField(),
+  phone: requiredPhoneField('فون نمبر درج کرنا ضروری ہے۔'),
+  whatsapp: optionalPhoneField(),
   email: z
     .union([z.string().trim().email('Please enter a valid parent email.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
@@ -67,8 +80,8 @@ const studentBodySchema = z.object({
   cnic: optionalCnicField(),
   dob: requiredDateField('تاریخ پیدائش لازمی منتخب کریں۔'),
   bForm: optionalStringField(50, 'B-Form is too long.'),
-  phone: optionalStringField(50, 'Student phone is too long.'),
-  whatsapp: optionalStringField(50, 'WhatsApp number is too long.'),
+  phone: requiredPhoneField('موبائل نمبر درج کرنا ضروری ہے۔'),
+  whatsapp: optionalPhoneField(),
   email: z
     .union([z.string().trim().email('Please enter a valid student email.').max(150), z.literal(''), z.undefined()])
     .transform((value) => (value === '' ? undefined : value)),
@@ -90,7 +103,7 @@ const studentBodySchema = z.object({
   teacherName: optionalStringField(150, 'Teacher name is too long.'),
   medicalCondition: optionalStringField(255, 'Medical condition detail is too long.'),
   monthlyFee: requiredNumberField('ماہانہ فیس لازمی درج کریں۔', 'ماہانہ فیس درست درج کریں۔'),
-  reside: optionalStringField(20, 'Residence detail is too long.'),
+  reside: residenceStatusField,
   status: z.enum(['active', 'inactive']).optional(),
   parents: z.array(parentLinkSchema).optional(),
 });
@@ -139,7 +152,10 @@ export const studentDocumentIdValidationSchema = z.object({
     id: z.coerce.number().int().positive('Student id must be a valid number.'),
     documentId: z.coerce.number().int().positive('Document id must be a valid number.'),
   }),
-  query: z.object({}).default({}),
+  query: z.object({
+    download: z.enum(['true', 'false']).optional(),
+    branchId: z.coerce.number().int().positive().optional(),
+  }).default({}),
 });
 
 export const assignStudentClassValidationSchema = z.object({
