@@ -33,7 +33,6 @@
     "test:branch-api-errors": "node scripts/test-branch-api-errors.js",
     "test:branch-role-isolation": "node scripts/test-branch-role-isolation.js",
     "test:login-rbac": "node scripts/test-login-rbac-response.js",
-    "test:recaptcha": "node scripts/test-recaptcha.js",
     "test:audit-logs": "node scripts/test-rbac-audit-logs.js",
     "test:affiliate": "node scripts/test-affiliate-suite.js",
     "test:affiliate-http-security": "node scripts/test-affiliate-http-security.js",

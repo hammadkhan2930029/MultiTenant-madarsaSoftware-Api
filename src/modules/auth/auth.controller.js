@@ -1,10 +1,8 @@
 import { apiResponse } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authService } from './auth.service.js';
-import { verifyRecaptchaToken } from './recaptcha.service.js';
 
 export const loginAdmin = asyncHandler(async (req, res) => {
-  await verifyRecaptchaToken(req.body.recaptchaToken, req.ip);
   const result = await authService.loginAdmin(req.body, {
     tenantId: req.tenantId,
     isSystemHost: Boolean(req.tenantHost?.isSystemHost),

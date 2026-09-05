@@ -11,7 +11,6 @@ export const loginValidationSchema = z.object({
       .string()
       .min(6, 'Password must be at least 6 characters long.')
       .max(100, 'Password is too long.'),
-    recaptchaToken: z.string().trim().max(4096, 'reCAPTCHA token is too long.').optional().or(z.literal('')),
   }),
   params: z.object({}).default({}),
   query: z.object({}).default({}),
