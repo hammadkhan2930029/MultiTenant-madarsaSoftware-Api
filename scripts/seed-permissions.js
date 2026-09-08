@@ -138,6 +138,41 @@ const EXTRA_PERMISSIONS = [
 
 const LEGACY_ACTION_ALIASES = ['edit'];
 
+const URDU_MODULE_LABELS = {
+  dashboard: 'ڈیش بورڈ', students: 'طلباء', parents: 'والدین', teachers: 'اساتذہ',
+  classes: 'جماعتیں', sections: 'سیکشنز', attendance: 'حاضری', fees: 'فیس', finance: 'مالیات',
+  hifz: 'حفظ', exams: 'امتحانات', store: 'اسٹور', inventory: 'اشیاء', reports: 'رپورٹس',
+  roles: 'کردار و اختیارات', users: 'صارفین کا انتظام', settings: 'ترتیبات',
+  madrassa_profile: 'مدرسہ پروفائل', notifications: 'اطلاعات', branches: 'شاخیں',
+  admissions: 'داخلے', sessions: 'تعلیمی سیشن', subjects: 'مضامین', staff: 'عملہ', funds: 'عطیات',
+  salary: 'تنخواہ', exam_results: 'امتحانی نتائج', result_grades: 'نتائج کے گریڈز',
+  support: 'سپورٹ', suggestions: 'تجاویز', tenant_management: 'مدرسہ انتظام', audit: 'آڈٹ ریکارڈ',
+};
+
+const URDU_ACTION_LABELS = {
+  view: 'دیکھیں', create: 'شامل کریں', add: 'شامل کریں', edit: 'ترمیم کریں',
+  update: 'ترمیم کریں', delete: 'حذف کریں', assign: 'تفویض کریں', print: 'پرنٹ کریں',
+  upload: 'اپ لوڈ کریں', download: 'ڈاؤن لوڈ کریں', archive: 'محفوظات میں منتقل کریں',
+  restore: 'بحال کریں', mark: 'درج کریں', collect: 'وصول کریں', refund: 'رقم واپس کریں',
+  manage: 'انتظام کریں', approve: 'منظور کریں', reject: 'مسترد کریں', export: 'ایکسپورٹ کریں',
+  import: 'امپورٹ کریں', generate: 'بنائیں', reports: 'رپورٹس دیکھیں',
+  assign_permissions: 'اجازتیں تفویض کریں', change_password: 'پاس ورڈ تبدیل کریں',
+};
+
+const localizePermission = (permission) => {
+  const [moduleKey, ...actionParts] = permission.permissionKey.split('.');
+  const action = permission.action || actionParts.join('.');
+  const actionKey = URDU_ACTION_LABELS[action] ? action : action.split('.').pop();
+  const moduleLabel = URDU_MODULE_LABELS[moduleKey] || moduleKey;
+  const actionLabel = URDU_ACTION_LABELS[actionKey] || action;
+
+  return {
+    ...permission,
+    displayLabel: `${moduleLabel} ${actionLabel}`,
+    description: `${moduleLabel} کی اس سہولت کو استعمال کرنے کی اجازت۔`,
+  };
+};
+
 function titleCase(value) {
   return value
     .replace(/_/g, ' ')
@@ -191,7 +226,7 @@ function buildPermissionCatalog() {
     });
   }
 
-  return [...permissions.values()];
+  return [...permissions.values()].map(localizePermission);
 }
 
 async function seedPermissions() {
