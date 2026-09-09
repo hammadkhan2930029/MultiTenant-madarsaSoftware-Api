@@ -8,7 +8,17 @@ export const validate = (schema) => (req, _res, next) => {
   });
 
   if (!result.success) {
-    throw new AppError('درج کردہ معلومات درست نہیں ہیں۔', 400, result.error.flatten());
+    const flattened = result.error.flatten();
+    const fieldErrors = {};
+
+    result.error.issues.forEach((issue) => {
+      const path = issue.path
+        .filter((part) => !['body', 'params', 'query'].includes(String(part)))
+        .join('.');
+      if (path && !fieldErrors[path]) fieldErrors[path] = issue.message;
+    });
+
+    throw new AppError('درج کردہ معلومات درست نہیں ہیں۔', 400, { ...flattened, fieldErrors });
   }
 
   req.body = result.data.body;

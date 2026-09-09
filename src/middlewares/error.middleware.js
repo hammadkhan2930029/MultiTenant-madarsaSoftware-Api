@@ -57,5 +57,6 @@ export const errorMiddleware = (error, req, res, _next) => {
     statusCode,
     message,
     data: isPrismaError ? null : error.details || null,
+    errors: isPrismaError ? undefined : error.details?.fieldErrors,
   });
 };
