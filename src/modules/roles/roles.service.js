@@ -513,9 +513,15 @@ const replaceRoleClassScopes = async (client, role, scope) => {
 const resolveTeacherClassAssignment = async (client, payload, tenantId, branchId, classScope, fallbackTeacherId = null) => {
   if (classScope.mode === 'all') return { teacherId: null, classIds: [] };
 
-  const teacherId = Number(payload.teacherId || fallbackTeacherId);
+  const hasTeacherId = Object.prototype.hasOwnProperty.call(payload, 'teacherId');
+  const teacherValue = hasTeacherId ? payload.teacherId : fallbackTeacherId;
+  if (teacherValue === null || teacherValue === undefined || teacherValue === '') {
+    return { teacherId: null, classIds: classScope.classIds };
+  }
+
+  const teacherId = Number(teacherValue);
   if (!Number.isInteger(teacherId) || teacherId <= 0) {
-    throw new AppError('منتخب جماعتوں کے لیے استاد منتخب کریں۔', 400);
+    throw new AppError('استاد کی درست قدر منتخب کریں۔', 400);
   }
 
   const teacher = await client.teacher.findFirst({
