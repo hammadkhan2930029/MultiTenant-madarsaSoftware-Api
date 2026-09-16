@@ -147,16 +147,9 @@ const resolveTeacherBranchId = (tenantId, queryOrPayload = {}, branchScope = nul
     requireActive: true,
   });
 
-const buildTeacherClassScopeWhere = (branchScope = null) => classScopeService.isRestricted(branchScope)
-  ? {
-      teachingAssignments: {
-        some: {
-          status: 'active',
-          classId: { in: classScopeService.normalizeClassIds(branchScope) },
-        },
-      },
-    }
-  : {};
+const buildTeacherClassScopeWhere = (branchScope = null) => (
+  classScopeService.buildTeacherClassScopeWhere(branchScope)
+);
 
 const mapTeacherIncrement = (row) => ({
   id: row.id,

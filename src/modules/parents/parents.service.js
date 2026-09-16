@@ -44,27 +44,26 @@ const buildParentBranchVisibilityWhere = (tenantId, branchId) => {
 };
 
 const buildStudentClassScopeWhere = (branchScope = null) => (
-  classScopeService.isRestricted(branchScope)
-    ? {
-        assignments: {
-          some: {
-            status: 'active',
-            classId: { in: classScopeService.normalizeClassIds(branchScope) },
-          },
-        },
-      }
-    : {}
+  classScopeService.buildStudentClassScopeWhere(branchScope)
 );
 
-const buildParentClassScopeWhere = (tenantId, branchScope = null) => (
+const buildParentClassScopeWhere = (tenantId, branchId, branchScope = null) => (
   classScopeService.isRestricted(branchScope)
     ? {
-        students: {
-          some: {
-            tenantId,
-            student: buildStudentClassScopeWhere(branchScope),
+        OR: [
+          {
+            students: {
+              some: {
+                tenantId,
+                student: buildStudentClassScopeWhere(branchScope),
+              },
+            },
           },
-        },
+          {
+            branchId,
+            students: { none: {} },
+          },
+        ],
       }
     : {}
 );
@@ -157,13 +156,59 @@ const buildDuplicateParentWhere = (tenantId, payload, excludeId) => ({
   ],
 });
 
+const getScopedStudentForParentLink = async (tenantId, studentId, branchId, branchScope, client = prisma) => {
+  if (!studentId) return null;
+
+  const student = await client.student.findFirst({
+    where: {
+      id: Number(studentId),
+      tenantId,
+      ...buildStudentBranchVisibilityWhere(tenantId, branchId),
+      ...buildStudentClassScopeWhere(branchScope),
+    },
+    select: { id: true },
+  });
+
+  if (!student) {
+    throw new AppError('Selected student is not available in your assigned class.', 403);
+  }
+
+  return student;
+};
+
+const assertParentWriteWithinClassScope = async (tenantId, parentId, branchScope, client = prisma) => {
+  if (!classScopeService.isRestricted(branchScope)) return;
+
+  const links = await client.studentParent.findMany({
+    where: { tenantId, parentId },
+    select: {
+      student: {
+        select: {
+          assignments: {
+            where: classScopeService.buildActiveAssignmentWhere(branchScope, { tenantId }),
+            select: { id: true },
+            take: 1,
+          },
+        },
+      },
+    },
+  });
+
+  if (links.some((link) => !link.student?.assignments?.length)) {
+    throw new AppError('This parent is linked to a student outside your assigned classes.', 403);
+  }
+};
+
 export const parentsService = {
   async createParent(tenantId, payload, branchScope = null) {
-    if (classScopeService.isRestricted(branchScope)) {
-      throw new AppError('Create parents through a student in an assigned class.', 403);
-    }
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveParentBranchId(resolvedTenantId, payload, branchScope);
+    await getScopedStudentForParentLink(
+      resolvedTenantId,
+      payload.studentId,
+      scopedBranchId,
+      branchScope,
+    );
     const familyNumber = payload.familyNumber || (await getNextFamilyNumber(resolvedTenantId));
 
     await ensureFamilyNumberUnique(resolvedTenantId, familyNumber);
@@ -196,6 +241,18 @@ export const parentsService = {
       });
 
       await assignParentRegistrationNumber(tx, resolvedTenantId, parent.id);
+
+      if (payload.studentId) {
+        await tx.studentParent.create({
+          data: {
+            tenantId: resolvedTenantId,
+            studentId: Number(payload.studentId),
+            parentId: parent.id,
+            relationship: payload.relationship,
+            isPrimary: false,
+          },
+        });
+      }
       return parent;
     });
 
@@ -215,7 +272,7 @@ export const parentsService = {
       tenantId: resolvedTenantId,
       AND: [
         buildParentBranchVisibilityWhere(resolvedTenantId, requestedBranchId),
-        buildParentClassScopeWhere(resolvedTenantId, branchScope),
+        buildParentClassScopeWhere(resolvedTenantId, requestedBranchId, branchScope),
       ].filter((item) => Object.keys(item).length),
       ...(query.search
         ? {
@@ -256,7 +313,7 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
-        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
+        ...buildParentClassScopeWhere(resolvedTenantId, scopedBranchId, branchScope),
       },
       select: buildParentSelect(resolvedTenantId, scopedBranchId, branchScope),
     });
@@ -276,13 +333,14 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
-        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
+        ...buildParentClassScopeWhere(resolvedTenantId, scopedBranchId, branchScope),
       },
     });
 
     if (!existingParent) {
       throw new AppError('Parent not found.', 404);
     }
+    await assertParentWriteWithinClassScope(resolvedTenantId, id, branchScope);
 
     await ensureFamilyNumberUnique(resolvedTenantId, payload.familyNumber, id);
 
@@ -344,13 +402,14 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
-        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
+        ...buildParentClassScopeWhere(resolvedTenantId, scopedBranchId, branchScope),
       },
     });
 
     if (!parent) {
       throw new AppError('Parent not found.', 404);
     }
+    await assertParentWriteWithinClassScope(resolvedTenantId, id, branchScope);
 
     if (parent.status === 'inactive') {
       throw new AppError('Parent is already inactive.', 400);
@@ -371,7 +430,7 @@ export const parentsService = {
         id,
         tenantId: resolvedTenantId,
         ...buildParentBranchVisibilityWhere(resolvedTenantId, scopedBranchId),
-        ...buildParentClassScopeWhere(resolvedTenantId, branchScope),
+        ...buildParentClassScopeWhere(resolvedTenantId, scopedBranchId, branchScope),
       },
       select: {
         id: true,
@@ -386,6 +445,7 @@ export const parentsService = {
     if (!parent) {
       throw new AppError('Parent not found.', 404);
     }
+    await assertParentWriteWithinClassScope(resolvedTenantId, id, branchScope);
 
     if ((parent._count?.students || 0) > 0) {
       throw new AppError('This parent cannot be deleted because linked students exist.', 400);

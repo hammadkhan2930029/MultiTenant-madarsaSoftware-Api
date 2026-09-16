@@ -20,10 +20,10 @@ import {
 const router = Router();
 
 router.use(authMiddleware);
-router.post('/generate', requirePermission('fees.create'), validate(generateStudentFeesValidationSchema), generateStudentFees);
-router.get('/', requirePermission('fees.view'), validate(listStudentFeesValidationSchema), getStudentFees);
-router.get('/student/:studentId/history', requirePermission('fees.view'), validate(studentFeeHistoryValidationSchema), getStudentFeeHistory);
-router.get('/:id', requirePermission('fees.view'), validate(studentFeeIdValidationSchema), getStudentFeeById);
-router.patch('/:id/payment', requirePermission('fees.create'), validate(saveStudentFeePaymentValidationSchema), saveStudentFeePayment);
+router.post('/generate', requirePermission('student_fees.create'), validate(generateStudentFeesValidationSchema), generateStudentFees);
+router.get('/', requirePermission('student_fees.view', 'student_fees.create', 'student_fees.collect', 'student_fees.history', 'student_fees.edit'), validate(listStudentFeesValidationSchema), getStudentFees);
+router.get('/student/:studentId/history', requirePermission('student_fees.history', 'student_fees.view', 'student_fees.collect', 'student_fees.edit'), validate(studentFeeHistoryValidationSchema), getStudentFeeHistory);
+router.get('/:id', requirePermission('student_fees.view', 'student_fees.history', 'student_fees.collect', 'student_fees.edit'), validate(studentFeeIdValidationSchema), getStudentFeeById);
+router.patch('/:id/payment', requirePermission('student_fees.collect', 'student_fees.edit'), validate(saveStudentFeePaymentValidationSchema), saveStudentFeePayment);
 
 export { router as studentFeesRoutes };

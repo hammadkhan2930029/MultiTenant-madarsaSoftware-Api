@@ -78,7 +78,9 @@ const buildAuthContext = ({ admin, access, tenantId }) => {
   const resolvedTenantId = normalizeTenantId(tenantId);
   const branchId = admin.branchId || admin.branch_id || null;
   const roleBranchId = normalizeTenantId(access.role?.branchId ?? access.role?.branch_id);
-  const isTenantAdminRole = resolvedTenantId !== null && (roleName === 'admin' || roleScope === 'tenant');
+  // A tenant-owned custom role is not automatically a Tenant Admin. `roleScope`
+  // describes where the role belongs; it must never grant an authorization bypass.
+  const isTenantAdminRole = resolvedTenantId !== null && roleName === 'admin';
 
   const auth = {
     admin,

@@ -183,19 +183,13 @@ const buildStudentBranchVisibilityWhere = (tenantId, branchId) => {
 const buildAssignmentFilter = ({ tenantId, branchId, classId, sectionId, sessionId, branchScope = null }) => {
   if (!branchId && !classId && !sectionId && !sessionId && !classScopeService.isRestricted(branchScope)) return {};
 
-  return {
-    assignments: {
-      some: {
-        ...(tenantId ? { tenantId } : {}),
-        status: 'active',
-        ...(branchId ? { branchId } : {}),
-        ...(classId ? { classId } : {}),
-        ...(classScopeService.isRestricted(branchScope) ? { classId: { in: classScopeService.normalizeClassIds(branchScope) } } : {}),
-        ...(sectionId ? { sectionId } : {}),
-        ...(sessionId ? { sessionId } : {}),
-      },
-    },
-  };
+  return classScopeService.buildStudentClassScopeWhere(branchScope, {
+    tenantId,
+    branchId,
+    classId,
+    sectionId,
+    sessionId,
+  });
 };
 
 const buildSearchFilter = (search) => {

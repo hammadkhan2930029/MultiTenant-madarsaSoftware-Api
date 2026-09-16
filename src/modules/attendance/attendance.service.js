@@ -13,16 +13,9 @@ const normalizeTenantId = (tenantId) => {
   return resolvedTenantId;
 };
 
-const buildTeacherClassScopeWhere = (branchScope = null) => classScopeService.isRestricted(branchScope)
-  ? {
-      teachingAssignments: {
-        some: {
-          status: 'active',
-          classId: { in: classScopeService.normalizeClassIds(branchScope) },
-        },
-      },
-    }
-  : {};
+const buildTeacherClassScopeWhere = (branchScope = null) => (
+  classScopeService.buildTeacherClassScopeWhere(branchScope)
+);
 
 const studentAttendanceSelect = {
   id: true,
@@ -164,8 +157,8 @@ const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId
       },
     }),
     prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
-    prisma.academicClass.findFirst({ where: { id: classId, tenantId, branchId } }),
-    prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId, branchId, status: 'active' } }),
+    prisma.section.findFirst({ where: { id: sectionId, tenantId, classId, status: 'active' } }),
     prisma.studentClassAssignment.findFirst({
       where: {
         tenantId,
@@ -196,9 +189,9 @@ const ensureStudentAttendanceReferences = async (tenantId, { studentId, branchId
   }
 };
 
-const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId, date }, branchScoped = false, branchScope = null) => {
+const ensureTeacherAttendanceReferences = async (tenantId, { teacherId, branchId, date }, branchScoped = false, branchScope = null, staffType = 'teacher') => {
   const [teacher, branch] = await Promise.all([
-    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, ...(branchScoped ? { branchId } : {}), ...buildTeacherClassScopeWhere(branchScope) } }),
+    prisma.teacher.findFirst({ where: { id: teacherId, tenantId, staffType, ...(branchScoped ? { branchId } : {}), ...(staffType === 'teacher' ? buildTeacherClassScopeWhere(branchScope) : {}) } }),
     prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
   ]);
 
@@ -253,6 +246,9 @@ export const attendanceService = {
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveStudentAttendanceBranchId(resolvedTenantId, query, branchScope);
     const dateFilter = buildAttendanceDateFilter(query);
+    const requestedClassId = query.classId
+      ? classScopeService.assertClassAccess(query.classId, branchScope)
+      : null;
 
     const where = {
       tenantId: resolvedTenantId,
@@ -263,8 +259,9 @@ export const attendanceService = {
       ...(dateFilter ? { date: dateFilter } : {}),
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(branchId ? { branchId } : {}),
-      ...(query.classId ? { classId: query.classId } : {}),
-      ...classScopeService.buildClassIdWhere(branchScope),
+      ...(requestedClassId
+        ? { classId: requestedClassId }
+        : classScopeService.buildClassIdWhere(branchScope)),
       ...(query.sectionId ? { sectionId: query.sectionId } : {}),
       ...(query.status ? { status: query.status } : {}),
     };
@@ -286,11 +283,11 @@ export const attendanceService = {
     };
   },
 
-  async markTeacherAttendance(tenantId, payload, branchScope = null) {
+  async markTeacherAttendance(tenantId, payload, branchScope = null, staffType = 'teacher') {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, payload, branchScope);
     const attendanceDate = normalizeDate(payload.date);
-    await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId, date: attendanceDate }, Boolean(branchScope?.isBranchScoped), branchScope);
+    await ensureTeacherAttendanceReferences(resolvedTenantId, { ...payload, branchId, date: attendanceDate }, Boolean(branchScope?.isBranchScoped), branchScope, staffType);
 
     return prisma.teacherAttendance.upsert({
       where: {
@@ -317,7 +314,7 @@ export const attendanceService = {
     });
   },
 
-  async getTeacherAttendance(tenantId, query, branchScope = null) {
+  async getTeacherAttendance(tenantId, query, branchScope = null, staffType = 'teacher') {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const { page, limit, skip } = getPagination(query.page, query.limit);
     const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, query, branchScope);
@@ -325,7 +322,7 @@ export const attendanceService = {
 
     const where = {
       tenantId: resolvedTenantId,
-      teacher: { tenantId: resolvedTenantId, ...buildTeacherClassScopeWhere(branchScope) },
+      teacher: { tenantId: resolvedTenantId, staffType, ...(staffType === 'teacher' ? buildTeacherClassScopeWhere(branchScope) : {}) },
       branch: { tenantId: resolvedTenantId },
       ...(dateFilter ? { date: dateFilter } : {}),
       ...(query.teacherId ? { teacherId: query.teacherId } : {}),
@@ -350,7 +347,7 @@ export const attendanceService = {
     };
   },
 
-  async deleteTeacherAttendance(tenantId, query, branchScope = null) {
+  async deleteTeacherAttendance(tenantId, query, branchScope = null, staffType = 'teacher') {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveTeacherAttendanceBranchId(resolvedTenantId, query, branchScope);
     const attendanceDate = normalizeDate(query.date);
@@ -359,7 +356,7 @@ export const attendanceService = {
         teacherId: query.teacherId,
         date: attendanceDate,
         tenantId: resolvedTenantId,
-        teacher: { tenantId: resolvedTenantId, ...buildTeacherClassScopeWhere(branchScope) },
+        teacher: { tenantId: resolvedTenantId, staffType, ...(staffType === 'teacher' ? buildTeacherClassScopeWhere(branchScope) : {}) },
         ...(branchId ? { branchId } : {}),
       },
       select: teacherAttendanceSelect,
@@ -375,7 +372,9 @@ export const attendanceService = {
         date: attendanceDate,
         tenantId: resolvedTenantId,
         ...(branchId ? { branchId } : {}),
-        ...(classScopeService.isRestricted(branchScope) ? { teacher: buildTeacherClassScopeWhere(branchScope) } : {}),
+        ...(staffType === 'teacher'
+          ? { teacher: { tenantId: resolvedTenantId, staffType, ...buildTeacherClassScopeWhere(branchScope) } }
+          : { teacher: { tenantId: resolvedTenantId, staffType } }),
       },
     });
 

@@ -2,8 +2,8 @@ import { TENANT_ADMIN_BYPASS_BLOCKED_PREFIXES } from './rbac.constants.js';
 
 const GRANTED_PERMISSION_ALIASES = {
   'admissions.create': ['students.create'],
-  'admissions.edit': ['students.edit', 'students.update'],
-  'admissions.update': ['students.edit', 'students.update'],
+  'admissions.edit': ['students.edit'],
+  'admissions.update': ['students.edit'],
 };
 
 export const normalizePermissions = (permissions = []) => (

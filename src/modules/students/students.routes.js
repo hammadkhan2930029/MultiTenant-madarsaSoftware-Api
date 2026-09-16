@@ -62,10 +62,15 @@ router.delete(
   deleteStudentDocument
 );
 router.delete('/:id', requirePermission('students.delete'), validate(studentIdValidationSchema), deleteStudent);
-router.post('/:id/assign-class', requirePermission('students.edit'), validate(assignStudentClassValidationSchema), assignClassToStudent);
+router.post(
+  '/:id/assign-class',
+  requirePermission('students.assign_class', 'students.edit'),
+  validate(assignStudentClassValidationSchema),
+  assignClassToStudent
+);
 router.patch(
   '/class-assignments/:assignmentId/remove',
-  requirePermission('students.edit'),
+  requirePermission('students.assign_class', 'students.edit'),
   validate(classAssignmentIdValidationSchema),
   removeClassAssignment
 );

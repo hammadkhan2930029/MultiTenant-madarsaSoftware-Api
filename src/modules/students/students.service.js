@@ -126,16 +126,7 @@ const buildParentBranchVisibilityWhere = (tenantId, branchId) => {
 };
 
 const buildStudentClassScopeWhere = (branchScope = null) => (
-  classScopeService.isRestricted(branchScope)
-    ? {
-        assignments: {
-          some: {
-            status: 'active',
-            classId: { in: classScopeService.normalizeClassIds(branchScope) },
-          },
-        },
-      }
-    : {}
+  classScopeService.buildStudentClassScopeWhere(branchScope)
 );
 
 const buildStudentSelect = (branchId, branchScope = null) => ({
@@ -249,8 +240,8 @@ const optionalDecimal = (value) => (value === undefined || value === null || val
 const ensureAssignmentReferences = async (tenantId, { branchId, classId, sectionId, sessionId }) => {
   const [branch, academicClass, section, session] = await Promise.all([
     prisma.branch.findFirst({ where: { id: branchId, tenantId, status: 'active' } }),
-    prisma.academicClass.findFirst({ where: { id: classId, tenantId } }),
-    prisma.section.findFirst({ where: { id: sectionId, tenantId } }),
+    prisma.academicClass.findFirst({ where: { id: classId, tenantId, branchId, status: 'active' } }),
+    prisma.section.findFirst({ where: { id: sectionId, tenantId, classId, status: 'active' } }),
     prisma.academicSession.findFirst({ where: { id: sessionId, tenantId, status: 'active' } }),
   ]);
 
@@ -418,6 +409,10 @@ export const studentsService = {
   async createStudent(tenantId, { body, file, files = [], branchScope = null }) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveStudentBranchId(resolvedTenantId, body, branchScope);
+    const assignedClassIds = classScopeService.normalizeClassIds(branchScope);
+    if (classScopeService.isRestricted(branchScope) && !body.classId && assignedClassIds.length === 1) {
+      body.classId = assignedClassIds[0];
+    }
     const shouldSaveAssignment = Boolean(body.sessionId && body.classId && body.sectionId);
 
     if (classScopeService.isRestricted(branchScope) && !shouldSaveAssignment) {
@@ -548,18 +543,13 @@ export const studentsService = {
       status,
       ...(query.gender ? { gender: query.gender } : {}),
       ...(query.classId || query.sectionId || query.sessionId
-        ? {
-            assignments: {
-              some: {
-                tenantId: resolvedTenantId,
-                status: 'active',
-                ...(requestedBranchId ? { branchId: requestedBranchId } : {}),
-                ...(query.classId ? { classId: query.classId } : {}),
-                ...(query.sectionId ? { sectionId: query.sectionId } : {}),
-                ...(query.sessionId ? { sessionId: query.sessionId } : {}),
-              },
-            },
-          }
+        ? classScopeService.buildStudentClassScopeWhere(branchScope, {
+            tenantId: resolvedTenantId,
+            branchId: requestedBranchId,
+            classId: query.classId,
+            sectionId: query.sectionId,
+            sessionId: query.sessionId,
+          })
         : {}),
     };
 

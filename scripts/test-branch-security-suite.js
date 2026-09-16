@@ -55,7 +55,7 @@ const upsertTenant = async ({ tenantCode, name, subdomain, branchEnabled = true,
   const tenant = await prisma.tenant.upsert({
     where: { tenantCode },
     update: { name, subdomain, customDomain: null, status, branchEnabled, branchLimit },
-    create: { tenantCode, name, subdomain, status, branchEnabled, branchLimit },
+    create: { tenantCode, name, subdomain, referralCode: `T${tenantCode.slice(-19)}`, status, branchEnabled, branchLimit },
   });
 
   await cleanupTenantData(tenant.id);

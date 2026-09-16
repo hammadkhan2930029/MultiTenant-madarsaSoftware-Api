@@ -27,7 +27,7 @@ const upsertTenant = async ({ tenantCode, name, subdomain }) => {
   const tenant = await prisma.tenant.upsert({
     where: { tenantCode },
     update: { name, subdomain, customDomain: null, status: 'active' },
-    create: { tenantCode, name, subdomain, status: 'active' },
+    create: { tenantCode, name, subdomain, referralCode: `T${tenantCode.slice(-19)}`, status: 'active' },
   });
 
   await seedDefaultTenantRoles(prisma, tenant.id);
@@ -222,8 +222,11 @@ const run = async () => {
   }
   assert(selfRoleChangeBlocked, 'Tenant admin cannot change own role');
 
-  const deactivatedUser = await usersService.deactivateUser(jamia1User.id, auth1);
-  assert(deactivatedUser.status === 'inactive', 'DELETE/deactivate marks user inactive');
+  const deletedUser = await usersService.deleteUser(jamia1User.id, auth1);
+  assert(deletedUser.deleted === true, 'DELETE removes user from active user management');
+
+  const deletedUserRow = await prisma.admin.findUnique({ where: { id: jamia1User.id } });
+  assert(deletedUserRow.status === 'deleted' && deletedUserRow.roleId === null, 'DELETE revokes login and releases assigned role');
 
   let selfDeactivateBlocked = false;
   try {

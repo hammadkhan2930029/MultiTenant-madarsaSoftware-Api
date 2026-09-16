@@ -101,31 +101,32 @@ export const getAdminRoleAndPermissions = async (admin, client = prisma) => {
   const permissions = await getRolePermissions(role, client);
   const classScopeRows = role?.id && role.class_scope_mode === 'selected'
     ? await client.roleClassScope.findMany({
-        where: { roleId: Number(role.id) },
-        select: { classId: true },
+        where: { roleId: Number(role.id), tenantId: adminTenantId },
+        select: { branchId: true, classId: true },
       })
     : [];
   const teacherClassRows = role?.id && role.class_scope_mode === 'selected'
     ? await client.roleTeacherClassAssignment.findMany({
-        where: { roleId: Number(role.id) },
-        select: { teacherId: true, classId: true },
+        where: { roleId: Number(role.id), tenantId: adminTenantId },
+        select: { branchId: true, teacherId: true, classId: true },
       })
     : [];
-  const scopedClassIds = classScopeRows.map((row) => Number(row.classId));
-  const assignedClassIds = new Set(teacherClassRows.map((row) => Number(row.classId)));
-  const effectiveClassIds = teacherClassRows.length
-    ? scopedClassIds.filter((classId) => assignedClassIds.has(classId))
-    : scopedClassIds;
+  const roleBranchId = toNumber(role.branch_id);
+  const scopedClassIds = classScopeRows
+    .filter((row) => !roleBranchId || Number(row.branchId) === roleBranchId)
+    .map((row) => Number(row.classId));
+  const effectiveClassIds = [...new Set(scopedClassIds)];
   const teacherIds = [...new Set(teacherClassRows.map((row) => Number(row.teacherId)))];
   const roleTeacherId = teacherIds.length === 1 ? teacherIds[0] : null;
   const linkedTeacherId = toNumber(adminRoleState.teacher_id);
-  const teacherAssignmentMatches = !roleTeacherId || linkedTeacherId === roleTeacherId;
 
   return {
     role: mapRoleRow(role),
     permissions,
     permissionKeys: permissions.map((permission) => permission.permissionKey),
-    classIds: teacherAssignmentMatches ? effectiveClassIds : [],
+    // Class access belongs to the role. Linking the login account to a teacher is
+    // optional metadata and must not erase the role's explicitly selected classes.
+    classIds: effectiveClassIds,
     teacherId: linkedTeacherId,
     roleTeacherId,
   };

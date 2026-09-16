@@ -15,8 +15,8 @@ import {
 
 const router = Router();
 router.use(authMiddleware);
-router.get('/', requirePermission('reports.view'), validate(financeSummaryReportValidationSchema), getFinanceSummaryReport);
-router.get('/student-funds', requirePermission('reports.view'), validate(studentFundHistoryValidationSchema), getStudentFundHistoryReport);
-router.get('/teacher-salaries', requirePermission('reports.view'), validate(teacherSalaryHistoryValidationSchema), getTeacherSalaryHistoryReport);
+router.get('/', requirePermission('finance.reports.view', 'reports.view'), validate(financeSummaryReportValidationSchema), getFinanceSummaryReport);
+router.get('/student-funds', requirePermission('finance.reports.view', 'reports.view'), validate(studentFundHistoryValidationSchema), getStudentFundHistoryReport);
+router.get('/teacher-salaries', requirePermission('finance.reports.view', 'reports.view'), validate(teacherSalaryHistoryValidationSchema), getTeacherSalaryHistoryReport);
 
 export { router as reportsRoutes };

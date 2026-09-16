@@ -100,7 +100,7 @@ const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
   status: 'active',
 });
 
-const buildRoleResponse = (role) => {
+const buildRoleResponse = (role, access = {}) => {
   if (!role) return null;
 
   const branchId = role.branchId ?? role.branch_id ?? null;
@@ -118,6 +118,10 @@ const buildRoleResponse = (role) => {
     description: role.description || null,
     status: role.status || 'active',
     isSystemRole: Boolean(role.isSystemRole ?? role.is_system_role),
+    classScopeMode: role.classScopeMode ?? role.class_scope_mode ?? 'all',
+    classIds: Array.isArray(access.classIds) ? access.classIds.map(Number) : [],
+    teacherId: access.teacherId ?? null,
+    roleTeacherId: access.roleTeacherId ?? null,
   };
 };
 
@@ -125,10 +129,9 @@ const buildAccountScope = (admin, roleDetails) => {
   const tenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
   const branchId = normalizeTenantId(admin.branchId ?? admin.branch_id);
   const roleName = roleDetails?.roleName || admin.role;
-  const roleScope = roleDetails?.scope || null;
 
   if (roleName === 'super_admin' && !tenantId) return 'super_admin';
-  if ((roleName === 'admin' || roleScope === 'tenant') && tenantId) return 'tenant_admin';
+  if (roleName === 'admin' && tenantId) return 'tenant_admin';
   if (branchId) return 'branch_admin';
   return tenantId ? 'tenant_user' : 'system_user';
 };
@@ -153,8 +156,7 @@ const assertLoginRoleIsActive = (access, admin) => {
   const adminBranchId = normalizeTenantId(admin.branchId ?? admin.branch_id);
   const roleBranchId = normalizeTenantId(access.role.branchId ?? access.role.branch_id);
   const roleName = access.role.roleName || access.role.role_name || admin.role;
-  const roleScope = buildRoleResponse(access.role)?.scope || null;
-  const isTenantAdminRole = (roleName === 'admin' || roleScope === 'tenant') && adminTenantId !== null;
+  const isTenantAdminRole = roleName === 'admin' && adminTenantId !== null;
 
   if (!isTenantAdminRole && adminBranchId && roleBranchId !== adminBranchId) {
     throw new AppError('Assigned role is not valid for this branch. Please contact support.', 403);
@@ -169,8 +171,7 @@ const assertLoginBranchIsActive = async (admin, access = {}) => {
   const branchId = admin.branchId ?? admin.branch_id ?? null;
   const tenantId = normalizeTenantId(admin.tenantId ?? admin.tenant_id);
   const roleName = access.role?.roleName || access.role?.role_name || admin.role;
-  const roleScope = buildRoleResponse(access.role)?.scope || null;
-  const isTenantAdminRole = (roleName === 'admin' || roleScope === 'tenant') && tenantId !== null;
+  const isTenantAdminRole = roleName === 'admin' && tenantId !== null;
 
   if (!branchId) return null;
 
@@ -206,10 +207,9 @@ const assertLoginBranchIsActive = async (admin, access = {}) => {
 };
 
 const canManageMadrassaProfile = async (admin) => {
-  if (admin.role === 'super_admin' || admin.role === 'admin') return true;
-
   const access = await getAdminRoleAndPermissions(admin);
-  const roleName = access.role?.roleName || access.role?.role_name || admin.role;
+  const hasAssignedRole = Boolean(access.role?.id);
+  const roleName = access.role?.roleName || access.role?.role_name || (!hasAssignedRole ? admin.role : null);
   return roleName === 'super_admin' || roleName === 'admin';
 };
 
@@ -217,7 +217,7 @@ const buildAdminAuthPayload = async (admin) => {
   const access = await getAdminRoleAndPermissions(admin);
   assertLoginRoleIsActive(access, admin);
   const branch = await assertLoginBranchIsActive(admin, access);
-  const roleDetails = buildRoleResponse(access.role);
+  const roleDetails = buildRoleResponse(access.role, access);
   const branchId = admin.branchId || admin.branch_id || null;
   const tenantId = admin.tenantId || admin.tenant_id || null;
   const accountScope = buildAccountScope(admin, roleDetails);

@@ -45,11 +45,11 @@ export const updateUser = asyncHandler(async (req, res) => {
   });
 });
 
-export const deactivateUser = asyncHandler(async (req, res) => {
-  const result = await usersService.deactivateUser(req.params.id, buildRequester(req));
+export const deleteUser = asyncHandler(async (req, res) => {
+  const result = await usersService.deleteUser(req.params.id, buildRequester(req));
 
   return apiResponse(res, {
-    message: 'User deactivated successfully.',
+    message: 'User deleted successfully.',
     data: result,
   });
 });

@@ -25,7 +25,13 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/responsibilities', requirePermission('teachers.assignments.view'), validate(listResponsibilitiesValidationSchema), getResponsibilities);
-router.get('/', requirePermission('teachers.assignments.view'), validate(listTeacherAssignmentsValidationSchema), getTeacherAssignments);
+router.get('/', requirePermission(
+  'teachers.assignments.view',
+  'teachers.attendance.view',
+  'teachers.attendance.create',
+  'teachers.attendance.edit',
+  'teachers.attendance.delete',
+), validate(listTeacherAssignmentsValidationSchema), getTeacherAssignments);
 router.post('/', requirePermission('teachers.assignments.create'), validate(createTeacherAssignmentValidationSchema), createTeacherAssignments);
 router.get('/:id', requirePermission('teachers.assignments.view'), validate(teacherAssignmentIdValidationSchema), getTeacherAssignmentById);
 router.patch('/:id', requirePermission('teachers.assignments.edit'), validate(updateTeacherAssignmentValidationSchema), updateTeacherAssignment);

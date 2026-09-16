@@ -469,6 +469,21 @@ const assertNotSelfDeactivate = (id, payload, requester = null) => {
   }
 };
 
+const assertUserCanBeDeleted = (id, user, requester = null) => {
+  const requesterId = requester?.admin?.id === null || requester?.admin?.id === undefined
+    ? null
+    : Number(requester.admin.id);
+
+  if (requesterId && Number(id) === requesterId) {
+    throw new AppError('You cannot delete your own account.', 400);
+  }
+
+  const roleName = String(user?.role_name || user?.role || '').trim().toLowerCase();
+  if (PROTECTED_USER_ROLE_NAMES.has(roleName)) {
+    throw new AppError('Protected administrator account cannot be deleted.', 400);
+  }
+};
+
 const assertNotSelfRoleChange = (id, requester = null) => {
   const requesterId = requester?.admin?.id === null || requester?.admin?.id === undefined
     ? null
@@ -655,7 +670,8 @@ export const usersService = {
         LEFT JOIN roles r ON r.id = a.role_id
         LEFT JOIN branches b ON b.id = a.branch_id
         LEFT JOIN teachers t ON t.id = a.teacher_id
-        WHERE (${search} IS NULL
+        WHERE a.status <> 'deleted'
+          AND (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
             OR a.username LIKE CONCAT('%', ${search}, '%'))
@@ -693,6 +709,7 @@ export const usersService = {
         LEFT JOIN branches b ON b.id = a.branch_id
         LEFT JOIN teachers t ON t.id = a.teacher_id
         WHERE a.tenant_id <=> ${tenantId}
+          AND a.status <> 'deleted'
           AND (${branchId} IS NULL OR a.branch_id = ${branchId})
           AND (${branchScopedRequester} = false OR (a.branch_id = ${branchId} AND r.branch_id = ${branchId} AND r.role_scope_key = ${branchId} AND COALESCE(r.role_name, a.role) NOT IN ('admin', 'super_admin')))
           AND (${search} IS NULL
@@ -709,7 +726,8 @@ export const usersService = {
       ? await prisma.$queryRaw`
         SELECT COUNT(*) AS total
         FROM admins a
-        WHERE (${search} IS NULL
+        WHERE a.status <> 'deleted'
+          AND (${search} IS NULL
             OR a.name LIKE CONCAT('%', ${search}, '%')
             OR a.email LIKE CONCAT('%', ${search}, '%')
             OR a.username LIKE CONCAT('%', ${search}, '%'))
@@ -721,6 +739,7 @@ export const usersService = {
         FROM admins a
         LEFT JOIN roles r ON r.id = a.role_id
         WHERE a.tenant_id <=> ${tenantId}
+          AND a.status <> 'deleted'
           AND (${branchId} IS NULL OR a.branch_id = ${branchId})
           AND (${branchScopedRequester} = false OR (a.branch_id = ${branchId} AND r.branch_id = ${branchId} AND r.role_scope_key = ${branchId} AND COALESCE(r.role_name, a.role) NOT IN ('admin', 'super_admin')))
           AND (${search} IS NULL
@@ -740,7 +759,7 @@ export const usersService = {
   async getUserById(id, requester = null) {
     const user = await getUserRowById(prisma, id);
 
-    if (!user) {
+    if (!user || user.status === 'deleted') {
       throw new AppError('User not found.', 404);
     }
 
@@ -754,7 +773,7 @@ export const usersService = {
       await assertNoBranchUserScopeInjection(payload, requester, id);
       const existingUser = await getUserRowById(tx, id);
 
-      if (!existingUser) {
+      if (!existingUser || existingUser.status === 'deleted') {
         throw new AppError('User not found.', 404);
       }
 
@@ -853,36 +872,47 @@ export const usersService = {
     });
   },
 
-  async deactivateUser(id, requester = null) {
+  async deleteUser(id, requester = null) {
     return prisma.$transaction(async (tx) => {
       const existingUser = await getUserRowById(tx, id);
 
-      if (!existingUser) {
+      if (!existingUser || existingUser.status === 'deleted') {
         throw new AppError('User not found.', 404);
       }
 
       assertCanAccessUserRow(requester, existingUser);
-      assertNotSelfDeactivate(id, { status: 'inactive' }, requester);
+      assertUserCanBeDeleted(id, existingUser, requester);
       const oldResponse = await buildUserDetails(tx, existingUser);
+      const deletedSuffix = `${Number(id)}_${Date.now()}`;
+      const deletedEmail = `deleted_${deletedSuffix}@deleted.invalid`;
+      const deletedUsername = `deleted_${deletedSuffix}`;
+      const unusablePassword = await bcrypt.hash(`deleted:${deletedSuffix}:${Math.random()}`, 12);
 
       await tx.$executeRaw`
         UPDATE admins
-        SET status = 'inactive',
+        SET name = 'حذف شدہ صارف',
+            email = ${deletedEmail},
+            phone = NULL,
+            username = ${deletedUsername},
+            password = ${unusablePassword},
+            role = 'deleted',
+            role_id = NULL,
+            branch_id = NULL,
+            teacher_id = NULL,
+            status = 'deleted',
             updatedAt = CURRENT_TIMESTAMP
         WHERE id = ${id}
       `;
 
-      const updatedUser = await getUserRowById(tx, id);
-      const updatedResponse = await buildUserDetails(tx, updatedUser);
       await logUserAudit(tx, requester, {
-        tenantId: updatedResponse.tenantId,
-        action: 'user.deactivated',
-        targetId: updatedResponse.id,
+        tenantId: oldResponse.tenantId,
+        action: 'user.deleted',
+        targetId: oldResponse.id,
         oldValue: oldResponse,
-        newValue: updatedResponse,
+        newValue: { id: oldResponse.id, status: 'deleted' },
       });
 
-      return updatedResponse;
+      return { id: oldResponse.id, deleted: true };
     });
   },
 
@@ -891,7 +921,7 @@ export const usersService = {
       await assertNoBranchUserScopeInjection(payload, requester, id);
       const existingUser = await getUserRowById(tx, id);
 
-      if (!existingUser) {
+      if (!existingUser || existingUser.status === 'deleted') {
         throw new AppError('User not found.', 404);
       }
 

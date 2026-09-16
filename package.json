@@ -28,6 +28,8 @@
     "test:student-documents": "node scripts/test-student-documents.js",
     "test:class-incharge": "node scripts/test-class-incharge.js",
     "test:role-teacher-classes": "node scripts/test-role-teacher-classes.js",
+    "test:class-scope": "node scripts/test-class-scope-service.js",
+    "test:granular-role-security": "node scripts/test-granular-role-route-security.js",
     "test:user-teacher-link": "node scripts/test-user-teacher-link.js",
     "test:branch-performance": "node scripts/test-branch-performance-audit.js",
     "test:branch-api-errors": "node scripts/test-branch-api-errors.js",

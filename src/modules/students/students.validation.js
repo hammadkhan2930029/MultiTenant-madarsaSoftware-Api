@@ -106,6 +106,17 @@ const studentBodySchema = z.object({
   reside: residenceStatusField,
   status: z.enum(['active', 'inactive']).optional(),
   parents: z.array(parentLinkSchema).optional(),
+}).superRefine((value, context) => {
+  const assignmentValues = [value.sessionId, value.classId, value.sectionId];
+  const selectedCount = assignmentValues.filter((item) => item !== undefined).length;
+
+  if (selectedCount > 0 && selectedCount < assignmentValues.length) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['sessionId'],
+      message: 'سیشن، جماعت اور سیکشن تینوں منتخب کریں۔',
+    });
+  }
 });
 
 export const createStudentValidationSchema = z.object({

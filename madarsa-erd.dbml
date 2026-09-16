@@ -1,0 +1,1416 @@
+Table `tenant` {
+  `id` int [pk, increment]
+  `tenantCode` varchar [unique]
+  `name` varchar
+  `subdomain` varchar [unique, null]
+  `customDomain` varchar [unique, null]
+  `status` varchar
+  `branch_enabled` boolean
+  `public_website_enabled` boolean
+  `branch_limit` int [null]
+  `ownerAdminId` int [null]
+  `referral_code` varchar [unique]
+  `referred_by_tenant_id` int [null]
+  `referred_at` datetime [null]
+  `sale_amount` decimal [null]
+  `sale_currency` varchar [null]
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `admins` {
+  `id` int [pk, increment]
+  `name` varchar
+  `email` varchar
+  `phone` varchar [null]
+  `city` varchar [null]
+  `province` varchar [null]
+  `username` varchar
+  `password` varchar
+  `role` varchar
+  `tenant_id` int [null]
+  `role_id` int [null]
+  `owner_admin_id` int [null]
+  `branch_id` int [null]
+  `teacher_id` int [unique, null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `email`) [unique]
+    (`tenant_id`, `username`) [unique]
+  }
+}
+
+Table `affiliate_commission_tiers` {
+  `id` int [pk, increment]
+  `min_referrals` int
+  `max_referrals` int [null]
+  `percentage` decimal
+  `effective_from` datetime
+  `effective_to` datetime [null]
+  `status` varchar
+  `created_by_admin_id` int [null]
+  `updated_by_admin_id` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `affiliate_commissions` {
+  `id` int [pk, increment]
+  `referrer_tenant_id` int
+  `referred_tenant_id` int [unique]
+  `commission_tier_id` int [null]
+  `referral_count_snapshot` int
+  `sale_amount_snapshot` decimal [null]
+  `percentage_snapshot` decimal [null]
+  `commission_amount` decimal [null]
+  `currency` varchar [null]
+  `status` varchar
+  `earned_at` datetime [null]
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `affiliate_payment_accounts` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `account_type` varchar
+  `account_title` varchar
+  `institution_name` varchar [null]
+  `account_number` varchar [null]
+  `iban` varchar [null]
+  `wallet_phone` varchar [null]
+  `branch_name` varchar [null]
+  `instructions` varchar [null]
+  `is_default` boolean
+  `status` varchar
+  `created_by_admin_id` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `affiliate_withdrawal_requests` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `requested_amount` decimal
+  `currency` varchar
+  `payment_account_id` int [null]
+  `payment_account_snapshot` json
+  `status` varchar
+  `request_note` varchar [null]
+  `admin_note` varchar [null]
+  `requested_by_admin_id` int [null]
+  `reviewed_by_admin_id` int [null]
+  `requested_at` datetime
+  `reviewed_at` datetime [null]
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `affiliate_payments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `withdrawal_request_id` int [unique]
+  `amount` decimal
+  `currency` varchar
+  `payment_method` varchar [null]
+  `transaction_reference` varchar [null]
+  `payment_date` datetime
+  `note` varchar [null]
+  `paid_by_admin_id` int [null]
+  `status` varchar
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `affiliate_settings` {
+  `id` int [pk, increment]
+  `scope_key` varchar [unique]
+  `withdrawal_interval_days` int
+  `allow_blank_withdrawal_amount` boolean
+  `allow_only_one_pending_request` boolean
+  `minimum_withdrawal_amount` decimal [null]
+  `status` varchar
+  `created_by_admin_id` int [null]
+  `updated_by_admin_id` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `audit_logs` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `actor_user_id` int [null]
+  `branch_id` int [null]
+  `role_id` int [null]
+  `action` varchar
+  `module` varchar
+  `target_type` varchar
+  `target_id` int [null]
+  `old_value` json [null]
+  `new_value` json [null]
+  `ip_address` varchar [null]
+  `user_agent` varchar [null]
+  `created_at` datetime
+}
+
+Table `roles` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `branch_id` int [null]
+  `role_scope_key` int
+  `role_name` varchar
+  `description` varchar [null]
+  `status` varchar
+  `is_system_role` boolean
+  `class_scope_mode` varchar
+  `created_by` int [null]
+  `updated_by` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+
+  indexes {
+    (`tenant_id`, `role_scope_key`, `role_name`) [unique]
+  }
+}
+
+Table `permissions` {
+  `id` int [pk, increment]
+  `permission_key` varchar [unique]
+  `permission_name` varchar
+  `display_label` varchar [null]
+  `description` varchar [null]
+  `page_path` varchar [null]
+  `module_name` varchar
+  `action` varchar [null]
+  `sort_order` int
+  `created_at` datetime
+}
+
+Table `role_permissions` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `role_id` int
+  `permission_id` int
+  `created_at` datetime
+
+  indexes {
+    (`role_id`, `permission_id`) [unique]
+  }
+}
+
+Table `role_class_scopes` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int
+  `role_id` int
+  `class_id` int
+  `created_at` datetime
+
+  indexes {
+    (`role_id`, `class_id`) [unique]
+  }
+}
+
+Table `role_teacher_class_assignments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int
+  `role_id` int
+  `teacher_id` int
+  `class_id` int
+  `created_at` datetime
+
+  indexes {
+    (`role_id`, `class_id`) [unique]
+  }
+}
+
+Table `madrassa_profiles` {
+  `id` int [pk, increment]
+  `adminId` int [unique]
+  `tenant_id` int [unique]
+  `name` varchar
+  `email` varchar
+  `phone1` varchar [null]
+  `phone2` varchar [null]
+  `address` varchar [null]
+  `branch` varchar [null]
+  `city` varchar [null]
+  `familyNoSeq` varchar [null]
+  `regNo` varchar [null]
+  `logoUrl` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `cities` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `name` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `name`) [unique]
+  }
+}
+
+Table `suggestions` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `type` varchar
+  `title` varchar
+  `priority` varchar
+  `description` varchar
+  `submitterName` varchar [null]
+  `submitterEmail` varchar [null]
+  `adminId` int [null]
+  `emailRecipient` varchar [null]
+  `emailStatus` varchar
+  `emailError` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `support_requests` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `topic` varchar
+  `priority` varchar
+  `message` varchar
+  `submitterName` varchar [null]
+  `submitterEmail` varchar [null]
+  `adminId` int [null]
+  `emailRecipient` varchar [null]
+  `emailStatus` varchar
+  `emailError` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `shifts` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `branch_id` int [null]
+  `name` varchar
+  `startTime` varchar
+  `endTime` varchar
+  `type` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+  }
+}
+
+Table `departments` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `branch_id` int [null]
+  `name` varchar
+  `code` varchar [null]
+  `head` varchar [null]
+  `members` int
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+    (`tenant_id`, `branch_id`, `code`) [unique]
+  }
+}
+
+Table `department_head_assignments` {
+  `id` int [pk, increment]
+  `department_id` int
+  `tenant_id` int
+  `branch_id` int [null]
+  `branch_scope_key` varchar
+  `teacher_id` int
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`department_id`, `tenant_id`, `branch_scope_key`) [unique]
+  }
+}
+
+Table `qualifications` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `branch_id` int [null]
+  `title` varchar
+  `category` varchar [null]
+  `level` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `title`) [unique]
+  }
+}
+
+Table `subjects` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `name` varchar
+  `detail` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `branches` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `name` varchar
+  `code` varchar [null]
+  `address` varchar [null]
+  `contact` varchar [null]
+  `created_by` int [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `name`) [unique]
+    (`tenant_id`, `code`) [unique]
+  }
+}
+
+Table `classes` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `name` varchar
+  `branchId` int
+  `incharge_teacher_id` int [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`branchId`, `name`) [unique]
+  }
+}
+
+Table `sections` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `name` varchar
+  `classId` int
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`classId`, `name`) [unique]
+  }
+}
+
+Table `sessions` {
+  `id` int [pk, increment]
+  `tenant_id` int [null]
+  `branch_id` int [null]
+  `name` varchar
+  `startDate` datetime
+  `endDate` datetime
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+  }
+}
+
+Table `student_schedules` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `sessionId` int
+  `classId` int
+  `sectionId` int
+  `subjects` json
+  `days` json
+  `startTime` varchar
+  `endTime` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `teacher_schedules` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `teacherId` int
+  `sessionId` int
+  `classId` int
+  `sectionId` int
+  `subjects` json
+  `days` json
+  `startTime` varchar
+  `endTime` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `teacher_responsibilities` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `branch_scope_key` varchar
+  `name` varchar
+  `status` varchar
+  `created_by` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+
+  indexes {
+    (`tenant_id`, `branch_scope_key`, `name`) [unique]
+  }
+}
+
+Table `teacher_assignments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int
+  `branch_scope_key` varchar
+  `teacher_id` int
+  `subject_id` int [null]
+  `class_id` int [null]
+  `section_id` int [null]
+  `responsibility_id` int [null]
+  `note` varchar [null]
+  `assignment_scope_key` varchar
+  `status` varchar
+  `created_by` int [null]
+  `created_at` datetime
+  `updated_at` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `assignment_scope_key`) [unique]
+  }
+}
+
+Table `exam_schedules` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `examName` varchar
+  `sessionId` int
+  `classId` int
+  `section_id` int [null]
+  `subjectId` int
+  `examDate` datetime
+  `startTime` varchar
+  `endTime` varchar
+  `totalMarks` int [null]
+  `room` varchar [null]
+  `invigilator` varchar [null]
+  `invigilator_teacher_id` int [null]
+  `notes` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `result_grades` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `title` varchar
+  `code` varchar [null]
+  `fromPercent` int
+  `toPercent` int
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `exam_results` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `studentId` int
+  `sessionId` int
+  `classId` int
+  `sectionId` int [null]
+  `examName` varchar
+  `totalMarks` int
+  `obtainedMarks` int
+  `percentage` decimal
+  `gradeTitle` varchar [null]
+  `gradeCode` varchar [null]
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `studentId`, `sessionId`, `classId`, `sectionId`, `examName`) [unique]
+  }
+}
+
+Table `exam_result_subjects` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `examResultId` int
+  `subjectId` int
+  `totalMarks` int
+  `obtainedMarks` int
+  `percentage` decimal
+  `gradeTitle` varchar [null]
+  `gradeCode` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `examResultId`, `subjectId`) [unique]
+  }
+}
+
+Table `students` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `admissionNumber` varchar
+  `admissionDate` datetime [null]
+  `admissionFee` decimal [null]
+  `fullName` varchar
+  `fatherName` varchar
+  `gender` varchar
+  `caste` varchar [null]
+  `cnic` varchar [null]
+  `dob` datetime [null]
+  `bForm` varchar [null]
+  `phone` varchar [null]
+  `whatsapp` varchar [null]
+  `email` varchar [null]
+  `address` varchar [null]
+  `currentAddress` varchar [null]
+  `permanentAddress` varchar [null]
+  `district` varchar [null]
+  `prevMadrassa` varchar [null]
+  `religiousEduDate` datetime [null]
+  `prevSchool` varchar [null]
+  `secularEduDate` datetime [null]
+  `secularEdu` varchar [null]
+  `religiousEdu` varchar [null]
+  `requiredClass` varchar [null]
+  `requiredJamaat` varchar [null]
+  `teacherName` varchar [null]
+  `medicalCondition` varchar [null]
+  `monthlyFee` decimal [null]
+  `reside` varchar [null]
+  `imageUrl` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `admissionNumber`) [unique]
+  }
+}
+
+Table `student_documents` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `student_id` int
+  `original_name` varchar
+  `file_name` varchar
+  `file_url` varchar
+  `mime_type` varchar
+  `file_size` int
+  `created_at` datetime
+  `updated_at` datetime
+}
+
+Table `parents` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `registration_number` varchar [null]
+  `fullName` varchar
+  `familyNumber` varchar [null]
+  `phone` varchar [null]
+  `whatsapp` varchar [null]
+  `email` varchar [null]
+  `cnic` varchar [null]
+  `occupation` varchar [null]
+  `address` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `familyNumber`) [unique]
+    (`tenant_id`, `registration_number`) [unique]
+  }
+}
+
+Table `student_parents` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `parentId` int
+  `relationship` varchar
+  `isPrimary` boolean
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`studentId`, `parentId`, `relationship`) [unique]
+  }
+}
+
+Table `student_class_assignments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `branchId` int
+  `classId` int
+  `sectionId` int
+  `sessionId` int
+  `status` varchar
+  `assignedAt` datetime
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `teachers` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `staffType` varchar
+  `fullName` varchar
+  `email` varchar [null]
+  `phone` varchar [null]
+  `cnic` varchar [null]
+  `subject` varchar [null]
+  `qualification` varchar [null]
+  `educationInstitute` varchar [null]
+  `educationYear` varchar [null]
+  `specialization` varchar [null]
+  `address` varchar [null]
+  `shiftId` int [null]
+  `imageUrl` varchar [null]
+  `basicSalary` decimal
+  `bankName` varchar [null]
+  `accountTitle` varchar [null]
+  `accountNumber` varchar [null]
+  `iban` varchar [null]
+  `jobTitle` varchar [null]
+  `department` varchar [null]
+  `employmentType` varchar [null]
+  `appointmentDate` varchar [null]
+  `joiningDate` varchar [null]
+  `experienceSummary` varchar [null]
+  `notes` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `phone`) [unique]
+    (`tenant_id`, `cnic`) [unique]
+  }
+}
+
+Table `teacher_salary_increments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `teacherId` int
+  `previousSalary` decimal
+  `incrementAmount` decimal
+  `newSalary` decimal
+  `effectiveDate` varchar
+  `reason` varchar [null]
+  `createdById` int [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `student_attendance` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `branchId` int
+  `classId` int
+  `sectionId` int
+  `date` datetime
+  `status` varchar
+  `remarks` varchar [null]
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`studentId`, `date`) [unique]
+  }
+}
+
+Table `teacher_attendance` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `teacherId` int
+  `branchId` int
+  `date` datetime
+  `status` varchar
+  `remarks` varchar [null]
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`teacherId`, `date`) [unique]
+  }
+}
+
+Table `hifz_daily_entries` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `date` datetime
+  `sabq` varchar [null]
+  `sabqListener` varchar [null]
+  `sabqRuku` varchar [null]
+  `sabqAyatFrom` varchar [null]
+  `sabqAyatTo` varchar [null]
+  `sabqTeacherName` varchar [null]
+  `sabqMistake` int [null]
+  `sabqAtkann` int [null]
+  `sabaqi` varchar [null]
+  `sabaqiRuku` varchar [null]
+  `sabaqiAyatFrom` varchar [null]
+  `sabaqiAyatTo` varchar [null]
+  `sabaqiMistake` int [null]
+  `sabaqiAtkann` int [null]
+  `manzil` varchar [null]
+  `manzilBeforeDetail` varchar [null]
+  `manzilBeforePara` varchar [null]
+  `manzilBeforeRuku` varchar [null]
+  `manzilBeforeAyatFrom` varchar [null]
+  `manzilBeforeAyatTo` varchar [null]
+  `manzilBeforeMistake` int [null]
+  `manzilBeforeAtkann` int [null]
+  `manzilAfterDetail` varchar [null]
+  `manzilAfterPara` varchar [null]
+  `manzilAfterRuku` varchar [null]
+  `manzilAfterAyatFrom` varchar [null]
+  `manzilAfterAyatTo` varchar [null]
+  `manzilAfterMistake` int [null]
+  `manzilAfterAtkann` int [null]
+  `lessonDetail` varchar [null]
+  `count` int [null]
+  `performanceStatus` varchar
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `studentId`, `date`) [unique]
+  }
+}
+
+Table `hifz_weekly_entries` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `weekLabel` varchar [null]
+  `className` varchar [null]
+  `sectionName` varchar [null]
+  `teacherName` varchar [null]
+  `weekStartDate` datetime
+  `weekEndDate` datetime
+  `siparaFrom` varchar [null]
+  `siparaTo` varchar [null]
+  `lessonFrom` varchar [null]
+  `lessonTo` varchar [null]
+  `sawal1` int [null]
+  `sawal2` int [null]
+  `sawal3` int [null]
+  `tahajji` int [null]
+  `panja` int [null]
+  `khudKhwani` int [null]
+  `classWork` varchar [null]
+  `performanceStatus` varchar
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `studentId`, `weekStartDate`, `weekEndDate`) [unique]
+  }
+}
+
+Table `hifz_monthly_entries` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `month` int
+  `year` int
+  `startSabq` varchar [null]
+  `endSabq` varchar [null]
+  `totalRecitation` varchar [null]
+  `performanceStatus` varchar
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `studentId`, `month`, `year`) [unique]
+  }
+}
+
+Table `hifz_sipara_entries` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `studentId` int
+  `siparaNumber` int
+  `startDate` datetime [null]
+  `endDate` datetime [null]
+  `totalDays` int [null]
+  `quality` varchar [null]
+  `performanceStatus` varchar
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `studentId`, `siparaNumber`) [unique]
+  }
+}
+
+Table `finance_heads` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `expense_category_id` int [null]
+  `name` varchar
+  `type` varchar
+  `description` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+  }
+}
+
+Table `finance_expense_categories` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `name` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+  }
+}
+
+Table `student_fee_vouchers` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `voucherNo` varchar
+  `studentId` int
+  `feeMonth` int
+  `feeYear` int
+  `monthlyFee` decimal
+  `admissionFee` decimal
+  `arrears` decimal
+  `discount` decimal
+  `fine` decimal
+  `totalAmount` decimal
+  `paidAmount` decimal
+  `dueAmount` decimal
+  `dueDate` datetime [null]
+  `paidDate` datetime [null]
+  `paymentMethod` varchar [null]
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `voucherNo`) [unique]
+    (`studentId`, `feeMonth`, `feeYear`) [unique]
+  }
+}
+
+Table `fund_collections` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `collectionGroupId` varchar
+  `donorName` varchar
+  `careOf` varchar [null]
+  `phone` varchar [null]
+  `paymentMode` varchar
+  `donationType` varchar
+  `donationSubType` varchar
+  `purpose` varchar [null]
+  `amount` decimal
+  `receiptNo` varchar [null]
+  `details` varchar [null]
+  `paymentDate` datetime
+  `cheque_date` datetime [null]
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `salary_entries` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `teacherId` int
+  `financeHeadId` int
+  `amount` decimal
+  `salaryMonth` int
+  `salaryYear` int
+  `paymentDate` datetime
+  `paymentMethod` varchar [null]
+  `remarks` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`teacherId`, `salaryMonth`, `salaryYear`) [unique]
+  }
+}
+
+Table `finance_transactions` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `financeHeadId` int
+  `type` varchar
+  `amount` decimal
+  `transactionDate` datetime
+  `paymentMode` varchar [null]
+  `paymentStatus` varchar [null]
+  `slipNo` varchar [null]
+  `details` varchar [null]
+  `referenceType` varchar [null]
+  `referenceId` int [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `referenceType`, `referenceId`) [unique]
+  }
+}
+
+Table `financial_records` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `type` varchar
+  `category` varchar
+  `description` varchar [null]
+  `amount` decimal
+  `date` datetime
+  `status` varchar
+  `createdById` int [null]
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_items` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `itemName` varchar
+  `category` varchar
+  `description` varchar [null]
+  `unit` varchar
+  `itemCode` varchar
+  `currentStock` decimal
+  `purchasePrice` decimal
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `itemCode`) [unique]
+  }
+}
+
+Table `store_units` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `name` varchar
+  `shortName` varchar
+  `description` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `shortName`) [unique]
+  }
+}
+
+Table `store_categories` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `name` varchar
+  `description` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `name`) [unique]
+  }
+}
+
+Table `store_suppliers` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `supplierName` varchar
+  `mobileNumber` varchar [null]
+  `address` varchar [null]
+  `shopName` varchar [null]
+  `balance` decimal
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+
+  indexes {
+    (`tenant_id`, `branch_id`, `supplierName`) [unique]
+  }
+}
+
+Table `store_supplier_payments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `supplierId` int
+  `amount` decimal
+  `paymentDate` datetime
+  `paymentMethod` varchar [null]
+  `note` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_purchases` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `purchaseDate` datetime
+  `supplierId` int
+  `invoiceNumber` varchar [null]
+  `totalAmount` decimal
+  `paidAmount` decimal
+  `remainingAmount` decimal
+  `paymentMethod` varchar [null]
+  `invoiceImage` varchar [null]
+  `approvalStatus` varchar
+  `financeTransactionId` int [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_purchase_items` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `purchaseId` int
+  `itemId` int
+  `unitId` int [null]
+  `quantity` decimal
+  `rate` decimal
+  `total` decimal
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_stock_issues` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `issueDate` datetime
+  `itemId` int
+  `quantity` decimal
+  `returnedQuantity` decimal
+  `department` varchar
+  `receiverName` varchar
+  `purpose` varchar [null]
+  `issuedBy` varchar
+  `receiverSignature` varchar [null]
+  `approvalStatus` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_returns` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `stockIssueId` int
+  `itemId` int
+  `returnQuantity` decimal
+  `condition` varchar
+  `addToStock` boolean
+  `note` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_damaged_stock` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `returnId` int [null]
+  `itemId` int
+  `quantity` decimal
+  `reason` varchar [null]
+  `date` datetime
+  `responsiblePerson` varchar [null]
+  `amountLoss` decimal
+  `approvalStatus` varchar
+  `note` varchar [null]
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Table `store_approval_logs` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `moduleType` varchar
+  `recordId` int
+  `status` varchar
+  `approvedBy` varchar [null]
+  `remarks` varchar [null]
+  `createdAt` datetime
+}
+
+Table `store_stock_adjustments` {
+  `id` int [pk, increment]
+  `tenant_id` int
+  `branch_id` int [null]
+  `itemId` int
+  `adjustmentType` varchar
+  `quantity` decimal
+  `previousStock` decimal
+  `adjustedStock` decimal
+  `reason` varchar [null]
+  `approvalStatus` varchar
+  `status` varchar
+  `createdAt` datetime
+  `updatedAt` datetime
+}
+
+Ref: `tenant`.`referred_by_tenant_id` > `tenant`.`id`
+Ref: `admins`.`tenant_id` > `tenant`.`id`
+Ref: `admins`.`role_id` > `roles`.`id`
+Ref: `admins`.`branch_id` > `branches`.`id`
+Ref: `admins`.`teacher_id` > `teachers`.`id`
+Ref: `admins`.`owner_admin_id` > `admins`.`id`
+Ref: `affiliate_commission_tiers`.`created_by_admin_id` > `admins`.`id`
+Ref: `affiliate_commission_tiers`.`updated_by_admin_id` > `admins`.`id`
+Ref: `affiliate_commissions`.`referrer_tenant_id` > `tenant`.`id`
+Ref: `affiliate_commissions`.`referred_tenant_id` > `tenant`.`id`
+Ref: `affiliate_commissions`.`commission_tier_id` > `affiliate_commission_tiers`.`id`
+Ref: `affiliate_payment_accounts`.`tenant_id` > `tenant`.`id`
+Ref: `affiliate_payment_accounts`.`created_by_admin_id` > `admins`.`id`
+Ref: `affiliate_withdrawal_requests`.`tenant_id` > `tenant`.`id`
+Ref: `affiliate_withdrawal_requests`.`payment_account_id` > `affiliate_payment_accounts`.`id`
+Ref: `affiliate_withdrawal_requests`.`requested_by_admin_id` > `admins`.`id`
+Ref: `affiliate_withdrawal_requests`.`reviewed_by_admin_id` > `admins`.`id`
+Ref: `affiliate_payments`.`tenant_id` > `tenant`.`id`
+Ref: `affiliate_payments`.`withdrawal_request_id` > `affiliate_withdrawal_requests`.`id`
+Ref: `affiliate_payments`.`paid_by_admin_id` > `admins`.`id`
+Ref: `affiliate_settings`.`created_by_admin_id` > `admins`.`id`
+Ref: `affiliate_settings`.`updated_by_admin_id` > `admins`.`id`
+Ref: `audit_logs`.`actor_user_id` > `admins`.`id`
+Ref: `roles`.`tenant_id` > `tenant`.`id`
+Ref: `roles`.`branch_id` > `branches`.`id`
+Ref: `roles`.`created_by` > `admins`.`id`
+Ref: `roles`.`updated_by` > `admins`.`id`
+Ref: `role_permissions`.`tenant_id` > `tenant`.`id`
+Ref: `role_permissions`.`role_id` > `roles`.`id`
+Ref: `role_permissions`.`permission_id` > `permissions`.`id`
+Ref: `role_class_scopes`.`tenant_id` > `tenant`.`id`
+Ref: `role_class_scopes`.`branch_id` > `branches`.`id`
+Ref: `role_class_scopes`.`role_id` > `roles`.`id`
+Ref: `role_class_scopes`.`class_id` > `classes`.`id`
+Ref: `role_teacher_class_assignments`.`tenant_id` > `tenant`.`id`
+Ref: `role_teacher_class_assignments`.`branch_id` > `branches`.`id`
+Ref: `role_teacher_class_assignments`.`role_id` > `roles`.`id`
+Ref: `role_teacher_class_assignments`.`teacher_id` > `teachers`.`id`
+Ref: `role_teacher_class_assignments`.`class_id` > `classes`.`id`
+Ref: `madrassa_profiles`.`adminId` > `admins`.`id`
+Ref: `madrassa_profiles`.`tenant_id` > `tenant`.`id`
+Ref: `cities`.`tenant_id` > `tenant`.`id`
+Ref: `suggestions`.`tenant_id` > `tenant`.`id`
+Ref: `suggestions`.`branch_id` > `branches`.`id`
+Ref: `suggestions`.`adminId` > `admins`.`id`
+Ref: `support_requests`.`tenant_id` > `tenant`.`id`
+Ref: `support_requests`.`branch_id` > `branches`.`id`
+Ref: `support_requests`.`adminId` > `admins`.`id`
+Ref: `shifts`.`tenant_id` > `tenant`.`id`
+Ref: `shifts`.`branch_id` > `branches`.`id`
+Ref: `departments`.`tenant_id` > `tenant`.`id`
+Ref: `departments`.`branch_id` > `branches`.`id`
+Ref: `department_head_assignments`.`department_id` > `departments`.`id`
+Ref: `department_head_assignments`.`tenant_id` > `tenant`.`id`
+Ref: `department_head_assignments`.`branch_id` > `branches`.`id`
+Ref: `department_head_assignments`.`teacher_id` > `teachers`.`id`
+Ref: `qualifications`.`tenant_id` > `tenant`.`id`
+Ref: `qualifications`.`branch_id` > `branches`.`id`
+Ref: `subjects`.`tenant_id` > `tenant`.`id`
+Ref: `subjects`.`branch_id` > `branches`.`id`
+Ref: `branches`.`tenant_id` > `tenant`.`id`
+Ref: `branches`.`created_by` > `admins`.`id`
+Ref: `classes`.`tenant_id` > `tenant`.`id`
+Ref: `classes`.`branchId` > `branches`.`id`
+Ref: `classes`.`incharge_teacher_id` > `teachers`.`id`
+Ref: `sections`.`tenant_id` > `tenant`.`id`
+Ref: `sections`.`classId` > `classes`.`id`
+Ref: `sessions`.`tenant_id` > `tenant`.`id`
+Ref: `sessions`.`branch_id` > `branches`.`id`
+Ref: `student_schedules`.`tenant_id` > `tenant`.`id`
+Ref: `student_schedules`.`sessionId` > `sessions`.`id`
+Ref: `student_schedules`.`classId` > `classes`.`id`
+Ref: `student_schedules`.`sectionId` > `sections`.`id`
+Ref: `teacher_schedules`.`tenant_id` > `tenant`.`id`
+Ref: `teacher_schedules`.`teacherId` > `teachers`.`id`
+Ref: `teacher_schedules`.`sessionId` > `sessions`.`id`
+Ref: `teacher_schedules`.`classId` > `classes`.`id`
+Ref: `teacher_schedules`.`sectionId` > `sections`.`id`
+Ref: `teacher_responsibilities`.`tenant_id` > `tenant`.`id`
+Ref: `teacher_responsibilities`.`branch_id` > `branches`.`id`
+Ref: `teacher_responsibilities`.`created_by` > `admins`.`id`
+Ref: `teacher_assignments`.`tenant_id` > `tenant`.`id`
+Ref: `teacher_assignments`.`branch_id` > `branches`.`id`
+Ref: `teacher_assignments`.`teacher_id` > `teachers`.`id`
+Ref: `teacher_assignments`.`subject_id` > `subjects`.`id`
+Ref: `teacher_assignments`.`class_id` > `classes`.`id`
+Ref: `teacher_assignments`.`section_id` > `sections`.`id`
+Ref: `teacher_assignments`.`responsibility_id` > `teacher_responsibilities`.`id`
+Ref: `teacher_assignments`.`created_by` > `admins`.`id`
+Ref: `exam_schedules`.`tenant_id` > `tenant`.`id`
+Ref: `exam_schedules`.`sessionId` > `sessions`.`id`
+Ref: `exam_schedules`.`classId` > `classes`.`id`
+Ref: `exam_schedules`.`section_id` > `sections`.`id`
+Ref: `exam_schedules`.`subjectId` > `subjects`.`id`
+Ref: `exam_schedules`.`invigilator_teacher_id` > `teachers`.`id`
+Ref: `result_grades`.`tenant_id` > `tenant`.`id`
+Ref: `result_grades`.`branch_id` > `branches`.`id`
+Ref: `exam_results`.`tenant_id` > `tenant`.`id`
+Ref: `exam_results`.`studentId` > `students`.`id`
+Ref: `exam_results`.`sessionId` > `sessions`.`id`
+Ref: `exam_results`.`classId` > `classes`.`id`
+Ref: `exam_results`.`sectionId` > `sections`.`id`
+Ref: `exam_result_subjects`.`tenant_id` > `tenant`.`id`
+Ref: `exam_result_subjects`.`examResultId` > `exam_results`.`id`
+Ref: `exam_result_subjects`.`subjectId` > `subjects`.`id`
+Ref: `students`.`tenant_id` > `tenant`.`id`
+Ref: `students`.`branch_id` > `branches`.`id`
+Ref: `student_documents`.`tenant_id` > `tenant`.`id`
+Ref: `student_documents`.`branch_id` > `branches`.`id`
+Ref: `student_documents`.`student_id` > `students`.`id`
+Ref: `parents`.`tenant_id` > `tenant`.`id`
+Ref: `parents`.`branch_id` > `branches`.`id`
+Ref: `student_parents`.`tenant_id` > `tenant`.`id`
+Ref: `student_parents`.`studentId` > `students`.`id`
+Ref: `student_parents`.`parentId` > `parents`.`id`
+Ref: `student_class_assignments`.`tenant_id` > `tenant`.`id`
+Ref: `student_class_assignments`.`studentId` > `students`.`id`
+Ref: `student_class_assignments`.`branchId` > `branches`.`id`
+Ref: `student_class_assignments`.`classId` > `classes`.`id`
+Ref: `student_class_assignments`.`sectionId` > `sections`.`id`
+Ref: `student_class_assignments`.`sessionId` > `sessions`.`id`
+Ref: `teachers`.`shiftId` > `shifts`.`id`
+Ref: `teachers`.`tenant_id` > `tenant`.`id`
+Ref: `teachers`.`branch_id` > `branches`.`id`
+Ref: `teacher_salary_increments`.`tenant_id` > `tenant`.`id`
+Ref: `teacher_salary_increments`.`teacherId` > `teachers`.`id`
+Ref: `teacher_salary_increments`.`createdById` > `admins`.`id`
+Ref: `student_attendance`.`tenant_id` > `tenant`.`id`
+Ref: `student_attendance`.`studentId` > `students`.`id`
+Ref: `student_attendance`.`branchId` > `branches`.`id`
+Ref: `student_attendance`.`classId` > `classes`.`id`
+Ref: `student_attendance`.`sectionId` > `sections`.`id`
+Ref: `teacher_attendance`.`tenant_id` > `tenant`.`id`
+Ref: `teacher_attendance`.`teacherId` > `teachers`.`id`
+Ref: `teacher_attendance`.`branchId` > `branches`.`id`
+Ref: `hifz_daily_entries`.`tenant_id` > `tenant`.`id`
+Ref: `hifz_daily_entries`.`studentId` > `students`.`id`
+Ref: `hifz_weekly_entries`.`tenant_id` > `tenant`.`id`
+Ref: `hifz_weekly_entries`.`studentId` > `students`.`id`
+Ref: `hifz_monthly_entries`.`tenant_id` > `tenant`.`id`
+Ref: `hifz_monthly_entries`.`studentId` > `students`.`id`
+Ref: `hifz_sipara_entries`.`tenant_id` > `tenant`.`id`
+Ref: `hifz_sipara_entries`.`studentId` > `students`.`id`
+Ref: `finance_heads`.`tenant_id` > `tenant`.`id`
+Ref: `finance_heads`.`expense_category_id` > `finance_expense_categories`.`id`
+Ref: `finance_expense_categories`.`tenant_id` > `tenant`.`id`
+Ref: `student_fee_vouchers`.`tenant_id` > `tenant`.`id`
+Ref: `student_fee_vouchers`.`studentId` > `students`.`id`
+Ref: `fund_collections`.`tenant_id` > `tenant`.`id`
+Ref: `salary_entries`.`tenant_id` > `tenant`.`id`
+Ref: `salary_entries`.`teacherId` > `teachers`.`id`
+Ref: `salary_entries`.`financeHeadId` > `finance_heads`.`id`
+Ref: `finance_transactions`.`tenant_id` > `tenant`.`id`
+Ref: `finance_transactions`.`financeHeadId` > `finance_heads`.`id`
+Ref: `financial_records`.`tenant_id` > `tenant`.`id`
+Ref: `financial_records`.`createdById` > `admins`.`id`
+Ref: `store_items`.`tenant_id` > `tenant`.`id`
+Ref: `store_units`.`tenant_id` > `tenant`.`id`
+Ref: `store_categories`.`tenant_id` > `tenant`.`id`
+Ref: `store_suppliers`.`tenant_id` > `tenant`.`id`
+Ref: `store_supplier_payments`.`tenant_id` > `tenant`.`id`
+Ref: `store_supplier_payments`.`supplierId` > `store_suppliers`.`id`
+Ref: `store_purchases`.`tenant_id` > `tenant`.`id`
+Ref: `store_purchases`.`supplierId` > `store_suppliers`.`id`
+Ref: `store_purchase_items`.`tenant_id` > `tenant`.`id`
+Ref: `store_purchase_items`.`purchaseId` > `store_purchases`.`id`
+Ref: `store_purchase_items`.`itemId` > `store_items`.`id`
+Ref: `store_stock_issues`.`tenant_id` > `tenant`.`id`
+Ref: `store_stock_issues`.`itemId` > `store_items`.`id`
+Ref: `store_returns`.`tenant_id` > `tenant`.`id`
+Ref: `store_returns`.`stockIssueId` > `store_stock_issues`.`id`
+Ref: `store_returns`.`itemId` > `store_items`.`id`
+Ref: `store_damaged_stock`.`tenant_id` > `tenant`.`id`
+Ref: `store_damaged_stock`.`itemId` > `store_items`.`id`
+Ref: `store_approval_logs`.`tenant_id` > `tenant`.`id`
+Ref: `store_stock_adjustments`.`tenant_id` > `tenant`.`id`
+Ref: `store_stock_adjustments`.`itemId` > `store_items`.`id`

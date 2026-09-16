@@ -63,6 +63,7 @@ const upsertTenant = async () => {
     },
     create: {
       tenantCode: TENANT_CODE,
+      referralCode: 'TQABRANCHROLE',
       name: 'QA Branch Role Isolation',
       subdomain: 'qa-branch-role-isolation',
       status: 'active',

@@ -48,3 +48,18 @@ export const deleteTeacherAttendance = asyncHandler(async (req, res) => {
     data: attendance,
   });
 });
+
+export const markStaffAttendance = asyncHandler(async (req, res) => {
+  const attendance = await attendanceService.markTeacherAttendance(req.tenantId, req.body, req.branchScope, 'staff');
+  return apiResponse(res, { statusCode: 201, message: 'عملہ کی حاضری کامیابی سے محفوظ ہو گئی۔', data: attendance });
+});
+
+export const getStaffAttendance = asyncHandler(async (req, res) => {
+  const attendances = await attendanceService.getTeacherAttendance(req.tenantId, req.query, req.branchScope, 'staff');
+  return apiResponse(res, { message: 'عملہ کی حاضری کامیابی سے لوڈ ہو گئی۔', data: attendances });
+});
+
+export const deleteStaffAttendance = asyncHandler(async (req, res) => {
+  const attendance = await attendanceService.deleteTeacherAttendance(req.tenantId, req.query, req.branchScope, 'staff');
+  return apiResponse(res, { message: 'عملہ کی حاضری کامیابی سے حذف ہو گئی۔', data: attendance });
+});

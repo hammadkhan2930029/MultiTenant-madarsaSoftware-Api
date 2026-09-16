@@ -20,7 +20,7 @@ const router = Router();
 router.use(authMiddleware);
 router.post('/', requirePermission('finance.transactions.create'), validate(createTransactionValidationSchema), createTransaction);
 router.get('/', requirePermission('finance.transactions.view'), validate(listTransactionsValidationSchema), getTransactions);
-router.put('/:id', requirePermission('finance.transactions.update', 'finance.transactions.create'), validate(updateTransactionValidationSchema), updateTransaction);
-router.patch('/:id/deactivate', requirePermission('finance.transactions.delete', 'finance.transactions.create'), validate(transactionIdValidationSchema), deactivateTransaction);
+router.put('/:id', requirePermission('finance.transactions.create'), validate(updateTransactionValidationSchema), updateTransaction);
+router.patch('/:id/deactivate', requirePermission('finance.transactions.create'), validate(transactionIdValidationSchema), deactivateTransaction);
 
 export { router as transactionsRoutes };

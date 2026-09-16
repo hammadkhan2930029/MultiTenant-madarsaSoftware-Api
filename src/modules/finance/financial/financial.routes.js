@@ -22,7 +22,7 @@ router.use(authMiddleware);
 router.get('/', requirePermission('finance.transactions.view', 'reports.view'), validate(listFinancialValidationSchema), getFinancialRecords);
 router.get('/summary', requirePermission('finance.transactions.view', 'reports.view'), validate(listFinancialValidationSchema), getFinancialSummary);
 router.post('/', requirePermission('finance.transactions.create'), validate(createFinancialValidationSchema), createFinancialRecord);
-router.put('/:id', requirePermission('finance.transactions.update', 'finance.transactions.create'), validate(updateFinancialValidationSchema), updateFinancialRecord);
-router.delete('/:id', requirePermission('finance.transactions.delete', 'finance.transactions.create'), validate(financialIdValidationSchema), deleteFinancialRecord);
+router.put('/:id', requirePermission('finance.transactions.create'), validate(updateFinancialValidationSchema), updateFinancialRecord);
+router.delete('/:id', requirePermission('finance.transactions.create'), validate(financialIdValidationSchema), deleteFinancialRecord);
 
 export { router as financialRoutes };

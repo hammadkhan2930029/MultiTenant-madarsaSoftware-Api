@@ -43,6 +43,7 @@ const upsertTenant = async ({ tenantCode, name, subdomain }) => {
     },
     create: {
       tenantCode,
+      referralCode: `T${tenantCode.slice(-19)}`,
       name,
       subdomain,
       status: 'active',

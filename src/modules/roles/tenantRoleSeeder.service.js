@@ -92,7 +92,7 @@ const assignAccountantPermissions = async (client, { tenantId, roleId }) => {
     INSERT IGNORE INTO role_permissions (tenant_id, role_id, permission_id)
     SELECT ${tenantId}, ${roleId}, p.id
     FROM permissions p
-    WHERE p.permission_key LIKE 'fees.%'
+    WHERE p.permission_key LIKE 'student_fees.%'
       OR p.permission_key LIKE 'reports.%'
   `;
 };

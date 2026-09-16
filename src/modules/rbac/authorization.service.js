@@ -41,7 +41,7 @@ const getRequiredPermissionForRequest = (req) => {
     return action === 'view' ? 'users.view' : 'users.manage';
   }
   if (req.originalUrl.startsWith('/api/students') && /\/(assign-class|class-assignments)(\/|$)/i.test(req.originalUrl)) {
-    return 'students.edit';
+    return ['students.assign_class', 'students.edit'];
   }
   if (req.originalUrl.startsWith('/api/teachers') && /\/increments(\/|$)/i.test(req.originalUrl)) {
     return req.method === 'GET' ? ['teachers.view', 'teachers.salary_increments.view'] : 'teachers.update';
@@ -50,7 +50,15 @@ const getRequiredPermissionForRequest = (req) => {
     return req.method === 'GET' ? 'teachers.view' : 'teachers.update';
   }
   if (req.originalUrl.startsWith('/api/teacher-assignments')) {
-    if (req.method === 'GET') return 'teachers.assignments.view';
+    if (req.method === 'GET') {
+      return [
+        'teachers.assignments.view',
+        'teachers.attendance.view',
+        'teachers.attendance.create',
+        'teachers.attendance.edit',
+        'teachers.attendance.delete',
+      ];
+    }
     if (req.method === 'POST') return 'teachers.assignments.create';
     if (req.method === 'DELETE') return 'teachers.assignments.delete';
     return 'teachers.assignments.edit';
@@ -67,11 +75,25 @@ const getRequiredPermissionForRequest = (req) => {
     return ['exams.view', 'exam_results.create'];
   }
   if (req.originalUrl.startsWith('/api/attendance')) {
+    if (req.originalUrl.startsWith('/api/attendance/staff')) {
+      if (req.method === 'GET') {
+        return ['staff.attendance.view', 'staff.attendance.create', 'staff.attendance.edit', 'staff.attendance.delete'];
+      }
+      if (req.method === 'DELETE') return 'staff.attendance.delete';
+      return ['staff.attendance.create', 'staff.attendance.edit'];
+    }
+    if (req.originalUrl.startsWith('/api/attendance/teachers')) {
+      if (req.method === 'GET') {
+        return ['teachers.attendance.view', 'teachers.attendance.create', 'teachers.attendance.edit', 'teachers.attendance.delete'];
+      }
+      if (req.method === 'DELETE') return 'teachers.attendance.delete';
+      return ['teachers.attendance.create', 'teachers.attendance.edit'];
+    }
     if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
-      return ['attendance.create', 'attendance.edit', 'teachers.attendance.create', 'teachers.attendance.view'];
+      return ['attendance.create', 'attendance.edit'];
     }
     return action === 'view'
-      ? ['attendance.view', 'attendance.create', 'attendance.edit', 'attendance.history.view', 'teachers.attendance.view']
+      ? ['attendance.view', 'attendance.create', 'attendance.edit', 'attendance.history.view']
       : `attendance.${action}`;
   }
   if (req.originalUrl.startsWith('/api/hifz/')) {
@@ -82,20 +104,21 @@ const getRequiredPermissionForRequest = (req) => {
     }
   }
   if (req.originalUrl.startsWith('/api/finance/student-fees')) {
-    if (req.method === 'PATCH' && /\/payment(\/|$)/i.test(req.originalUrl)) return 'fees.create';
-    return action === 'view' ? 'fees.view' : `fees.${action}`;
+    if (req.method === 'PATCH' && /\/payment(\/|$)/i.test(req.originalUrl)) return ['student_fees.collect', 'student_fees.edit'];
+    if (req.method === 'POST' && /\/generate(\/|$)/i.test(req.originalUrl)) return 'student_fees.create';
+    if (req.method === 'GET' && /\/student\/\d+\/history(\/|$)/i.test(req.originalUrl)) return ['student_fees.history', 'student_fees.view', 'student_fees.collect', 'student_fees.edit'];
+    return action === 'view'
+      ? ['student_fees.view', 'student_fees.create', 'student_fees.collect', 'student_fees.history', 'student_fees.edit']
+      : `student_fees.${action}`;
   }
   if (req.originalUrl.startsWith('/api/finance/transactions')) {
     if (action === 'view') return 'finance.transactions.view';
-    if (action === 'update') return ['finance.transactions.update', 'finance.transactions.create'];
-    if (action === 'delete') return ['finance.transactions.delete', 'finance.transactions.create'];
+    if (action === 'update' || action === 'delete') return 'finance.transactions.create';
     return `finance.transactions.${action}`;
   }
   if (req.originalUrl.startsWith('/api/finance/expense-categories') || req.originalUrl.startsWith('/api/finance/heads')) {
-    if (action === 'view') return ['finance.heads.view', 'finance.heads.create', 'finance.heads.update', 'finance.heads.delete', 'fees.view'];
-    if (action === 'create') return ['finance.heads.create', 'fees.create'];
-    if (action === 'update') return ['finance.heads.update', 'finance.heads.create', 'fees.update'];
-    if (action === 'delete') return ['finance.heads.delete', 'finance.heads.create', 'fees.delete'];
+    if (action === 'view') return ['finance.heads.view', 'finance.heads.edit'];
+    if (action === 'create' || action === 'update' || action === 'delete') return 'finance.heads.edit';
   }
   if (req.originalUrl.startsWith('/api/finance/fund-collections')) {
     if (action === 'view') return ['funds.view', 'funds.create'];
@@ -105,8 +128,7 @@ const getRequiredPermissionForRequest = (req) => {
   }
   if (req.originalUrl.startsWith('/api/finance/financial')) {
     if (action === 'view') return ['finance.transactions.view', 'reports.view'];
-    if (action === 'update') return ['finance.transactions.update', 'finance.transactions.create'];
-    if (action === 'delete') return ['finance.transactions.delete', 'finance.transactions.create'];
+    if (action === 'update' || action === 'delete') return 'finance.transactions.create';
     return `finance.transactions.${action}`;
   }
   if (req.originalUrl.startsWith('/api/finance/salaries')) {
@@ -114,15 +136,15 @@ const getRequiredPermissionForRequest = (req) => {
     if (action === 'update') return 'salary.edit';
     return `salary.${action}`;
   }
-  if (req.originalUrl.startsWith('/api/finance/reports')) return 'reports.view';
+  if (req.originalUrl.startsWith('/api/finance/reports')) return ['finance.reports.view', 'reports.view'];
   if (req.originalUrl.startsWith('/api/finance/expenses')) {
-    return action === 'view' ? 'fees.view' : `fees.${action}`;
+    return action === 'view' ? 'finance.transactions.view' : 'finance.transactions.create';
   }
   if (req.originalUrl.startsWith('/api/finance')) {
-    return action === 'view' ? 'fees.view' : `fees.${action}`;
+    return action === 'view' ? 'finance.view' : `finance.${action}`;
   }
   if (req.originalUrl.startsWith('/api/financial')) {
-    return action === 'view' ? 'fees.view' : `fees.${action}`;
+    return action === 'view' ? 'finance.transactions.view' : 'finance.transactions.create';
   }
   if (req.originalUrl.startsWith('/api/store/approvals') || /\/(approve|reject)(\/|$)/i.test(req.originalUrl)) {
     return 'store.approve';

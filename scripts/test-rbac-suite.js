@@ -28,10 +28,11 @@ const assert = (condition, name, details = '') => {
 };
 
 const upsertTenant = async ({ tenantCode, name, subdomain }) => {
+  const referralCode = `QA-${subdomain}`.slice(0, 20).toUpperCase();
   const tenant = await prisma.tenant.upsert({
     where: { tenantCode },
     update: { name, subdomain, customDomain: null, status: 'active' },
-    create: { tenantCode, name, subdomain, status: 'active' },
+    create: { tenantCode, name, subdomain, referralCode, status: 'active' },
   });
 
   await seedDefaultTenantRoles(prisma, tenant.id);
@@ -185,10 +186,10 @@ const run = async () => {
   assert(crossTenantRoleBlocked, 'Tenant Admin cannot access another tenant role');
 
   const assignedRole = await rolesService.assignPermissionsToRole(jamia1Role.id, {
-    permissions: ['students.view', 'attendance.mark'],
+    permissions: ['students.view', 'attendance.create'],
   }, auth1);
   const assignedKeys = assignedRole.permissions.map((permission) => permission.permissionKey);
-  assert(assignedKeys.includes('attendance.mark'), 'Tenant Admin can assign permissions to own role');
+  assert(assignedKeys.includes('attendance.create'), 'Tenant Admin can assign permissions to own role');
 
   let invalidPermissionRejected = false;
   try {

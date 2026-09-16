@@ -21,7 +21,7 @@ const upsertTenant = async () => {
   const tenant = await prisma.tenant.upsert({
     where: { tenantCode: TENANT_CODE },
     update: { name: 'QA Login RBAC', subdomain: 'login-rbac', customDomain: null, status: 'active' },
-    create: { tenantCode: TENANT_CODE, name: 'QA Login RBAC', subdomain: 'login-rbac', status: 'active' },
+    create: { tenantCode: TENANT_CODE, name: 'QA Login RBAC', subdomain: 'login-rbac', referralCode: 'TQALOGINRBAC', status: 'active' },
   });
 
   await seedDefaultTenantRoles(prisma, tenant.id);

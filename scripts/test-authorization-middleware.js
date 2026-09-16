@@ -20,10 +20,11 @@ const assert = (condition, name, details = '') => {
 };
 
 const upsertTenant = async ({ tenantCode, name, subdomain }) => {
+  const referralCode = `QA-${subdomain}`.slice(0, 20).toUpperCase();
   const tenant = await prisma.tenant.upsert({
     where: { tenantCode },
     update: { name, subdomain, customDomain: null, status: 'active' },
-    create: { tenantCode, name, subdomain, status: 'active' },
+    create: { tenantCode, name, subdomain, referralCode, status: 'active' },
   });
 
   await seedDefaultTenantRoles(prisma, tenant.id);
@@ -158,7 +159,7 @@ const run = async () => {
     method: 'GET',
     originalUrl: '/api/auth/profile',
   });
-  assert(accountantSettingsResult.error?.statusCode === 403, 'Accountant cannot access settings/profile API');
+  assert(!accountantSettingsResult.error, 'Authenticated user can access own profile API');
 
   const readOnlyLogin = await login(tenant, 'qa-authz-readonly');
   const readOnlyViewResult = await runAuthMiddleware({ tenant, token: readOnlyLogin.token, method: 'GET', originalUrl: '/api/students' });
