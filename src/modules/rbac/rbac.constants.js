@@ -33,6 +33,8 @@ export const SUPPORTING_READ_PERMISSIONS = {
     'students.create', 'students.assign_class', 'attendance.view', 'attendance.create',
     'attendance.edit', 'students.schedule.view', 'exams.view',
     'exams.create', 'exam_results.view', 'exam_results.create',
+    'hifz.daily.view', 'hifz.daily.create', 'hifz.weekly.view', 'hifz.weekly.create',
+    'hifz.monthly.view', 'hifz.monthly.create', 'hifz.para.view', 'hifz.para.create',
   ],
   teachers: [
     'students.create', 'students.edit', 'teachers.attendance.view',
@@ -40,6 +42,8 @@ export const SUPPORTING_READ_PERMISSIONS = {
     'staff.attendance.view', 'staff.attendance.create', 'staff.attendance.edit', 'staff.attendance.delete',
     'teachers.assignments.create', 'students.schedule.view', 'salary.view', 'salary.create',
     'exams.view', 'exams.create', 'exams.update',
+    'hifz.daily.view', 'hifz.daily.create', 'hifz.weekly.view', 'hifz.weekly.create',
+    'hifz.monthly.view', 'hifz.monthly.create', 'hifz.para.view', 'hifz.para.create',
   ],
   subjects: [
     'teachers.create', 'teachers.edit', 'teachers.update',
