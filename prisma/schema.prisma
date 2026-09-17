@@ -100,7 +100,7 @@ model Tenant {
 model Admin {
   id                              Int                          @id @default(autoincrement())
   name                            String                       @db.VarChar(150)
-  email                           String                       @db.VarChar(150)
+  email                           String?                      @db.VarChar(150)
   phone                           String?                      @db.VarChar(50)
   city                            String?                      @db.VarChar(150)
   province                        String?                      @db.VarChar(150)

@@ -502,21 +502,21 @@ const ensureUniqueUser = async ({ email, username, tenantId = null, excludeId = 
         FROM admins
         WHERE id <> ${excludeId}
           AND tenant_id <=> ${normalizedTenantId}
-          AND (email = ${email} OR username = ${username})
+          AND ((${email} IS NOT NULL AND email = ${email}) OR username = ${username})
         LIMIT 1
       `
     : await client.$queryRaw`
         SELECT id, email, username
         FROM admins
         WHERE tenant_id <=> ${normalizedTenantId}
-          AND (email = ${email} OR username = ${username})
+          AND ((${email} IS NOT NULL AND email = ${email}) OR username = ${username})
         LIMIT 1
       `;
 
   const duplicateUser = rows[0];
   if (!duplicateUser) return;
 
-  if (duplicateUser.email === email) {
+  if (email && duplicateUser.email === email) {
     throw new AppError('User with the same email already exists.', 409);
   }
 
@@ -587,7 +587,7 @@ export const usersService = {
         INSERT INTO admins (name, email, phone, username, password, role, tenant_id, role_id, owner_admin_id, branch_id, teacher_id, status, updatedAt)
         VALUES (
           ${payload.name},
-          ${payload.email},
+          ${payload.email || null},
           ${payload.phone || null},
           ${username},
           ${hashedPassword},

@@ -1,0 +1,2 @@
+ALTER TABLE `admins`
+  MODIFY `email` VARCHAR(150) NULL;

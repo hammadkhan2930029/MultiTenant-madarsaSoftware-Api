@@ -15,6 +15,7 @@ const userBaseSchema = {
 export const createUserValidationSchema = z.object({
   body: z.object({
     ...userBaseSchema,
+    email: userBaseSchema.email.optional().nullable(),
     password: z.string().min(8, 'Password must be at least 8 characters.').max(100, 'Password is too long.'),
   }),
   params: z.object({}).default({}),

@@ -110,7 +110,7 @@ const studentBodySchema = z.object({
   const assignmentValues = [value.sessionId, value.classId, value.sectionId];
   const selectedCount = assignmentValues.filter((item) => item !== undefined).length;
 
-  if (selectedCount > 0 && selectedCount < assignmentValues.length) {
+  if (selectedCount < assignmentValues.length) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['sessionId'],
