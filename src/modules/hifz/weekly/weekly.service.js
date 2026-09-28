@@ -123,7 +123,20 @@ export const weeklyHifzService = {
     const branchId = await resolveHifzBranchId(resolvedTenantId, query, branchScope);
     const where = {
       tenantId: resolvedTenantId,
-      student: { tenantId: resolvedTenantId, ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId), ...buildStudentClassVisibilityWhere(resolvedTenantId, branchScope) },
+      student: {
+        tenantId: resolvedTenantId,
+        ...buildStudentBranchVisibilityWhere(resolvedTenantId, branchId),
+        ...buildStudentClassVisibilityWhere(resolvedTenantId, branchScope),
+        ...(query.search
+          ? {
+              OR: [
+                { fullName: { contains: query.search } },
+                { fatherName: { contains: query.search } },
+                { admissionNumber: { contains: query.search } },
+              ],
+            }
+          : {}),
+      },
       ...(query.studentId ? { studentId: query.studentId } : {}),
       ...(query.date
         ? {
