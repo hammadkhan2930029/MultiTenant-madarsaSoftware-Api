@@ -10,3 +10,12 @@ export const getAuditLogs = asyncHandler(async (req, res) => {
     data: result,
   });
 });
+
+export const getAuditLogFilterOptions = asyncHandler(async (req, res) => {
+  const result = await auditLogsService.getFilterOptions(req.auth, req.query);
+
+  return apiResponse(res, {
+    message: 'Audit log filter options fetched successfully.',
+    data: result,
+  });
+});

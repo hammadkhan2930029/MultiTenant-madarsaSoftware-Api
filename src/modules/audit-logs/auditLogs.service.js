@@ -107,6 +107,37 @@ const buildScope = (auth = {}, query = {}) => {
 };
 
 export const auditLogsService = {
+  async getFilterOptions(auth = {}, query = {}) {
+    const scope = buildScope(auth, query);
+    const hasContextColumns = await hasAuditContextColumns();
+    const conditions = [Prisma.sql`al.module = 'finance'`];
+
+    if (scope.tenantId) conditions.push(Prisma.sql`al.tenant_id = ${scope.tenantId}`);
+    if (hasContextColumns && scope.branchId) conditions.push(Prisma.sql`al.branch_id = ${scope.branchId}`);
+    const whereSql = Prisma.sql`WHERE ${Prisma.join(conditions, ' AND ')}`;
+
+    const [tenantRows, branchRows, userRows, actionRows] = await Promise.all([
+      auth.isSuperAdmin
+        ? prisma.$queryRaw`SELECT id, name FROM tenant ORDER BY name ASC, id ASC`
+        : prisma.$queryRaw`SELECT id, name FROM tenant WHERE id = ${scope.tenantId}`,
+      scope.tenantId
+        ? prisma.$queryRaw`SELECT id, name, code FROM branches WHERE tenant_id = ${scope.tenantId} ${scope.branchId ? Prisma.sql`AND id = ${scope.branchId}` : Prisma.empty} ORDER BY name ASC, id ASC`
+        : Promise.resolve([]),
+      scope.tenantId
+        ? prisma.$queryRaw`SELECT id, name, username FROM admins WHERE tenant_id = ${scope.tenantId} ${scope.branchId ? Prisma.sql`AND (branch_id = ${scope.branchId} OR branch_id IS NULL)` : Prisma.empty} ORDER BY name ASC, username ASC, id ASC`
+        : Promise.resolve([]),
+      hasContextColumns || !scope.branchId
+        ? prisma.$queryRaw`SELECT DISTINCT al.action FROM audit_logs al ${whereSql} AND al.action IS NOT NULL ORDER BY al.action ASC`
+        : Promise.resolve([]),
+    ]);
+
+    return {
+      tenants: tenantRows.map((item) => ({ id: Number(item.id), name: item.name || `Tenant #${item.id}` })),
+      branches: branchRows.map((item) => ({ id: Number(item.id), name: item.name || `Branch #${item.id}`, code: item.code || null })),
+      users: userRows.map((item) => ({ id: Number(item.id), name: item.name || item.username || `User #${item.id}`, username: item.username || null })),
+      actions: actionRows.map((item) => item.action).filter(Boolean),
+    };
+  },
   async getAuditLogs(auth = {}, query = {}) {
     const scope = buildScope(auth, query);
     const { page, limit, skip } = getPagination(query.page, query.limit);
