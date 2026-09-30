@@ -2,7 +2,12 @@
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
 import { normalizeStatusFilter } from '../../../utils/statusFilter.js';
-import { branchScopeService } from '../../security/index.js';
+import { auditService, branchScopeService } from '../../security/index.js';
+
+const recordSalaryAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: entry.tenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || auditContext.branchId || null, roleId: auditContext.roleId || null,
+  module: 'finance', targetType: 'salary_entry', targetId: entry.id, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null, ...entry,
+});
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -23,6 +28,13 @@ const select = {
   salaryYear: true,
   paymentDate: true,
   paymentMethod: true,
+  chequeBankName: true,
+  chequeBranchCode: true,
+  chequeNumber: true,
+  chequeDate: true,
+  onlineWalletOrBank: true,
+  onlineReferenceNo: true,
+  paymentProofUrl: true,
   remarks: true,
   status: true,
   createdAt: true,
@@ -66,6 +78,18 @@ const normalizeDate = (value) => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
+
+const requiresPaymentProof = (paymentMethod) => ['Cheque', 'Online'].includes(paymentMethod);
+
+const buildPaymentDetails = (payload, proofFile = null, existing = null) => ({
+  chequeBankName: payload.paymentMethod === 'Cheque' ? payload.chequeBankName || null : null,
+  chequeBranchCode: payload.paymentMethod === 'Cheque' ? payload.chequeBranchCode || null : null,
+  chequeNumber: payload.paymentMethod === 'Cheque' ? payload.chequeNumber || null : null,
+  chequeDate: payload.paymentMethod === 'Cheque' && payload.chequeDate ? normalizeDate(payload.chequeDate) : null,
+  onlineWalletOrBank: payload.paymentMethod === 'Online' ? payload.onlineWalletOrBank || null : null,
+  onlineReferenceNo: payload.paymentMethod === 'Online' ? payload.onlineReferenceNo || null : null,
+  paymentProofUrl: proofFile ? `/uploads/salary-payment-proofs/${proofFile.filename}` : existing?.paymentProofUrl || null,
+});
 
 const getTeacherStartDate = (teacher) => {
   const value = teacher?.joiningDate || teacher?.appointmentDate || teacher?.createdAt;
@@ -114,11 +138,21 @@ const findSalaryExpenseHead = async (tenantId, branchId = null, staffType = 'tea
   const preferredPattern = staffType === 'staff'
     ? /staff|other staff|عملہ|دیگر عملے/i
     : /teacher|ustad|استاد|اساتذہ|اساتزہ/i;
+  const salaryHeadName = staffType === 'staff' ? 'دیگر عملہ کی تنخواہ' : 'اساتذہ کی تنخواہ';
 
   return scopedHeads.find((head) => preferredPattern.test(head.name || ''))
     || scopedHeads.find((head) => /salary|payroll|تنخواہ|سیلری/i.test(head.name || ''))
-    || scopedHeads[0]
-    || null;
+    || await prisma.financeHead.create({
+      data: {
+        tenantId,
+        branchId,
+        name: salaryHeadName,
+        type: 'expense',
+        description: salaryHeadName,
+        status: 'active',
+      },
+      select: { id: true, branchId: true, name: true, type: true, status: true },
+    });
 };
 
 const ensureReferences = async (tenantId, { teacherId, financeHeadId }, branchId = null) => {
@@ -186,12 +220,15 @@ export const salariesService = {
     };
   },
 
-  async createEntry(tenantId, payload, branchScope = null) {
+  async createEntry(tenantId, payload, branchScope = null, proofFile = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const status = normalizeStatusFilter(payload.status);
     const { financeHeadId, teacher } = await ensureReferences(resolvedTenantId, payload, branchId);
     ensureTeacherIsEligibleForSalaryDate(teacher, payload);
+    if (requiresPaymentProof(payload.paymentMethod) && !proofFile) {
+      throw new AppError('Payment proof image is required for cheque and online payments.', 400);
+    }
     const duplicate = await prisma.salaryEntry.findFirst({
       where: {
         teacherId: payload.teacherId,
@@ -206,7 +243,7 @@ export const salariesService = {
       throw new AppError('Salary entry for this teacher and month already exists.', 409);
     }
     if (duplicate) {
-      return prisma.salaryEntry.update({
+      const entry = await prisma.salaryEntry.update({
         where: { id: duplicate.id, tenantId: resolvedTenantId },
         data: {
           ...payload,
@@ -214,16 +251,21 @@ export const salariesService = {
           branchId,
           paymentDate: normalizeDate(payload.paymentDate),
           paymentMethod: payload.paymentMethod || duplicate.paymentMethod || 'Cash',
+          ...buildPaymentDetails(payload, proofFile, duplicate),
           remarks: payload.remarks || null,
           status,
         },
         select,
       });
+      await recordSalaryAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.salary.reactivated', oldValue: duplicate, newValue: entry }, auditContext);
+      return entry;
     }
-    return prisma.salaryEntry.create({
-      data: { ...payload, financeHeadId, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || 'Cash', remarks: payload.remarks || null, status },
+    const entry = await prisma.salaryEntry.create({
+      data: { ...payload, financeHeadId, tenantId: resolvedTenantId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || 'Cash', ...buildPaymentDetails(payload, proofFile), remarks: payload.remarks || null, status },
       select,
     });
+    await recordSalaryAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.salary.created', oldValue: null, newValue: entry }, auditContext);
+    return entry;
   },
   async getEntries(tenantId, query, branchScope = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
@@ -260,11 +302,14 @@ export const salariesService = {
     if (!entry) throw new AppError('Salary entry not found.', 404);
     return entry;
   },
-  async updateEntry(tenantId, id, payload, branchScope = null) {
+  async updateEntry(tenantId, id, payload, branchScope = null, proofFile = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
+    if (requiresPaymentProof(payload.paymentMethod) && !proofFile && !existing.paymentProofUrl) {
+      throw new AppError('Payment proof image is required for cheque and online payments.', 400);
+    }
     const status = normalizeStatusFilter(payload.status, existing.status);
     const { financeHeadId, teacher } = await ensureReferences(resolvedTenantId, payload, branchId);
     ensureTeacherIsEligibleForSalaryDate(teacher, payload);
@@ -280,17 +325,21 @@ export const salariesService = {
       },
     });
     if (duplicate) throw new AppError('Another salary entry for this teacher and month already exists.', 409);
-    return prisma.salaryEntry.update({
+    const entry = await prisma.salaryEntry.update({
       where: { id, tenantId: resolvedTenantId },
-      data: { ...payload, financeHeadId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || existing.paymentMethod || 'Cash', remarks: payload.remarks || null, status },
+      data: { ...payload, financeHeadId, branchId, paymentDate: normalizeDate(payload.paymentDate), paymentMethod: payload.paymentMethod || existing.paymentMethod || 'Cash', ...buildPaymentDetails(payload, proofFile, existing), remarks: payload.remarks || null, status },
       select,
     });
+    await recordSalaryAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.salary.updated', oldValue: existing, newValue: entry }, auditContext);
+    return entry;
   },
-  async deactivateEntry(tenantId, id, branchScope = null) {
+  async deactivateEntry(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await prisma.salaryEntry.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}), teacher: { tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } } });
     if (!existing) throw new AppError('Salary entry not found.', 404);
-    return prisma.salaryEntry.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
+    const entry = await prisma.salaryEntry.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select });
+    await recordSalaryAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.salary.deleted', oldValue: existing, newValue: entry }, auditContext);
+    return entry;
   },
 };

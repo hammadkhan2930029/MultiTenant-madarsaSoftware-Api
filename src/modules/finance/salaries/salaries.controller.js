@@ -1,9 +1,12 @@
 import { apiResponse } from '../../../utils/apiResponse.js';
 import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { auditService } from '../../security/index.js';
 import { salariesService } from './salaries.service.js';
 
+const buildAuditContext = (req) => ({ ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null });
+
 export const createSalaryEntry = asyncHandler(async (req, res) => {
-  const entry = await salariesService.createEntry(req.tenantId, req.body, req.branchScope);
+  const entry = await salariesService.createEntry(req.tenantId, req.body, req.branchScope, req.file, buildAuditContext(req));
   return apiResponse(res, { statusCode: 201, message: 'Salary entry saved successfully.', data: entry });
 });
 export const getSalaryEntries = asyncHandler(async (req, res) => {
@@ -19,10 +22,10 @@ export const getSalaryEntryById = asyncHandler(async (req, res) => {
   return apiResponse(res, { message: 'Salary entry detail fetched successfully.', data: entry });
 });
 export const updateSalaryEntry = asyncHandler(async (req, res) => {
-  const entry = await salariesService.updateEntry(req.tenantId, Number(req.params.id), req.body, req.branchScope);
+  const entry = await salariesService.updateEntry(req.tenantId, Number(req.params.id), req.body, req.branchScope, req.file, buildAuditContext(req));
   return apiResponse(res, { message: 'Salary entry updated successfully.', data: entry });
 });
 export const deactivateSalaryEntry = asyncHandler(async (req, res) => {
-  const entry = await salariesService.deactivateEntry(req.tenantId, Number(req.params.id), req.branchScope);
+  const entry = await salariesService.deactivateEntry(req.tenantId, Number(req.params.id), req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'Salary entry deactivated successfully.', data: entry });
 });

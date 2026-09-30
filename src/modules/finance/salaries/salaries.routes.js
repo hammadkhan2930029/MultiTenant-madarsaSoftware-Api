@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authMiddleware } from '../../../middlewares/auth.middleware.js';
 import { requirePermission } from '../../../middlewares/authorization.middleware.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
+import { salaryPaymentProofUpload } from '../../../middlewares/upload.middleware.js';
 import {
   createSalaryEntry,
   getSalaryEntries,
@@ -20,11 +21,11 @@ import {
 
 const router = Router();
 router.use(authMiddleware);
-router.post('/', requirePermission('salary.create'), validate(createSalaryValidationSchema), createSalaryEntry);
+router.post('/', requirePermission('salary.create'), salaryPaymentProofUpload.single('paymentProof'), validate(createSalaryValidationSchema), createSalaryEntry);
 router.get('/', requirePermission('salary.view', 'salary.create', 'salary.edit'), validate(listSalariesValidationSchema), getSalaryEntries);
 router.get('/teachers', requirePermission('salary.view', 'salary.create', 'salary.edit'), validate(listSalaryTeachersValidationSchema), getSalaryTeachers);
 router.get('/:id', requirePermission('salary.view', 'salary.edit'), validate(salaryIdValidationSchema), getSalaryEntryById);
-router.put('/:id', requirePermission('salary.edit'), validate(updateSalaryValidationSchema), updateSalaryEntry);
+router.put('/:id', requirePermission('salary.edit'), salaryPaymentProofUpload.single('paymentProof'), validate(updateSalaryValidationSchema), updateSalaryEntry);
 router.patch('/:id/deactivate', requirePermission('salary.delete'), validate(salaryIdValidationSchema), deactivateSalaryEntry);
 
 export { router as salaryRoutes };

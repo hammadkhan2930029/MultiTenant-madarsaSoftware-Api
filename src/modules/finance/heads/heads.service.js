@@ -1,7 +1,7 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
-import { branchScopeService } from '../../security/index.js';
+import { auditService, branchScopeService } from '../../security/index.js';
 
 const select = {
   id: true,
@@ -56,7 +56,7 @@ const resolveExpenseCategoryId = async (tenantId, branchId, type, expenseCategor
 };
 
 export const headsService = {
-  async createHead(tenantId, payload, branchScope = null) {
+  async createHead(tenantId, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
     const expenseCategoryId = await resolveExpenseCategoryId(resolvedTenantId, branchId, payload.type, payload.expenseCategoryId);
@@ -71,8 +71,8 @@ export const headsService = {
       );
     }
 
-    if (existing) {
-      return prisma.financeHead.update({
+    const entry = existing
+      ? await prisma.financeHead.update({
         where: { id: existing.id },
         data: {
           name: payload.name,
@@ -82,10 +82,8 @@ export const headsService = {
           status: payload.status || 'active',
         },
         select,
-      });
-    }
-
-    return prisma.financeHead.create({
+      })
+      : await prisma.financeHead.create({
       data: {
         ...payload,
         tenantId: resolvedTenantId,
@@ -94,7 +92,13 @@ export const headsService = {
         description: payload.description || null,
       },
       select,
+      });
+    await auditService.recordAuditLog(prisma, {
+      tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null,
+      action: existing ? 'finance.head.reactivated' : 'finance.head.created', module: 'finance', targetType: 'finance_head', targetId: entry.id,
+      oldValue: existing || null, newValue: entry, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null,
     });
+    return entry;
   },
 
   async getHeads(tenantId, query, branchScope = null) {
@@ -123,7 +127,7 @@ export const headsService = {
     return getTenantHead(resolvedTenantId, id, branchId);
   },
 
-  async updateHead(tenantId, id, payload, branchScope = null) {
+  async updateHead(tenantId, id, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
     const currentHead = await getTenantHead(resolvedTenantId, id, branchId);
@@ -143,18 +147,30 @@ export const headsService = {
       }
     }
 
-    return prisma.financeHead.update({
+    const { editReason, ...updatePayload } = payload;
+    const entry = await prisma.financeHead.update({
       where: { id },
-      data: { ...payload, expenseCategoryId, description: payload.description || null },
+      data: { ...updatePayload, expenseCategoryId, description: payload.description || null },
       select,
     });
+    await auditService.recordAuditLog(prisma, {
+      tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null,
+      action: 'finance.head.updated', module: 'finance', targetType: 'finance_head', targetId: entry.id,
+      oldValue: currentHead, newValue: { ...entry, editReason }, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null,
+    });
+    return entry;
   },
 
-  async deactivateHead(tenantId, id, branchScope = null) {
+  async deactivateHead(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, {}, branchScope);
-    await getTenantHead(resolvedTenantId, id, branchId);
-
-    return prisma.financeHead.update({ where: { id }, data: { status: 'inactive' }, select });
+    const existing = await getTenantHead(resolvedTenantId, id, branchId);
+    const entry = await prisma.financeHead.update({ where: { id }, data: { status: 'inactive' }, select });
+    await auditService.recordAuditLog(prisma, {
+      tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null,
+      action: 'finance.head.deleted', module: 'finance', targetType: 'finance_head', targetId: entry.id,
+      oldValue: existing, newValue: entry, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null,
+    });
+    return entry;
   },
 };

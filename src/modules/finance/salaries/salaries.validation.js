@@ -9,8 +9,21 @@ const bodySchema = z.object({
   salaryYear: z.coerce.number().int().min(2000).max(3000),
   paymentDate: z.coerce.date({ message: 'Payment date is required.' }),
   paymentMethod: z.enum(['Cash', 'Online', 'Cheque', 'Bank Transfer']).optional(),
+  chequeBankName: z.union([z.string().trim().max(150), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  chequeBranchCode: z.union([z.string().trim().max(50), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  chequeNumber: z.union([z.string().trim().max(100), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  chequeDate: z.preprocess((v) => (v === '' || v === null || v === undefined ? undefined : v), z.coerce.date().optional()),
+  onlineWalletOrBank: z.union([z.string().trim().max(150), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  onlineReferenceNo: z.union([z.string().trim().max(100), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   remarks: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),
+}).superRefine((data, ctx) => {
+  if (data.paymentMethod === 'Cheque' && !data.chequeDate) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['chequeDate'], message: 'Cheque date is required.' });
+  }
+  if (data.paymentMethod === 'Online' && !data.onlineReferenceNo) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['onlineReferenceNo'], message: 'Online reference number is required.' });
+  }
 });
 
 export const createSalaryValidationSchema = z.object({ body: bodySchema, params: z.object({}).default({}), query: z.object({}).default({}) });

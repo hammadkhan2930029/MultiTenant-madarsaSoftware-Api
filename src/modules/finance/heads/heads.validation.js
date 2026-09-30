@@ -9,6 +9,7 @@ const bodySchema = z.object({
   status: z.enum(['active', 'inactive']).optional(),
   branchId: branchIdSchema,
   expenseCategoryId: z.union([z.coerce.number().int().positive(), z.literal(''), z.null(), z.undefined()]).transform((value) => (value ? Number(value) : null)),
+  editReason: z.union([z.string().trim().max(500), z.literal(''), z.undefined()]).transform((value) => (value === '' ? undefined : value)),
 });
 
 export const createHeadValidationSchema = z.object({ body: bodySchema, params: z.object({}).default({}), query: z.object({}).default({}) });
@@ -30,7 +31,9 @@ export const headIdValidationSchema = z.object({
   query: z.object({ branchId: branchIdSchema }).default({}),
 });
 export const updateHeadValidationSchema = z.object({
-  body: bodySchema,
+  body: bodySchema.superRefine((data, context) => {
+    if (!data.editReason) context.addIssue({ code: z.ZodIssueCode.custom, path: ['editReason'], message: 'ترمیم کی وجہ ضروری ہے۔' });
+  }),
   params: z.object({ id: z.coerce.number().int().positive() }),
   query: z.object({ branchId: branchIdSchema }).default({}),
 });

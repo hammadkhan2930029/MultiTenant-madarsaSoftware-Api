@@ -1,9 +1,12 @@
 import { apiResponse } from '../../../utils/apiResponse.js';
 import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { auditService } from '../../security/index.js';
 import { headsService } from './heads.service.js';
 
+const buildAuditContext = (req) => ({ ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null });
+
 export const createHead = asyncHandler(async (req, res) => {
-  const head = await headsService.createHead(req.tenantId, req.body, req.branchScope);
+  const head = await headsService.createHead(req.tenantId, req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { statusCode: 201, message: 'مالیاتی قسم کامیابی سے شامل ہو گئی۔', data: head });
 });
 export const getHeads = asyncHandler(async (req, res) => {
@@ -15,10 +18,10 @@ export const getHeadById = asyncHandler(async (req, res) => {
   return apiResponse(res, { message: 'مالیاتی قسم کامیابی سے لوڈ ہو گئی۔', data: head });
 });
 export const updateHead = asyncHandler(async (req, res) => {
-  const head = await headsService.updateHead(req.tenantId, Number(req.params.id), req.body, req.branchScope);
+  const head = await headsService.updateHead(req.tenantId, Number(req.params.id), req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'مالیاتی قسم کامیابی سے تبدیل ہو گئی۔', data: head });
 });
 export const deactivateHead = asyncHandler(async (req, res) => {
-  const head = await headsService.deactivateHead(req.tenantId, Number(req.params.id), req.branchScope);
+  const head = await headsService.deactivateHead(req.tenantId, Number(req.params.id), req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'مالیاتی قسم کامیابی سے ختم کر دی گئی۔', data: head });
 });

@@ -27,6 +27,12 @@ const bodySchema = z.object({
   details: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   paymentDate: z.coerce.date({ message: 'ادائیگی کی تاریخ ضروری ہے۔' }),
   chequeDate: optionalDateSchema,
+  chequeBankName: z.union([z.string().trim().max(150), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  chequeBranchCode: z.union([z.string().trim().max(50), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  chequeNumber: z.union([z.string().trim().max(100), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  onlineWalletOrBank: z.union([z.string().trim().max(150), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  onlineReferenceNo: z.union([z.string().trim().max(100), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
+  editReason: z.union([z.string().trim().max(500), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   remarks: z.union([z.string().trim().max(255), z.literal(''), z.undefined()]).transform((v) => (v === '' ? undefined : v)),
   status: z.enum(['active', 'inactive']).optional(),
 }).superRefine((data, ctx) => {
@@ -36,6 +42,9 @@ const bodySchema = z.object({
       path: ['chequeDate'],
       message: 'چیک کی تاریخ ضروری ہے۔',
     });
+  }
+  if (data.paymentMode === 'آن لائن' && !data.onlineReferenceNo) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['onlineReferenceNo'], message: 'آن لائن ٹرانزیکشن / ریفرنس نمبر ضروری ہے۔' });
   }
 });
 
@@ -58,4 +67,10 @@ export const listFundCollectionsValidationSchema = z.object({
   }),
 });
 export const fundCollectionIdValidationSchema = z.object({ body: z.object({}).default({}), params: z.object({ id: z.coerce.number().int().positive() }), query: z.object({}).default({}) });
-export const updateFundCollectionValidationSchema = z.object({ body: bodySchema, params: z.object({ id: z.coerce.number().int().positive() }), query: z.object({}).default({}) });
+export const updateFundCollectionValidationSchema = z.object({
+  body: bodySchema.superRefine((data, ctx) => {
+    if (!data.editReason) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['editReason'], message: 'ترمیم کی وجہ ضروری ہے۔' });
+  }),
+  params: z.object({ id: z.coerce.number().int().positive() }),
+  query: z.object({}).default({}),
+});

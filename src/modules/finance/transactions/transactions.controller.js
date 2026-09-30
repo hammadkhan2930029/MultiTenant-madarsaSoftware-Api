@@ -19,7 +19,7 @@ export const getExpenses = asyncHandler(async (req, res) => {
 });
 
 export const createTransaction = asyncHandler(async (req, res) => {
-  const entry = await transactionsService.createEntry(req.tenantId, req.body, req.branchScope, buildAuditContext(req));
+  const entry = await transactionsService.createEntry(req.tenantId, req.body, req.branchScope, buildAuditContext(req), req.file);
   return apiResponse(res, { statusCode: 201, message: 'مالیاتی ریکارڈ کامیابی سے محفوظ ہو گیا۔', data: entry });
 });
 
@@ -29,11 +29,16 @@ export const getTransactions = asyncHandler(async (req, res) => {
 });
 
 export const updateTransaction = asyncHandler(async (req, res) => {
-  const entry = await transactionsService.updateEntry(req.tenantId, Number(req.params.id), req.body, req.branchScope, buildAuditContext(req));
+  const entry = await transactionsService.updateEntry(req.tenantId, Number(req.params.id), req.body, req.branchScope, buildAuditContext(req), req.file);
   return apiResponse(res, { message: 'مالیاتی ریکارڈ کامیابی سے تبدیل ہو گیا۔', data: entry });
 });
 
 export const deactivateTransaction = asyncHandler(async (req, res) => {
   const entry = await transactionsService.deactivateEntry(req.tenantId, Number(req.params.id), req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'مالیاتی ریکارڈ کامیابی سے حذف ہو گیا۔', data: entry });
+});
+
+export const printTransaction = asyncHandler(async (req, res) => {
+  await transactionsService.recordPrint(req.tenantId, Number(req.params.id), req.branchScope, buildAuditContext(req));
+  return apiResponse(res, { message: 'Print action logged successfully.' });
 });

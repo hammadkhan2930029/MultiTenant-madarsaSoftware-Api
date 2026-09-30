@@ -100,7 +100,7 @@ model Tenant {
 model Admin {
   id                              Int                          @id @default(autoincrement())
   name                            String                       @db.VarChar(150)
-  email                           String                       @db.VarChar(150)
+  email                           String?                      @db.VarChar(150)
   phone                           String?                      @db.VarChar(50)
   city                            String?                      @db.VarChar(150)
   province                        String?                      @db.VarChar(150)
@@ -1463,27 +1463,33 @@ model StudentFeeVoucher {
 }
 
 model FundCollection {
-  id                Int       @id @default(autoincrement())
-  tenantId          Int       @map("tenant_id")
-  branchId          Int?      @map("branch_id")
-  collectionGroupId String    @db.VarChar(100)
-  donorName         String    @db.VarChar(150)
-  careOf            String?   @db.VarChar(150)
-  phone             String?   @db.VarChar(50)
-  paymentMode       String    @db.VarChar(50)
-  donationType      String    @db.VarChar(100)
-  donationSubType   String    @db.VarChar(100)
-  purpose           String?   @db.VarChar(255)
-  amount            Decimal   @db.Decimal(10, 2)
-  receiptNo         String?   @db.VarChar(100)
-  details           String?   @db.VarChar(255)
-  paymentDate       DateTime
-  chequeDate        DateTime? @map("cheque_date")
-  remarks           String?   @db.VarChar(255)
-  status            String    @default("active") @db.VarChar(50)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  tenant            Tenant    @relation("TenantFundCollections", fields: [tenantId], references: [id])
+  id                 Int       @id @default(autoincrement())
+  tenantId           Int       @map("tenant_id")
+  branchId           Int?      @map("branch_id")
+  collectionGroupId  String    @db.VarChar(100)
+  donorName          String    @db.VarChar(150)
+  careOf             String?   @db.VarChar(150)
+  phone              String?   @db.VarChar(50)
+  paymentMode        String    @db.VarChar(50)
+  donationType       String    @db.VarChar(100)
+  donationSubType    String    @db.VarChar(100)
+  purpose            String?   @db.VarChar(255)
+  amount             Decimal   @db.Decimal(10, 2)
+  receiptNo          String?   @db.VarChar(100)
+  details            String?   @db.VarChar(255)
+  paymentDate        DateTime
+  chequeDate         DateTime? @map("cheque_date")
+  chequeBankName     String?   @map("cheque_bank_name") @db.VarChar(150)
+  chequeBranchCode   String?   @map("cheque_branch_code") @db.VarChar(50)
+  chequeNumber       String?   @map("cheque_number") @db.VarChar(100)
+  onlineWalletOrBank String?   @map("online_wallet_or_bank") @db.VarChar(150)
+  onlineReferenceNo  String?   @map("online_reference_no") @db.VarChar(100)
+  paymentProofUrl    String?   @map("payment_proof_url") @db.VarChar(255)
+  remarks            String?   @db.VarChar(255)
+  status             String    @default("active") @db.VarChar(50)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  tenant             Tenant    @relation("TenantFundCollections", fields: [tenantId], references: [id])
 
   @@index([tenantId])
   @@index([branchId])
@@ -1494,23 +1500,30 @@ model FundCollection {
 }
 
 model SalaryEntry {
-  id            Int         @id @default(autoincrement())
-  tenantId      Int         @map("tenant_id")
-  branchId      Int?        @map("branch_id")
-  teacherId     Int
-  financeHeadId Int
-  amount        Decimal     @db.Decimal(10, 2)
-  salaryMonth   Int
-  salaryYear    Int
-  paymentDate   DateTime
-  paymentMethod String?     @db.VarChar(50)
-  remarks       String?     @db.VarChar(255)
-  status        String      @default("active") @db.VarChar(50)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  tenant        Tenant      @relation("TenantSalaryEntries", fields: [tenantId], references: [id])
-  teacher       Teacher     @relation(fields: [teacherId], references: [id])
-  financeHead   FinanceHead @relation(fields: [financeHeadId], references: [id])
+  id                 Int         @id @default(autoincrement())
+  tenantId           Int         @map("tenant_id")
+  branchId           Int?        @map("branch_id")
+  teacherId          Int
+  financeHeadId      Int
+  amount             Decimal     @db.Decimal(10, 2)
+  salaryMonth        Int
+  salaryYear         Int
+  paymentDate        DateTime
+  paymentMethod      String?     @db.VarChar(50)
+  chequeBankName     String?     @map("cheque_bank_name") @db.VarChar(150)
+  chequeBranchCode   String?     @map("cheque_branch_code") @db.VarChar(50)
+  chequeNumber       String?     @map("cheque_number") @db.VarChar(100)
+  chequeDate         DateTime?   @map("cheque_date")
+  onlineWalletOrBank String?     @map("online_wallet_or_bank") @db.VarChar(150)
+  onlineReferenceNo  String?     @map("online_reference_no") @db.VarChar(100)
+  paymentProofUrl    String?     @map("payment_proof_url") @db.VarChar(255)
+  remarks            String?     @db.VarChar(255)
+  status             String      @default("active") @db.VarChar(50)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  tenant             Tenant      @relation("TenantSalaryEntries", fields: [tenantId], references: [id])
+  teacher            Teacher     @relation(fields: [teacherId], references: [id])
+  financeHead        FinanceHead @relation(fields: [financeHeadId], references: [id])
 
   @@unique([teacherId, salaryMonth, salaryYear])
   @@index([tenantId])
@@ -1522,24 +1535,31 @@ model SalaryEntry {
 }
 
 model FinanceTransaction {
-  id              Int         @id @default(autoincrement())
-  tenantId        Int         @map("tenant_id")
-  branchId        Int?        @map("branch_id")
-  financeHeadId   Int
-  type            String      @db.VarChar(20)
-  amount          Decimal     @db.Decimal(10, 2)
-  transactionDate DateTime
-  paymentMode     String?     @db.VarChar(50)
-  paymentStatus   String?     @db.VarChar(50)
-  slipNo          String?     @db.VarChar(100)
-  details         String?     @db.VarChar(255)
-  referenceType   String?     @db.VarChar(50)
-  referenceId     Int?
-  status          String      @default("active") @db.VarChar(50)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  tenant          Tenant      @relation("TenantFinanceTransactions", fields: [tenantId], references: [id])
-  financeHead     FinanceHead @relation(fields: [financeHeadId], references: [id])
+  id                 Int         @id @default(autoincrement())
+  tenantId           Int         @map("tenant_id")
+  branchId           Int?        @map("branch_id")
+  financeHeadId      Int
+  type               String      @db.VarChar(20)
+  amount             Decimal     @db.Decimal(10, 2)
+  transactionDate    DateTime
+  paymentMode        String?     @db.VarChar(50)
+  paymentStatus      String?     @db.VarChar(50)
+  slipNo             String?     @db.VarChar(100)
+  chequeBankName     String?     @map("cheque_bank_name") @db.VarChar(150)
+  chequeBranchCode   String?     @map("cheque_branch_code") @db.VarChar(50)
+  chequeNumber       String?     @map("cheque_number") @db.VarChar(100)
+  chequeDate         DateTime?   @map("cheque_date")
+  onlineWalletOrBank String?     @map("online_wallet_or_bank") @db.VarChar(150)
+  onlineReferenceNo  String?     @map("online_reference_no") @db.VarChar(100)
+  paymentProofUrl    String?     @map("payment_proof_url") @db.VarChar(255)
+  details            String?     @db.VarChar(255)
+  referenceType      String?     @db.VarChar(50)
+  referenceId        Int?
+  status             String      @default("active") @db.VarChar(50)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  tenant             Tenant      @relation("TenantFinanceTransactions", fields: [tenantId], references: [id])
+  financeHead        FinanceHead @relation(fields: [financeHeadId], references: [id])
 
   @@unique([tenantId, referenceType, referenceId])
   @@index([tenantId])

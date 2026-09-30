@@ -6,6 +6,7 @@ const bodySchema = z.object({
   name: z.string().trim().min(2, 'خرچ کی قسم کا نام لازمی ہے۔').max(150, 'خرچ کی قسم کا نام بہت لمبا ہے۔'),
   status: z.enum(['active', 'inactive']).optional(),
   branchId: branchIdSchema,
+  editReason: z.union([z.string().trim().max(500), z.literal(''), z.undefined()]).transform((value) => (value === '' ? undefined : value)),
 });
 
 export const createExpenseCategoryValidationSchema = z.object({
@@ -33,7 +34,9 @@ export const expenseCategoryIdValidationSchema = z.object({
 });
 
 export const updateExpenseCategoryValidationSchema = z.object({
-  body: bodySchema,
+  body: bodySchema.superRefine((data, context) => {
+    if (!data.editReason) context.addIssue({ code: z.ZodIssueCode.custom, path: ['editReason'], message: 'ترمیم کی وجہ ضروری ہے۔' });
+  }),
   params: z.object({ id: z.coerce.number().int().positive() }),
   query: z.object({ branchId: branchIdSchema }).default({}),
 });

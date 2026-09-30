@@ -1,7 +1,12 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
-import { branchScopeService, classScopeService } from '../../security/index.js';
+import { auditService, branchScopeService, classScopeService } from '../../security/index.js';
+
+const recordFeeAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: entry.tenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || auditContext.branchId || null, roleId: auditContext.roleId || null,
+  module: 'finance', targetType: entry.targetType || 'student_fee_voucher', targetId: entry.targetId ?? entry.id ?? null, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null, ...entry,
+});
 
 const DEFAULT_FEE_VOUCHER_NUMBER = 'FEE-0001';
 
@@ -206,7 +211,7 @@ const buildSearchFilter = (search) => {
 };
 
 export const studentFeesService = {
-  async generateFees(tenantId, payload, branchScope = null) {
+  async generateFees(tenantId, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
 
@@ -324,6 +329,10 @@ export const studentFeesService = {
       items.push(voucher);
     }
 
+    await recordFeeAudit({
+      tenantId: resolvedTenantId, branchId: scopedBranchId, action: 'finance.student_fee.vouchers_generated', targetType: 'student_fee_generation', targetId: null,
+      oldValue: null, newValue: { feeMonth, feeYear, classId: classId || null, sectionId: sectionId || null, sessionId: sessionId || null, generated, skipped, voucherIds: items.map((item) => item.id) },
+    }, auditContext);
     return { generated, skipped, items };
   },
 
@@ -427,7 +436,7 @@ export const studentFeesService = {
     return { student, vouchers };
   },
 
-  async savePayment(tenantId, id, payload, branchScope = null) {
+  async savePayment(tenantId, id, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const scopedBranchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.studentFeeVoucher.findFirst({
@@ -452,7 +461,7 @@ export const studentFeesService = {
     const status = dueAmount <= 0 ? 'paid' : paidAmount > 0 ? 'partial' : 'unpaid';
     const hasNewPayment = paymentAmount > 0;
 
-    return prisma.studentFeeVoucher.update({
+    const entry = await prisma.studentFeeVoucher.update({
       where: { id, tenantId: resolvedTenantId },
       data: {
         paidAmount,
@@ -464,5 +473,7 @@ export const studentFeesService = {
       },
       select: voucherSelect,
     });
+    await recordFeeAudit({ tenantId: resolvedTenantId, branchId: scopedBranchId, id: entry.id, action: 'finance.student_fee.payment_saved', oldValue: existing, newValue: entry }, auditContext);
+    return entry;
   },
 };

@@ -104,6 +104,10 @@ export const teacherImageUpload = multer({
   fileFilter: imageFileFilter,
 });
 
+export const fundCollectionProofUpload = multer({ storage: createStorage('fund-collection-proofs'), limits: { fileSize: 5 * 1024 * 1024 }, fileFilter: imageFileFilter });
+export const financeTransactionProofUpload = multer({ storage: createStorage('finance-transaction-proofs'), limits: { fileSize: 5 * 1024 * 1024 }, fileFilter: imageFileFilter });
+export const salaryPaymentProofUpload = multer({ storage: createStorage('salary-payment-proofs'), limits: { fileSize: 5 * 1024 * 1024 }, fileFilter: imageFileFilter });
+
 export const madrassaProfileImageUpload = multer({
   storage: createStorage('madrassa-profiles'),
   limits: {

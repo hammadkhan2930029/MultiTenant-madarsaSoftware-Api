@@ -1,9 +1,12 @@
 import { apiResponse } from '../../../utils/apiResponse.js';
 import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { auditService } from '../../security/index.js';
 import { studentFeesService } from './studentFees.service.js';
 
+const buildAuditContext = (req) => ({ ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null });
+
 export const generateStudentFees = asyncHandler(async (req, res) => {
-  const result = await studentFeesService.generateFees(req.tenantId, req.body, req.branchScope);
+  const result = await studentFeesService.generateFees(req.tenantId, req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { statusCode: 201, message: 'Student fees generated successfully.', data: result });
 });
 
@@ -23,6 +26,6 @@ export const getStudentFeeHistory = asyncHandler(async (req, res) => {
 });
 
 export const saveStudentFeePayment = asyncHandler(async (req, res) => {
-  const result = await studentFeesService.savePayment(req.tenantId, Number(req.params.id), req.body, req.branchScope);
+  const result = await studentFeesService.savePayment(req.tenantId, Number(req.params.id), req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'Student fee payment saved successfully.', data: result });
 });

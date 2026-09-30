@@ -1,9 +1,12 @@
 import { apiResponse } from '../../../utils/apiResponse.js';
 import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { auditService } from '../../security/index.js';
 import { expenseCategoriesService } from './expenseCategories.service.js';
 
+const buildAuditContext = (req) => ({ ...auditService.buildRequestAuditContext(req), actorUserId: req.admin?.id || null });
+
 export const createExpenseCategory = asyncHandler(async (req, res) => {
-  const category = await expenseCategoriesService.createCategory(req.tenantId, req.body, req.branchScope);
+  const category = await expenseCategoriesService.createCategory(req.tenantId, req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { statusCode: 201, message: 'خرچ کی قسم کامیابی سے شامل ہو گئی۔', data: category });
 });
 
@@ -18,11 +21,11 @@ export const getExpenseCategoryById = asyncHandler(async (req, res) => {
 });
 
 export const updateExpenseCategory = asyncHandler(async (req, res) => {
-  const category = await expenseCategoriesService.updateCategory(req.tenantId, Number(req.params.id), req.body, req.branchScope);
+  const category = await expenseCategoriesService.updateCategory(req.tenantId, Number(req.params.id), req.body, req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'خرچ کی قسم کامیابی سے تبدیل ہو گئی۔', data: category });
 });
 
 export const deactivateExpenseCategory = asyncHandler(async (req, res) => {
-  const category = await expenseCategoriesService.deactivateCategory(req.tenantId, Number(req.params.id), req.branchScope);
+  const category = await expenseCategoriesService.deactivateCategory(req.tenantId, Number(req.params.id), req.branchScope, buildAuditContext(req));
   return apiResponse(res, { message: 'خرچ کی قسم کامیابی سے ختم کر دی گئی۔', data: category });
 });

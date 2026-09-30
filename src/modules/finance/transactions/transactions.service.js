@@ -14,6 +14,7 @@ const select = {
   paymentMode: true,
   paymentStatus: true,
   slipNo: true,
+  chequeBankName: true, chequeBranchCode: true, chequeNumber: true, chequeDate: true, onlineWalletOrBank: true, onlineReferenceNo: true, paymentProofUrl: true,
   details: true,
   referenceType: true,
   referenceId: true,
@@ -228,7 +229,8 @@ export const transactionsService = {
     return { items: rows.map(mapExpense), meta: null };
   },
 
-  async createEntry(tenantId, payload, branchScope = null, auditContext = {}) {
+  async createEntry(tenantId, payload, branchScope = null, auditContext = {}, proofFile = null) {
+    if (['چیک', 'آن لائن'].includes(payload.paymentMode) && !proofFile) throw new AppError('ثبوت کی تصویر ضروری ہے۔', 400);
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     await ensureHead(resolvedTenantId, payload);
@@ -243,6 +245,8 @@ export const transactionsService = {
         paymentStatus: payload.paymentStatus || null,
         slipNo: payload.slipNo || null,
         details: payload.details || null,
+        chequeBankName: payload.paymentMode === 'چیک' ? payload.chequeBankName || null : null, chequeBranchCode: payload.paymentMode === 'چیک' ? payload.chequeBranchCode || null : null, chequeNumber: payload.paymentMode === 'چیک' ? payload.chequeNumber || null : null, chequeDate: payload.paymentMode === 'چیک' && payload.chequeDate ? normalizeDate(payload.chequeDate) : null, onlineWalletOrBank: payload.paymentMode === 'آن لائن' ? payload.onlineWalletOrBank || null : null, onlineReferenceNo: payload.paymentMode === 'آن لائن' ? payload.onlineReferenceNo || null : null, paymentProofUrl: proofFile ? `/uploads/finance-transaction-proofs/${proofFile.filename}` : null,
+        paymentProofUrl: proofFile ? `/uploads/finance-transaction-proofs/${proofFile.filename}` : null,
       },
       select,
     });
@@ -294,23 +298,26 @@ export const transactionsService = {
     return { items, meta: buildPaginationMeta({ totalItems, page, limit }) };
   },
 
-  async updateEntry(tenantId, id, payload, branchScope = null, auditContext = {}) {
+  async updateEntry(tenantId, id, payload, branchScope = null, auditContext = {}, proofFile = null) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Finance record not found.', 404);
+    if (['چیک', 'آن لائن'].includes(payload.paymentMode) && !proofFile && !existing.paymentProofUrl) throw new AppError('ثبوت کی تصویر ضروری ہے۔', 400);
     await ensureHead(resolvedTenantId, payload);
 
+    const { editReason, ...updatePayload } = payload;
     const entry = await prisma.financeTransaction.update({
       where: { id, tenantId: resolvedTenantId },
       data: {
-        ...payload,
+        ...updatePayload,
         branchId,
         transactionDate: normalizeDate(payload.transactionDate),
         paymentMode: payload.paymentMode || null,
         paymentStatus: payload.paymentStatus || null,
         slipNo: payload.slipNo || null,
         details: payload.details || null,
+        chequeBankName: payload.paymentMode === 'چیک' ? payload.chequeBankName || null : null, chequeBranchCode: payload.paymentMode === 'چیک' ? payload.chequeBranchCode || null : null, chequeNumber: payload.paymentMode === 'چیک' ? payload.chequeNumber || null : null, chequeDate: payload.paymentMode === 'چیک' && payload.chequeDate ? normalizeDate(payload.chequeDate) : null, onlineWalletOrBank: payload.paymentMode === 'آن لائن' ? payload.onlineWalletOrBank || null : null, onlineReferenceNo: payload.paymentMode === 'آن لائن' ? payload.onlineReferenceNo || null : null, paymentProofUrl: ['چیک', 'آن لائن'].includes(payload.paymentMode) ? (proofFile ? `/uploads/finance-transaction-proofs/${proofFile.filename}` : existing.paymentProofUrl) : null,
         status: payload.status || existing.status,
       },
       select,
@@ -320,7 +327,7 @@ export const transactionsService = {
       branchId: entry.branchId || branchId,
       action: 'finance.transaction.updated',
       oldValue: existing,
-      newValue: entry,
+      newValue: { ...entry, editReason },
       id: entry.id,
     }, auditContext);
     return entry;
@@ -336,11 +343,20 @@ export const transactionsService = {
     await recordFinanceAudit({
       tenantId: resolvedTenantId,
       branchId: entry.branchId || branchId,
-      action: 'finance.transaction.deactivated',
+      action: 'finance.transaction.deleted',
       oldValue: existing,
       newValue: entry,
       id: entry.id,
     }, auditContext);
+    return entry;
+  },
+
+  async recordPrint(tenantId, id, branchScope = null, auditContext = {}) {
+    const resolvedTenantId = normalizeTenantId(tenantId);
+    const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
+    const entry = await prisma.financeTransaction.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) }, select });
+    if (!entry) throw new AppError('Finance record not found.', 404);
+    await recordFinanceAudit({ tenantId: resolvedTenantId, branchId: entry.branchId || branchId, action: 'finance.transaction.printed', oldValue: null, newValue: { id: entry.id, printedAt: new Date().toISOString() }, id: entry.id }, auditContext);
     return entry;
   },
 };

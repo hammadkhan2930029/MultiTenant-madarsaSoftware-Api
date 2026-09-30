@@ -11594,7 +11594,7 @@ export namespace Prisma {
   export type AdminGroupByOutputType = {
     id: number
     name: string
-    email: string
+    email: string | null
     phone: string | null
     city: string | null
     province: string | null
@@ -11760,7 +11760,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      email: string
+      email: string | null
       phone: string | null
       city: string | null
       province: string | null
@@ -69259,6 +69259,12 @@ export namespace Prisma {
     details: string | null
     paymentDate: Date | null
     chequeDate: Date | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string | null
     createdAt: Date | null
@@ -69282,6 +69288,12 @@ export namespace Prisma {
     details: string | null
     paymentDate: Date | null
     chequeDate: Date | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string | null
     createdAt: Date | null
@@ -69305,6 +69317,12 @@ export namespace Prisma {
     details: number
     paymentDate: number
     chequeDate: number
+    chequeBankName: number
+    chequeBranchCode: number
+    chequeNumber: number
+    onlineWalletOrBank: number
+    onlineReferenceNo: number
+    paymentProofUrl: number
     remarks: number
     status: number
     createdAt: number
@@ -69344,6 +69362,12 @@ export namespace Prisma {
     details?: true
     paymentDate?: true
     chequeDate?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -69367,6 +69391,12 @@ export namespace Prisma {
     details?: true
     paymentDate?: true
     chequeDate?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -69390,6 +69420,12 @@ export namespace Prisma {
     details?: true
     paymentDate?: true
     chequeDate?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -69500,6 +69536,12 @@ export namespace Prisma {
     details: string | null
     paymentDate: Date
     chequeDate: Date | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string
     createdAt: Date
@@ -69542,6 +69584,12 @@ export namespace Prisma {
     details?: boolean
     paymentDate?: boolean
     chequeDate?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     remarks?: boolean
     status?: boolean
     createdAt?: boolean
@@ -69568,13 +69616,19 @@ export namespace Prisma {
     details?: boolean
     paymentDate?: boolean
     chequeDate?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     remarks?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FundCollectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "collectionGroupId" | "donorName" | "careOf" | "phone" | "paymentMode" | "donationType" | "donationSubType" | "purpose" | "amount" | "receiptNo" | "details" | "paymentDate" | "chequeDate" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["fundCollection"]>
+  export type FundCollectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "collectionGroupId" | "donorName" | "careOf" | "phone" | "paymentMode" | "donationType" | "donationSubType" | "purpose" | "amount" | "receiptNo" | "details" | "paymentDate" | "chequeDate" | "chequeBankName" | "chequeBranchCode" | "chequeNumber" | "onlineWalletOrBank" | "onlineReferenceNo" | "paymentProofUrl" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["fundCollection"]>
   export type FundCollectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
@@ -69601,6 +69655,12 @@ export namespace Prisma {
       details: string | null
       paymentDate: Date
       chequeDate: Date | null
+      chequeBankName: string | null
+      chequeBranchCode: string | null
+      chequeNumber: string | null
+      onlineWalletOrBank: string | null
+      onlineReferenceNo: string | null
+      paymentProofUrl: string | null
       remarks: string | null
       status: string
       createdAt: Date
@@ -69991,6 +70051,12 @@ export namespace Prisma {
     readonly details: FieldRef<"FundCollection", 'String'>
     readonly paymentDate: FieldRef<"FundCollection", 'DateTime'>
     readonly chequeDate: FieldRef<"FundCollection", 'DateTime'>
+    readonly chequeBankName: FieldRef<"FundCollection", 'String'>
+    readonly chequeBranchCode: FieldRef<"FundCollection", 'String'>
+    readonly chequeNumber: FieldRef<"FundCollection", 'String'>
+    readonly onlineWalletOrBank: FieldRef<"FundCollection", 'String'>
+    readonly onlineReferenceNo: FieldRef<"FundCollection", 'String'>
+    readonly paymentProofUrl: FieldRef<"FundCollection", 'String'>
     readonly remarks: FieldRef<"FundCollection", 'String'>
     readonly status: FieldRef<"FundCollection", 'String'>
     readonly createdAt: FieldRef<"FundCollection", 'DateTime'>
@@ -70401,6 +70467,13 @@ export namespace Prisma {
     salaryYear: number | null
     paymentDate: Date | null
     paymentMethod: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string | null
     createdAt: Date | null
@@ -70418,6 +70491,13 @@ export namespace Prisma {
     salaryYear: number | null
     paymentDate: Date | null
     paymentMethod: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string | null
     createdAt: Date | null
@@ -70435,6 +70515,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: number
     paymentMethod: number
+    chequeBankName: number
+    chequeBranchCode: number
+    chequeNumber: number
+    chequeDate: number
+    onlineWalletOrBank: number
+    onlineReferenceNo: number
+    paymentProofUrl: number
     remarks: number
     status: number
     createdAt: number
@@ -70476,6 +70563,13 @@ export namespace Prisma {
     salaryYear?: true
     paymentDate?: true
     paymentMethod?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -70493,6 +70587,13 @@ export namespace Prisma {
     salaryYear?: true
     paymentDate?: true
     paymentMethod?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -70510,6 +70611,13 @@ export namespace Prisma {
     salaryYear?: true
     paymentDate?: true
     paymentMethod?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     remarks?: true
     status?: true
     createdAt?: true
@@ -70614,6 +70722,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date
     paymentMethod: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     remarks: string | null
     status: string
     createdAt: Date
@@ -70650,6 +70765,13 @@ export namespace Prisma {
     salaryYear?: boolean
     paymentDate?: boolean
     paymentMethod?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    chequeDate?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     remarks?: boolean
     status?: boolean
     createdAt?: boolean
@@ -70672,13 +70794,20 @@ export namespace Prisma {
     salaryYear?: boolean
     paymentDate?: boolean
     paymentMethod?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    chequeDate?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     remarks?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SalaryEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "teacherId" | "financeHeadId" | "amount" | "salaryMonth" | "salaryYear" | "paymentDate" | "paymentMethod" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["salaryEntry"]>
+  export type SalaryEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "teacherId" | "financeHeadId" | "amount" | "salaryMonth" | "salaryYear" | "paymentDate" | "paymentMethod" | "chequeBankName" | "chequeBranchCode" | "chequeNumber" | "chequeDate" | "onlineWalletOrBank" | "onlineReferenceNo" | "paymentProofUrl" | "remarks" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["salaryEntry"]>
   export type SalaryEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
@@ -70703,6 +70832,13 @@ export namespace Prisma {
       salaryYear: number
       paymentDate: Date
       paymentMethod: string | null
+      chequeBankName: string | null
+      chequeBranchCode: string | null
+      chequeNumber: string | null
+      chequeDate: Date | null
+      onlineWalletOrBank: string | null
+      onlineReferenceNo: string | null
+      paymentProofUrl: string | null
       remarks: string | null
       status: string
       createdAt: Date
@@ -71089,6 +71225,13 @@ export namespace Prisma {
     readonly salaryYear: FieldRef<"SalaryEntry", 'Int'>
     readonly paymentDate: FieldRef<"SalaryEntry", 'DateTime'>
     readonly paymentMethod: FieldRef<"SalaryEntry", 'String'>
+    readonly chequeBankName: FieldRef<"SalaryEntry", 'String'>
+    readonly chequeBranchCode: FieldRef<"SalaryEntry", 'String'>
+    readonly chequeNumber: FieldRef<"SalaryEntry", 'String'>
+    readonly chequeDate: FieldRef<"SalaryEntry", 'DateTime'>
+    readonly onlineWalletOrBank: FieldRef<"SalaryEntry", 'String'>
+    readonly onlineReferenceNo: FieldRef<"SalaryEntry", 'String'>
+    readonly paymentProofUrl: FieldRef<"SalaryEntry", 'String'>
     readonly remarks: FieldRef<"SalaryEntry", 'String'>
     readonly status: FieldRef<"SalaryEntry", 'String'>
     readonly createdAt: FieldRef<"SalaryEntry", 'DateTime'>
@@ -71495,6 +71638,13 @@ export namespace Prisma {
     paymentMode: string | null
     paymentStatus: string | null
     slipNo: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     details: string | null
     referenceType: string | null
     referenceId: number | null
@@ -71514,6 +71664,13 @@ export namespace Prisma {
     paymentMode: string | null
     paymentStatus: string | null
     slipNo: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     details: string | null
     referenceType: string | null
     referenceId: number | null
@@ -71533,6 +71690,13 @@ export namespace Prisma {
     paymentMode: number
     paymentStatus: number
     slipNo: number
+    chequeBankName: number
+    chequeBranchCode: number
+    chequeNumber: number
+    chequeDate: number
+    onlineWalletOrBank: number
+    onlineReferenceNo: number
+    paymentProofUrl: number
     details: number
     referenceType: number
     referenceId: number
@@ -71572,6 +71736,13 @@ export namespace Prisma {
     paymentMode?: true
     paymentStatus?: true
     slipNo?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     details?: true
     referenceType?: true
     referenceId?: true
@@ -71591,6 +71762,13 @@ export namespace Prisma {
     paymentMode?: true
     paymentStatus?: true
     slipNo?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     details?: true
     referenceType?: true
     referenceId?: true
@@ -71610,6 +71788,13 @@ export namespace Prisma {
     paymentMode?: true
     paymentStatus?: true
     slipNo?: true
+    chequeBankName?: true
+    chequeBranchCode?: true
+    chequeNumber?: true
+    chequeDate?: true
+    onlineWalletOrBank?: true
+    onlineReferenceNo?: true
+    paymentProofUrl?: true
     details?: true
     referenceType?: true
     referenceId?: true
@@ -71716,6 +71901,13 @@ export namespace Prisma {
     paymentMode: string | null
     paymentStatus: string | null
     slipNo: string | null
+    chequeBankName: string | null
+    chequeBranchCode: string | null
+    chequeNumber: string | null
+    chequeDate: Date | null
+    onlineWalletOrBank: string | null
+    onlineReferenceNo: string | null
+    paymentProofUrl: string | null
     details: string | null
     referenceType: string | null
     referenceId: number | null
@@ -71754,6 +71946,13 @@ export namespace Prisma {
     paymentMode?: boolean
     paymentStatus?: boolean
     slipNo?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    chequeDate?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     details?: boolean
     referenceType?: boolean
     referenceId?: boolean
@@ -71777,6 +71976,13 @@ export namespace Prisma {
     paymentMode?: boolean
     paymentStatus?: boolean
     slipNo?: boolean
+    chequeBankName?: boolean
+    chequeBranchCode?: boolean
+    chequeNumber?: boolean
+    chequeDate?: boolean
+    onlineWalletOrBank?: boolean
+    onlineReferenceNo?: boolean
+    paymentProofUrl?: boolean
     details?: boolean
     referenceType?: boolean
     referenceId?: boolean
@@ -71785,7 +71991,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FinanceTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "financeHeadId" | "type" | "amount" | "transactionDate" | "paymentMode" | "paymentStatus" | "slipNo" | "details" | "referenceType" | "referenceId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["financeTransaction"]>
+  export type FinanceTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "branchId" | "financeHeadId" | "type" | "amount" | "transactionDate" | "paymentMode" | "paymentStatus" | "slipNo" | "chequeBankName" | "chequeBranchCode" | "chequeNumber" | "chequeDate" | "onlineWalletOrBank" | "onlineReferenceNo" | "paymentProofUrl" | "details" | "referenceType" | "referenceId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["financeTransaction"]>
   export type FinanceTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     financeHead?: boolean | FinanceHeadDefaultArgs<ExtArgs>
@@ -71808,6 +72014,13 @@ export namespace Prisma {
       paymentMode: string | null
       paymentStatus: string | null
       slipNo: string | null
+      chequeBankName: string | null
+      chequeBranchCode: string | null
+      chequeNumber: string | null
+      chequeDate: Date | null
+      onlineWalletOrBank: string | null
+      onlineReferenceNo: string | null
+      paymentProofUrl: string | null
       details: string | null
       referenceType: string | null
       referenceId: number | null
@@ -72195,6 +72408,13 @@ export namespace Prisma {
     readonly paymentMode: FieldRef<"FinanceTransaction", 'String'>
     readonly paymentStatus: FieldRef<"FinanceTransaction", 'String'>
     readonly slipNo: FieldRef<"FinanceTransaction", 'String'>
+    readonly chequeBankName: FieldRef<"FinanceTransaction", 'String'>
+    readonly chequeBranchCode: FieldRef<"FinanceTransaction", 'String'>
+    readonly chequeNumber: FieldRef<"FinanceTransaction", 'String'>
+    readonly chequeDate: FieldRef<"FinanceTransaction", 'DateTime'>
+    readonly onlineWalletOrBank: FieldRef<"FinanceTransaction", 'String'>
+    readonly onlineReferenceNo: FieldRef<"FinanceTransaction", 'String'>
+    readonly paymentProofUrl: FieldRef<"FinanceTransaction", 'String'>
     readonly details: FieldRef<"FinanceTransaction", 'String'>
     readonly referenceType: FieldRef<"FinanceTransaction", 'String'>
     readonly referenceId: FieldRef<"FinanceTransaction", 'Int'>
@@ -87652,6 +87872,12 @@ export namespace Prisma {
     details: 'details',
     paymentDate: 'paymentDate',
     chequeDate: 'chequeDate',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     remarks: 'remarks',
     status: 'status',
     createdAt: 'createdAt',
@@ -87672,6 +87898,13 @@ export namespace Prisma {
     salaryYear: 'salaryYear',
     paymentDate: 'paymentDate',
     paymentMethod: 'paymentMethod',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    chequeDate: 'chequeDate',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     remarks: 'remarks',
     status: 'status',
     createdAt: 'createdAt',
@@ -87692,6 +87925,13 @@ export namespace Prisma {
     paymentMode: 'paymentMode',
     paymentStatus: 'paymentStatus',
     slipNo: 'slipNo',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    chequeDate: 'chequeDate',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     details: 'details',
     referenceType: 'referenceType',
     referenceId: 'referenceId',
@@ -88559,6 +88799,12 @@ export namespace Prisma {
     purpose: 'purpose',
     receiptNo: 'receiptNo',
     details: 'details',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     remarks: 'remarks',
     status: 'status'
   };
@@ -88568,6 +88814,12 @@ export namespace Prisma {
 
   export const SalaryEntryOrderByRelevanceFieldEnum: {
     paymentMethod: 'paymentMethod',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     remarks: 'remarks',
     status: 'status'
   };
@@ -88580,6 +88832,12 @@ export namespace Prisma {
     paymentMode: 'paymentMode',
     paymentStatus: 'paymentStatus',
     slipNo: 'slipNo',
+    chequeBankName: 'chequeBankName',
+    chequeBranchCode: 'chequeBranchCode',
+    chequeNumber: 'chequeNumber',
+    onlineWalletOrBank: 'onlineWalletOrBank',
+    onlineReferenceNo: 'onlineReferenceNo',
+    paymentProofUrl: 'paymentProofUrl',
     details: 'details',
     referenceType: 'referenceType',
     status: 'status'
@@ -89093,7 +89351,7 @@ export namespace Prisma {
     NOT?: AdminWhereInput | AdminWhereInput[]
     id?: IntFilter<"Admin"> | number
     name?: StringFilter<"Admin"> | string
-    email?: StringFilter<"Admin"> | string
+    email?: StringNullableFilter<"Admin"> | string | null
     phone?: StringNullableFilter<"Admin"> | string | null
     city?: StringNullableFilter<"Admin"> | string | null
     province?: StringNullableFilter<"Admin"> | string | null
@@ -89138,7 +89396,7 @@ export namespace Prisma {
   export type AdminOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     province?: SortOrderInput | SortOrder
@@ -89190,7 +89448,7 @@ export namespace Prisma {
     OR?: AdminWhereInput[]
     NOT?: AdminWhereInput | AdminWhereInput[]
     name?: StringFilter<"Admin"> | string
-    email?: StringFilter<"Admin"> | string
+    email?: StringNullableFilter<"Admin"> | string | null
     phone?: StringNullableFilter<"Admin"> | string | null
     city?: StringNullableFilter<"Admin"> | string | null
     province?: StringNullableFilter<"Admin"> | string | null
@@ -89234,7 +89492,7 @@ export namespace Prisma {
   export type AdminOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     province?: SortOrderInput | SortOrder
@@ -89262,7 +89520,7 @@ export namespace Prisma {
     NOT?: AdminScalarWhereWithAggregatesInput | AdminScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Admin"> | number
     name?: StringWithAggregatesFilter<"Admin"> | string
-    email?: StringWithAggregatesFilter<"Admin"> | string
+    email?: StringNullableWithAggregatesFilter<"Admin"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Admin"> | string | null
     city?: StringNullableWithAggregatesFilter<"Admin"> | string | null
     province?: StringNullableWithAggregatesFilter<"Admin"> | string | null
@@ -94699,6 +94957,12 @@ export namespace Prisma {
     details?: StringNullableFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
     chequeDate?: DateTimeNullableFilter<"FundCollection"> | Date | string | null
+    chequeBankName?: StringNullableFilter<"FundCollection"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FundCollection"> | string | null
+    chequeNumber?: StringNullableFilter<"FundCollection"> | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FundCollection"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FundCollection"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FundCollection"> | string | null
     remarks?: StringNullableFilter<"FundCollection"> | string | null
     status?: StringFilter<"FundCollection"> | string
     createdAt?: DateTimeFilter<"FundCollection"> | Date | string
@@ -94723,6 +94987,12 @@ export namespace Prisma {
     details?: SortOrderInput | SortOrder
     paymentDate?: SortOrder
     chequeDate?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -94751,6 +95021,12 @@ export namespace Prisma {
     details?: StringNullableFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
     chequeDate?: DateTimeNullableFilter<"FundCollection"> | Date | string | null
+    chequeBankName?: StringNullableFilter<"FundCollection"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FundCollection"> | string | null
+    chequeNumber?: StringNullableFilter<"FundCollection"> | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FundCollection"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FundCollection"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FundCollection"> | string | null
     remarks?: StringNullableFilter<"FundCollection"> | string | null
     status?: StringFilter<"FundCollection"> | string
     createdAt?: DateTimeFilter<"FundCollection"> | Date | string
@@ -94775,6 +95051,12 @@ export namespace Prisma {
     details?: SortOrderInput | SortOrder
     paymentDate?: SortOrder
     chequeDate?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -94806,6 +95088,12 @@ export namespace Prisma {
     details?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeWithAggregatesFilter<"FundCollection"> | Date | string
     chequeDate?: DateTimeNullableWithAggregatesFilter<"FundCollection"> | Date | string | null
+    chequeBankName?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    chequeBranchCode?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    chequeNumber?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    onlineWalletOrBank?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    onlineReferenceNo?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
+    paymentProofUrl?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     remarks?: StringNullableWithAggregatesFilter<"FundCollection"> | string | null
     status?: StringWithAggregatesFilter<"FundCollection"> | string
     createdAt?: DateTimeWithAggregatesFilter<"FundCollection"> | Date | string
@@ -94826,6 +95114,13 @@ export namespace Prisma {
     salaryYear?: IntFilter<"SalaryEntry"> | number
     paymentDate?: DateTimeFilter<"SalaryEntry"> | Date | string
     paymentMethod?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBankName?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBranchCode?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeNumber?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeDate?: DateTimeNullableFilter<"SalaryEntry"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"SalaryEntry"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"SalaryEntry"> | string | null
+    paymentProofUrl?: StringNullableFilter<"SalaryEntry"> | string | null
     remarks?: StringNullableFilter<"SalaryEntry"> | string | null
     status?: StringFilter<"SalaryEntry"> | string
     createdAt?: DateTimeFilter<"SalaryEntry"> | Date | string
@@ -94846,6 +95141,13 @@ export namespace Prisma {
     salaryYear?: SortOrder
     paymentDate?: SortOrder
     paymentMethod?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    chequeDate?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -94871,6 +95173,13 @@ export namespace Prisma {
     salaryYear?: IntFilter<"SalaryEntry"> | number
     paymentDate?: DateTimeFilter<"SalaryEntry"> | Date | string
     paymentMethod?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBankName?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBranchCode?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeNumber?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeDate?: DateTimeNullableFilter<"SalaryEntry"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"SalaryEntry"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"SalaryEntry"> | string | null
+    paymentProofUrl?: StringNullableFilter<"SalaryEntry"> | string | null
     remarks?: StringNullableFilter<"SalaryEntry"> | string | null
     status?: StringFilter<"SalaryEntry"> | string
     createdAt?: DateTimeFilter<"SalaryEntry"> | Date | string
@@ -94891,6 +95200,13 @@ export namespace Prisma {
     salaryYear?: SortOrder
     paymentDate?: SortOrder
     paymentMethod?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    chequeDate?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -94916,6 +95232,13 @@ export namespace Prisma {
     salaryYear?: IntWithAggregatesFilter<"SalaryEntry"> | number
     paymentDate?: DateTimeWithAggregatesFilter<"SalaryEntry"> | Date | string
     paymentMethod?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    chequeBankName?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    chequeBranchCode?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    chequeNumber?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    chequeDate?: DateTimeNullableWithAggregatesFilter<"SalaryEntry"> | Date | string | null
+    onlineWalletOrBank?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    onlineReferenceNo?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
+    paymentProofUrl?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
     remarks?: StringNullableWithAggregatesFilter<"SalaryEntry"> | string | null
     status?: StringWithAggregatesFilter<"SalaryEntry"> | string
     createdAt?: DateTimeWithAggregatesFilter<"SalaryEntry"> | Date | string
@@ -94936,6 +95259,13 @@ export namespace Prisma {
     paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
     paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
     slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBankName?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeNumber?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeDate?: DateTimeNullableFilter<"FinanceTransaction"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FinanceTransaction"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FinanceTransaction"> | string | null
     details?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceType?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceId?: IntNullableFilter<"FinanceTransaction"> | number | null
@@ -94957,6 +95287,13 @@ export namespace Prisma {
     paymentMode?: SortOrderInput | SortOrder
     paymentStatus?: SortOrderInput | SortOrder
     slipNo?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    chequeDate?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     referenceType?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
@@ -94983,6 +95320,13 @@ export namespace Prisma {
     paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
     paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
     slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBankName?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeNumber?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeDate?: DateTimeNullableFilter<"FinanceTransaction"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FinanceTransaction"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FinanceTransaction"> | string | null
     details?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceType?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceId?: IntNullableFilter<"FinanceTransaction"> | number | null
@@ -95004,6 +95348,13 @@ export namespace Prisma {
     paymentMode?: SortOrderInput | SortOrder
     paymentStatus?: SortOrderInput | SortOrder
     slipNo?: SortOrderInput | SortOrder
+    chequeBankName?: SortOrderInput | SortOrder
+    chequeBranchCode?: SortOrderInput | SortOrder
+    chequeNumber?: SortOrderInput | SortOrder
+    chequeDate?: SortOrderInput | SortOrder
+    onlineWalletOrBank?: SortOrderInput | SortOrder
+    onlineReferenceNo?: SortOrderInput | SortOrder
+    paymentProofUrl?: SortOrderInput | SortOrder
     details?: SortOrderInput | SortOrder
     referenceType?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
@@ -95031,6 +95382,13 @@ export namespace Prisma {
     paymentMode?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
     paymentStatus?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
     slipNo?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    chequeBankName?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    chequeBranchCode?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    chequeNumber?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    chequeDate?: DateTimeNullableWithAggregatesFilter<"FinanceTransaction"> | Date | string | null
+    onlineWalletOrBank?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    onlineReferenceNo?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
+    paymentProofUrl?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
     details?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
     referenceType?: StringNullableWithAggregatesFilter<"FinanceTransaction"> | string | null
     referenceId?: IntNullableWithAggregatesFilter<"FinanceTransaction"> | number | null
@@ -96702,7 +97060,7 @@ export namespace Prisma {
 
   export type AdminCreateInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -96742,7 +97100,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -96781,7 +97139,7 @@ export namespace Prisma {
 
   export type AdminUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96821,7 +97179,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96861,7 +97219,7 @@ export namespace Prisma {
   export type AdminCreateManyInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -96880,7 +97238,7 @@ export namespace Prisma {
 
   export type AdminUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96895,7 +97253,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -102511,6 +102869,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102535,6 +102899,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102556,6 +102926,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102580,6 +102956,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102603,6 +102985,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102624,6 +103012,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102647,6 +103041,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102660,6 +103060,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102680,6 +103087,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102693,6 +103107,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102713,6 +103134,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102730,6 +103158,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -102743,6 +103178,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102760,6 +103202,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102774,6 +103223,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -102795,6 +103251,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -102811,6 +103274,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -102832,6 +103302,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -102851,6 +103328,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -102867,6 +103351,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -102886,6 +103377,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -109214,6 +109712,12 @@ export namespace Prisma {
     details?: SortOrder
     paymentDate?: SortOrder
     chequeDate?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109244,6 +109748,12 @@ export namespace Prisma {
     details?: SortOrder
     paymentDate?: SortOrder
     chequeDate?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109267,6 +109777,12 @@ export namespace Prisma {
     details?: SortOrder
     paymentDate?: SortOrder
     chequeDate?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109308,6 +109824,13 @@ export namespace Prisma {
     salaryYear?: SortOrder
     paymentDate?: SortOrder
     paymentMethod?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109336,6 +109859,13 @@ export namespace Prisma {
     salaryYear?: SortOrder
     paymentDate?: SortOrder
     paymentMethod?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109353,6 +109883,13 @@ export namespace Prisma {
     salaryYear?: SortOrder
     paymentDate?: SortOrder
     paymentMethod?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     remarks?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -109393,6 +109930,13 @@ export namespace Prisma {
     paymentMode?: SortOrder
     paymentStatus?: SortOrder
     slipNo?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     details?: SortOrder
     referenceType?: SortOrder
     referenceId?: SortOrder
@@ -109421,6 +109965,13 @@ export namespace Prisma {
     paymentMode?: SortOrder
     paymentStatus?: SortOrder
     slipNo?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     details?: SortOrder
     referenceType?: SortOrder
     referenceId?: SortOrder
@@ -109440,6 +109991,13 @@ export namespace Prisma {
     paymentMode?: SortOrder
     paymentStatus?: SortOrder
     slipNo?: SortOrder
+    chequeBankName?: SortOrder
+    chequeBranchCode?: SortOrder
+    chequeNumber?: SortOrder
+    chequeDate?: SortOrder
+    onlineWalletOrBank?: SortOrder
+    onlineReferenceNo?: SortOrder
+    paymentProofUrl?: SortOrder
     details?: SortOrder
     referenceType?: SortOrder
     referenceId?: SortOrder
@@ -121072,7 +121630,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutTenantInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -121111,7 +121669,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutTenantInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -122284,6 +122842,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -122306,6 +122870,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -122329,6 +122899,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -122347,6 +122924,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -122371,6 +122955,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -122390,6 +122981,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -124011,7 +124609,7 @@ export namespace Prisma {
     NOT?: AdminScalarWhereInput | AdminScalarWhereInput[]
     id?: IntFilter<"Admin"> | number
     name?: StringFilter<"Admin"> | string
-    email?: StringFilter<"Admin"> | string
+    email?: StringNullableFilter<"Admin"> | string | null
     phone?: StringNullableFilter<"Admin"> | string | null
     city?: StringNullableFilter<"Admin"> | string | null
     province?: StringNullableFilter<"Admin"> | string | null
@@ -124939,6 +125537,12 @@ export namespace Prisma {
     details?: StringNullableFilter<"FundCollection"> | string | null
     paymentDate?: DateTimeFilter<"FundCollection"> | Date | string
     chequeDate?: DateTimeNullableFilter<"FundCollection"> | Date | string | null
+    chequeBankName?: StringNullableFilter<"FundCollection"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FundCollection"> | string | null
+    chequeNumber?: StringNullableFilter<"FundCollection"> | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FundCollection"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FundCollection"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FundCollection"> | string | null
     remarks?: StringNullableFilter<"FundCollection"> | string | null
     status?: StringFilter<"FundCollection"> | string
     createdAt?: DateTimeFilter<"FundCollection"> | Date | string
@@ -124975,6 +125579,13 @@ export namespace Prisma {
     salaryYear?: IntFilter<"SalaryEntry"> | number
     paymentDate?: DateTimeFilter<"SalaryEntry"> | Date | string
     paymentMethod?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBankName?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeBranchCode?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeNumber?: StringNullableFilter<"SalaryEntry"> | string | null
+    chequeDate?: DateTimeNullableFilter<"SalaryEntry"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"SalaryEntry"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"SalaryEntry"> | string | null
+    paymentProofUrl?: StringNullableFilter<"SalaryEntry"> | string | null
     remarks?: StringNullableFilter<"SalaryEntry"> | string | null
     status?: StringFilter<"SalaryEntry"> | string
     createdAt?: DateTimeFilter<"SalaryEntry"> | Date | string
@@ -125011,6 +125622,13 @@ export namespace Prisma {
     paymentMode?: StringNullableFilter<"FinanceTransaction"> | string | null
     paymentStatus?: StringNullableFilter<"FinanceTransaction"> | string | null
     slipNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBankName?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeBranchCode?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeNumber?: StringNullableFilter<"FinanceTransaction"> | string | null
+    chequeDate?: DateTimeNullableFilter<"FinanceTransaction"> | Date | string | null
+    onlineWalletOrBank?: StringNullableFilter<"FinanceTransaction"> | string | null
+    onlineReferenceNo?: StringNullableFilter<"FinanceTransaction"> | string | null
+    paymentProofUrl?: StringNullableFilter<"FinanceTransaction"> | string | null
     details?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceType?: StringNullableFilter<"FinanceTransaction"> | string | null
     referenceId?: IntNullableFilter<"FinanceTransaction"> | number | null
@@ -126576,7 +127194,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutOwnedUsersInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -126615,7 +127233,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutOwnedUsersInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -126658,7 +127276,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutOwnerAdminInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -126697,7 +127315,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutOwnerAdminInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -127966,7 +128584,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutOwnedUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128005,7 +128623,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutOwnedUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128447,7 +129065,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedAffiliateCommissionTiersInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -128486,7 +129104,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedAffiliateCommissionTiersInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -128529,7 +129147,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutUpdatedAffiliateCommissionTiersInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -128568,7 +129186,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutUpdatedAffiliateCommissionTiersInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -128661,7 +129279,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedAffiliateCommissionTiersInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128700,7 +129318,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedAffiliateCommissionTiersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128749,7 +129367,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutUpdatedAffiliateCommissionTiersInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128788,7 +129406,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutUpdatedAffiliateCommissionTiersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -129774,7 +130392,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedAffiliatePaymentAccountsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -129813,7 +130431,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedAffiliatePaymentAccountsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -130088,7 +130706,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedAffiliatePaymentAccountsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130127,7 +130745,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedAffiliatePaymentAccountsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130391,7 +131009,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutRequestedAffiliateWithdrawalsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -130430,7 +131048,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutRequestedAffiliateWithdrawalsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -130473,7 +131091,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutReviewedAffiliateWithdrawalsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -130512,7 +131130,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutReviewedAffiliateWithdrawalsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -130822,7 +131440,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutRequestedAffiliateWithdrawalsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130861,7 +131479,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutRequestedAffiliateWithdrawalsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130910,7 +131528,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutReviewedAffiliateWithdrawalsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130949,7 +131567,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutReviewedAffiliateWithdrawalsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131237,7 +131855,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutPaidAffiliatePaymentsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131276,7 +131894,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutPaidAffiliatePaymentsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131552,7 +132170,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutPaidAffiliatePaymentsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131591,7 +132209,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutPaidAffiliatePaymentsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131629,7 +132247,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedAffiliateSettingsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131668,7 +132286,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedAffiliateSettingsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131711,7 +132329,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutUpdatedAffiliateSettingsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131750,7 +132368,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutUpdatedAffiliateSettingsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -131804,7 +132422,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedAffiliateSettingsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131843,7 +132461,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedAffiliateSettingsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131892,7 +132510,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutUpdatedAffiliateSettingsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131931,7 +132549,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutUpdatedAffiliateSettingsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131969,7 +132587,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutAuditLogsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132008,7 +132626,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutAuditLogsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132062,7 +132680,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutAuditLogsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132101,7 +132719,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutAuditLogsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132383,7 +133001,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedRolesInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132422,7 +133040,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedRolesInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132465,7 +133083,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutUpdatedRolesInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132504,7 +133122,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutUpdatedRolesInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132547,7 +133165,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutAssignedRoleInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132586,7 +133204,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutAssignedRoleInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -132976,7 +133594,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedRolesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133015,7 +133633,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedRolesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133064,7 +133682,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutUpdatedRolesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133103,7 +133721,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutUpdatedRolesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135300,7 +135918,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutMadrassaProfileInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -135339,7 +135957,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutMadrassaProfileInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -135563,7 +136181,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutMadrassaProfileInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135602,7 +136220,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutMadrassaProfileInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -136406,7 +137024,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutSuggestionsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -136445,7 +137063,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutSuggestionsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -136755,7 +137373,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutSuggestionsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -136794,7 +137412,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutSuggestionsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137076,7 +137694,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutSupportRequestsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -137115,7 +137733,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutSupportRequestsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -137425,7 +138043,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutSupportRequestsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137464,7 +138082,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutSupportRequestsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140757,7 +141375,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedBranchesInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -140796,7 +141414,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedBranchesInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -140839,7 +141457,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutAssignedBranchInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -140878,7 +141496,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutAssignedBranchInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -142045,7 +142663,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedBranchesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -142084,7 +142702,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedBranchesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -146966,7 +147584,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedTeacherResponsibilitiesInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -147005,7 +147623,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedTeacherResponsibilitiesInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -147358,7 +147976,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedTeacherResponsibilitiesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -147397,7 +148015,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedTeacherResponsibilitiesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -147923,7 +148541,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutCreatedTeacherAssignmentsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -147962,7 +148580,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutCreatedTeacherAssignmentsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -148530,7 +149148,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutCreatedTeacherAssignmentsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -148569,7 +149187,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutCreatedTeacherAssignmentsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -155366,6 +155984,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -155384,6 +156009,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -155912,7 +156544,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutLinkedTeacherInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -155951,7 +156583,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutLinkedTeacherInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -156441,7 +157073,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutLinkedTeacherInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156480,7 +157112,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutLinkedTeacherInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156778,7 +157410,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutSalaryIncrementsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -156817,7 +157449,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutSalaryIncrementsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -157143,7 +157775,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutSalaryIncrementsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -157182,7 +157814,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutSalaryIncrementsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -161191,6 +161823,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -161209,6 +161848,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -161233,6 +161879,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -161252,6 +161905,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -163995,7 +164655,7 @@ export namespace Prisma {
 
   export type AdminCreateWithoutFinancialRecordsInput = {
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -164034,7 +164694,7 @@ export namespace Prisma {
   export type AdminUncheckedCreateWithoutFinancialRecordsInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -164264,7 +164924,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutFinancialRecordsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -164303,7 +164963,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutFinancialRecordsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -169810,7 +170470,7 @@ export namespace Prisma {
   export type AdminCreateManyTenantInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -170191,6 +170851,12 @@ export namespace Prisma {
     details?: string | null
     paymentDate: Date | string
     chequeDate?: Date | string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -170207,6 +170873,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -170223,6 +170896,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -170935,7 +171615,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutTenantInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -170974,7 +171654,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutTenantInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -171013,7 +171693,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateManyWithoutTenantInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -172225,6 +172905,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172247,6 +172933,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172269,6 +172961,12 @@ export namespace Prisma {
     details?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172282,6 +172980,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172300,6 +173005,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172316,6 +173028,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -172330,6 +173049,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -172349,6 +173075,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -172367,6 +173100,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -173922,7 +174662,7 @@ export namespace Prisma {
   export type AdminCreateManyOwnerAdminInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -174207,7 +174947,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutOwnerAdminInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -174246,7 +174986,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutOwnerAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -174285,7 +175025,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateManyWithoutOwnerAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -175289,7 +176029,7 @@ export namespace Prisma {
   export type AdminCreateManyAssignedRoleInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -175331,7 +176071,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutAssignedRoleInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -175370,7 +176110,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutAssignedRoleInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -175409,7 +176149,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateManyWithoutAssignedRoleInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -175915,7 +176655,7 @@ export namespace Prisma {
   export type AdminCreateManyAssignedBranchInput = {
     id?: number
     name: string
-    email: string
+    email?: string | null
     phone?: string | null
     city?: string | null
     province?: string | null
@@ -176254,7 +176994,7 @@ export namespace Prisma {
 
   export type AdminUpdateWithoutAssignedBranchInput = {
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -176293,7 +177033,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateWithoutAssignedBranchInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -176332,7 +177072,7 @@ export namespace Prisma {
   export type AdminUncheckedUpdateManyWithoutAssignedBranchInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     province?: NullableStringFieldUpdateOperationsInput | string | null
@@ -179643,6 +180383,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -179810,6 +180557,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -179828,6 +180582,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -179844,6 +180605,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -180117,6 +180885,13 @@ export namespace Prisma {
     salaryYear: number
     paymentDate: Date | string
     paymentMethod?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     remarks?: string | null
     status?: string
     createdAt?: Date | string
@@ -180133,6 +180908,13 @@ export namespace Prisma {
     paymentMode?: string | null
     paymentStatus?: string | null
     slipNo?: string | null
+    chequeBankName?: string | null
+    chequeBranchCode?: string | null
+    chequeNumber?: string | null
+    chequeDate?: Date | string | null
+    onlineWalletOrBank?: string | null
+    onlineReferenceNo?: string | null
+    paymentProofUrl?: string | null
     details?: string | null
     referenceType?: string | null
     referenceId?: number | null
@@ -180148,6 +180930,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -180166,6 +180955,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -180182,6 +180978,13 @@ export namespace Prisma {
     salaryYear?: IntFieldUpdateOperationsInput | number
     paymentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -180196,6 +180999,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -180215,6 +181025,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -180233,6 +181050,13 @@ export namespace Prisma {
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     slipNo?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBankName?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeBranchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    chequeDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onlineWalletOrBank?: NullableStringFieldUpdateOperationsInput | string | null
+    onlineReferenceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentProofUrl?: NullableStringFieldUpdateOperationsInput | string | null
     details?: NullableStringFieldUpdateOperationsInput | string | null
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableIntFieldUpdateOperationsInput | number | null

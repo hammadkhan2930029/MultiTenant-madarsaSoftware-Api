@@ -1,7 +1,7 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
-import { branchScopeService } from '../../security/index.js';
+import { auditService, branchScopeService } from '../../security/index.js';
 
 const normalizeTenantId = (tenantId) => {
   const resolvedTenantId = Number(tenantId);
@@ -43,7 +43,7 @@ const getCategoryById = async (tenantId, id, branchId) => {
 };
 
 export const expenseCategoriesService = {
-  async createCategory(tenantId, payload, branchScope = null) {
+  async createCategory(tenantId, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
     const name = payload.name.trim();
@@ -72,7 +72,9 @@ export const expenseCategoriesService = {
           AND branch_id = ${branchId}
       `;
 
-      return getCategoryById(resolvedTenantId, existingId, branchId);
+      const entry = await getCategoryById(resolvedTenantId, existingId, branchId);
+      await auditService.recordAuditLog(prisma, { tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null, action: 'finance.expense_category.reactivated', module: 'finance', targetType: 'finance_expense_category', targetId: entry.id, oldValue: existing, newValue: entry, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null });
+      return entry;
     }
 
     await prisma.$executeRaw`
@@ -87,7 +89,9 @@ export const expenseCategoriesService = {
       LIMIT 1
     `;
 
-    return mapCategory(rows[0]);
+    const entry = mapCategory(rows[0]);
+    await auditService.recordAuditLog(prisma, { tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null, action: 'finance.expense_category.created', module: 'finance', targetType: 'finance_expense_category', targetId: entry.id, oldValue: null, newValue: entry, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null });
+    return entry;
   },
 
   async getCategories(tenantId, query = {}, branchScope = null) {
@@ -128,10 +132,10 @@ export const expenseCategoriesService = {
     return getCategoryById(resolvedTenantId, id, branchId);
   },
 
-  async updateCategory(tenantId, id, payload, branchScope = null) {
+  async updateCategory(tenantId, id, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, payload, branchScope);
-    await getCategoryById(resolvedTenantId, id, branchId);
+    const currentCategory = await getCategoryById(resolvedTenantId, id, branchId);
 
     const name = payload.name.trim();
     const status = payload.status || 'active';
@@ -152,13 +156,19 @@ export const expenseCategoriesService = {
       WHERE id = ${id} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
 
-    return getCategoryById(resolvedTenantId, id, branchId);
+    const entry = await getCategoryById(resolvedTenantId, id, branchId);
+    await auditService.recordAuditLog(prisma, {
+      tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null,
+      action: 'finance.expense_category.updated', module: 'finance', targetType: 'finance_expense_category', targetId: entry.id,
+      oldValue: currentCategory, newValue: { ...entry, editReason: payload.editReason }, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null,
+    });
+    return entry;
   },
 
-  async deactivateCategory(tenantId, id, branchScope = null) {
+  async deactivateCategory(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveFinanceBranchId(resolvedTenantId, {}, branchScope);
-    await getCategoryById(resolvedTenantId, id, branchId);
+    const existing = await getCategoryById(resolvedTenantId, id, branchId);
 
     await prisma.$executeRaw`
       UPDATE finance_expense_categories
@@ -166,6 +176,8 @@ export const expenseCategoriesService = {
       WHERE id = ${id} AND tenant_id = ${resolvedTenantId} AND branch_id = ${branchId}
     `;
 
-    return getCategoryById(resolvedTenantId, id, branchId);
+    const entry = await getCategoryById(resolvedTenantId, id, branchId);
+    await auditService.recordAuditLog(prisma, { tenantId: resolvedTenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || branchId || null, roleId: auditContext.roleId || null, action: 'finance.expense_category.deleted', module: 'finance', targetType: 'finance_expense_category', targetId: entry.id, oldValue: existing, newValue: entry, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null });
+    return entry;
   },
 };

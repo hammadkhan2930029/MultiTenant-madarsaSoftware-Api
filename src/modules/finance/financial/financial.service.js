@@ -1,7 +1,12 @@
 import { prisma } from '../../../config/prisma.js';
 import { AppError } from '../../../utils/appError.js';
 import { buildPaginationMeta, getPagination } from '../../../utils/pagination.js';
-import { branchScopeService } from '../../security/index.js';
+import { auditService, branchScopeService } from '../../security/index.js';
+
+const recordManualFinancialAudit = (entry, auditContext = {}) => auditService.recordAuditLog(prisma, {
+  tenantId: entry.tenantId, actorUserId: auditContext.actorUserId || null, branchId: entry.branchId || auditContext.branchId || null, roleId: auditContext.roleId || null,
+  module: 'finance', targetType: 'financial_record', targetId: entry.id, ipAddress: auditContext.ipAddress || null, userAgent: auditContext.userAgent || null, ...entry,
+});
 
 const manualSelect = {
   id: true,
@@ -151,7 +156,7 @@ const mapSalaryRecord = (item) => ({
   branchId: item.branchId || null,
   source: 'salary',
   type: 'kharch',
-  category: item.financeHead?.name || 'تنخواہ',
+  category: item.teacher?.staffType === 'staff' ? 'دیگر عملہ کی تنخواہ' : 'اساتذہ کی تنخواہ',
   description: makeDescription(item.teacher?.fullName, item.remarks),
   amount: toAmount(item.amount),
   date: item.paymentDate,
@@ -304,7 +309,7 @@ const fetchFinancialRows = async (tenantId, query, branchScope = null) => {
         createdAt: true,
         updatedAt: true,
         branchId: true,
-        teacher: { select: { id: true, fullName: true } },
+        teacher: { select: { id: true, fullName: true, staffType: true } },
         financeHead: { select: { id: true, name: true } },
       },
     }),
@@ -377,10 +382,10 @@ export const financialService = {
     return summarize(applyCommonFilters(items, query), outstanding);
   },
 
-  async create(tenantId, payload, admin, branchScope = null) {
+  async create(tenantId, payload, admin, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
-    return mapManualRecord(
+    const entry = mapManualRecord(
       await prisma.financialRecord.create({
         data: {
           tenantId: resolvedTenantId,
@@ -396,15 +401,17 @@ export const financialService = {
         select: manualSelect,
       })
     );
+    await recordManualFinancialAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.manual_record.created', oldValue: null, newValue: entry }, auditContext);
+    return entry;
   },
 
-  async update(tenantId, id, payload, branchScope = null) {
+  async update(tenantId, id, payload, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, payload, branchScope);
     const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Financial record not found.', 404);
 
-    return mapManualRecord(
+    const entry = mapManualRecord(
       await prisma.financialRecord.update({
         where: { id, tenantId: resolvedTenantId },
         data: {
@@ -419,13 +426,17 @@ export const financialService = {
         select: manualSelect,
       })
     );
+    await recordManualFinancialAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.manual_record.updated', oldValue: existing, newValue: entry }, auditContext);
+    return entry;
   },
 
-  async remove(tenantId, id, branchScope = null) {
+  async remove(tenantId, id, branchScope = null, auditContext = {}) {
     const resolvedTenantId = normalizeTenantId(tenantId);
     const branchId = await resolveBranchId(resolvedTenantId, {}, branchScope);
     const existing = await prisma.financialRecord.findFirst({ where: { id, tenantId: resolvedTenantId, ...(branchId ? { branchId } : {}) } });
     if (!existing) throw new AppError('Financial record not found.', 404);
-    return mapManualRecord(await prisma.financialRecord.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select: manualSelect }));
+    const entry = mapManualRecord(await prisma.financialRecord.update({ where: { id, tenantId: resolvedTenantId }, data: { status: 'inactive' }, select: manualSelect }));
+    await recordManualFinancialAudit({ tenantId: resolvedTenantId, branchId, id: entry.id, action: 'finance.manual_record.deleted', oldValue: existing, newValue: entry }, auditContext);
+    return entry;
   },
 };
