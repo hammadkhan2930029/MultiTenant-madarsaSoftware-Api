@@ -29,6 +29,7 @@ export const listUsersValidationSchema = z.object({
     search: z.string().trim().optional(),
     status: z.enum(['active', 'inactive']).optional(),
     roleId: z.coerce.number().int().positive().optional(),
+    branchId: z.coerce.number().int().positive().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),

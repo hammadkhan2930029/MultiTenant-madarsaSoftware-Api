@@ -166,7 +166,12 @@ const resolveRoleBranchId = async (client, payload = {}, requester = {}, roleTen
   }
 
   const requestedBranchId = normalizeOptionalBranchId(payload.branchId);
-  if (!requestedBranchId) return null;
+  if (!requestedBranchId) {
+    if (roleTenantId) {
+      throw new AppError('Branch is required for tenant roles.', 400);
+    }
+    return null;
+  }
 
   return ensureBranchBelongsToTenant(client, {
     tenantId: roleTenantId,
@@ -1019,12 +1024,34 @@ export const rolesService = {
       const nextRoleName = payload.roleName || payload.name ? normalizeRoleName(payload.roleName || payload.name) : existingRole.role_name;
       const roleTenantId = normalizeOptionalTenantId(existingRole.tenant_id);
       const roleBranchId = normalizeOptionalBranchId(existingRole.branch_id);
+      const hasRequestedBranch = Object.prototype.hasOwnProperty.call(payload, 'branchId');
+      const nextRoleBranchId = hasRequestedBranch
+        ? await ensureBranchBelongsToTenant(tx, { tenantId: roleTenantId, branchId: payload.branchId })
+        : roleBranchId;
+      const branchChanged = nextRoleBranchId !== roleBranchId;
       const nextStatus = payload.status || existingRole.status || 'active';
       const actorId = requester?.admin?.id || null;
 
+      if (branchChanged) {
+        const assignedRows = await tx.$queryRaw`
+          SELECT COUNT(*) AS total
+          FROM admins
+          WHERE role_id = ${id}
+            AND status <> 'deleted'
+        `;
+        const assignedUsers = Number(assignedRows[0]?.total || 0);
+        if (assignedUsers > 0) {
+          throw new AppError('This role is assigned to users. Please change those users to another role before changing its branch.', 409);
+        }
+
+        if (!hasClassScopePayload(payload)) {
+          throw new AppError('Class scope must be provided when changing a role branch.', 400);
+        }
+      }
+
       if (payload.roleName || payload.name) {
         assertBranchRoleNameAllowed(nextRoleName, requester);
-        const duplicateRole = await getRoleByName(tx, nextRoleName, roleTenantId, roleBranchId, id);
+        const duplicateRole = await getRoleByName(tx, nextRoleName, roleTenantId, nextRoleBranchId, id);
         if (duplicateRole) {
           throw new AppError('Another role with the same name already exists.', 409);
         }
@@ -1036,6 +1063,8 @@ export const rolesService = {
           role_name = ${nextRoleName},
           description = ${payload.description === undefined ? existingRole.description : payload.description || null},
           status = ${nextStatus},
+          branch_id = ${nextRoleBranchId},
+          role_scope_key = ${getRoleScopeKey(nextRoleBranchId)},
           updated_by = ${actorId},
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
@@ -1052,7 +1081,7 @@ export const rolesService = {
           tx,
           payload,
           roleTenantId,
-          roleBranchId,
+          nextRoleBranchId,
           existingRole.class_scope_mode || 'all',
         );
         await assertClassScopeBoundary(classScope, requester);
@@ -1061,12 +1090,13 @@ export const rolesService = {
           tx,
           payload,
           roleTenantId,
-          roleBranchId,
+          nextRoleBranchId,
           classScope,
           previousTeacherAssignment.teacherId,
         );
-        await replaceRoleClassScopes(tx, existingRole, classScope);
-        await replaceRoleTeacherClassAssignments(tx, existingRole, teacherClassAssignment);
+        const scopedRole = { ...existingRole, branch_id: nextRoleBranchId };
+        await replaceRoleClassScopes(tx, scopedRole, classScope);
+        await replaceRoleTeacherClassAssignments(tx, scopedRole, teacherClassAssignment);
       }
 
       const updatedResponse = await buildRoleResponse(tx, id);
