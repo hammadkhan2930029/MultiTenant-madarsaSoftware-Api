@@ -86,8 +86,10 @@ const withTenantReferralCode = async (profile) => {
 };
 
 const buildDefaultMadrassaProfileData = (admin, tenantId, tenantName = '') => ({
-  adminId: admin.id,
   tenantId,
+  // Prisma requires the mandatory Admin relation to be connected explicitly
+  // when creating a tenant profile.
+  admin: { connect: { id: admin.id } },
   name: tenantName || 'Madarsa',
   email: admin.email,
   phone1: '0300-1234567',
