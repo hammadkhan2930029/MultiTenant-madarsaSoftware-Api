@@ -91,7 +91,9 @@ const buildDefaultMadrassaProfileData = (admin, tenantId, tenantName = '') => ({
   admin: { connect: { id: admin.id } },
   tenant: { connect: { id: tenantId } },
   name: tenantName || 'Madarsa',
-  email: admin.email,
+  // A normal tenant user may not have an email, while the profile email is
+  // required by the database schema.
+  email: admin.email || `tenant-${tenantId}@madarsa.local`,
   phone1: '0300-1234567',
   phone2: '0321-7654321',
   address: 'Township, Lahore',
