@@ -85,10 +85,10 @@ const withTenantReferralCode = async (profile) => {
   };
 };
 
-const buildDefaultMadrassaProfileData = (admin, tenantId) => ({
+const buildDefaultMadrassaProfileData = (admin, tenantId, tenantName = '') => ({
   adminId: admin.id,
   tenantId,
-  name: 'Jamia Anwar ul Quran',
+  name: tenantName || 'Madarsa',
   email: admin.email,
   phone1: '0300-1234567',
   phone2: '0321-7654321',
@@ -503,10 +503,19 @@ export const authService = {
       throw new AppError('Tenant context is required for madrassa profile.', 403);
     }
 
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: resolvedTenantId },
+      select: { name: true },
+    });
+
+    if (!tenant) {
+      throw new AppError('Tenant not found.', 404);
+    }
+
     const profile = await prisma.madrassaProfile.upsert({
       where: { tenantId: resolvedTenantId },
       update: {},
-      create: buildDefaultMadrassaProfileData(admin, resolvedTenantId),
+      create: buildDefaultMadrassaProfileData(admin, resolvedTenantId, tenant.name),
       select: madrassaProfileSelect,
     });
 
